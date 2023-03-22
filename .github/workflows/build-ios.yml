@@ -23,7 +23,7 @@ jobs:
           cache: 'yarn'
 
       - name: Cache node modules
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         id: cache
         with:
           path: node_modules
@@ -43,7 +43,7 @@ jobs:
         working-directory: ios
 
       - name: Cache Pods
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         id: podcache
         with:
           path: ios/Pods
