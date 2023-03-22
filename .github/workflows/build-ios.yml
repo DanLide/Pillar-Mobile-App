@@ -16,6 +16,9 @@ jobs:
       - name: Checkout to repository
         uses: actions/checkout@v3
 
+      - name: Install Carthage
+        run: brew install carthage
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -42,6 +45,13 @@ jobs:
         run: bundle install
         working-directory: ios
 
+      - name: Cache Carthage
+        uses: actions/cache@v3
+        id: carthage-cache
+        with:
+          path: ios/Carthage
+          key: carthage-${{ hashFiles('**/Cartfile.resolved') }}
+
       - name: Cache Pods
         uses: actions/cache@v3
         id: podcache
@@ -49,7 +59,16 @@ jobs:
           path: ios/Pods
           key: pods-${{ hashFiles('**/Podfile.lock') }}
 
+      - name: Carthage
+        if: steps.carthage-cache.outputs.cache-hit != 'true'
+        run: |
+          carthage bootstrap --no-use-binaries --platform iOS --cache-builds
+          rm -rf ./Carthage/Build/iOS/*.dSYM
+        working-directory: ios
+
+
       - name: Install Pods
+        if: steps.podcache.outputs.cache-hit != 'true'
         run: pod install --repo-update
         working-directory: ios
 
