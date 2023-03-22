@@ -53,6 +53,9 @@ jobs:
         run: pod install --repo-update
         working-directory: ios
 
+      - name: Run unit tests
+        run: yarn test
+
       - name: Build app with Fastlane
         run: bundle exec fastlane build
         working-directory: ios
