@@ -28,7 +28,7 @@ platform :ios do
       destination: "generic/platform=iOS",
       build_settings: {
         "CODE_SIGNING_REQUIRED" => "NO",
-        "CODE_SIGN_IDENTITY" => ""
+        "CODE_SIGN_IDENTITY" => "",
         "ENABLE_BITCODE" => "NO"
       }
     )
