@@ -1,5 +1,6 @@
-import { createRequest } from "../helpers/createRequest";
+import { tryFetch } from "../helpers/tryFetch";
 import { environment } from "../helpers/environment";
+import { URLProvider } from "../helpers";
 
 interface GetRoleManagerAPIResponse {
   isTermsAccepted?: boolean;
@@ -9,8 +10,9 @@ interface GetRoleManagerAPIResponse {
 export const getRoleManagerAPI = async (
   token: string
 ): Promise<GetRoleManagerAPIResponse> => {
-  const url = new URL(`${environment.modules.pisaUser.apiUri}/api/RoleManager`);
-  return await createRequest<GetRoleManagerAPIResponse>(url, {
+  const url = new URLProvider().getRoleModelUrl();
+
+  return await tryFetch<GetRoleManagerAPIResponse>(url, {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,

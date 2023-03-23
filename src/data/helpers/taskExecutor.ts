@@ -1,4 +1,4 @@
-import { ResponseError } from "./createRequest";
+import { ResponseError } from "./tryFetch";
 
 export abstract class Task {
   isCanceled: boolean;

@@ -1,5 +1,6 @@
+import { URLProvider } from "../helpers";
 import { environment } from "../helpers/environment";
-import { createRequest } from "../helpers/createRequest";
+import { tryFetch } from "../helpers/tryFetch";
 
 export interface LoginAPIParams {
   username: string;
@@ -16,19 +17,13 @@ interface LoginAPIResponse {
 export const loginAPI = async (
   params: LoginAPIParams
 ): Promise<LoginAPIResponse> => {
-  const url = new URL(`${environment.b2c.authority}/oauth2/v2.0/token`);
+  const url = new URLProvider().getLoginUrl();
 
   url.searchParams.set("password", params.password);
   url.searchParams.set("username", params.username);
-  url.searchParams.set("grant_type", "password");
-  url.searchParams.set(
-    "scope",
-    `openid+${environment.b2c.clientId}+offline_access`
-  );
-  url.searchParams.set("client_id", environment.b2c.clientId);
   url.search = decodeURIComponent(url.search);
 
-  const response = await createRequest<LoginAPIResponse>(url, {
+  const response = await tryFetch<LoginAPIResponse>(url, {
     method: "POST",
   });
 

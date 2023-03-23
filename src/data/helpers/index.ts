@@ -1,5 +1,6 @@
-import { createRequest } from "./createRequest";
+import { tryFetch } from "./tryFetch";
 import { Task, TaskExecutor } from "./taskExecutor";
 import { environment } from "./environment";
+import { URLProvider } from "./urlProvider";
 
-export { createRequest, Task, TaskExecutor, environment };
+export { tryFetch, Task, TaskExecutor, environment, URLProvider };
