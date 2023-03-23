@@ -1,3 +1,5 @@
+import { ResponseError } from "./tryFetch";
+
 export abstract class Task {
   isCanceled: boolean;
   constructor() {
@@ -31,12 +33,12 @@ export class TaskExecutor {
     }
   };
 
-  async execute(): Promise<void> {
+  async execute(): Promise<void | ResponseError> {
     try {
       await this.recurse(this.taskList);
     } catch (error) {
       await this.cancel();
-      throw error;
+      return error;
     }
   }
 
