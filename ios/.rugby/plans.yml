@@ -1,0 +1,9 @@
+# You can find more information here:
+# https://github.com/swiftyfinch/Rugby/blob/main/Docs/Plans.md
+
+- ci:
+  - command: cache
+    exclude: [YogaKit]
+    arch: [arm64]
+    config: Debug
+    sdk: [ios]
