@@ -68,3 +68,4 @@ yarn-error.log
 /ios/.rugby/backup/
 /ios/.rugby/history
 /ios/.rugby/*.log
+/ios/.rugby/cache.yml
