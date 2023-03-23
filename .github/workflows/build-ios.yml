@@ -33,6 +33,21 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
+      - name: Cache Rugby
+        id: cache-rugby
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/rugby
+          key: CachedRugby-default
+
+      - name: Install Rugby
+        if: steps.cache-rugby.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/swiftyfinch/Rugby.git
+          cd Rugby
+          swift build -c release
+          cp `swift build -c release --show-bin-path`/rugby /usr/local/bin
+
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
         with:
@@ -42,31 +57,19 @@ jobs:
         run: bundle install
         working-directory: ios
 
-      - name: Cache Carthage
-        uses: actions/cache@v3
-        id: carthage-cache
-        with:
-          path: ios/Carthage
-          key: carthage-${{ hashFiles('**/Cartfile.resolved') }}
-
       - name: Cache Pods
         uses: actions/cache@v3
         id: podcache
         with:
-          path: ios/Pods
+          path: |
+            ios/Pods
+            ios/.rugby/build
+            ios/.rugby/cache.yml
           key: pods-${{ hashFiles('**/Podfile.lock') }}
-
-      - name: Carthage
-        if: steps.carthage-cache.outputs.cache-hit != 'true'
-        run: |
-          carthage bootstrap --no-use-binaries --platform iOS --cache-builds
-          rm -rf ./Carthage/Build/iOS/*.dSYM
-        working-directory: ios
-
 
       - name: Install Pods
         if: steps.podcache.outputs.cache-hit != 'true'
-        run: pod install --repo-update
+        run: pod install && rugby plans --plan ci
         working-directory: ios
 
       - name: Run unit tests
