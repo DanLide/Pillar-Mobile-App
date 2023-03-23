@@ -33,20 +33,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
 
-      - name: Cache Rugby
-        id: cache-rugby
-        uses: actions/cache@v3
-        with:
-          path: /usr/local/bin/rugby
-          key: CachedRugby-default
-
       - name: Install Rugby
-        if: steps.cache-rugby.outputs.cache-hit != 'true'
         run: |
-          git clone https://github.com/swiftyfinch/Rugby.git
-          cd Rugby
-          swift build -c release
-          cp `swift build -c release --show-bin-path`/rugby /usr/local/bin
+          brew tap swiftyfinch/Rugby https://github.com/swiftyfinch/Rugby.git
+          brew install rugby
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
