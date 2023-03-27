@@ -1,15 +1,28 @@
-import { action, computed, makeObservable, observable } from 'mobx'
+import { action, makeObservable, observable } from "mobx";
 
-export default class LoginFormStore {
-  protected AuthStore: any
-  @observable login: string
+interface LoginForm {
+  username: string;
+  password: string;
+}
+
+export class LoginFormStore implements LoginForm {
+  protected AuthStore: any;
+  @observable username: string;
+  @observable password: string;
+
   constructor(AuthStore: any) {
-    this.AuthStore = AuthStore
-    this.login = ''
-    makeObservable(this)
+    this.AuthStore = AuthStore;
+    this.username = "";
+    this.password = "";
+
+    makeObservable(this);
   }
 
-  @action setLogin(value: string) {
-    this.login = value
+  @action setUsername(value: string) {
+    this.username = value;
+  }
+
+  @action setPassword(value: string) {
+    this.password = value;
   }
 }

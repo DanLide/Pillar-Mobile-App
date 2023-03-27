@@ -1,15 +1,15 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { LoginScreen } from "../modules/login/components/LoginScreen";
+import { HomeScreen } from "../modules/home/HomeScreen";
 
 const Stack = createStackNavigator();
 
-function LoginStack() {
+const HomeStack = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="HomeScreen" component={HomeScreen} />
     </Stack.Navigator>
   );
-}
+};
 
-export default LoginStack;
+export default HomeStack;

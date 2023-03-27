@@ -1,6 +1,5 @@
 import { URLProvider } from "../helpers";
-import { environment } from "../helpers/environment";
-import { tryFetch } from "../helpers/tryFetch";
+import { ResponseError, tryFetch } from "../helpers/tryFetch";
 
 export interface LoginAPIParams {
   username: string;
@@ -16,16 +15,14 @@ interface LoginAPIResponse {
 
 export const loginAPI = async (
   params: LoginAPIParams
-): Promise<LoginAPIResponse> => {
+): Promise<LoginAPIResponse | ResponseError> => {
   const url = new URLProvider().getLoginUrl();
 
   url.searchParams.set("password", params.password);
   url.searchParams.set("username", params.username);
   url.search = decodeURIComponent(url.search);
 
-  const response = await tryFetch<LoginAPIResponse>(url, {
+  return await tryFetch<LoginAPIResponse>(url, {
     method: "POST",
   });
-
-  return response;
 };

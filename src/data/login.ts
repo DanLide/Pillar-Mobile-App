@@ -1,5 +1,6 @@
 import { Task, TaskExecutor } from "./helpers";
 import { loginAPI, getRoleManagerAPI, LoginAPIParams } from "./api";
+import { AuthStore } from "../stores/AuthStore";
 
 interface LoginFlowContext {
   token?: string;
@@ -7,7 +8,7 @@ interface LoginFlowContext {
   isLanguageSelected?: boolean;
 }
 
-export const login = async (params: LoginAPIParams) => {
+export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
   const loginContext: LoginFlowContext = {
     token: undefined,
     isTnC: undefined,
@@ -17,6 +18,7 @@ export const login = async (params: LoginAPIParams) => {
   const result = await new TaskExecutor([
     new LoginTask(loginContext, params),
     new GetRoleManagerTask(loginContext),
+    new SaveAuthDataTask(loginContext, authStore),
   ]).execute();
 
   return result;
@@ -34,6 +36,9 @@ export class LoginTask extends Task {
 
   async run(): Promise<void> {
     const response = await loginAPI(this.params);
+    if (!response.access_token) {
+      throw response;
+    }
     this.loginFlowContext.token = response.access_token;
   }
 }
@@ -47,8 +52,38 @@ export class GetRoleManagerTask extends Task {
   }
 
   async run(): Promise<void> {
+    if (!this.loginFlowContext.token) {
+      throw new Error("Login failed!");
+    }
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
+    if (!response.username) {
+      throw response;
+    }
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguageSelected = !!response.isLanguageSelected;
+  }
+}
+
+class SaveAuthDataTask extends Task {
+  loginFlowContext: LoginFlowContext;
+  authStore: AuthStore;
+
+  constructor(loginFlowContext: LoginFlowContext, authStore: AuthStore) {
+    super();
+    this.loginFlowContext = loginFlowContext;
+    this.authStore = authStore;
+  }
+
+  async run() {
+    const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
+    if (
+      isLanguageSelected !== undefined &&
+      token !== undefined &&
+      isTnC !== undefined
+    ) {
+      this.authStore.setLoggedInData(token, isTnC, isLanguageSelected);
+    } else {
+      throw Error("Login failed!");
+    }
   }
 }

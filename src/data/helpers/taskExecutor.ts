@@ -38,7 +38,7 @@ export class TaskExecutor {
       await this.recurse(this.taskList);
     } catch (error) {
       await this.cancel();
-      return error;
+      return error as ResponseError;
     }
   }
 

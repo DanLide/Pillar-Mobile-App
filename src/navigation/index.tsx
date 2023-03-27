@@ -1,16 +1,30 @@
-import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
-import LoginStack from './Login'
+import React, { useRef } from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { observer } from "mobx-react";
 
-const Stack = createStackNavigator()
+import { authStore } from "../stores";
 
-function AppStack() {
+import LoginStack from "./Login";
+import HomeStack from "./Home";
+
+const Stack = createStackNavigator();
+
+export const AppStack = observer(() => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="LoginStack" component={LoginStack} options={{ headerShown: false }} />
+      {authStore.isLoggedIn ? (
+        <Stack.Screen
+          name="HomeStack"
+          component={HomeStack}
+          options={{ headerShown: false }}
+        />
+      ) : (
+        <Stack.Screen
+          name="LoginStack"
+          component={LoginStack}
+          options={{ headerShown: false }}
+        />
+      )}
     </Stack.Navigator>
   );
-}
-
-export default AppStack
-
+});

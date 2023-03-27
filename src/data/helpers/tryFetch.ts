@@ -1,12 +1,13 @@
 export interface ResponseError {
-  error: string;
-  error_description: string;
+  error?: string;
+  error_description?: string;
+  message?: string;
 }
 
 export const tryFetch = async <ResponseType>(
   url: string | URL,
   request?: RequestInit
-): Promise<ResponseType> => {
+): Promise<ResponseType | ResponseError> => {
   try {
     const response = await fetch(url, request);
 
@@ -17,6 +18,6 @@ export const tryFetch = async <ResponseType>(
       throw data as ResponseError;
     }
   } catch (error) {
-    return error;
+    return error as ResponseError;
   }
 };
