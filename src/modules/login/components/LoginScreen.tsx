@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import { observer } from "mobx-react";
 
@@ -11,17 +11,21 @@ export const LoginScreen = observer(() => {
   const store = useRef(authStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onSubmitLogin = async (username: string, password: string) => {
-    setIsLoading(true);
-    const error = await onLogin({ username, password }, store);
-    setIsLoading(false);
+  const onSubmitLogin = useCallback(
+    async (username: string, password: string) => {
+      setIsLoading(true);
+      const error = await onLogin({ username, password }, store);
+      setIsLoading(false);
 
-    if (error) {
-      const message = error.error || error.message || "Login Failed!";
+      if (error) {
+        const message =
+          error.error_description || error.message || "Login Failed!";
 
-      Alert.alert("Error", message);
-    }
-  };
+        Alert.alert("Error", message);
+      }
+    },
+    []
+  );
 
   return (
     <View style={styles.container}>
@@ -33,5 +37,6 @@ export const LoginScreen = observer(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
   },
 });

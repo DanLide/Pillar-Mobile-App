@@ -36,9 +36,7 @@ export class LoginTask extends Task {
 
   async run(): Promise<void> {
     const response = await loginAPI(this.params);
-    if (!response.access_token) {
-      throw response;
-    }
+
     this.loginFlowContext.token = response.access_token;
   }
 }
@@ -56,9 +54,7 @@ export class GetRoleManagerTask extends Task {
       throw new Error("Login failed!");
     }
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
-    if (!response.username) {
-      throw response;
-    }
+
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguageSelected = !!response.isLanguageSelected;
   }
@@ -74,15 +70,24 @@ class SaveAuthDataTask extends Task {
     this.authStore = authStore;
   }
 
-  async run() {
+  isLoginFieldsValid() {
     const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
-    if (
+    return (
       isLanguageSelected !== undefined &&
       token !== undefined &&
       isTnC !== undefined
-    ) {
-      this.authStore.setLoggedInData(token, isTnC, isLanguageSelected);
+    );
+  }
+
+  async run() {
+    const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
+    if (this.isLoginFieldsValid()) {
+      this.authStore.setToken(token);
+      this.authStore.setIsTnC(isTnC);
+      this.authStore.setIsLanguageSelected(isLanguageSelected);
+      this.authStore.setLoggedIn(true);
     } else {
+      this.authStore.cleanAuthStore();
       throw Error("Login failed!");
     }
   }

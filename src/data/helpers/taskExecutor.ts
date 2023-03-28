@@ -1,4 +1,4 @@
-import { ResponseError } from "./tryFetch";
+import { RequestError } from "./tryFetch";
 
 export abstract class Task {
   isCanceled: boolean;
@@ -33,12 +33,12 @@ export class TaskExecutor {
     }
   };
 
-  async execute(): Promise<void | ResponseError> {
+  async execute(): Promise<void | RequestError> {
     try {
       await this.recurse(this.taskList);
     } catch (error) {
       await this.cancel();
-      return error as ResponseError;
+      return error as RequestError;
     }
   }
 

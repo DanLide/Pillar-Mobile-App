@@ -1,11 +1,18 @@
-import React, { useRef } from "react";
+import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { observer } from "mobx-react";
 
+import { defaultOptions } from "./helpers";
+
 import { authStore } from "../stores";
 
-import LoginStack from "./Login";
-import HomeStack from "./Home";
+import { LoginScreen } from "../modules/login/components/LoginScreen";
+import { HomeScreen } from "../modules/home/HomeScreen";
+
+enum AppNavigator {
+  HomeScreen = "HomeScreen",
+  LoginScreen = "LoginScreen",
+}
 
 const Stack = createStackNavigator();
 
@@ -14,15 +21,15 @@ export const AppStack = observer(() => {
     <Stack.Navigator>
       {authStore.isLoggedIn ? (
         <Stack.Screen
-          name="HomeStack"
-          component={HomeStack}
-          options={{ headerShown: false }}
+          name={AppNavigator.HomeScreen}
+          component={HomeScreen}
+          options={defaultOptions}
         />
       ) : (
         <Stack.Screen
-          name="LoginStack"
-          component={LoginStack}
-          options={{ headerShown: false }}
+          name={AppNavigator.LoginScreen}
+          component={LoginScreen}
+          options={defaultOptions}
         />
       )}
     </Stack.Navigator>

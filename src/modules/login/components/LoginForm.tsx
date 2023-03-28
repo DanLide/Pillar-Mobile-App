@@ -18,24 +18,34 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
     onPress(store.username, store.password);
   };
 
+  const onChangeUsername = (value: string) => {
+    store.setUsername(value);
+  };
+
+  const onChangePassword = (value: string) => {
+    store.setPassword(value);
+  };
+
+  const isDisabled = store.password.length === 0 && store.username.length === 0;
+
   return (
     <View style={styles.container}>
       <Input
         style={styles.input}
         placeholder={"username"}
         value={store.username}
-        onChangeText={(value) => {
-          store.setUsername(value);
-        }}
+        editable={!isLoading}
+        selectTextOnFocus={!isLoading}
+        onChangeText={onChangeUsername}
       />
       <Input
         style={styles.input}
         placeholder={"password"}
         value={store.password}
+        editable={!isLoading}
+        selectTextOnFocus={!isLoading}
         secureTextEntry={true}
-        onChangeText={(value) => {
-          store.setPassword(value);
-        }}
+        onChangeText={onChangePassword}
       />
       {isLoading ? (
         <View style={styles.buttonStyle}>
@@ -44,6 +54,7 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
       ) : (
         <Button
           title="Submit"
+          disabled={isDisabled}
           buttonStyle={styles.buttonStyle}
           onPress={onSubmit}
         />
