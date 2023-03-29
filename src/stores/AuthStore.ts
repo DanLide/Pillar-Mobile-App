@@ -5,6 +5,12 @@ export class AuthStore implements LogoutListener {
   private token?: string;
   private isTnC?: boolean;
   private isLanguageSelected?: boolean;
+  private username?: string;
+  private companyNumber?: string;
+  private permissionSet1?: number;
+  private permissionSet2?: number;
+  private msoID?: number;
+  private facilityID?: string;
 
   constructor() {
     this.token = undefined;
@@ -45,6 +51,30 @@ export class AuthStore implements LogoutListener {
 
   @action setLoggedIn(value: boolean) {
     this.isLoggedIn = value;
+  }
+
+  @action setUsername(value?: string) {
+    this.username = value;
+  }
+
+  @action setCompanyNumber(value?: string) {
+    this.companyNumber = value;
+  }
+
+  @action setPermissionSet1(value?: number) {
+    this.permissionSet1 = value;
+  }
+
+  @action setPermissionSet2(value?: number) {
+    this.permissionSet2 = value;
+  }
+
+  @action setMsoID(value?: number) {
+    this.msoID = value;
+  }
+
+  @action setFacilityID(value?: string) {
+    this.facilityID = value;
   }
 
   @action logOut() {
