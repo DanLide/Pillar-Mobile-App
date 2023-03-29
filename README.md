@@ -1,12 +1,19 @@
 # repair_stack
 
+## Speed up iOS local build
+Install and cache Pods binaries with [Rugby](https://github.com/swiftyfinch/Rugby).
 
+For simulators:
 
-## Getting started
+```
+cd ios && pod install && rugby plans --plan simulator
+```
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+For physical devices:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+```
+cd ios && pod install && rugby plans --plan ci
+```
 
 ## Add your files
 
