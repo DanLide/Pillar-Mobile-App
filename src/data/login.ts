@@ -70,7 +70,7 @@ class SaveAuthDataTask extends Task {
     this.authStore = authStore;
   }
 
-  isLoginFieldsValid() {
+  isLoginContextValid() {
     const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
     return (
       isLanguageSelected !== undefined &&
@@ -81,13 +81,13 @@ class SaveAuthDataTask extends Task {
 
   async run() {
     const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
-    if (this.isLoginFieldsValid()) {
+    if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguageSelected(isLanguageSelected);
       this.authStore.setLoggedIn(true);
     } else {
-      this.authStore.cleanAuthStore();
+      this.authStore.logOut();
       throw Error("Login failed!");
     }
   }

@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
-  const store = useRef(new LoginFormStore({})).current;
+  const store = useRef(new LoginFormStore()).current;
 
   const onSubmit = () => {
     onPress(store.username, store.password);

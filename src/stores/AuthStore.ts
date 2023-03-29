@@ -1,24 +1,12 @@
 import { action, makeObservable, observable, computed } from "mobx";
 import { LogoutListener } from "../data/helpers/tryFetch";
-
-interface Auth {
-  token?: string;
-  isTnC?: boolean;
-  isLanguageSelected?: boolean;
-  isLoggedIn?: boolean;
-}
-
-export class AuthStore implements Auth, LogoutListener {
-  protected AuthStore: any;
-
+export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
   private token?: string;
   private isTnC?: boolean;
   private isLanguageSelected?: boolean;
 
-  constructor(AuthStore: any) {
-    this.AuthStore = AuthStore;
-
+  constructor() {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguageSelected = undefined;
@@ -40,7 +28,7 @@ export class AuthStore implements Auth, LogoutListener {
   }
 
   onServerLogout() {
-    this.cleanAuthStore();
+    this.logOut();
   }
 
   @action setToken(token: string) {
@@ -59,7 +47,7 @@ export class AuthStore implements Auth, LogoutListener {
     this.isLoggedIn = value;
   }
 
-  @action cleanAuthStore() {
+  @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguageSelected = undefined;

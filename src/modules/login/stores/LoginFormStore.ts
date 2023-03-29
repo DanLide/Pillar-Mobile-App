@@ -6,12 +6,10 @@ interface LoginForm {
 }
 
 export class LoginFormStore implements LoginForm {
-  protected AuthStore: any;
   @observable username: string;
   @observable password: string;
 
-  constructor(AuthStore: any) {
-    this.AuthStore = AuthStore;
+  constructor() {
     this.username = "";
     this.password = "";
 

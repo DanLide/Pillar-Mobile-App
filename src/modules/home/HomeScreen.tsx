@@ -11,7 +11,7 @@ export const HomeScreen = () => {
   };
 
   const onLogout = () => {
-    authStore.cleanAuthStore();
+    authStore.logOut();
   };
 
   return (
