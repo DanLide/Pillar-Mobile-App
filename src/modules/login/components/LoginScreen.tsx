@@ -1,85 +1,42 @@
-import React, { useState } from 'react'
-import { StyleSheet, TouchableOpacity, View, Button } from 'react-native'
-import LoginForm from './LoginForm'
-import LoginQR from './LoginQR'
-import { Text } from '../../../components'
+import React, { useRef, useState, useCallback } from "react";
+import { StyleSheet, View, Alert } from "react-native";
+import { observer } from "mobx-react";
 
-const LoginScreen = () => {
-  const [isForm, setIsForm] = useState(false)
-  const [test, setIsTest] = useState(true)
+import { onLogin } from "../../../data/login";
+import { authStore } from "../../../stores";
 
+import { LoginForm } from "./LoginForm";
 
-  const onPressQr = () => {
-    setIsForm(false)
-  }
+export const LoginScreen = observer(() => {
+  const store = useRef(authStore).current;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onPressForm = () => {
-    setIsForm(true)
-  }
+  const onSubmitLogin = useCallback(
+    async (username: string, password: string) => {
+      setIsLoading(true);
+      const error = await onLogin({ username, password }, store);
+      setIsLoading(false);
 
-  return <View style={styles.container}>
-    <View style={styles.switchContainer}>
-      <TouchableOpacity onPress={onPressQr}>
-        <Text style={styles.switchText}>
-          QR
-        </Text>
-      </TouchableOpacity>
-      <View style={styles.separator} />
-      <TouchableOpacity onPress={onPressForm}>
-        <Text style={styles.switchText}>
-          Form
-        </Text>
-      </TouchableOpacity>
+      if (error) {
+        const message =
+          error.error_description || error.message || "Login Failed!";
+
+        Alert.alert("Error", message);
+      }
+    },
+    []
+  );
+
+  return (
+    <View style={styles.container}>
+      <LoginForm onPress={onSubmitLogin} isLoading={isLoading} />
     </View>
-    {
-      isForm ? (
-        test && <LoginForm onPress={() => {
-          setIsTest(false)
-        }} />
-      )
-        : <LoginQR />
-    }
-    <Button title='show login' onPress={() => {
-      setIsTest(true)
-    }} />
-  </View>
-};
+  );
+});
 
 const styles = StyleSheet.create({
-  input: {
-    margin: 15,
-  },
-  switchButton: {
-
-  },
-  switchText: {
-    justifyContent: 'center',
-    paddingVertical: 20,
-    fontSize: 15,
-    width: 90,
-    textAlign: 'center',
-  },
-  separator: {
-    width: 1,
-    backgroundColor: 'black',
-  },
   container: {
     flex: 1,
+    justifyContent: "center",
   },
-  switchContainer: {
-    marginTop: 15,
-    marginBottom: '40%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    backgroundColor: 'gray',
-    borderRadius: 20,
-  },
-
-  buttonStyle: {
-    marginTop: 20,
-    marginHorizontal: 20,
-  }
-})
-
-export default LoginScreen;
+});
