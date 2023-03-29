@@ -1,14 +1,14 @@
 import React, { memo } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import WebView from 'react-native-webview';
+import WebView, { WebViewProps } from 'react-native-webview';
+import English from '../../../strings/terms/English';
 
-const TermsEnglish = require('../../../../assets/terms/English.html');
-const ORIGIN_WHITELIST = ['*'];
+const SOURCE_DEFAULT: WebViewProps['source'] = { html: English };
 
 const TermsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <WebView source={TermsEnglish} originWhitelist={ORIGIN_WHITELIST} />
+      <WebView source={SOURCE_DEFAULT} />
     </SafeAreaView>
   );
 };
