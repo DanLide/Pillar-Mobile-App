@@ -1,5 +1,4 @@
 import { URLProvider } from "../helpers";
-import { environment } from "../helpers/environment";
 import { tryFetch } from "../helpers/tryFetch";
 
 export interface LoginAPIParams {
@@ -14,18 +13,14 @@ interface LoginAPIResponse {
   token_type: string;
 }
 
-export const loginAPI = async (
-  params: LoginAPIParams
-): Promise<LoginAPIResponse> => {
+export const loginAPI = (params: LoginAPIParams) => {
   const url = new URLProvider().getLoginUrl();
 
   url.searchParams.set("password", params.password);
   url.searchParams.set("username", params.username);
   url.search = decodeURIComponent(url.search);
 
-  const response = await tryFetch<LoginAPIResponse>(url, {
+  return tryFetch<LoginAPIResponse>(url, {
     method: "POST",
   });
-
-  return response;
 };

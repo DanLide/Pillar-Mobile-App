@@ -1,18 +1,17 @@
 import { tryFetch } from "../helpers/tryFetch";
-import { environment } from "../helpers/environment";
 import { URLProvider } from "../helpers";
 
 interface GetRoleManagerAPIResponse {
+  username: string;
+  roleTypeId: number;
   isTermsAccepted?: boolean;
   isLanguageSelected?: boolean;
 }
 
-export const getRoleManagerAPI = async (
-  token: string
-): Promise<GetRoleManagerAPIResponse> => {
+export const getRoleManagerAPI = (token: string) => {
   const url = new URLProvider().getRoleModelUrl();
 
-  return await tryFetch<GetRoleManagerAPIResponse>(url, {
+  return tryFetch<GetRoleManagerAPIResponse>(url, {
     method: "GET",
     headers: {
       authorization: `Bearer ${token}`,

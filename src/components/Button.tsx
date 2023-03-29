@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,14 +6,14 @@ import {
   ViewStyle,
   TextStyle,
   TextProps,
-} from 'react-native'
-import Text from './Text'
+} from "react-native";
+import Text from "./Text";
 
-type ButtonProps = TouchableOpacityProps & TextProps
+type ButtonProps = TouchableOpacityProps & TextProps;
 interface ExtendedButtonProps extends ButtonProps {
-  title: string
-  buttonStyle?: ViewStyle
-  textStyle?: TextStyle
+  title: string;
+  buttonStyle?: ViewStyle;
+  textStyle?: TextStyle;
 }
 
 const Button: React.FC<ExtendedButtonProps> = ({
@@ -23,30 +23,24 @@ const Button: React.FC<ExtendedButtonProps> = ({
   disabled,
   ...props
 }) => {
-  return <TouchableOpacity {...props} style={[
-    styles.button,
-    disabled && styles.disabledStyle,
-    buttonStyle,
-  ]
-  }>
-    <Text {...props}
-      style={
-        [
-          styles.buttonText,
-          textStyle,
-        ]
-      }>
-      {title}
-    </Text>
-  </TouchableOpacity>
-
+  return (
+    <TouchableOpacity
+      {...props}
+      disabled={disabled}
+      style={[styles.button, disabled && styles.disabledStyle, buttonStyle]}
+    >
+      <Text {...props} style={[styles.buttonText, textStyle]}>
+        {title}
+      </Text>
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'blue',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
     height: 50,
     borderRadius: 16,
   },
@@ -55,8 +49,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    color: 'white',
+    color: "white",
   },
-})
+});
 
 export default Button;
