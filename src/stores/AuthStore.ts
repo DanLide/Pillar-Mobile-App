@@ -4,7 +4,7 @@ export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
   private token?: string;
   private isTnC?: boolean;
-  private isLanguageSelected?: boolean;
+  private isLanguage?: boolean;
   private username?: string;
   private companyNumber?: string;
   private permissionSet1?: number;
@@ -15,7 +15,7 @@ export class AuthStore implements LogoutListener {
   constructor() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguageSelected = undefined;
+    this.isLanguage = undefined;
 
     this.isLoggedIn = false;
     makeObservable(this);
@@ -25,12 +25,12 @@ export class AuthStore implements LogoutListener {
     return this.token;
   }
 
-  @computed public get getIsTnC() {
+  @computed public get isTnCSelected() {
     return this.isTnC;
   }
 
-  @computed public get getIsLanguageSelected() {
-    return this.isLanguageSelected;
+  @computed public get isLanguageSelected() {
+    return this.isLanguage;
   }
 
   onServerLogout() {
@@ -45,8 +45,8 @@ export class AuthStore implements LogoutListener {
     this.isTnC = isTnC;
   }
 
-  @action setIsLanguageSelected(isLanguageSelected: boolean) {
-    this.isLanguageSelected = isLanguageSelected;
+  @action setIsLanguage(isLanguage: boolean) {
+    this.isLanguage = isLanguage;
   }
 
   @action setLoggedIn(value: boolean) {
@@ -80,7 +80,7 @@ export class AuthStore implements LogoutListener {
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguageSelected = undefined;
+    this.isLanguage = undefined;
     this.isLoggedIn = false;
   }
 }
