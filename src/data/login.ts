@@ -1,13 +1,14 @@
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
-import { Task, TaskExecutor } from "./helpers";
-import { loginAPI, getRoleManagerAPI, LoginAPIParams } from "./api";
-import { AuthStore } from "../stores/AuthStore";
+import { Task, TaskExecutor } from './helpers';
+import { loginAPI, getRoleManagerAPI, LoginAPIParams } from './api';
+import { AuthStore } from '../stores/AuthStore';
 
 interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
   isLanguageSelected?: boolean;
+  partyRoleId?: string;
   username?: string;
   companyNumber?: string;
   permissionSet1?: number;
@@ -60,7 +61,7 @@ export class GetRoleManagerTask extends Task {
 
   async run(): Promise<void> {
     if (!this.loginFlowContext.token) {
-      throw new Error("Login failed!");
+      throw new Error('Login failed!');
     }
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
@@ -86,7 +87,7 @@ class JWTParserTask extends Task {
   }
 
   makeValidField<Type>(value: Type) {
-    if (value == "0") {
+    if (value == '0') {
       return undefined;
     }
 
@@ -97,26 +98,26 @@ class JWTParserTask extends Task {
     const decodedToken = jwt_decode(this.loginFlowContext.token);
 
     if (!this.isTokenValid(decodedToken)) {
-      throw Error("Token is not valid!");
+      throw Error('Token is not valid!');
     }
 
     this.loginFlowContext.username = this.makeValidField<string>(
-      decodedToken.name
+      decodedToken.name,
     );
     this.loginFlowContext.companyNumber = this.makeValidField<string>(
-      decodedToken.extension_companyNumber
+      decodedToken.extension_companyNumber,
     );
     this.loginFlowContext.permissionSet1 = this.makeValidField<number>(
-      +decodedToken.extension_permissionSet1
+      +decodedToken.extension_permissionSet1,
     );
     this.loginFlowContext.permissionSet2 = this.makeValidField<number>(
-      +decodedToken.extension_permissionSet2
+      +decodedToken.extension_permissionSet2,
     );
     this.loginFlowContext.msoID = this.makeValidField<number>(
-      +decodedToken.extension_msoPisaID
+      +decodedToken.extension_msoPisaID,
     );
     this.loginFlowContext.facilityID = this.makeValidField<string>(
-      decodedToken.extension_repairFacilityID
+      decodedToken.extension_repairFacilityID,
     );
   }
 }
@@ -141,12 +142,14 @@ class SaveAuthDataTask extends Task {
   }
 
   async run() {
-    const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
+    const { token, isTnC, isLanguageSelected, partyRoleId } =
+      this.loginFlowContext;
     if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguageSelected(isLanguageSelected);
 
+      this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);
       this.authStore.setCompanyNumber(this.loginFlowContext.companyNumber);
       this.authStore.setPermissionSet1(this.loginFlowContext.permissionSet1);
@@ -157,7 +160,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setLoggedIn(true);
     } else {
       this.authStore.logOut();
-      throw Error("Login failed!");
+      throw Error('Login failed!');
     }
   }
 }
