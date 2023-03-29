@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
-import WebView, { WebViewProps } from 'react-native-webview';
-import English from '../../../strings/terms/English';
-
-const SOURCE_DEFAULT: WebViewProps['source'] = { html: English };
+import { WebView } from 'react-native-webview';
+import { handleExternalLinkInBrowser, SOURCE_DEFAULT } from './helpers/webview';
 
 const TermsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <WebView source={SOURCE_DEFAULT} />
+      <WebView
+        source={SOURCE_DEFAULT}
+        onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
+      />
     </SafeAreaView>
   );
 };
