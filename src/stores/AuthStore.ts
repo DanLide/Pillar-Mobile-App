@@ -5,7 +5,7 @@ export class AuthStore implements LogoutListener {
   private token?: string;
   private isTnC?: boolean;
   private isLanguageSelected?: boolean;
-  private partyRoleId?: string;
+  private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
   private permissionSet1?: number;
@@ -54,7 +54,7 @@ export class AuthStore implements LogoutListener {
     this.isLoggedIn = value;
   }
 
-  @action setPartyRoleId(partyRoleId?: string) {
+  @action setPartyRoleId(partyRoleId?: number) {
     this.partyRoleId = partyRoleId;
   }
 

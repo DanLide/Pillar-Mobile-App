@@ -8,7 +8,7 @@ interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
   isLanguageSelected?: boolean;
-  partyRoleId?: string;
+  partyRoleId?: number;
   username?: string;
   companyNumber?: string;
   permissionSet1?: number;
