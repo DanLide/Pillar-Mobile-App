@@ -1,5 +1,10 @@
-import { tryFetch } from "../helpers/tryFetch";
-import { URLProvider } from "../helpers";
+import { tryFetch } from '../helpers/tryFetch';
+import { URLProvider } from '../helpers';
+import { AuthStore } from '../../stores/AuthStore';
+
+interface GetRoleManagerParams {
+  token: string;
+}
 
 interface GetRoleManagerAPIResponse {
   username: string;
@@ -8,13 +13,19 @@ interface GetRoleManagerAPIResponse {
   isLanguageSelected?: boolean;
 }
 
-export const getRoleManagerAPI = (token: string) => {
-  const url = new URLProvider().getRoleModelUrl();
+export const getRoleManagerAPI = (
+  { token }: GetRoleManagerParams,
+  authStore: AuthStore,
+) => {
+  const url = new URLProvider(authStore).getRoleModelUrl();
 
-  return tryFetch<GetRoleManagerAPIResponse>(url, {
-    method: "GET",
-    headers: {
-      authorization: `Bearer ${token}`,
+  return tryFetch<GetRoleManagerAPIResponse>({
+    url,
+    request: {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     },
   });
 };

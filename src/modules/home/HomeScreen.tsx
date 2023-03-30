@@ -1,13 +1,13 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { Button } from "../../components";
-import { onGetRoleManager } from "../../data/getRoleManager";
-import { authStore } from "../../stores";
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Button } from '../../components';
+import { onGetRoleManager } from '../../data/getRoleManager';
+import { authStore } from '../../stores';
 
 export const HomeScreen = () => {
   const onGetRoleManagerPress = async () => {
-    const error = await onGetRoleManager("token");
-    console.log(error, "error");
+    const error = await onGetRoleManager('token', authStore);
+    console.log(error, 'error');
   };
 
   const onLogout = () => {
@@ -30,7 +30,7 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   button: {
     margin: 16,

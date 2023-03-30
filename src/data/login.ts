@@ -1,8 +1,8 @@
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
-import { Task, TaskExecutor } from "./helpers";
-import { loginAPI, getRoleManagerAPI, LoginAPIParams } from "./api";
-import { AuthStore } from "../stores/AuthStore";
+import { Task, TaskExecutor } from './helpers';
+import { getRoleManagerAPI, loginAPI, LoginAPIParams } from './api';
+import { AuthStore } from '../stores/AuthStore';
 
 interface LoginFlowContext {
   token?: string;
@@ -16,35 +16,39 @@ interface LoginFlowContext {
   facilityID?: string;
 }
 
-export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
+export const onLogin = (params: LoginAPIParams, authStore: AuthStore) => {
   const loginContext: LoginFlowContext = {
     token: undefined,
     isTnC: undefined,
     isLanguage: undefined,
   };
 
-  const result = await new TaskExecutor([
-    new LoginTask(loginContext, params),
-    new GetRoleManagerTask(loginContext),
+  return new TaskExecutor([
+    new LoginTask(loginContext, params, authStore),
+    new GetRoleManagerTask(loginContext, authStore),
     new JWTParserTask(loginContext),
     new SaveAuthDataTask(loginContext, authStore),
   ]).execute();
-
-  return result;
 };
 
 export class LoginTask extends Task {
   loginFlowContext: LoginFlowContext;
   params: LoginAPIParams;
+  authStore: AuthStore;
 
-  constructor(loginFlowContext: LoginFlowContext, params: LoginAPIParams) {
+  constructor(
+    loginFlowContext: LoginFlowContext,
+    params: LoginAPIParams,
+    authStore: AuthStore,
+  ) {
     super();
     this.loginFlowContext = loginFlowContext;
     this.params = params;
+    this.authStore = authStore;
   }
 
   async run(): Promise<void> {
-    const response = await loginAPI(this.params);
+    const response = await loginAPI(this.params, this.authStore);
 
     this.loginFlowContext.token = response.access_token;
   }
@@ -52,17 +56,22 @@ export class LoginTask extends Task {
 
 export class GetRoleManagerTask extends Task {
   loginFlowContext: LoginFlowContext;
+  authStore: AuthStore;
 
-  constructor(loginFlowContext: LoginFlowContext) {
+  constructor(loginFlowContext: LoginFlowContext, authStore: AuthStore) {
     super();
     this.loginFlowContext = loginFlowContext;
+    this.authStore = authStore;
   }
 
   async run(): Promise<void> {
     if (!this.loginFlowContext.token) {
-      throw new Error("Login failed!");
+      throw new Error('Login failed!');
     }
-    const response = await getRoleManagerAPI(this.loginFlowContext.token);
+    const response = await getRoleManagerAPI(
+      { token: this.loginFlowContext.token },
+      this.authStore,
+    );
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
@@ -86,7 +95,7 @@ class JWTParserTask extends Task {
   }
 
   makeValidField<Type>(value: Type) {
-    if (value == "0") {
+    if (value == '0') {
       return undefined;
     }
 
@@ -97,26 +106,26 @@ class JWTParserTask extends Task {
     const decodedToken = jwt_decode(this.loginFlowContext.token);
 
     if (!this.isTokenValid(decodedToken)) {
-      throw Error("Token is not valid!");
+      throw Error('Token is not valid!');
     }
 
     this.loginFlowContext.username = this.makeValidField<string>(
-      decodedToken.name
+      decodedToken.name,
     );
     this.loginFlowContext.companyNumber = this.makeValidField<string>(
-      decodedToken.extension_companyNumber
+      decodedToken.extension_companyNumber,
     );
     this.loginFlowContext.permissionSet1 = this.makeValidField<number>(
-      +decodedToken.extension_permissionSet1
+      +decodedToken.extension_permissionSet1,
     );
     this.loginFlowContext.permissionSet2 = this.makeValidField<number>(
-      +decodedToken.extension_permissionSet2
+      +decodedToken.extension_permissionSet2,
     );
     this.loginFlowContext.msoID = this.makeValidField<number>(
-      +decodedToken.extension_msoPisaID
+      +decodedToken.extension_msoPisaID,
     );
     this.loginFlowContext.facilityID = this.makeValidField<string>(
-      decodedToken.extension_repairFacilityID
+      decodedToken.extension_repairFacilityID,
     );
   }
 }
@@ -155,7 +164,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setLoggedIn(true);
     } else {
       this.authStore.logOut();
-      throw Error("Login failed!");
+      throw Error('Login failed!');
     }
   }
 }
