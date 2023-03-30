@@ -497,7 +497,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-					.rugby/build,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -528,7 +527,6 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
-					.rugby/build,
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
