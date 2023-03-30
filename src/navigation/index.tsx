@@ -44,7 +44,7 @@ const HomeStack = () => {
     : AppNavigator.HomeScreen;
 
   return (
-    <Stack.Navigator initialRouteName={AppNavigator.TermsScreen}>
+    <Stack.Navigator initialRouteName={initialRoute}>
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
