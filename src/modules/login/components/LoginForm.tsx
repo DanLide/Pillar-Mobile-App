@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
-import { observer } from 'mobx-react';
+import React, { useRef } from "react";
+import { StyleSheet, View, ActivityIndicator } from "react-native";
+import { observer } from "mobx-react";
 
-import { Input, Button } from '../../../components';
-import { LoginFormStore } from '../stores/LoginFormStore';
+import { Input, Button } from "../../../components";
+import { LoginFormStore } from "../stores/LoginFormStore";
 
 interface Props {
   isLoading: boolean;
@@ -32,17 +32,15 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
     <View style={styles.container}>
       <Input
         style={styles.input}
-        placeholder={'username'}
+        placeholder={"username"}
         value={store.username}
         editable={!isLoading}
         selectTextOnFocus={!isLoading}
         onChangeText={onChangeUsername}
-        autoCapitalize="none"
-        autoCorrect={false}
       />
       <Input
         style={styles.input}
-        placeholder={'password'}
+        placeholder={"password"}
         value={store.password}
         editable={!isLoading}
         selectTextOnFocus={!isLoading}
@@ -70,7 +68,7 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   buttonStyle: {
     marginTop: 20,
