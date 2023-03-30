@@ -2,9 +2,9 @@ import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
 export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
+  @observable isTnC?: boolean;
+  @observable isLanguageSelected?: boolean;
   private token?: string;
-  private isTnC?: boolean;
-  private isLanguageSelected?: boolean;
   private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
@@ -26,12 +26,8 @@ export class AuthStore implements LogoutListener {
     return this.token;
   }
 
-  @computed public get getIsTnC() {
-    return this.isTnC;
-  }
-
-  @computed public get getIsLanguageSelected() {
-    return this.isLanguageSelected;
+  @computed public get getPartyRoleId() {
+    return this.partyRoleId;
   }
 
   onServerLogout() {

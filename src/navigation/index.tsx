@@ -29,42 +29,34 @@ export const AppStack = observer(() => {
   const store = useRef(authStore).current;
 
   const currentScreen = useMemo(() => {
+    if (!store.isLoggedIn) {
+      return (
+        <Stack.Screen
+          name={AppNavigator.LoginScreen}
+          component={LoginScreen}
+          options={defaultOptions}
+        />
+      );
+    }
+
+    if (!store.isTnC) {
+      return (
+        <Stack.Screen
+          name={AppNavigator.TermsScreen}
+          component={TermsScreen}
+          options={termsScreenOptions}
+        />
+      );
+    }
+
     return (
       <Stack.Screen
-        name={AppNavigator.TermsScreen}
-        component={TermsScreen}
-        options={termsScreenOptions}
+        name={AppNavigator.HomeScreen}
+        component={HomeScreen}
+        options={defaultOptions}
       />
     );
-
-    // if (!store.isLoggedIn) {
-    //   return (
-    //     <Stack.Screen
-    //       name={AppNavigator.LoginScreen}
-    //       component={LoginScreen}
-    //       options={defaultOptions}
-    //     />
-    //   );
-    // }
-    //
-    // if (!store.getIsTnC) {
-    //   return (
-    //     <Stack.Screen
-    //       name={AppNavigator.TermsScreen}
-    //       component={TermsScreen}
-    //       options={termsScreenOptions}
-    //     />
-    //   );
-    // }
-    //
-    // return (
-    //   <Stack.Screen
-    //     name={AppNavigator.HomeScreen}
-    //     component={HomeScreen}
-    //     options={defaultOptions}
-    //   />
-    // );
-  }, [store.getIsTnC, store.isLoggedIn]);
+  }, [store.isLoggedIn, store.isTnC]);
 
   return <Stack.Navigator>{currentScreen}</Stack.Navigator>;
 });
