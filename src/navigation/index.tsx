@@ -1,10 +1,12 @@
 import React, { useMemo, useRef } from 'react';
+import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import { defaultOptions } from './helpers';
+import { defaultOptions, logout } from './helpers';
 import { authStore } from '../stores';
 
+import { IconButton } from '../components';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
@@ -23,6 +25,14 @@ type ScreenOptions = React.ComponentProps<
 
 const termsScreenOptions: ScreenOptions = {
   title: 'Terms & Conditions',
+  headerRight: () => (
+    <IconButton
+      name="logout"
+      size={20}
+      style={styles.logoutButton}
+      onPress={logout}
+    />
+  ),
 };
 
 export const AppStack = observer(() => {
@@ -39,7 +49,7 @@ export const AppStack = observer(() => {
       );
     }
 
-    if (!store.isTnC) {
+    if (store.isTnC) {
       return (
         <Stack.Screen
           name={AppNavigator.TermsScreen}
@@ -59,4 +69,8 @@ export const AppStack = observer(() => {
   }, [store.isLoggedIn, store.isTnC]);
 
   return <Stack.Navigator>{currentScreen}</Stack.Navigator>;
+});
+
+const styles = StyleSheet.create({
+  logoutButton: { marginRight: 16 },
 });
