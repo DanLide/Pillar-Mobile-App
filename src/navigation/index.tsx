@@ -1,42 +1,38 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { observer } from 'mobx-react';
+import React from "react";
+import { Button, StyleSheet, View } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { observer } from "mobx-react";
 
-import { defaultOptions, logout } from './helpers';
-import { authStore } from '../stores';
+import { defaultOptions, logout } from "./helpers";
+import { authStore } from "../stores";
 
-import { IconButton } from '../components';
-import { LoginScreen } from '../modules/login/components/LoginScreen';
-import { HomeScreen } from '../modules/home/HomeScreen';
-import TermsScreen from '../modules/terms/TermsScreen';
-import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
+import { LoginScreen } from "../modules/login/components/LoginScreen";
+import { HomeScreen } from "../modules/home/HomeScreen";
+import TermsScreen from "../modules/terms/TermsScreen";
+import { LanguageSelectScreen } from "../modules/languageSelect/LanguageSelectScreen";
 
 export enum AppNavigator {
-  LoginScreen = 'LoginScreen',
+  LoginScreen = "LoginScreen",
 
   // HomeStack
-  HomeStack = 'HomeStack',
-  HomeScreen = 'HomeScreen',
-  TermsScreen = 'TermsScreen',
-  LanguageSelectScreen = 'LanguageSelectScreen',
+  HomeStack = "HomeStack",
+  HomeScreen = "HomeScreen",
+  TermsScreen = "TermsScreen",
+  LanguageSelectScreen = "LanguageSelectScreen",
 }
 
 const Stack = createStackNavigator();
 
 type ScreenOptions = React.ComponentProps<
   typeof Stack.Navigator
->['screenOptions'];
+>["screenOptions"];
 
 const termsScreenOptions: ScreenOptions = {
-  title: 'Terms & Conditions',
+  title: "Terms & Conditions",
   headerRight: () => (
-    <IconButton
-      name="logout"
-      size={20}
-      style={styles.logoutButton}
-      onPress={logout}
-    />
+    <View style={styles.logoutButton}>
+      <Button title="Logout" onPress={logout} />
+    </View>
   ),
 };
 
@@ -48,7 +44,7 @@ const HomeStack = () => {
     : AppNavigator.HomeScreen;
 
   return (
-    <Stack.Navigator initialRouteName={initialRoute}>
+    <Stack.Navigator initialRouteName={AppNavigator.TermsScreen}>
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
@@ -89,5 +85,5 @@ export const AppStack = observer(() => {
 });
 
 const styles = StyleSheet.create({
-  logoutButton: { marginRight: 16 },
+  logoutButton: { marginRight: 8 },
 });
