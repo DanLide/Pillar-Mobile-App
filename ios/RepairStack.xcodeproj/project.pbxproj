@@ -501,6 +501,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					.rugby/build,
 				);
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
@@ -538,6 +539,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+					.rugby/build,
 				);
 				MARKETING_VERSION = 0.0.1;
 				OTHER_LDFLAGS = (
