@@ -67,6 +67,7 @@ export class GetRoleManagerTask extends Task {
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguageSelected = !!response.isLanguageSelected;
+    this.loginFlowContext.partyRoleId = response.partyRoleId;
   }
 }
 

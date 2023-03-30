@@ -1,10 +1,9 @@
-import { tryFetch } from '../helpers/tryFetch';
-import { URLProvider } from '../helpers';
+import { tryFetch, URLProvider } from '../helpers';
 
 interface GetRoleManagerAPIResponse {
   username: string;
   roleTypeId: number;
-  partyRoleId: string;
+  partyRoleId: number;
   isTermsAccepted?: boolean;
   isLanguageSelected?: boolean;
 }
