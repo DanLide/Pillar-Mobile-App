@@ -8,5 +8,11 @@ export const environment = {
     pisaUser: {
       apiUri: "https://api.repairstack-qa.3m.com/pisauser",
     },
+    companies: {
+      apiUri: "https://api.repairstack-qa.3m.com/repairfacility"
+    },
+    pisaCompanyLocation: {
+      apiUri: "https://api.repairstack-qa.3m.com/companylocation"
+    },
   },
 };
