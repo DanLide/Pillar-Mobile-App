@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
@@ -10,20 +10,16 @@ import { IconButton } from '../components';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
-import { authStore } from "../stores";
-
-import { LoginScreen } from "../modules/login/components/LoginScreen";
-import { HomeScreen } from "../modules/home/HomeScreen";
-import { LanguageSelectScreen } from "../modules/languageSelect/LanguageSelectScreen";
+import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
 
   // HomeStack
-  HomeStack = "HomeStack",
+  HomeStack = 'HomeStack',
   HomeScreen = 'HomeScreen',
   TermsScreen = 'TermsScreen',
-  LanguageSelectScreen = "LanguageSelectScreen",
+  LanguageSelectScreen = 'LanguageSelectScreen',
 }
 
 const Stack = createStackNavigator();
@@ -45,8 +41,10 @@ const termsScreenOptions: ScreenOptions = {
 };
 
 const HomeStack = () => {
-  const initialRoute = !authStore.isLanguageSelected ? AppNavigator.LanguageSelectScreen
-    : !authStore.isTnCSelected ? AppNavigator.TermsAndConditionsScreen
+  const initialRoute = !authStore.isLanguageSelected
+    ? AppNavigator.LanguageSelectScreen
+    : !authStore.isTnCSelected
+    ? AppNavigator.TermsScreen
     : AppNavigator.HomeScreen;
 
   return (
@@ -57,9 +55,9 @@ const HomeStack = () => {
         options={defaultOptions}
       />
       <Stack.Screen
-        name={AppNavigator.TermsAndConditionsScreen}
-        component={TermsAndConditionsScreen}
-        options={defaultOptions}
+        name={AppNavigator.TermsScreen}
+        component={TermsScreen}
+        options={termsScreenOptions}
       />
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}

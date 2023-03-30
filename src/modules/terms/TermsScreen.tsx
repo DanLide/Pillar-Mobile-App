@@ -8,8 +8,14 @@ import { Switch, Button } from '../../components';
 import { authStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useLazyRequest, useSwitchState } from '../../hooks';
+import { AppNavigator } from '../../navigation';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-const TermsScreen: React.FC = () => {
+interface Props {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+const TermsScreen: React.FC<Props> = ({ navigation }) => {
   const store = useRef(authStore).current;
 
   const [isTermsAccepted, toggleTermsAccepted] = useSwitchState();
@@ -20,10 +26,14 @@ const TermsScreen: React.FC = () => {
   const onSubmitTerms = useCallback(async () => {
     const error = await acceptTerms(store);
 
-    if (!error) return;
+    if (error)
+      return Alert.alert('Error', error.message || 'Accept Terms failed!');
 
-    Alert.alert('Error', error.message || 'Accept Terms failed!');
-  }, [acceptTerms, store]);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: AppNavigator.HomeScreen }],
+    });
+  }, [acceptTerms, navigation, store]);
 
   return (
     <SafeAreaView style={styles.container}>
