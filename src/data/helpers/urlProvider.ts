@@ -3,7 +3,7 @@ import { environment } from './environment';
 export class URLProvider {
   currentEnv: {
     b2c: { clientId: string; authority: string };
-    modules: { pisaUser: { apiUri: string } };
+    modules: { pisaUser: { apiUri: string }; common: { apiUri: string } };
   };
 
   constructor() {
@@ -31,7 +31,7 @@ export class URLProvider {
 
   getAcceptTermsUrl(partyRoleId: number) {
     return new URL(
-      `${this.currentEnv.modules.pisaUser.apiUri}/api/Common/partySetting/${partyRoleId}`,
+      `${this.currentEnv.modules.common.apiUri}/api/Common/partySetting/${partyRoleId}`,
     );
   }
 }
