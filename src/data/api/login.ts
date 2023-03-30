@@ -1,5 +1,5 @@
-import { AuthStore } from '../../stores/AuthStore';
-import { URLProvider, tryFetch } from '../helpers';
+import { URLProvider } from "../helpers";
+import { tryFetch } from "../helpers/tryFetch";
 
 export interface LoginAPIParams {
   username: string;
@@ -13,15 +13,14 @@ interface LoginAPIResponse {
   token_type: string;
 }
 
-export const loginAPI = (
-  { password, username }: LoginAPIParams,
-  authStore: AuthStore,
-) => {
-  const url = new URLProvider(authStore).getLoginUrl();
+export const loginAPI = (params: LoginAPIParams) => {
+  const url = new URLProvider().getLoginUrl();
 
-  url.searchParams.set('password', password);
-  url.searchParams.set('username', username);
+  url.searchParams.set("password", params.password);
+  url.searchParams.set("username", params.username);
   url.search = decodeURIComponent(url.search);
 
-  return tryFetch<LoginAPIResponse>({ url, request: { method: 'POST' } });
+  return tryFetch<LoginAPIResponse>(url, {
+    method: "POST",
+  });
 };

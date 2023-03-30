@@ -1,44 +1,31 @@
-import { Task, TaskExecutor } from './helpers';
-import { getRoleManagerAPI } from './api';
-import { AuthStore } from '../stores/AuthStore';
+import { Task, TaskExecutor } from "./helpers";
+import { getRoleManagerAPI } from "./api";
 
 interface GetRoleManagerContext {
   token?: string;
 }
 
-export const onGetRoleManager = (token: string, authStore: AuthStore) => {
+export const onGetRoleManager = async (token: string) => {
   const getRoleManagerContext = {
     token: undefined,
   };
-
-  return new TaskExecutor([
-    new GetRoleManagerTask(getRoleManagerContext, token, authStore),
+  const result = await new TaskExecutor([
+    new GetRoleManagerTask(getRoleManagerContext, token),
   ]).execute();
+
+  return result;
 };
 
 export class GetRoleManagerTask extends Task {
   loginFlowContext: GetRoleManagerContext;
-  authStore: AuthStore;
 
-  constructor(
-    loginFlowContext: GetRoleManagerContext,
-    token: string,
-    authStore: AuthStore,
-  ) {
+  constructor(loginFlowContext: GetRoleManagerContext, token: string) {
     super();
     this.loginFlowContext = loginFlowContext;
     this.loginFlowContext.token = token;
-    this.authStore = authStore;
   }
 
   async run(): Promise<void> {
-    if (!this.loginFlowContext.token) {
-      throw new Error('Login failed!');
-    }
-
-    await getRoleManagerAPI(
-      { token: this.loginFlowContext.token },
-      this.authStore,
-    );
+    await getRoleManagerAPI(this.loginFlowContext.token);
   }
 }
