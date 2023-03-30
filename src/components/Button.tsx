@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   StyleProp,
 } from 'react-native';
+
 import Text from './Text';
 
 type ButtonProps = TouchableOpacityProps & TextProps;

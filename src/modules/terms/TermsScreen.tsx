@@ -1,13 +1,13 @@
 import React, { useCallback, useRef } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { handleExternalLinkInBrowser, SOURCE_DEFAULT } from './helpers/webview';
-import useSwitchState from '../../hooks/useSwitchState';
-import { Switch, Button } from '../../components';
 import { observer } from 'mobx-react';
+
+import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
+import { Switch, Button } from '../../components';
 import { authStore } from '../../stores';
-import useLazyRequest from '../../hooks/useLazyRequest';
 import { onAcceptTerms } from '../../data/acceptTerms';
+import { useLazyRequest, useSwitchState } from '../../hooks';
 
 const TermsScreen: React.FC = () => {
   const store = useRef(authStore).current;
@@ -28,7 +28,7 @@ const TermsScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <WebView
-        source={SOURCE_DEFAULT}
+        source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
       />
       <View style={styles.controlsContainer}>
