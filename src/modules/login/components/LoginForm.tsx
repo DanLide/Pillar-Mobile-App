@@ -49,18 +49,13 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
         secureTextEntry={true}
         onChangeText={onChangePassword}
       />
-      {isLoading ? (
-        <View style={styles.buttonStyle}>
-          <ActivityIndicator size="large" color="blue" />
-        </View>
-      ) : (
-        <Button
-          title="Submit"
-          disabled={isDisabled}
-          buttonStyle={styles.buttonStyle}
-          onPress={onSubmit}
-        />
-      )}
+      <Button
+        title="Submit"
+        disabled={isDisabled}
+        buttonStyle={styles.buttonStyle}
+        onPress={onSubmit}
+        isLoading={isLoading}
+      />
     </View>
   );
 });
