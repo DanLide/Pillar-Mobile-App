@@ -2,9 +2,9 @@ import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
 export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
-  @observable isTnC?: boolean;
-  @observable isLanguageSelected?: boolean;
   private token?: string;
+  private isTnC?: boolean;
+  private isLanguage?: boolean;
   private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
@@ -16,7 +16,7 @@ export class AuthStore implements LogoutListener {
   constructor() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguageSelected = undefined;
+    this.isLanguage = undefined;
 
     this.isLoggedIn = false;
     makeObservable(this);
@@ -24,6 +24,14 @@ export class AuthStore implements LogoutListener {
 
   @computed public get getToken() {
     return this.token;
+  }
+
+  @computed public get isTnCSelected() {
+    return this.isTnC;
+  }
+
+  @computed public get isLanguageSelected() {
+    return this.isLanguage;
   }
 
   @computed public get getPartyRoleId() {
@@ -42,8 +50,8 @@ export class AuthStore implements LogoutListener {
     this.isTnC = isTnC;
   }
 
-  @action setIsLanguageSelected(isLanguageSelected: boolean) {
-    this.isLanguageSelected = isLanguageSelected;
+  @action setIsLanguage(isLanguage: boolean) {
+    this.isLanguage = isLanguage;
   }
 
   @action setLoggedIn(value: boolean) {
@@ -81,7 +89,7 @@ export class AuthStore implements LogoutListener {
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguageSelected = undefined;
+    this.isLanguage = undefined;
     this.isLoggedIn = false;
   }
 }

@@ -7,7 +7,7 @@ import { AuthStore } from '../stores/AuthStore';
 interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
-  isLanguageSelected?: boolean;
+  isLanguage?: boolean;
   partyRoleId?: number;
   username?: string;
   companyNumber?: string;
@@ -21,7 +21,7 @@ export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
   const loginContext: LoginFlowContext = {
     token: undefined,
     isTnC: undefined,
-    isLanguageSelected: undefined,
+    isLanguage: undefined,
   };
 
   const result = await new TaskExecutor([
@@ -66,7 +66,7 @@ export class GetRoleManagerTask extends Task {
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
-    this.loginFlowContext.isLanguageSelected = !!response.isLanguageSelected;
+    this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
     this.loginFlowContext.partyRoleId = response.partyRoleId;
   }
 }
@@ -134,21 +134,18 @@ class SaveAuthDataTask extends Task {
   }
 
   isLoginContextValid() {
-    const { token, isTnC, isLanguageSelected } = this.loginFlowContext;
+    const { token, isTnC, isLanguage } = this.loginFlowContext;
     return (
-      isLanguageSelected !== undefined &&
-      token !== undefined &&
-      isTnC !== undefined
+      isLanguage !== undefined && token !== undefined && isTnC !== undefined
     );
   }
 
   async run() {
-    const { token, isTnC, isLanguageSelected, partyRoleId } =
-      this.loginFlowContext;
+    const { token, isTnC, isLanguage, partyRoleId } = this.loginFlowContext;
     if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
-      this.authStore.setIsLanguageSelected(isLanguageSelected);
+      this.authStore.setIsLanguage(isLanguage);
 
       this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);

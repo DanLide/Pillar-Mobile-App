@@ -10,11 +10,20 @@ import { IconButton } from '../components';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
+import { authStore } from "../stores";
 
-enum AppNavigator {
-  HomeScreen = 'HomeScreen',
+import { LoginScreen } from "../modules/login/components/LoginScreen";
+import { HomeScreen } from "../modules/home/HomeScreen";
+import { LanguageSelectScreen } from "../modules/languageSelect/LanguageSelectScreen";
+
+export enum AppNavigator {
   LoginScreen = 'LoginScreen',
+
+  // HomeStack
+  HomeStack = "HomeStack",
+  HomeScreen = 'HomeScreen',
   TermsScreen = 'TermsScreen',
+  LanguageSelectScreen = "LanguageSelectScreen",
 }
 
 const Stack = createStackNavigator();
@@ -35,40 +44,50 @@ const termsScreenOptions: ScreenOptions = {
   ),
 };
 
-export const AppStack = observer(() => {
-  const store = useRef(authStore).current;
+const HomeStack = () => {
+  const initialRoute = !authStore.isLanguageSelected ? AppNavigator.LanguageSelectScreen
+    : !authStore.isTnCSelected ? AppNavigator.TermsAndConditionsScreen
+    : AppNavigator.HomeScreen;
 
-  const currentScreen = useMemo(() => {
-    if (!store.isLoggedIn) {
-      return (
-        <Stack.Screen
-          name={AppNavigator.LoginScreen}
-          component={LoginScreen}
-          options={defaultOptions}
-        />
-      );
-    }
-
-    if (store.isTnC) {
-      return (
-        <Stack.Screen
-          name={AppNavigator.TermsScreen}
-          component={TermsScreen}
-          options={termsScreenOptions}
-        />
-      );
-    }
-
-    return (
+  return (
+    <Stack.Navigator initialRouteName={initialRoute}>
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
         options={defaultOptions}
       />
-    );
-  }, [store.isLoggedIn, store.isTnC]);
+      <Stack.Screen
+        name={AppNavigator.TermsAndConditionsScreen}
+        component={TermsAndConditionsScreen}
+        options={defaultOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.LanguageSelectScreen}
+        component={LanguageSelectScreen}
+        options={defaultOptions}
+      />
+    </Stack.Navigator>
+  );
+};
 
-  return <Stack.Navigator>{currentScreen}</Stack.Navigator>;
+export const AppStack = observer(() => {
+  return (
+    <Stack.Navigator>
+      {authStore.isLoggedIn ? (
+        <Stack.Screen
+          name={AppNavigator.HomeStack}
+          component={HomeStack}
+          options={defaultOptions}
+        />
+      ) : (
+        <Stack.Screen
+          name={AppNavigator.LoginScreen}
+          component={LoginScreen}
+          options={defaultOptions}
+        />
+      )}
+    </Stack.Navigator>
+  );
 });
 
 const styles = StyleSheet.create({

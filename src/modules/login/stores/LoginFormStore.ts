@@ -10,8 +10,8 @@ export class LoginFormStore implements LoginForm {
   @observable password: string;
 
   constructor() {
-    this.username = "";
-    this.password = "";
+    this.username = "testusermobile";
+    this.password = "Password123!";
 
     makeObservable(this);
   }
