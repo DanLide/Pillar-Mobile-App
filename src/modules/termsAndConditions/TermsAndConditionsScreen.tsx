@@ -12,7 +12,7 @@ interface Props {
 
 export const TermsAndConditionsScreen: React.FC<Props> = ({ navigation }) => {
   const onAccept = () => {
-    // TODO accept request
+    // TODO: make API call and handle errors
     navigation.reset({
       index: 0,
       routes: [{ name: AppNavigator.HomeScreen }],

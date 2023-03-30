@@ -23,11 +23,9 @@ export enum AppNavigator {
 
 const Stack = createStackNavigator();
 
-const Home = () => {
-  const initialRoute = !authStore.isLanguageSelected
-    ? AppNavigator.LanguageSelectScreen
-    : !authStore.isTnCSelected
-    ? AppNavigator.TermsAndConditionsScreen
+const HomeStack = () => {
+  const initialRoute = !authStore.isLanguageSelected ? AppNavigator.LanguageSelectScreen
+    : !authStore.isTnCSelected ? AppNavigator.TermsAndConditionsScreen
     : AppNavigator.HomeScreen;
 
   return (
@@ -57,7 +55,7 @@ export const AppStack = observer(() => {
       {authStore.isLoggedIn ? (
         <Stack.Screen
           name={AppNavigator.HomeStack}
-          component={Home}
+          component={HomeStack}
           options={defaultOptions}
         />
       ) : (

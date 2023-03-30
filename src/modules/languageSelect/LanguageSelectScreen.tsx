@@ -14,6 +14,7 @@ interface Props {
 
 export const LanguageSelectScreen: React.FC<Props> = ({ navigation }) => {
   const onSelectLanguage = () => {
+    // TODO: make API call and handle errors
     !authStore.isTnCSelected
       ? navigation.navigate(AppNavigator.TermsAndConditionsScreen)
       : navigation.reset({
