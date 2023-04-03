@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';
@@ -7,7 +7,7 @@ import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
 import { Switch, Button } from '../../components';
 import { authStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
-import { useLazyRequest, useSwitchState } from '../../hooks';
+import { useSwitchState } from '../../hooks';
 import { AppNavigator } from '../../navigation';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -18,13 +18,13 @@ interface Props {
 const TermsScreen: React.FC<Props> = ({ navigation }) => {
   const store = useRef(authStore).current;
 
+  const [isLoading, setIsLoading] = useState(false);
   const [isTermsAccepted, toggleTermsAccepted] = useSwitchState();
-  const isSubmitDisabled = !isTermsAccepted;
-
-  const [acceptTerms, { isLoading }] = useLazyRequest(onAcceptTerms);
 
   const onSubmitTerms = useCallback(async () => {
-    const error = await acceptTerms(store);
+    setIsLoading(true);
+    const error = await onAcceptTerms(store);
+    setIsLoading(false);
 
     if (error)
       return Alert.alert('Error', error.message || 'Accept Terms failed!');
@@ -33,7 +33,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
       index: 0,
       routes: [{ name: AppNavigator.HomeScreen }],
     });
-  }, [acceptTerms, navigation, store]);
+  }, [navigation, store]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,7 +49,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
         />
         <Button
           title="Submit"
-          disabled={isSubmitDisabled}
+          disabled={!isTermsAccepted}
           buttonStyle={styles.submitButton}
           onPress={onSubmitTerms}
           isLoading={isLoading}
