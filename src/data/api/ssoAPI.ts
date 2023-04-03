@@ -1,4 +1,4 @@
-import { URLProvider, tryAuthFetch } from '../helpers';
+import { URLProvider, tryFetch } from "../helpers";
 
 export interface SingleSSOAPIResponse {
   id: string;
@@ -26,34 +26,43 @@ interface MultiSSOAPIObj {
   distributorName?: string;
 }
 
-export const singleSSOAPI = (facilityID: string) => {
+export const singleSSOAPI = (token: string, facilityID: string) => {
   const url = new URLProvider().getSingleSSOUrl(facilityID);
 
   url.search = decodeURIComponent(url.search);
-  return tryAuthFetch<SingleSSOAPIResponse>({
-    url,
-    request: { method: 'GET' },
+  return tryFetch<SingleSSOAPIResponse>(url, {
+    method: "GET",
+    // TODO remove this
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 };
 
-export const multiSSOAPI = (msoID: string) => {
+export const multiSSOAPI = (token: string, msoID: string) => {
   const url = new URLProvider().getMultiSSOUrl(msoID);
 
   url.search = decodeURIComponent(url.search);
 
-  return tryAuthFetch<MultiSSOAPIResponse>({
-    url,
-    request: { method: 'GET' },
+  return tryFetch<MultiSSOAPIResponse>(url, {
+    method: "GET",
+    // TODO remove this
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 };
 
-export const adminSSOAPI = () => {
+export const adminSSOAPI = (token: string) => {
   const url = new URLProvider().getAllSSOUrl();
 
   url.search = decodeURIComponent(url.search);
 
-  return tryAuthFetch<MultiSSOAPIResponse>({
-    url,
-    request: { method: 'GET' },
+  return tryFetch<MultiSSOAPIResponse>(url, {
+    method: "GET",
+    // TODO remove this
+    headers: {
+      authorization: `Bearer ${token}`,
+    },
   });
 };
