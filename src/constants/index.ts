@@ -1,3 +1,3 @@
-import { PartySettingsType } from './enums';
+import { PartySettingsType } from './common.enum';
 
 export { PartySettingsType };
