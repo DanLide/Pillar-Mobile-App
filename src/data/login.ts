@@ -74,8 +74,7 @@ export class GetRoleManagerTask extends Task {
     if (!this.loginFlowContext.token) {
       throw new Error('Login failed!');
     }
-    const response = await getRoleManagerAPI();
-
+    const response = await getRoleManagerAPI(this.loginFlowContext.token);
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
     this.loginFlowContext.partyRoleId = response.partyRoleId;
