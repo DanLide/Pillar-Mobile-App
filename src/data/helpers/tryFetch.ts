@@ -14,11 +14,17 @@ export interface LogoutListener {
 
 export type RequestError = BadRequestError | AuthError | Error;
 
-export const tryFetch = async <ResponseType>(
-  url: string | URL,
-  request: RequestInit,
+export interface TryFetchParams {
+  url: string | URL;
+  request: RequestInit;
+  logoutListener?: LogoutListener;
+}
+
+export const tryFetch = async <ResponseType>({
+  url,
+  request,
   logoutListener = getLogoutListener(),
-) => {
+}: TryFetchParams) => {
   try {
     const response = await fetch(url, request);
 

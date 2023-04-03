@@ -1,5 +1,4 @@
-import { URLProvider } from "../helpers";
-import { tryFetch } from "../helpers/tryFetch";
+import { URLProvider, tryFetch } from '../helpers';
 
 export interface LoginAPIParams {
   username: string;
@@ -16,11 +15,9 @@ interface LoginAPIResponse {
 export const loginAPI = (params: LoginAPIParams) => {
   const url = new URLProvider().getLoginUrl();
 
-  url.searchParams.set("password", params.password);
-  url.searchParams.set("username", params.username);
+  url.searchParams.set('password', params.password);
+  url.searchParams.set('username', params.username);
   url.search = decodeURIComponent(url.search);
 
-  return tryFetch<LoginAPIResponse>(url, {
-    method: "POST",
-  });
+  return tryFetch<LoginAPIResponse>({ url, request: { method: 'POST' } });
 };
