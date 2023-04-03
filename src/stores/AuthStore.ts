@@ -1,5 +1,7 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
+import { numbersToBigInts } from '../data/helpers';
+
 export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
   private token?: string;
@@ -22,20 +24,29 @@ export class AuthStore implements LogoutListener {
     makeObservable(this);
   }
 
-  @computed public get getToken() {
+  @computed
+  public get getToken() {
     return this.token;
   }
 
-  @computed public get isTnCSelected() {
+  @computed
+  public get isTnCSelected() {
     return this.isTnC;
   }
 
-  @computed public get isLanguageSelected() {
+  @computed
+  public get isLanguageSelected() {
     return this.isLanguage;
   }
 
-  @computed public get getPartyRoleId() {
+  @computed
+  public get getPartyRoleId() {
     return this.partyRoleId;
+  }
+
+  @computed
+  public get permissionSets() {
+    return numbersToBigInts([this.permissionSet1, this.permissionSet2]);
   }
 
   onServerLogout() {
