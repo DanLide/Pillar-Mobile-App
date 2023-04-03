@@ -6,7 +6,12 @@ export class URLProvider {
   authStore: AuthStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
-    modules: { pisaUser: { apiUri: string }, companies: { apiUri: string }, pisaCompanyLocation: { apiUri: string }, };
+    modules: {
+      pisaUser: { apiUri: string };
+      common: { apiUri: string };
+      companies: { apiUri: string };
+      pisaCompanyLocation: { apiUri: string };
+    };
   };
 
   constructor(auth_store = authStore) {
@@ -33,24 +38,31 @@ export class URLProvider {
     );
   }
 
+  getAcceptTermsUrl() {
+    const partyRoleId = this.authStore.getPartyRoleId;
+
+    return new URL(
+      `${this.currentEnv.modules.common.apiUri}/api/Common/partySetting/${partyRoleId}`,
+    );
+  }
+
   getSingleSSOUrl(facilityID: string) {
     return new URL(
-      `${this.currentEnv.modules.companies.apiUri}/api/repairFacility/${facilityID}`
+      `${this.currentEnv.modules.companies.apiUri}/api/repairFacility/${facilityID}`,
     );
   }
 
   getMultiSSOUrl(msoID: string) {
     // TODO replace 19 with PartyRelationshipType.MsoToRepairFacility or PartyRelationshipType.DistributorToRepairFacility or PartyRelationshipType.BranchToRepairFacility
     return new URL(
-      `${this.currentEnv.modules.pisaCompanyLocation.apiUri}/api/RepairFacility/${msoID}/19`
+      `${this.currentEnv.modules.pisaCompanyLocation.apiUri}/api/RepairFacility/${msoID}/19`,
     );
   }
 
   getAllSSOUrl() {
     // TODO replace with constants repairFacilities + '/' + repairFacilityPrimaryContact + '/' + orgPartyRoleId
     return new URL(
-      `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetAllOrganizations/3/26/1`
+      `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetAllOrganizations/3/26/1`,
     );
   }
-
 }

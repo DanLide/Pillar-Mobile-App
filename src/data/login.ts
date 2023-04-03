@@ -1,17 +1,18 @@
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
 import { Task, TaskExecutor } from "./helpers";
 import { loginAPI, getRoleManagerAPI, LoginAPIParams } from "./api";
 import { Utils } from "./helpers/utils";
 import { AuthStore } from "../stores/AuthStore";
 import { SSOModel } from "../stores/SSOStore";
-import { authStore, ssoStore } from "../stores";
+import { ssoStore } from "../stores";
 import { singleSSOAPI, multiSSOAPI, adminSSOAPI, SingleSSOAPIResponse, MultiSSOAPIResponse } from "./api/ssoAPI";
 
 interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
   isLanguage?: boolean;
+  partyRoleId?: number;
   username?: string;
   companyNumber?: string;
   permissionSet1?: number;
@@ -65,12 +66,13 @@ export class GetRoleManagerTask extends Task {
 
   async run(): Promise<void> {
     if (!this.loginFlowContext.token) {
-      throw new Error("Login failed!");
+      throw new Error('Login failed!');
     }
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
+    this.loginFlowContext.partyRoleId = response.partyRoleId;
   }
 }
 
@@ -94,7 +96,7 @@ class JWTParserTask extends Task {
     const decodedToken = jwt_decode(this.loginFlowContext.token);
 
     if (!this.isTokenValid(decodedToken)) {
-      throw Error("Token is not valid!");
+      throw Error('Token is not valid!');
     }
 
     this.loginFlowContext.username = Utils.zeroToUndefined<string>(
@@ -238,12 +240,13 @@ class SaveAuthDataTask extends Task {
   }
 
   async run() {
-    const { token, isTnC, isLanguage } = this.loginFlowContext;
+    const { token, isTnC, isLanguage, partyRoleId } = this.loginFlowContext;
     if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguage(isLanguage);
 
+      this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);
       this.authStore.setCompanyNumber(this.loginFlowContext.companyNumber);
       this.authStore.setPermissionSet1(this.loginFlowContext.permissionSet1);
@@ -254,7 +257,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setLoggedIn(true);
     } else {
       this.authStore.logOut();
-      throw Error("Login failed!");
+      throw Error('Login failed!');
     }
   }
 }

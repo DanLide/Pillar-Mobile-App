@@ -1,10 +1,11 @@
-import { action, makeObservable, observable, computed } from "mobx";
-import { LogoutListener } from "../data/helpers/tryFetch";
+import { action, makeObservable, observable, computed } from 'mobx';
+import { LogoutListener } from '../data/helpers/tryFetch';
 export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
   private token?: string;
   private isTnC?: boolean;
   private isLanguage?: boolean;
+  private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
   private permissionSet1?: number;
@@ -33,6 +34,10 @@ export class AuthStore implements LogoutListener {
     return this.isLanguage;
   }
 
+  @computed public get getPartyRoleId() {
+    return this.partyRoleId;
+  }
+
   onServerLogout() {
     this.logOut();
   }
@@ -51,6 +56,10 @@ export class AuthStore implements LogoutListener {
 
   @action setLoggedIn(value: boolean) {
     this.isLoggedIn = value;
+  }
+
+  @action setPartyRoleId(partyRoleId?: number) {
+    this.partyRoleId = partyRoleId;
   }
 
   @action setUsername(value?: string) {
