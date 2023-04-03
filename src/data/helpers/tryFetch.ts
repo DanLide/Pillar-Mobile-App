@@ -1,4 +1,4 @@
-import { getLogoutListener } from "./getLogoutListener";
+import { getLogoutListener } from './getLogoutListener';
 
 export interface BadRequestError {
   error?: string;
@@ -14,21 +14,32 @@ export interface LogoutListener {
 
 export type RequestError = BadRequestError | AuthError | Error;
 
-export const tryFetch = async <ResponseType>(
-  url: string | URL,
-  request: RequestInit,
-  logoutListener = getLogoutListener()
-) => {
+export interface TryFetchParams {
+  url: string | URL;
+  request: RequestInit;
+  logoutListener?: LogoutListener;
+}
+
+export const tryFetch = async <ResponseType>({
+  url,
+  request,
+  logoutListener = getLogoutListener(),
+}: TryFetchParams) => {
   try {
     const response = await fetch(url, request);
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+
+    const data =
+      contentType?.indexOf('application/json') !== -1
+        ? await response.json()
+        : await response.text();
 
     if (response.ok) {
       return data as ResponseType;
     } else if (response.status === 401 || response.status === 403) {
       logoutListener.onServerLogout();
-      throw (new AuthError().message = data?.message || "Unauthorized");
+      throw (new AuthError().message = data?.message || 'Unauthorized');
     } else if (response.status === 400) {
       throw data as BadRequestError;
     } else {

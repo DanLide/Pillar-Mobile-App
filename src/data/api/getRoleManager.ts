@@ -1,5 +1,4 @@
-import { tryFetch } from "../helpers/tryFetch";
-import { URLProvider } from "../helpers";
+import { URLProvider, tryFetch } from '../helpers';
 
 interface GetRoleManagerAPIResponse {
   username: string;
@@ -11,10 +10,13 @@ interface GetRoleManagerAPIResponse {
 export const getRoleManagerAPI = (token: string) => {
   const url = new URLProvider().getRoleModelUrl();
 
-  return tryFetch<GetRoleManagerAPIResponse>(url, {
-    method: "GET",
-    headers: {
-      authorization: `Bearer ${token}`,
+  return tryFetch<GetRoleManagerAPIResponse>({
+    url,
+    request: {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     },
   });
 };
