@@ -7,13 +7,15 @@ interface TryAuthFetchParams extends TryFetchParams {
 }
 
 export const tryAuthFetch = async <ResponseType>({
+  url,
+  request,
   authToken = getAuthToken(),
-  ...params
 }: TryAuthFetchParams) =>
-  tryFetch<ResponseType>(
-    assocPath(
-      ['request', 'headers', 'authorization'],
+  tryFetch<ResponseType>({
+    url,
+    request: assocPath(
+      ['headers', 'authorization'],
       `Bearer ${authToken?.getToken}`,
-      params,
+      request,
     ),
-  );
+  });
