@@ -1,6 +1,7 @@
-import { tryFetch } from "./tryFetch";
-import { Task, TaskExecutor } from "./taskExecutor";
-import { environment } from "./environment";
-import { URLProvider } from "./urlProvider";
+import { tryFetch } from './tryFetch';
+import { tryAuthFetch } from './tryAuthFetch';
+import { Task, TaskExecutor } from './taskExecutor';
+import { environment } from './environment';
+import { URLProvider } from './urlProvider';
 
-export { tryFetch, Task, TaskExecutor, environment, URLProvider };
+export { tryFetch, tryAuthFetch, Task, TaskExecutor, environment, URLProvider };
