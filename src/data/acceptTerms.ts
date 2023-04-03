@@ -9,10 +9,6 @@ export const onAcceptTerms = async (authStore: AuthStore) =>
   ]).execute();
 
 export class AcceptTermsTask extends Task {
-  constructor() {
-    super();
-  }
-
   async run(): Promise<void> {
     await acceptTermsAPI();
   }
