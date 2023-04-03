@@ -1,13 +1,8 @@
-import { URLProvider } from '../helpers';
+import { URLProvider, tryAuthFetch } from '../helpers';
 import { PartySettingsType } from '../../constants';
-import { tryAuthFetch } from '../helpers/tryAuthFetch';
 
-export interface AcceptTermsAPIParams {
-  partyRoleId: number;
-}
-
-export const acceptTermsAPI = ({ partyRoleId }: AcceptTermsAPIParams) => {
-  const url = new URLProvider().getAcceptTermsUrl(partyRoleId);
+export const acceptTermsAPI = () => {
+  const url = new URLProvider().getAcceptTermsUrl();
 
   const body = JSON.stringify([
     { id: PartySettingsType.IsTermsAccepted, value: true },

@@ -38,7 +38,9 @@ export class URLProvider {
     );
   }
 
-  getAcceptTermsUrl(partyRoleId: number) {
+  getAcceptTermsUrl() {
+    const partyRoleId = this.authStore.getPartyRoleId;
+
     return new URL(
       `${this.currentEnv.modules.common.apiUri}/api/Common/partySetting/${partyRoleId}`,
     );
