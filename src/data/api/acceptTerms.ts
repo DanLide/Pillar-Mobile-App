@@ -1,25 +1,17 @@
 import { URLProvider } from '../helpers';
-import { tryFetch } from '../helpers';
 import { PartySettingsType } from '../../constants';
+import { tryAuthFetch } from '../helpers/tryAuthFetch';
 
 export interface AcceptTermsAPIParams {
   partyRoleId: number;
-  token: string;
 }
 
-export const acceptTermsAPI = ({
-  partyRoleId,
-  token,
-}: AcceptTermsAPIParams) => {
+export const acceptTermsAPI = ({ partyRoleId }: AcceptTermsAPIParams) => {
   const url = new URLProvider().getAcceptTermsUrl(partyRoleId);
 
   const body = JSON.stringify([
     { id: PartySettingsType.IsTermsAccepted, value: true },
   ]);
 
-  return tryFetch<Response>(url, {
-    method: 'PUT',
-    headers: { authorization: `Bearer ${token}` },
-    body,
-  });
+  return tryAuthFetch<Response>({ url, request: { method: 'PUT', body } });
 };

@@ -1,4 +1,4 @@
-import { Task, TaskExecutor } from './helpers';
+import { AuthError, Task, TaskExecutor } from './helpers';
 import { acceptTermsAPI } from './api/acceptTerms';
 import { AuthStore } from '../stores/AuthStore';
 
@@ -17,12 +17,11 @@ export class AcceptTermsTask extends Task {
   }
 
   async run(): Promise<void> {
-    const token = this.authStore.getToken;
     const partyRoleId = this.authStore.getPartyRoleId;
 
-    if (!token || !partyRoleId) throw Error('Accept Terms failed!');
+    if (!partyRoleId) throw new AuthError('Login failed!');
 
-    await acceptTermsAPI({ token, partyRoleId });
+    await acceptTermsAPI({ partyRoleId });
   }
 }
 
