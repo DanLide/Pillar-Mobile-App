@@ -4,16 +4,13 @@ import { AuthStore } from '../stores/AuthStore';
 
 export const onAcceptTerms = async (authStore: AuthStore) =>
   new TaskExecutor([
-    new AcceptTermsTask(authStore),
+    new AcceptTermsTask(),
     new SaveAcceptTermsDataTask(authStore),
   ]).execute();
 
 export class AcceptTermsTask extends Task {
-  authStore: AuthStore;
-
-  constructor(authStore: AuthStore) {
+  constructor() {
     super();
-    this.authStore = authStore;
   }
 
   async run(): Promise<void> {
