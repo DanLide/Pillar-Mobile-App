@@ -133,7 +133,7 @@ export class GetSSOTask extends Task {
       throw new Error("Login failed!");
     }
 
-    var ssoList: SSOModel[] | undefined = await this.fetchSSOList();
+    const ssoList = await this.fetchSSOList();
     if (ssoList === undefined) {
       throw new Error("SSO fetching error!");
     }
@@ -148,16 +148,16 @@ export class GetSSOTask extends Task {
   private async fetchSSOList(): Promise<SSOModel[] | undefined> {
     if (this.loginFlowContext.facilityID !== undefined) {
       // is SSO user
-      const response: SingleSSOAPIResponse = await singleSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.facilityID!);
+      const response: SingleSSOAPIResponse =
+        await singleSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.facilityID);
       const res = this.mapSingle(response);
-      if (res === undefined) {
-        return undefined;
-      }
-      return [res!];
+      // return undefined if the element is undefined
+      return res && [res];
 
     } else if (this.loginFlowContext.msoID !== undefined) {
       // is MSO user
-      const response: MultiSSOAPIResponse = await multiSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.msoID!.toString());
+      const response: MultiSSOAPIResponse =
+        await multiSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.msoID.toString());
       const res = this.mapMulti(response);
       return res;
 
@@ -197,10 +197,19 @@ export class GetSSOTask extends Task {
       return undefined
     }
 
-    const address = `${resp.streetAddress1}, ${(resp.streetAddress2?.length === 0) ? "" : resp.streetAddress2 + ", "}${resp.city}, ${resp.zipCode}, ${resp.state}, ${resp.country}`
+    const address = [
+      resp.streetAddress1,
+      resp.streetAddress2,
+      resp.city,
+      resp.zipCode,
+      resp.state,
+      resp.country,
+    ]
+      .filter(item => !Utils.isEmpty(item))
+      .join(', ');
 
     return {
-      pisaId: pisaId!,
+      pisaId: pisaId,
       address: address,
       name: resp.name,
       pillarId: resp.id,

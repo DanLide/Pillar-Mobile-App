@@ -1,5 +1,4 @@
-import { URLProvider } from "../helpers";
-import { tryFetch } from "../helpers/tryFetch";
+import { URLProvider, tryFetch } from "../helpers";
 
 export interface SingleSSOAPIResponse {
   id: string;
@@ -16,7 +15,7 @@ export interface SingleSSOAPIResponse {
   country: string;
 }
 
-export interface MultiSSOAPIResponse extends Array<MultiSSOAPIObj> { }
+export type MultiSSOAPIResponse = Array<MultiSSOAPIObj>;
 
 interface MultiSSOAPIObj {
   partyRoleId: string;
