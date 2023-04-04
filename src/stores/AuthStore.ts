@@ -101,6 +101,8 @@ export class AuthStore implements LogoutListener {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguage = undefined;
+    this.permissionSet1 = undefined;
+    this.permissionSet2 = undefined;
     this.isLoggedIn = false;
   }
 }
