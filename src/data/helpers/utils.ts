@@ -5,12 +5,12 @@ export class Utils {
     return value == '0' ? undefined : value;
   }
 
-  static isEmpty(value: string | undefined) {
-    return value === undefined || value == null || value.trim().length === 0;
+  static isNullOrEmpty<Type>(value: Type) {
+    return either(isNil, isEmpty)(value);
   }
 
   static notNullOrEmpty<Type>(value: Type) {
-    return pipe(either(isNil, isEmpty), not)(value);
+    return pipe(this.isNullOrEmpty, not)(value);
   }
 
   static numbersToBigInts(collection: Array<number | undefined>) {

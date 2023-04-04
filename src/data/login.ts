@@ -1,12 +1,18 @@
 import jwt_decode from 'jwt-decode';
 
-import { Task, TaskExecutor } from "./helpers";
-import { loginAPI, getRoleManagerAPI, LoginAPIParams } from "./api";
-import { Utils } from "./helpers/utils";
-import { AuthStore } from "../stores/AuthStore";
-import { SSOModel } from "../stores/SSOStore";
-import { ssoStore } from "../stores";
-import { singleSSOAPI, multiSSOAPI, adminSSOAPI, SingleSSOAPIResponse, MultiSSOAPIResponse } from "./api/ssoAPI";
+import { Task, TaskExecutor } from './helpers';
+import { loginAPI, getRoleManagerAPI, LoginAPIParams } from './api';
+import { Utils } from './helpers/utils';
+import { AuthStore } from '../stores/AuthStore';
+import { SSOModel } from '../stores/SSOStore';
+import { ssoStore } from '../stores';
+import {
+  singleSSOAPI,
+  multiSSOAPI,
+  adminSSOAPI,
+  SingleSSOAPIResponse,
+  MultiSSOAPIResponse,
+} from './api/ssoAPI';
 
 interface LoginFlowContext {
   token?: string;
@@ -100,22 +106,22 @@ class JWTParserTask extends Task {
     }
 
     this.loginFlowContext.username = Utils.zeroToUndefined<string>(
-      decodedToken.name
+      decodedToken.name,
     );
     this.loginFlowContext.companyNumber = Utils.zeroToUndefined<string>(
-      decodedToken.extension_companyNumber
+      decodedToken.extension_companyNumber,
     );
     this.loginFlowContext.permissionSet1 = Utils.zeroToUndefined<number>(
-      +decodedToken.extension_permissionSet1
+      +decodedToken.extension_permissionSet1,
     );
     this.loginFlowContext.permissionSet2 = Utils.zeroToUndefined<number>(
-      +decodedToken.extension_permissionSet2
+      +decodedToken.extension_permissionSet2,
     );
     this.loginFlowContext.msoID = Utils.zeroToUndefined<number>(
-      +decodedToken.extension_msoPisaID
+      +decodedToken.extension_msoPisaID,
     );
     this.loginFlowContext.facilityID = Utils.zeroToUndefined<string>(
-      decodedToken.extension_repairFacilityID
+      decodedToken.extension_repairFacilityID,
     );
   }
 }
@@ -132,12 +138,12 @@ export class GetSSOTask extends Task {
     ssoStore.clear();
 
     if (!this.loginFlowContext.token) {
-      throw new Error("Login failed!");
+      throw new Error('Login failed!');
     }
 
     const ssoList = await this.fetchSSOList();
     if (ssoList === undefined) {
-      throw new Error("SSO fetching error!");
+      throw new Error('SSO fetching error!');
     }
     ssoStore.setSSOList(ssoList);
 
@@ -150,22 +156,26 @@ export class GetSSOTask extends Task {
   private async fetchSSOList(): Promise<SSOModel[] | undefined> {
     if (this.loginFlowContext.facilityID !== undefined) {
       // is SSO user
-      const response: SingleSSOAPIResponse =
-        await singleSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.facilityID);
+      const response: SingleSSOAPIResponse = await singleSSOAPI(
+        this.loginFlowContext.token!,
+        this.loginFlowContext.facilityID,
+      );
       const res = this.mapSingle(response);
       // return undefined if the element is undefined
       return res && [res];
-
     } else if (this.loginFlowContext.msoID !== undefined) {
       // is MSO user
-      const response: MultiSSOAPIResponse =
-        await multiSSOAPI(this.loginFlowContext.token!, this.loginFlowContext.msoID.toString());
+      const response: MultiSSOAPIResponse = await multiSSOAPI(
+        this.loginFlowContext.token!,
+        this.loginFlowContext.msoID.toString(),
+      );
       const res = this.mapMulti(response);
       return res;
-
     } else {
       // TODO add extra check if it is Admin. If not - throw exception
-      const response: MultiSSOAPIResponse = await adminSSOAPI(this.loginFlowContext.token!);
+      const response: MultiSSOAPIResponse = await adminSSOAPI(
+        this.loginFlowContext.token!,
+      );
       const res = this.mapMulti(response);
       return res;
     }
@@ -173,11 +183,11 @@ export class GetSSOTask extends Task {
 
   private mapMulti(resp: MultiSSOAPIResponse): SSOModel[] | undefined {
     if (resp.length === 0) {
-      return undefined
+      return undefined;
     }
-    return resp.flatMap<SSOModel>((item) => {
-      const pisaId = Utils.zeroToUndefined<number>(+item.partyRoleId)
-      if (pisaId === undefined || Utils.isEmpty(item.name)) {
+    return resp.flatMap<SSOModel>(item => {
+      const pisaId = Utils.zeroToUndefined<number>(+item.partyRoleId);
+      if (pisaId === undefined || Utils.isNullOrEmpty(item.name)) {
         // skip not valid
         return [];
       }
@@ -186,17 +196,21 @@ export class GetSSOTask extends Task {
         address: item.address,
         name: item.name,
         pillarId: undefined,
-        msoPillarId: Utils.isEmpty(item.msoId) ? undefined : item.msoId,
-        distributorId: Utils.isEmpty(item.distributorId) ? undefined : item.distributorId,
-        distributorName: Utils.isEmpty(item.distributorName) ? undefined : item.distributorName,
+        msoPillarId: Utils.isNullOrEmpty(item.msoId) ? undefined : item.msoId,
+        distributorId: Utils.isNullOrEmpty(item.distributorId)
+          ? undefined
+          : item.distributorId,
+        distributorName: Utils.isNullOrEmpty(item.distributorName)
+          ? undefined
+          : item.distributorName,
       };
     });
   }
 
   private mapSingle(resp: SingleSSOAPIResponse): SSOModel | undefined {
-    const pisaId = Utils.zeroToUndefined<number>(+resp.pisaId)
-    if (pisaId === undefined || Utils.isEmpty(resp.name)) {
-      return undefined
+    const pisaId = Utils.zeroToUndefined<number>(+resp.pisaId);
+    if (pisaId === undefined || Utils.isNullOrEmpty(resp.name)) {
+      return undefined;
     }
 
     const address = [
@@ -207,7 +221,7 @@ export class GetSSOTask extends Task {
       resp.state,
       resp.country,
     ]
-      .filter(item => !Utils.isEmpty(item))
+      .filter(Utils.notNullOrEmpty)
       .join(', ');
 
     return {
@@ -218,7 +232,7 @@ export class GetSSOTask extends Task {
       msoPillarId: resp.msoId,
       distributorId: resp.distributorId,
       distributorName: resp.distributor,
-    }
+    };
   }
 }
 
