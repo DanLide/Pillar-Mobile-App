@@ -10,10 +10,10 @@ export class Utils {
   }
 
   static notNullOrEmpty<Type>(value: Type) {
-    return pipe(this.isNullOrEmpty, not)(value);
+    return pipe(Utils.isNullOrEmpty, not)(value);
   }
 
   static numbersToBigInts(collection: Array<number | undefined>) {
-    return pipe(filter(this.notNullOrEmpty), map(BigInt))(collection);
+    return pipe(filter(Utils.notNullOrEmpty), map(BigInt))(collection);
   }
 }

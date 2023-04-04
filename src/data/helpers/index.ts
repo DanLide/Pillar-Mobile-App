@@ -3,7 +3,7 @@ import { tryAuthFetch } from './tryAuthFetch';
 import { Task, TaskExecutor } from './taskExecutor';
 import { environment } from './environment';
 import { URLProvider } from './urlProvider';
-import { hasPermission } from './permissions';
+import { GetPermissionSets, getPermissionSets } from './getPermissionSets';
 
 export {
   tryFetch,
@@ -12,5 +12,7 @@ export {
   TaskExecutor,
   environment,
   URLProvider,
-  hasPermission,
+  getPermissionSets,
 };
+
+export type { GetPermissionSets };
