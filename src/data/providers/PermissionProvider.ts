@@ -11,13 +11,13 @@ export class PermissionProvider {
   }
 
   hasPermission(permission: Permission): boolean {
-    const permissionsSet =
-      this.permissionState.permissionSets[(permission / ENUM_BASE) >> 0];
+    const permissionSets = this.permissionState.getPermissionSets;
 
-    if (!permissionsSet) return false;
+    if (!permissionSets) return false;
 
+    const permissionSet = permissionSets[(permission / ENUM_BASE) >> 0];
     const permissionValue = BigInt(1) << BigInt(permission % ENUM_BASE);
 
-    return BigInt(permissionsSet & permissionValue) == permissionValue;
+    return BigInt(permissionSet & permissionValue) == permissionValue;
   }
 }

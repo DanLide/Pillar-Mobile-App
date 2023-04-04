@@ -254,7 +254,15 @@ class SaveAuthDataTask extends Task {
   }
 
   async run() {
-    const { token, isTnC, isLanguage, partyRoleId } = this.loginFlowContext;
+    const {
+      token,
+      isTnC,
+      isLanguage,
+      partyRoleId,
+      permissionSet1,
+      permissionSet2,
+    } = this.loginFlowContext;
+
     if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
@@ -263,8 +271,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);
       this.authStore.setCompanyNumber(this.loginFlowContext.companyNumber);
-      this.authStore.setPermissionSet1(this.loginFlowContext.permissionSet1);
-      this.authStore.setPermissionSet2(this.loginFlowContext.permissionSet2);
+      this.authStore.setPermissionSets([permissionSet1, permissionSet2]);
       this.authStore.setMsoID(this.loginFlowContext.msoID);
       this.authStore.setFacilityID(this.loginFlowContext.facilityID);
 

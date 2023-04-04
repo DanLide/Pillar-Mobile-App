@@ -1,7 +1,7 @@
 import { authStore } from '../../stores';
 
 export interface GetPermissionSets {
-  permissionSets: bigint[];
+  getPermissionSets?: bigint[];
 }
 
 export const getPermissionSets = (): GetPermissionSets => authStore;

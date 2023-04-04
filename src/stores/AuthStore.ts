@@ -10,8 +10,7 @@ export class AuthStore implements LogoutListener {
   private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
-  private permissionSet1?: number;
-  private permissionSet2?: number;
+  private permissionSets?: bigint[];
   private msoID?: number;
   private facilityID?: string;
 
@@ -45,8 +44,8 @@ export class AuthStore implements LogoutListener {
   }
 
   @computed
-  get permissionSets() {
-    return Utils.numbersToBigInts([this.permissionSet1, this.permissionSet2]);
+  get getPermissionSets() {
+    return this.permissionSets;
   }
 
   onServerLogout() {
@@ -81,12 +80,8 @@ export class AuthStore implements LogoutListener {
     this.companyNumber = value;
   }
 
-  @action setPermissionSet1(value?: number) {
-    this.permissionSet1 = value;
-  }
-
-  @action setPermissionSet2(value?: number) {
-    this.permissionSet2 = value;
+  @action setPermissionSets(value: (number | undefined)[]) {
+    this.permissionSets = Utils.numbersToBigInts(value);
   }
 
   @action setMsoID(value?: number) {
@@ -101,8 +96,7 @@ export class AuthStore implements LogoutListener {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguage = undefined;
-    this.permissionSet1 = undefined;
-    this.permissionSet2 = undefined;
+    this.permissionSets = undefined;
     this.isLoggedIn = false;
   }
 }
