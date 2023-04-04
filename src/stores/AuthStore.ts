@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
-import { numbersToBigInts } from '../data/helpers';
+import { Utils } from '../data/helpers/utils';
 
 export class AuthStore implements LogoutListener {
   @observable isLoggedIn?: boolean;
@@ -46,7 +46,7 @@ export class AuthStore implements LogoutListener {
 
   @computed
   get permissionSets() {
-    return numbersToBigInts([this.permissionSet1, this.permissionSet2]);
+    return Utils.numbersToBigInts([this.permissionSet1, this.permissionSet2]);
   }
 
   onServerLogout() {
