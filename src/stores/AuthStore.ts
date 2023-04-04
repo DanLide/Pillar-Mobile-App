@@ -25,27 +25,27 @@ export class AuthStore implements LogoutListener {
   }
 
   @computed
-  public get getToken() {
+  get getToken() {
     return this.token;
   }
 
   @computed
-  public get isTnCSelected() {
+  get isTnCSelected() {
     return this.isTnC;
   }
 
   @computed
-  public get isLanguageSelected() {
+  get isLanguageSelected() {
     return this.isLanguage;
   }
 
   @computed
-  public get getPartyRoleId() {
+  get getPartyRoleId() {
     return this.partyRoleId;
   }
 
   @computed
-  public get permissionSets() {
+  get permissionSets() {
     return numbersToBigInts([this.permissionSet1, this.permissionSet2]);
   }
 
