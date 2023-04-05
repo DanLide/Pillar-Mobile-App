@@ -25,7 +25,7 @@ export const LanguageSelectScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text>Language select screen</Text>
+      <Text style={styles.text}>Language select screen</Text>
       <Button
         buttonStyle={styles.button}
         title="Accept"
@@ -42,5 +42,8 @@ const styles = StyleSheet.create({
   },
   button: {
     margin: 16,
+  },
+  text: {
+    alignSelf: 'center',
   },
 });
