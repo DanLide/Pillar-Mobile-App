@@ -1,8 +1,10 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
 import { Utils } from '../data/helpers/utils';
+import { Permissions } from '../data/helpers';
+import { GetAuthToken } from '../data/helpers/getAuthToken';
 
-export class AuthStore implements LogoutListener {
+export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @observable isLoggedIn?: boolean;
   private token?: string;
   private isTnC?: boolean;
@@ -10,7 +12,7 @@ export class AuthStore implements LogoutListener {
   private partyRoleId?: number;
   private username?: string;
   private companyNumber?: string;
-  private permissionSets?: bigint[];
+  private permissionSet?: bigint[];
   private msoID?: number;
   private facilityID?: string;
 
@@ -18,6 +20,7 @@ export class AuthStore implements LogoutListener {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguage = undefined;
+    this.permissionSet = undefined;
 
     this.isLoggedIn = false;
     makeObservable(this);
@@ -44,8 +47,8 @@ export class AuthStore implements LogoutListener {
   }
 
   @computed
-  get getPermissionSets() {
-    return this.permissionSets;
+  get getPermissionSet(): bigint[] | undefined {
+    return this.permissionSet;
   }
 
   onServerLogout() {
@@ -81,7 +84,7 @@ export class AuthStore implements LogoutListener {
   }
 
   @action setPermissionSets(value: (number | undefined)[]) {
-    this.permissionSets = Utils.numbersToBigInts(value);
+    this.permissionSet = Utils.numbersToBigInts(value);
   }
 
   @action setMsoID(value?: number) {
@@ -96,7 +99,7 @@ export class AuthStore implements LogoutListener {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguage = undefined;
-    this.permissionSets = undefined;
+    this.permissionSet = undefined;
     this.isLoggedIn = false;
   }
 }

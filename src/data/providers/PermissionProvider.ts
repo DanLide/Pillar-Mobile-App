@@ -1,23 +1,23 @@
-import { GetPermissionSets, getPermissionSets } from '../helpers';
+import { Permissions, permissions } from '../helpers';
 import { Permission } from '../../constants';
 
 const ENUM_BASE = 64; // .NET ULong base
 
 export class PermissionProvider {
-  permissionState: GetPermissionSets;
+  permissions: Permissions;
 
-  constructor(permissionState = getPermissionSets()) {
-    this.permissionState = permissionState;
+  constructor(_permissions = permissions()) {
+    this.permissions = _permissions;
   }
 
   hasPermission(permission: Permission): boolean {
-    const permissionSets = this.permissionState.getPermissionSets;
+    const permissionSet = this.permissions.getPermissionSet;
 
-    if (!permissionSets) return false;
+    if (!permissionSet) return false;
 
-    const permissionSet = permissionSets[(permission / ENUM_BASE) >> 0];
+    const permissionMask = permissionSet[(permission / ENUM_BASE) >> 0];
     const permissionValue = BigInt(1) << BigInt(permission % ENUM_BASE);
 
-    return BigInt(permissionSet & permissionValue) == permissionValue;
+    return BigInt(permissionMask & permissionValue) == permissionValue;
   }
 }
