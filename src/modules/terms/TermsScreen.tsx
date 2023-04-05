@@ -10,16 +10,22 @@ import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
 import { AppNavigator } from '../../navigation';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import Loading from '../../components/Loading';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+const renderLoading = () => <Loading />;
+
 const TermsScreen: React.FC<Props> = ({ navigation }) => {
   const store = useRef(authStore).current;
 
+  const [isWebViewLoading, setIsWebViewLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isTermsAccepted, toggleTermsAccepted] = useSwitchState();
+
+  const isSubmitDisabled = !isTermsAccepted || isWebViewLoading;
 
   const onSubmitTerms = useCallback(async () => {
     setIsLoading(true);
@@ -35,11 +41,18 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
     });
   }, [navigation, store]);
 
+  const startWebViewLoading = useCallback(() => setIsWebViewLoading(true), []);
+  const endWebViewLoading = useCallback(() => setIsWebViewLoading(false), []);
+
   return (
     <SafeAreaView style={styles.container}>
       <WebView
         source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
+        startInLoadingState
+        renderLoading={renderLoading}
+        onLoadStart={startWebViewLoading}
+        onLoadEnd={endWebViewLoading}
       />
       <View style={styles.controlsContainer}>
         <Switch
@@ -49,7 +62,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
         />
         <Button
           title="Submit"
-          disabled={!isTermsAccepted}
+          disabled={isSubmitDisabled}
           buttonStyle={styles.submitButton}
           onPress={onSubmitTerms}
           isLoading={isLoading}
