@@ -11,6 +11,7 @@ export class URLProvider {
       common: { apiUri: string };
       companies: { apiUri: string };
       pisaCompanyLocation: { apiUri: string };
+      pisaEquipment: { apiUri: string };
     };
   };
 
@@ -63,6 +64,13 @@ export class URLProvider {
     // TODO replace with constants repairFacilities + '/' + repairFacilityPrimaryContact + '/' + orgPartyRoleId
     return new URL(
       `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetAllOrganizations/3/26/1`,
+    );
+  }
+
+  getStocksUrl(facilityId: number, partyRoleID: number) {
+    // TODO replace 31 to PartyRelationshipType.RepairFacilityToStorage and 33 to PartyRelationshipType.UserToStorage
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/31/${partyRoleID}/33`,
     );
   }
 }

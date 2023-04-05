@@ -1,39 +1,64 @@
-import React from "react";
-import { Button, StyleSheet, View } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { observer } from "mobx-react";
+import React from 'react';
+import { Button, StyleSheet, View } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { observer } from 'mobx-react';
 
-import { defaultOptions, logout } from "./helpers";
-import { authStore } from "../stores";
+import { defaultOptions, logout } from './helpers';
+import { authStore } from '../stores';
 
-import { LoginScreen } from "../modules/login/components/LoginScreen";
-import { HomeScreen } from "../modules/home/HomeScreen";
-import TermsScreen from "../modules/terms/TermsScreen";
-import { LanguageSelectScreen } from "../modules/languageSelect/LanguageSelectScreen";
+import { LoginScreen } from '../modules/login/components/LoginScreen';
+import { HomeScreen } from '../modules/home/HomeScreen';
+import TermsScreen from '../modules/terms/TermsScreen';
+import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
+
+import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
+import { RemoveProductsListView } from '../modules/removeProducts/RemoveProductsListView';
 
 export enum AppNavigator {
-  LoginScreen = "LoginScreen",
+  LoginScreen = 'LoginScreen',
 
   // HomeStack
-  HomeStack = "HomeStack",
-  HomeScreen = "HomeScreen",
-  TermsScreen = "TermsScreen",
-  LanguageSelectScreen = "LanguageSelectScreen",
+  HomeStack = 'HomeStack',
+  HomeScreen = 'HomeScreen',
+  TermsScreen = 'TermsScreen',
+  LanguageSelectScreen = 'LanguageSelectScreen',
+
+  // RemoveProductsStack
+  RemoveProductsStack = 'RemoveProductsStack',
+  SelectStockScreen = 'SelectStockScreen',
+  RemoveProductsListView = 'RemoveProductsListView',
 }
 
 const Stack = createStackNavigator();
 
 type ScreenOptions = React.ComponentProps<
   typeof Stack.Navigator
->["screenOptions"];
+>['screenOptions'];
 
 const termsScreenOptions: ScreenOptions = {
-  title: "Terms & Conditions",
+  title: 'Terms & Conditions',
   headerRight: () => (
     <View style={styles.logoutButton}>
       <Button title="Logout" onPress={logout} />
     </View>
   ),
+};
+
+const RemoveStack = () => {
+  return (
+    <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
+      <Stack.Screen
+        name={AppNavigator.SelectStockScreen}
+        component={SelectStockScreen}
+        options={{ title: 'Remove Products' }}
+      />
+      <Stack.Screen
+        name={AppNavigator.RemoveProductsListView}
+        component={RemoveProductsListView}
+        options={{ title: 'Remove Products' }}
+      />
+    </Stack.Navigator>
+  );
 };
 
 const HomeStack = () => {
@@ -58,6 +83,11 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}
         component={LanguageSelectScreen}
+        options={defaultOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.RemoveProductsStack}
+        component={RemoveStack}
         options={defaultOptions}
       />
     </Stack.Navigator>

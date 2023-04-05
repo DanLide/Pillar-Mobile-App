@@ -1,5 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
+import { stockStore } from '../modules/stocksList/stores';
 import { Utils } from '../data/helpers/utils';
 import { Permissions } from '../data/helpers';
 import { GetAuthToken } from '../data/helpers/getAuthToken';
@@ -15,6 +16,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private permissionSet?: bigint[];
   private msoID?: number;
   private facilityID?: string;
+  private facilityPisaID?: number;
 
   constructor() {
     this.token = undefined;
@@ -49,6 +51,13 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @computed
   get getPermissionSet(): bigint[] | undefined {
     return this.permissionSet;
+  }
+  @computed public get getFacilityID() {
+    return this.facilityID;
+  }
+
+  @computed public get getFacilityPisaID() {
+    return this.facilityPisaID;
   }
 
   onServerLogout() {
@@ -95,11 +104,16 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.facilityID = value;
   }
 
+  @action setFacilityPisaID(facilityPisaID?: number) {
+    this.facilityPisaID = facilityPisaID;
+  }
+
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
     this.isLanguage = undefined;
     this.permissionSet = undefined;
     this.isLoggedIn = false;
+    stockStore.clear();
   }
 }
