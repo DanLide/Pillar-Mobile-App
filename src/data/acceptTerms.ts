@@ -1,5 +1,5 @@
 import { Task, TaskExecutor } from './helpers';
-import { acceptTermsAPI } from './api/acceptTerms';
+// import { acceptTermsAPI } from './api/acceptTerms';
 import { AuthStore } from '../stores/AuthStore';
 
 export const onAcceptTerms = async (authStore: AuthStore) =>
@@ -10,7 +10,8 @@ export const onAcceptTerms = async (authStore: AuthStore) =>
 
 export class AcceptTermsTask extends Task {
   async run(): Promise<void> {
-    await acceptTermsAPI();
+    // await acceptTermsAPI();
+    await new Promise<void>(resolve => setTimeout(resolve, 1000));
   }
 }
 
