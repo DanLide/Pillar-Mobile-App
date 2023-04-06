@@ -1,15 +1,15 @@
+import { action, makeObservable, observable } from 'mobx';
+
 export class StockStore {
-  private stocks: Stock[];
+  @observable stocks: StockModel[];
 
   constructor() {
     this.stocks = [];
+
+    makeObservable(this);
   }
 
-  public get getStocks() {
-    return this.stocks;
-  }
-
-  public setStocks(stocks: Stock[]) {
+  @action setStocks(stocks: StockModel[]) {
     this.stocks = stocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
     );
@@ -20,18 +20,18 @@ export class StockStore {
   }
 }
 
-export interface Stock {
-  partyRoleId: number;
-  roleTypeId: number;
-  roleTypeDescription: string;
-  dateAssigned: string;
+export interface StockModel {
   organizationName: string;
-  isRelationshipExists: string;
-  organizationPartyRoleId: number;
-  isAssignedSupplyArea: number;
-  serialPartyRoleId: number;
-  onHand: number;
-  onOrder: number;
-  isActiveTransfer: number;
-  isAssignedToUser: number;
+  // isRelationshipExists: string;
+  // organizationPartyRoleId: number;
+  // isAssignedSupplyArea: number;
+  // serialPartyRoleId: number;
+  // onHand: number;
+  // onOrder: number;
+  // isActiveTransfer: number;
+  // isAssignedToUser: number;
+  // partyRoleId: number;
+  // roleTypeId: number;
+  // roleTypeDescription: string;
+  // dateAssigned: string;
 }

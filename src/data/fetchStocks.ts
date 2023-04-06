@@ -1,25 +1,24 @@
 import { Task, TaskExecutor } from './helpers';
 import { getStocksAPI } from './api';
 
-import { Stock, StockStore } from '../modules/stocksList/stores/StocksStore';
+import { StockModel, StockStore } from '../modules/stocksList/stores/StocksStore';
 
 interface FetchStocksContext {
-  stocks: Stock[];
+  stocks: StockModel[];
 }
 
-export const fetchStocks = async (
-  stocksStore: StockStore,
-) => {
+export const fetchStocks = async (stocksStore: StockStore) => {
   const stocksContext: FetchStocksContext = {
     stocks: [],
   };
+  if (!stocksStore.stocks.length) {
+    const result = await new TaskExecutor([
+      new FetchStocksTask(stocksContext),
+      new SaveStocksToStore(stocksContext, stocksStore),
+    ]).execute();
 
-  const result = await new TaskExecutor([
-    new FetchStocksTask(stocksContext),
-    new SaveStocksToStore(stocksContext, stocksStore),
-  ]).execute();
-
-  return result;
+    return result;
+  }
 };
 
 class FetchStocksTask extends Task {

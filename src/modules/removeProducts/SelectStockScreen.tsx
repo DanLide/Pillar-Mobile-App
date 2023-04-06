@@ -2,25 +2,25 @@ import React from 'react';
 import { Text, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { List } from '../stocksList/components/List';
+import { StocksList } from '../stocksList/components/StocksList';
 import { AppNavigator } from '../../navigation';
-import { stockStore } from '../../stores';
-import { Stock } from '../stocksList/stores/StocksStore';
+import { removeProductsStore } from './stores';
+import { StockModel } from '../stocksList/stores/StocksStore';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
 export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
-  const onItemPress = (stock: Stock) => {
-    stockStore.setCurrentStocks(stock);
+  const onItemPress = (stock: StockModel) => {
+    removeProductsStore.setCurrentStocks(stock);
     navigation.navigate(AppNavigator.RemoveProductsListView);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.text}>Identify your Stock location</Text>
-      <List onPressItem={onItemPress} />
+      <StocksList onPressItem={onItemPress} />
     </SafeAreaView>
   );
 };

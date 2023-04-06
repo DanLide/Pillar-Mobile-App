@@ -16,7 +16,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private permissionSet?: bigint[];
   private msoID?: number;
   private facilityID?: string;
-  private facilityPisaID?: number;
 
   constructor() {
     this.token = undefined;
@@ -54,10 +53,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   }
   @computed public get getFacilityID() {
     return this.facilityID;
-  }
-
-  @computed public get getFacilityPisaID() {
-    return this.facilityPisaID;
   }
 
   onServerLogout() {
@@ -102,10 +97,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
 
   @action setFacilityID(value?: string) {
     this.facilityID = value;
-  }
-
-  @action setFacilityPisaID(facilityPisaID?: number) {
-    this.facilityPisaID = facilityPisaID;
   }
 
   @action logOut() {

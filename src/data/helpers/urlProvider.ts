@@ -1,10 +1,12 @@
 import { environment } from './environment';
 import { AuthStore } from '../../stores/AuthStore';
-import { authStore } from '../../stores';
+import { authStore, ssoStore } from '../../stores';
 import { PartyRelationshipType } from '../../constants/common.enum';
+import { SSOStore } from '../../stores/SSOStore';
 
 export class URLProvider {
   authStore: AuthStore;
+  ssoStore: SSOStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -16,8 +18,9 @@ export class URLProvider {
     };
   };
 
-  constructor(auth_store = authStore) {
+  constructor(auth_store = authStore, sso_store = ssoStore) {
     this.authStore = auth_store;
+    this.ssoStore = sso_store;
     this.currentEnv = environment;
   }
 
@@ -70,7 +73,7 @@ export class URLProvider {
 
   getStocksUrl() {
     const partyRoleID = this.authStore.getPartyRoleId;
-    const facilityId = this.authStore.getFacilityPisaID;
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${partyRoleID}/${PartyRelationshipType.UserToStorage}`,

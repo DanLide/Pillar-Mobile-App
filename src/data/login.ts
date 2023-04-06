@@ -25,7 +25,6 @@ interface LoginFlowContext {
   permissionSet2?: number;
   msoID?: number;
   facilityID?: string;
-  facilityPisaID?: number;
 }
 
 export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
@@ -123,9 +122,6 @@ class JWTParserTask extends Task {
     );
     this.loginFlowContext.facilityID = Utils.zeroToUndefined<string>(
       decodedToken.extension_repairFacilityID,
-    );
-    this.loginFlowContext.facilityPisaID = Utils.zeroToUndefined<number>(
-      decodedToken.extension_repairFacilityPisaID
     );
   }
 }
@@ -278,7 +274,6 @@ class SaveAuthDataTask extends Task {
       this.authStore.setPermissionSets([permissionSet1, permissionSet2]);
       this.authStore.setMsoID(this.loginFlowContext.msoID);
       this.authStore.setFacilityID(this.loginFlowContext.facilityID);
-      this.authStore.setFacilityPisaID(this.loginFlowContext.facilityPisaID)
 
       this.authStore.setLoggedIn(true);
     } else {
