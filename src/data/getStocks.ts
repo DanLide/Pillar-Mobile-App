@@ -2,14 +2,12 @@ import { Task, TaskExecutor } from './helpers';
 import { getStocksAPI } from './api';
 
 import { Stock, StockStore } from '../modules/stocksList/stores/StocksStore';
-import { AuthStore } from '../stores/AuthStore';
 
 interface GetStocksContext {
   stores: Stock[];
 }
 
 export const getStores = async (
-  authStore: AuthStore,
   stocksStore: StockStore,
 ) => {
   const storesContext: GetStocksContext = {

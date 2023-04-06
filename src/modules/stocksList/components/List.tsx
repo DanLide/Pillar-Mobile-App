@@ -2,9 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, Alert, ActivityIndicator } from 'react-native';
 
 import { Stock } from '../stores/StocksStore';
-import { getStores } from '../../../data/getStores';
+import { getStores } from '../../../data/getStocks';
 import { stocksStore } from '../stores';
-import { authStore } from '../../../stores';
 
 import { ListItem } from './ListItem';
 
@@ -18,13 +17,13 @@ export const List: React.FC<Props> = ({ onPressItem }) => {
 
   const getStocks = useCallback(async () => {
     setIsLoading(true);
-    const error = await getStores(authStore, stocksStore);
+    const error = await getStores(stocksStore);
     setStocks(stocksStore.getStocks);
     setIsLoading(false);
 
     if (error)
       return Alert.alert('Error', error.message || 'Loading is Failed!');
-  }, [authStore, stocksStore]);
+  }, [stocksStore]);
 
   useEffect(() => {
     if (!stocksStore.getStocks.length) {
