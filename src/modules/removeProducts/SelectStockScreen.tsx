@@ -4,7 +4,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { List } from '../stocksList/components/List';
 import { AppNavigator } from '../../navigation';
-import { cabinetStore } from '../../stores';
+import { stockStore } from '../../stores';
 import { Stock } from '../stocksList/stores/StocksStore';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 
 export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
   const onItemPress = (stock: Stock) => {
-    cabinetStore.setCurrentStocks(stock);
+    stockStore.setCurrentStocks(stock);
     navigation.navigate(AppNavigator.RemoveProductsListView);
   };
 

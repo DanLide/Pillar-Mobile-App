@@ -1,9 +1,9 @@
 import { AuthStore } from './AuthStore';
 import { SSOStore, SSOModel } from './SSOStore';
-import { CabinetStore } from './CabinetStock';
+import { StockStore } from './StockStore';
 
 const authStore = new AuthStore();
 const ssoStore = new SSOStore();
-const cabinetStore = new CabinetStore();
+const stockStore = new StockStore();
 
-export { authStore, ssoStore, cabinetStore };
+export { authStore, ssoStore, stockStore };

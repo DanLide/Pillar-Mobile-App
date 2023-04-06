@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
-import { stockStore } from '../modules/stocksList/stores';
+import { stocksStore } from '../modules/stocksList/stores';
 import { Utils } from '../data/helpers/utils';
 import { Permissions } from '../data/helpers';
 import { GetAuthToken } from '../data/helpers/getAuthToken';
@@ -114,6 +114,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isLanguage = undefined;
     this.permissionSet = undefined;
     this.isLoggedIn = false;
-    stockStore.clear();
+    stocksStore.clear();
   }
 }

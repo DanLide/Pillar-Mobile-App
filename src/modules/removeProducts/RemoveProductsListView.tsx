@@ -1,14 +1,14 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, Text } from 'react-native';
 
-import { cabinetStore } from '../../stores';
+import { stockStore } from '../../stores';
 
 export const RemoveProductsListView = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text>
         Current cabinet is:{' '}
-        {cabinetStore.getCurrentStock?.organizationName || 'None'}
+        {stockStore.getCurrentStock?.organizationName || 'None'}
       </Text>
     </SafeAreaView>
   );

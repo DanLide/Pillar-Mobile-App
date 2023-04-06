@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  ListRenderItemInfo,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { Stock } from '../stores/StocksStore';
 

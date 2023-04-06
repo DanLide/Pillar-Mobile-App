@@ -1,5 +1,5 @@
 import { StockStore } from './StocksStore';
 
-const stockStore = new StockStore();
+const stocksStore = new StockStore();
 
-export { stockStore };
+export { stocksStore };

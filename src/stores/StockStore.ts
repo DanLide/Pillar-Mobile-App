@@ -1,6 +1,6 @@
 import { Stock } from '../modules/stocksList/stores/StocksStore';
 
-export class CabinetStore {
+export class StockStore {
   private currentStock?: Stock;
 
   constructor() {

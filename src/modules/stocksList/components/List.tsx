@@ -3,7 +3,7 @@ import { FlatList, Alert, ActivityIndicator } from 'react-native';
 
 import { Stock } from '../stores/StocksStore';
 import { getStores } from '../../../data/getStores';
-import { stockStore } from '../stores';
+import { stocksStore } from '../stores';
 import { authStore } from '../../../stores';
 
 import { ListItem } from './ListItem';
@@ -13,24 +13,24 @@ interface Props {
 }
 
 export const List: React.FC<Props> = ({ onPressItem }) => {
-  const [stocks, setStocks] = useState<Stock[]>(stockStore.getStocks);
+  const [stocks, setStocks] = useState<Stock[]>(stocksStore.getStocks);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const getStocks = useCallback(async () => {
     setIsLoading(true);
-    const error = await getStores(authStore, stockStore);
-    setStocks(stockStore.getStocks);
+    const error = await getStores(authStore, stocksStore);
+    setStocks(stocksStore.getStocks);
     setIsLoading(false);
 
     if (error)
       return Alert.alert('Error', error.message || 'Loading is Failed!');
-  }, [authStore, stockStore]);
+  }, [authStore, stocksStore]);
 
   useEffect(() => {
-    if (!stockStore.getStocks.length) {
+    if (!stocksStore.getStocks.length) {
       getStocks();
     }
-  }, [stockStore.getStocks]);
+  }, [stocksStore.getStocks]);
 
   if (isLoading) {
     return <ActivityIndicator size="large" />;

@@ -1,23 +1,19 @@
 import { Task, TaskExecutor } from './helpers';
-import { getStoresAPI } from './api';
+import { getStocksAPI } from './api';
 
 import { Stock, StockStore } from '../modules/stocksList/stores/StocksStore';
 import { AuthStore } from '../stores/AuthStore';
 
-interface GetStoresContext {
+interface GetStocksContext {
   stores: Stock[];
-  facilityPisaID?: number;
-  partyRoleId?: number;
 }
 
 export const getStores = async (
   authStore: AuthStore,
   stocksStore: StockStore,
 ) => {
-  const storesContext: GetStoresContext = {
+  const storesContext: GetStocksContext = {
     stores: [],
-    facilityPisaID: authStore.getFacilityPisaID,
-    partyRoleId: authStore.getPartyRoleId,
   };
 
   const result = await new TaskExecutor([
@@ -29,41 +25,30 @@ export const getStores = async (
 };
 
 class GetStoresTask extends Task {
-  getStoresContext: GetStoresContext;
+  getStocksContext: GetStocksContext;
 
-  constructor(getStoresContext: GetStoresContext) {
+  constructor(getStocksContext: GetStocksContext) {
     super();
-    this.getStoresContext = getStoresContext;
+    this.getStocksContext = getStocksContext;
   }
 
   async run(): Promise<void> {
-    if (
-      this.getStoresContext.facilityPisaID &&
-      this.getStoresContext.partyRoleId
-    ) {
-      const response = await getStoresAPI(
-        this.getStoresContext.facilityPisaID,
-        this.getStoresContext.partyRoleId,
-      );
-
-      this.getStoresContext.stores = response;
-    } else {
-      throw Error('Auth error!');
-    }
+    const response = await getStocksAPI();
+    this.getStocksContext.stores = response;
   }
 }
 
 class SaveStoresToStore extends Task {
-  getStoresContext: GetStoresContext;
+  getStocksContext: GetStocksContext;
   stocksStore: StockStore;
 
-  constructor(getStoresContext: GetStoresContext, stocksStore: StockStore) {
+  constructor(getStocksContext: GetStocksContext, stocksStore: StockStore) {
     super();
     this.stocksStore = stocksStore;
-    this.getStoresContext = getStoresContext;
+    this.getStocksContext = getStocksContext;
   }
 
   async run() {
-    this.stocksStore.setStocks(this.getStoresContext.stores);
+    this.stocksStore.setStocks(this.getStocksContext.stores);
   }
 }

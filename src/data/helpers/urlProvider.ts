@@ -67,7 +67,10 @@ export class URLProvider {
     );
   }
 
-  getStocksUrl(facilityId: number, partyRoleID: number) {
+  getStocksUrl() {
+    const partyRoleID = this.authStore.getPartyRoleId;
+    const facilityId = this.authStore.getFacilityPisaID;
+
     // TODO replace 31 to PartyRelationshipType.RepairFacilityToStorage and 33 to PartyRelationshipType.UserToStorage
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/31/${partyRoleID}/33`,
