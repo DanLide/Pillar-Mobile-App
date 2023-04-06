@@ -4,19 +4,19 @@ import { getStocksAPI } from './api';
 import { Stock, StockStore } from '../modules/stocksList/stores/StocksStore';
 
 interface FetchStocksContext {
-  stores: Stock[];
+  stocks: Stock[];
 }
 
 export const fetchStocks = async (
   stocksStore: StockStore,
 ) => {
-  const storesContext: FetchStocksContext = {
-    stores: [],
+  const stocksContext: FetchStocksContext = {
+    stocks: [],
   };
 
   const result = await new TaskExecutor([
-    new FetchStocksTask(storesContext),
-    new SaveStoresToStore(storesContext, stocksStore),
+    new FetchStocksTask(stocksContext),
+    new SaveStocksToStore(stocksContext, stocksStore),
   ]).execute();
 
   return result;
@@ -32,11 +32,11 @@ class FetchStocksTask extends Task {
 
   async run(): Promise<void> {
     const response = await getStocksAPI();
-    this.fetchStocksContext.stores = response;
+    this.fetchStocksContext.stocks = response;
   }
 }
 
-class SaveStoresToStore extends Task {
+class SaveStocksToStore extends Task {
   fetchStocksContext: FetchStocksContext;
   stocksStore: StockStore;
 
@@ -47,6 +47,6 @@ class SaveStoresToStore extends Task {
   }
 
   async run() {
-    this.stocksStore.setStocks(this.fetchStocksContext.stores);
+    this.stocksStore.setStocks(this.fetchStocksContext.stocks);
   }
 }
