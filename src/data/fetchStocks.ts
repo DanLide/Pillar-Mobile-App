@@ -1,5 +1,5 @@
 import { Task, TaskExecutor } from './helpers';
-import { getStocksAPI } from './api';
+import { getFetchStockAPI } from './api';
 
 import { StockModel, StockStore } from '../modules/stocksList/stores/StocksStore';
 
@@ -30,7 +30,7 @@ class FetchStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const response = await getStocksAPI();
+    const response = await getFetchStockAPI();
     this.fetchStocksContext.stocks = response;
   }
 }

@@ -1,6 +1,6 @@
 import { getRoleManagerAPI } from './getRoleManager';
 import { loginAPI, LoginAPIParams } from './login';
-import { getStocksAPI } from './storesAPI';
+import { getFetchStockAPI } from './storesAPI';
 
-export { getRoleManagerAPI, loginAPI, getStocksAPI };
+export { getRoleManagerAPI, loginAPI, getFetchStockAPI };
 export type { LoginAPIParams };

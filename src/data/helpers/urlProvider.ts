@@ -71,7 +71,7 @@ export class URLProvider {
     );
   }
 
-  getStocksUrl() {
+  getFetchStockUrl() {
     const partyRoleID = this.authStore.getPartyRoleId;
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
