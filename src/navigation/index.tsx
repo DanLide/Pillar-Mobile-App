@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
@@ -12,7 +12,8 @@ import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
-import { RemoveProductsListView } from '../modules/removeProducts/RemoveProductsListView';
+import { RemoveProductsListViewScreen } from '../modules/removeProducts/RemoveProductsListViewScreen';
+import { removeProductsStore } from '../modules/removeProducts/stores';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -26,7 +27,7 @@ export enum AppNavigator {
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
   SelectStockScreen = 'SelectStockScreen',
-  RemoveProductsListView = 'RemoveProductsListView',
+  RemoveProductsListViewScreen = 'RemoveProductsListView',
 }
 
 const Stack = createStackNavigator();
@@ -44,6 +45,17 @@ const termsScreenOptions: ScreenOptions = {
   ),
 };
 
+const RemoveProductsListViewScreenHeader = () => (
+  <View style={{ flexDirection: 'column' }}>
+    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
+      Remove Products
+    </Text>
+    <Text style={{ textAlign: 'center' }}>
+      {removeProductsStore.currentStock?.organizationName}
+    </Text>
+  </View>
+);
+
 const RemoveStack = () => {
   return (
     <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
@@ -53,9 +65,12 @@ const RemoveStack = () => {
         options={{ title: 'Remove Products' }}
       />
       <Stack.Screen
-        name={AppNavigator.RemoveProductsListView}
-        component={RemoveProductsListView}
-        options={{ title: 'Remove Products' }}
+        name={AppNavigator.RemoveProductsListViewScreen}
+        component={RemoveProductsListViewScreen}
+        options={{
+          headerBackTitle: 'Back',
+          headerTitle: RemoveProductsListViewScreenHeader,
+        }}
       />
     </Stack.Navigator>
   );
