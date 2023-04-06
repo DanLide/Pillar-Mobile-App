@@ -12,10 +12,13 @@ export const environment = {
       apiUri: 'https://api.repairstack-qa.3m.com/common',
     },
     companies: {
-      apiUri: "https://api.repairstack-qa.3m.com/repairfacility"
+      apiUri: 'https://api.repairstack-qa.3m.com/repairfacility',
     },
     pisaCompanyLocation: {
-      apiUri: "https://api.repairstack-qa.3m.com/companylocation"
+      apiUri: 'https://api.repairstack-qa.3m.com/companylocation',
+    },
+    pisaEquipment: {
+      apiUri: 'https://api.repairstack-qa.3m.com/equipment',
     },
   },
 };

@@ -1,5 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { LogoutListener } from '../data/helpers/tryFetch';
+import { stocksStore } from '../modules/stocksList/stores';
 import { Utils } from '../data/helpers/utils';
 import { Permissions } from '../data/helpers';
 import { GetAuthToken } from '../data/helpers/getAuthToken';
@@ -49,6 +50,9 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @computed
   get getPermissionSet(): bigint[] | undefined {
     return this.permissionSet;
+  }
+  @computed public get getFacilityID() {
+    return this.facilityID;
   }
 
   onServerLogout() {
@@ -101,5 +105,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isLanguage = undefined;
     this.permissionSet = undefined;
     this.isLoggedIn = false;
+    stocksStore.clear();
   }
 }

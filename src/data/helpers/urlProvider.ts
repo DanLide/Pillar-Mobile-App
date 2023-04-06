@@ -1,9 +1,12 @@
 import { environment } from './environment';
 import { AuthStore } from '../../stores/AuthStore';
-import { authStore } from '../../stores';
+import { authStore, ssoStore } from '../../stores';
+import { PartyRelationshipType } from '../../constants/common.enum';
+import { SSOStore } from '../../stores/SSOStore';
 
 export class URLProvider {
   authStore: AuthStore;
+  ssoStore: SSOStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -11,11 +14,13 @@ export class URLProvider {
       common: { apiUri: string };
       companies: { apiUri: string };
       pisaCompanyLocation: { apiUri: string };
+      pisaEquipment: { apiUri: string };
     };
   };
 
-  constructor(auth_store = authStore) {
+  constructor(auth_store = authStore, sso_store = ssoStore) {
     this.authStore = auth_store;
+    this.ssoStore = sso_store;
     this.currentEnv = environment;
   }
 
@@ -63,6 +68,15 @@ export class URLProvider {
     // TODO replace with constants repairFacilities + '/' + repairFacilityPrimaryContact + '/' + orgPartyRoleId
     return new URL(
       `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetAllOrganizations/3/26/1`,
+    );
+  }
+
+  getFetchStockUrl() {
+    const partyRoleID = this.authStore.getPartyRoleId;
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${partyRoleID}/${PartyRelationshipType.UserToStorage}`,
     );
   }
 }
