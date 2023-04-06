@@ -3,50 +3,50 @@ import { getStocksAPI } from './api';
 
 import { Stock, StockStore } from '../modules/stocksList/stores/StocksStore';
 
-interface GetStocksContext {
+interface FetchStocksContext {
   stores: Stock[];
 }
 
-export const getStores = async (
+export const fetchStocks = async (
   stocksStore: StockStore,
 ) => {
-  const storesContext: GetStocksContext = {
+  const storesContext: FetchStocksContext = {
     stores: [],
   };
 
   const result = await new TaskExecutor([
-    new GetStoresTask(storesContext),
+    new FetchStocksTask(storesContext),
     new SaveStoresToStore(storesContext, stocksStore),
   ]).execute();
 
   return result;
 };
 
-class GetStoresTask extends Task {
-  getStocksContext: GetStocksContext;
+class FetchStocksTask extends Task {
+  fetchStocksContext: FetchStocksContext;
 
-  constructor(getStocksContext: GetStocksContext) {
+  constructor(fetchStocksContext: FetchStocksContext) {
     super();
-    this.getStocksContext = getStocksContext;
+    this.fetchStocksContext = fetchStocksContext;
   }
 
   async run(): Promise<void> {
     const response = await getStocksAPI();
-    this.getStocksContext.stores = response;
+    this.fetchStocksContext.stores = response;
   }
 }
 
 class SaveStoresToStore extends Task {
-  getStocksContext: GetStocksContext;
+  fetchStocksContext: FetchStocksContext;
   stocksStore: StockStore;
 
-  constructor(getStocksContext: GetStocksContext, stocksStore: StockStore) {
+  constructor(fetchStocksContext: FetchStocksContext, stocksStore: StockStore) {
     super();
     this.stocksStore = stocksStore;
-    this.getStocksContext = getStocksContext;
+    this.fetchStocksContext = fetchStocksContext;
   }
 
   async run() {
-    this.stocksStore.setStocks(this.getStocksContext.stores);
+    this.stocksStore.setStocks(this.fetchStocksContext.stores);
   }
 }

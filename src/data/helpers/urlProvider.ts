@@ -1,6 +1,7 @@
 import { environment } from './environment';
 import { AuthStore } from '../../stores/AuthStore';
 import { authStore } from '../../stores';
+import { PartyRelationshipType } from '../../constants/common.enum';
 
 export class URLProvider {
   authStore: AuthStore;
@@ -71,9 +72,8 @@ export class URLProvider {
     const partyRoleID = this.authStore.getPartyRoleId;
     const facilityId = this.authStore.getFacilityPisaID;
 
-    // TODO replace 31 to PartyRelationshipType.RepairFacilityToStorage and 33 to PartyRelationshipType.UserToStorage
     return new URL(
-      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/31/${partyRoleID}/33`,
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${partyRoleID}/${PartyRelationshipType.UserToStorage}`,
     );
   }
 }
