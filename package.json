@@ -59,6 +59,8 @@
   },
   "jest": {
     "preset": "react-native",
+    "resetMocks": true,
+    "restoreMocks": true,
     "moduleFileExtensions": [
       "ts",
       "tsx",
