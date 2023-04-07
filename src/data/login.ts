@@ -14,7 +14,7 @@ import {
   MultiSSOAPIResponse,
 } from './api/ssoAPI';
 
-interface LoginFlowContext {
+export interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
   isLanguage?: boolean;
