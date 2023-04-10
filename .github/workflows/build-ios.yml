@@ -58,8 +58,9 @@ jobs:
       - name: Install Rugby
         if: steps.podcache.outputs.cache-hit != 'true'
         run: |
-          brew tap swiftyfinch/Rugby https://github.com/swiftyfinch/Rugby.git
-          brew install rugby
+          curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
+          unzip rugby.zip
+          mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
 
       - name: Install & build Pods
         if: steps.podcache.outputs.cache-hit != 'true'
