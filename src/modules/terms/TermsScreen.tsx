@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 
 import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
 import { Switch, Button } from '../../components';
-import { authStore } from '../../stores';
+import { authStore, ssoStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
 import { AppNavigator } from '../../navigation';
@@ -34,6 +34,9 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
     if (error)
       return Alert.alert('Error', error.message || 'Accept Terms failed!');
+    if (!ssoStore.getCurrentSSO) {
+      return navigation.navigate(AppNavigator.SelectSSOScreen)
+    }
 
     navigation.reset({
       index: 0,

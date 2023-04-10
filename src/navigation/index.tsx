@@ -1,15 +1,17 @@
 import React from 'react';
-import { Button, StyleSheet, View, Text } from 'react-native';
+import { Button, StyleSheet, View, Alert, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
 import { defaultOptions, logout } from './helpers';
-import { authStore } from '../stores';
-
+import { authStore, ssoStore } from '../stores';
+import {AuthStore} from '../stores/AuthStore'
+import { SSOStore } from '../stores/SSOStore';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
+import SelectSSOScreen from "../modules/sso/SelectSSOScreen";
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
@@ -23,6 +25,7 @@ export enum AppNavigator {
   HomeScreen = 'HomeScreen',
   TermsScreen = 'TermsScreen',
   LanguageSelectScreen = 'LanguageSelectScreen',
+  SelectSSOScreen = "SelectSSOScreen",
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
@@ -78,12 +81,21 @@ const RemoveStack = () => {
   );
 };
 
+const getInitialScreen = (authStore: AuthStore, ssoStore: SSOStore): AppNavigator | undefined => {
+  if (!authStore.isTnCSelected) {
+    return AppNavigator.TermsScreen
+  }
+  else if (!authStore.isLanguageSelected) {
+    return AppNavigator.LanguageSelectScreen
+  }
+  else if (!ssoStore.getCurrentSSO) {
+    return AppNavigator.SelectSSOScreen
+  }
+  return AppNavigator.HomeScreen
+}
+
 const HomeStack = () => {
-  const initialRoute = !authStore.isLanguageSelected
-    ? AppNavigator.LanguageSelectScreen
-    : !authStore.isTnCSelected
-    ? AppNavigator.TermsScreen
-    : AppNavigator.HomeScreen;
+  const initialRoute = getInitialScreen(authStore,ssoStore)
 
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
@@ -102,9 +114,14 @@ const HomeStack = () => {
         component={LanguageSelectScreen}
         options={defaultOptions}
       />
-      <Stack.Screen
+       <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
+        options={defaultOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.SelectSSOScreen}
+        component={SelectSSOScreen}
         options={defaultOptions}
       />
     </Stack.Navigator>
