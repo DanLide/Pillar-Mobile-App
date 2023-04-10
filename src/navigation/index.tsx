@@ -56,6 +56,11 @@ const RemoveProductsScreenHeader = () => (
   </View>
 );
 
+const removeProductsScreenOptions: ScreenOptions = {
+  headerBackTitle: 'Back',
+  headerTitle: RemoveProductsScreenHeader,
+};
+
 const RemoveStack = () => {
   return (
     <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
@@ -67,10 +72,7 @@ const RemoveStack = () => {
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
-        options={{
-          headerBackTitle: 'Back',
-          headerTitle: RemoveProductsScreenHeader,
-        }}
+        options={removeProductsScreenOptions}
       />
     </Stack.Navigator>
   );
