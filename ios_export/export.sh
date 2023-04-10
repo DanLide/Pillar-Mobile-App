@@ -4,7 +4,7 @@ xcodebuild -workspace ../ios/RepairStack.xcworkspace  -scheme RepairStackRelease
 
 xcodebuild -exportArchive -archivePath build/RepairStack.xcarchive -exportPath build -exportOptionsPlist src/ExportOptions.plist
 
-python src/upload_manifest.py --v "$@" --t "$@"
+python src/upload_manifest.py --v "$1" --t "$2"
 
 rm -Rf build/manifest.plist
 rm -Rf build/RepairStack.ipa
