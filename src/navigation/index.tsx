@@ -12,7 +12,7 @@ import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
-import { RemoveProductsListViewScreen } from '../modules/removeProducts/RemoveProductsListViewScreen';
+import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
 
 export enum AppNavigator {
@@ -27,7 +27,7 @@ export enum AppNavigator {
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
   SelectStockScreen = 'SelectStockScreen',
-  RemoveProductsListViewScreen = 'RemoveProductsListView',
+  RemoveProductsScreen = 'RemoveProductsScreen',
 }
 
 const Stack = createStackNavigator();
@@ -45,7 +45,7 @@ const termsScreenOptions: ScreenOptions = {
   ),
 };
 
-const RemoveProductsListViewScreenHeader = () => (
+const RemoveProductsScreenHeader = () => (
   <View style={{ flexDirection: 'column' }}>
     <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
       Remove Products
@@ -65,11 +65,11 @@ const RemoveStack = () => {
         options={{ title: 'Remove Products' }}
       />
       <Stack.Screen
-        name={AppNavigator.RemoveProductsListViewScreen}
-        component={RemoveProductsListViewScreen}
+        name={AppNavigator.RemoveProductsScreen}
+        component={RemoveProductsScreen}
         options={{
           headerBackTitle: 'Back',
-          headerTitle: RemoveProductsListViewScreenHeader,
+          headerTitle: RemoveProductsScreenHeader,
         }}
       />
     </Stack.Navigator>

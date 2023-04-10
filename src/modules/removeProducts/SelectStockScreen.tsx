@@ -14,7 +14,7 @@ interface Props {
 export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
   const onItemPress = (stock: StockModel) => {
     removeProductsStore.setCurrentStocks(stock);
-    navigation.navigate(AppNavigator.RemoveProductsListViewScreen);
+    navigation.navigate(AppNavigator.RemoveProductsScreen);
   };
 
   return (

@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, Text, View } from 'react-native';
 
 import { Button } from '../../components';
 
-export const RemoveProductsListViewScreen = () => {
+export const RemoveProductsScreen = () => {
   const onScanProduct = () => {};
 
   const onCompleteRemove = () => {};
