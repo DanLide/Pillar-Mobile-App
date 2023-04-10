@@ -1,7 +1,14 @@
 #!/bin/bash
 
-xcodebuild -workspace ../ios/RepairStack.xcworkspace -scheme RepairStack_release -archivePath archive/RepairStack.xcarchive archive
+xcodebuild -workspace ../ios/RepairStack.xcworkspace  -scheme RepairStackRelease -archivePath build/RepairStack.xcarchive archive
 
-xcodebuild -exportArchive -archivePath archive/RepairStack.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist
+xcodebuild -exportArchive -archivePath build/RepairStack.xcarchive -exportPath build -exportOptionsPlist src/ExportOptions.plist
 
-rm -Rf archive/RepairStack.xcarchive
+python src/upload_manifest.py --v "$@" --t "$@"
+
+rm -Rf build/manifest.plist
+rm -Rf build/RepairStack.ipa
+rm -Rf build/DistributionSummary.plist
+rm -Rf build/ExportOptions.plist
+rm -Rf build/Packaging.log
+rm -Rf build/RepairStack.xcarchive

@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9542F90229DC906F003525F2"
-               BuildableName = "RepairStack_release.app"
-               BlueprintName = "RepairStack_release"
+               BlueprintIdentifier = "953DF4B729E3FDD900247A0B"
+               BuildableName = "RepairStackRelease.app"
+               BlueprintName = "RepairStackRelease"
                ReferencedContainer = "container:RepairStack.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,9 +44,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9542F90229DC906F003525F2"
-            BuildableName = "RepairStack_release.app"
-            BlueprintName = "RepairStack_release"
+            BlueprintIdentifier = "953DF4B729E3FDD900247A0B"
+            BuildableName = "RepairStackRelease.app"
+            BlueprintName = "RepairStackRelease"
             ReferencedContainer = "container:RepairStack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +61,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9542F90229DC906F003525F2"
-            BuildableName = "RepairStack_release.app"
-            BlueprintName = "RepairStack_release"
+            BlueprintIdentifier = "953DF4B729E3FDD900247A0B"
+            BuildableName = "RepairStackRelease.app"
+            BlueprintName = "RepairStackRelease"
             ReferencedContainer = "container:RepairStack.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
