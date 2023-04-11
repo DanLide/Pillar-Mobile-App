@@ -4,7 +4,7 @@ import { Task, TaskExecutor } from './helpers';
 import { loginAPI, getRoleManagerAPI, LoginAPIParams } from './api';
 import { Utils } from './helpers/utils';
 import { AuthStore } from '../stores/AuthStore';
-import { SSOModel } from '../stores/SSOStore';
+import { SSOModel } from "../modules/sso/stores/SelectSSOStore";
 import { ssoStore } from '../stores';
 import {
   singleSSOAPI,
