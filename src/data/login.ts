@@ -82,7 +82,7 @@ export class GetRoleManagerTask extends Task {
   }
 }
 
-class JWTParserTask extends Task {
+export class JWTParserTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {

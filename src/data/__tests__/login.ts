@@ -1,5 +1,13 @@
-import { GetRoleManagerTask, LoginFlowContext, LoginTask } from '../login';
+import jwt_decode from 'jwt-decode';
+
 import {
+  GetRoleManagerTask,
+  JWTParserTask,
+  LoginFlowContext,
+  LoginTask,
+} from '../login';
+import {
+  JWT_DECODE_RESULT,
   LOGIN_PARAMS,
   LOGIN_RESPONSE,
   mockGetRoleManagerError,
@@ -8,7 +16,11 @@ import {
   mockLoginSuccess,
 } from '../__mocks__/login';
 
+jest.mock('jwt-decode');
+
 describe('login', () => {
+  const mockedJWTDecode = jwt_decode as jest.MockedFunction<typeof jwt_decode>;
+
   it('should execute Login task', async () => {
     const loginContext: LoginFlowContext = {};
 
@@ -66,5 +78,35 @@ describe('login', () => {
     await expect(getRoleManagerTask.run()).rejects.toThrow();
     expect(loginContext.partyRoleId).toBeUndefined();
     expect(mockedGetRoleManagerSuccess).toBeCalled();
+  });
+
+  it('should execute JWTParser task', async () => {
+    const loginContext: LoginFlowContext = {
+      token: LOGIN_RESPONSE.access_token,
+    };
+
+    mockedJWTDecode.mockReturnValue(JWT_DECODE_RESULT);
+    const jwtParserTask = new JWTParserTask(loginContext);
+
+    await expect(jwtParserTask.run()).resolves.not.toThrow();
+    expect(loginContext.username).toBeDefined();
+    expect(loginContext.permissionSet1).toBeDefined();
+    expect(loginContext.permissionSet2).toBeDefined();
+    expect(mockedJWTDecode).toBeCalled();
+  });
+
+  it('should throw invalid token error on JWTParser task', async () => {
+    const loginContext: LoginFlowContext = {
+      token: LOGIN_RESPONSE.access_token,
+    };
+
+    mockedJWTDecode.mockReturnValue({});
+    const jwtParserTask = new JWTParserTask(loginContext);
+
+    await expect(jwtParserTask.run()).rejects.toThrow('Token is not valid');
+    expect(loginContext.username).toBeUndefined();
+    expect(loginContext.permissionSet1).toBeUndefined();
+    expect(loginContext.permissionSet2).toBeUndefined();
+    expect(mockedJWTDecode).toBeCalled();
   });
 });

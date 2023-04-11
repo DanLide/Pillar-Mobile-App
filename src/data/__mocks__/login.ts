@@ -1,25 +1,6 @@
 import * as LoginAPI from '../api/login';
 import * as GetRoleManagerAPI from '../api/getRoleManager';
 
-export const LOGIN_PARAMS: LoginAPI.LoginAPIParams = {
-  username: 'test',
-  password: 'test',
-};
-
-export const LOGIN_RESPONSE: LoginAPI.LoginAPIResponse = {
-  access_token: 'access_token',
-  expires_in: 86400,
-  refresh_token: 'refresh_token',
-  token_type: 'Bearer',
-};
-
-export const GET_ROLE_MANAGER_RESPONSE: GetRoleManagerAPI.GetRoleManagerAPIResponse =
-  {
-    username: 'test',
-    roleTypeId: 1,
-    partyRoleId: 1,
-  };
-
 export const mockLoginSuccess = () =>
   jest
     .spyOn(LoginAPI, 'loginAPI')
@@ -39,3 +20,31 @@ export const mockGetRoleManagerError = () =>
   jest.spyOn(GetRoleManagerAPI, 'getRoleManagerAPI').mockImplementation(() => {
     throw new Error();
   });
+
+export const LOGIN_PARAMS: LoginAPI.LoginAPIParams = {
+  username: 'test',
+  password: 'test',
+};
+
+export const LOGIN_RESPONSE: LoginAPI.LoginAPIResponse = {
+  access_token: 'access_token',
+  expires_in: 86400,
+  refresh_token: 'refresh_token',
+  token_type: 'Bearer',
+};
+
+export const GET_ROLE_MANAGER_RESPONSE: GetRoleManagerAPI.GetRoleManagerAPIResponse =
+  {
+    username: 'test',
+    roleTypeId: 14,
+    partyRoleId: 22273,
+  };
+
+export const JWT_DECODE_RESULT = {
+  name: 'test',
+  extension_companyNumber: 'e6144766-bc5f-44d0-8352-080e981d6f8a',
+  extension_permissionSet1: '18446462598732840959',
+  extension_permissionSet2: '15852741057088323583',
+  extension_msoPisaID: 1,
+  extension_repairFacilityID: 1,
+};
