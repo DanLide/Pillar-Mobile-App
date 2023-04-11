@@ -1,5 +1,6 @@
 import * as LoginAPI from '../api/login';
 import * as GetRoleManagerAPI from '../api/getRoleManager';
+import { LoginFlowContext } from '../login';
 
 export const mockLoginSuccess = () =>
   jest
@@ -38,7 +39,15 @@ export const GET_ROLE_MANAGER_RESPONSE: GetRoleManagerAPI.GetRoleManagerAPIRespo
     username: 'test',
     roleTypeId: 14,
     partyRoleId: 22273,
+    isTermsAccepted: false,
+    isLanguageSelected: false,
   };
+
+export const LOGIN_CONTEXT: LoginFlowContext = {
+  token: LOGIN_RESPONSE.access_token,
+  isLanguage: GET_ROLE_MANAGER_RESPONSE.isLanguageSelected,
+  isTnC: GET_ROLE_MANAGER_RESPONSE.isTermsAccepted,
+};
 
 export const JWT_DECODE_RESULT = {
   name: 'test',

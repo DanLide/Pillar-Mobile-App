@@ -236,7 +236,7 @@ export class GetSSOTask extends Task {
   }
 }
 
-class SaveAuthDataTask extends Task {
+export class SaveAuthDataTask extends Task {
   loginFlowContext: LoginFlowContext;
   authStore: AuthStore;
 

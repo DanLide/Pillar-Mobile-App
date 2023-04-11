@@ -1,20 +1,23 @@
 import jwt_decode from 'jwt-decode';
+import { clone } from 'ramda';
 
 import {
   GetRoleManagerTask,
   JWTParserTask,
   LoginFlowContext,
   LoginTask,
+  SaveAuthDataTask,
 } from '../login';
 import {
   JWT_DECODE_RESULT,
+  LOGIN_CONTEXT,
   LOGIN_PARAMS,
-  LOGIN_RESPONSE,
   mockGetRoleManagerError,
   mockGetRoleManagerSuccess,
   mockLoginError,
   mockLoginSuccess,
 } from '../__mocks__/login';
+import { AuthStore } from '../../stores/AuthStore';
 
 jest.mock('jwt-decode');
 
@@ -44,9 +47,7 @@ describe('login', () => {
   });
 
   it('should execute GetRoleManager task', async () => {
-    const loginContext: LoginFlowContext = {
-      token: LOGIN_RESPONSE.access_token,
-    };
+    const loginContext: LoginFlowContext = clone(LOGIN_CONTEXT);
 
     const mockedGetRoleManagerSuccess = mockGetRoleManagerSuccess();
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
@@ -68,9 +69,7 @@ describe('login', () => {
   });
 
   it('should throw error on GetRoleManager task', async () => {
-    const loginContext: LoginFlowContext = {
-      token: LOGIN_RESPONSE.access_token,
-    };
+    const loginContext: LoginFlowContext = clone(LOGIN_CONTEXT);
 
     const mockedGetRoleManagerSuccess = mockGetRoleManagerError();
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
@@ -81,9 +80,7 @@ describe('login', () => {
   });
 
   it('should execute JWTParser task', async () => {
-    const loginContext: LoginFlowContext = {
-      token: LOGIN_RESPONSE.access_token,
-    };
+    const loginContext = clone(LOGIN_CONTEXT);
 
     mockedJWTDecode.mockReturnValue(JWT_DECODE_RESULT);
     const jwtParserTask = new JWTParserTask(loginContext);
@@ -92,13 +89,11 @@ describe('login', () => {
     expect(loginContext.username).toBeDefined();
     expect(loginContext.permissionSet1).toBeDefined();
     expect(loginContext.permissionSet2).toBeDefined();
-    expect(mockedJWTDecode).toBeCalled();
+    expect(mockedJWTDecode).toBeCalledTimes(1);
   });
 
   it('should throw invalid token error on JWTParser task', async () => {
-    const loginContext: LoginFlowContext = {
-      token: LOGIN_RESPONSE.access_token,
-    };
+    const loginContext: LoginFlowContext = clone(LOGIN_CONTEXT);
 
     mockedJWTDecode.mockReturnValue({});
     const jwtParserTask = new JWTParserTask(loginContext);
@@ -107,6 +102,32 @@ describe('login', () => {
     expect(loginContext.username).toBeUndefined();
     expect(loginContext.permissionSet1).toBeUndefined();
     expect(loginContext.permissionSet2).toBeUndefined();
-    expect(mockedJWTDecode).toBeCalled();
+    expect(mockedJWTDecode).toBeCalledTimes(1);
+  });
+
+  it('should execute SaveAuthData task', async () => {
+    const loginContext: LoginFlowContext = clone(LOGIN_CONTEXT);
+    const authStore = new AuthStore();
+
+    const saveAuthDataTask = new SaveAuthDataTask(loginContext, authStore);
+
+    await expect(saveAuthDataTask.run()).resolves.not.toThrow();
+    expect(authStore.getToken).toBeDefined();
+    expect(authStore.isLanguageSelected).toBeDefined();
+    expect(authStore.isTnCSelected).toBeDefined();
+    expect(authStore.isLoggedIn).toBeTruthy();
+  });
+
+  it('should throw login failed error on SaveAuthData task', async () => {
+    const loginContext: LoginFlowContext = {};
+    const authStore = new AuthStore();
+
+    const saveAuthDataTask = new SaveAuthDataTask(loginContext, authStore);
+
+    await expect(saveAuthDataTask.run()).rejects.toThrow('Login failed');
+    expect(authStore.getToken).toBeUndefined();
+    expect(authStore.isLanguageSelected).toBeUndefined();
+    expect(authStore.isTnCSelected).toBeUndefined();
+    expect(authStore.isLoggedIn).toBeFalsy();
   });
 });
