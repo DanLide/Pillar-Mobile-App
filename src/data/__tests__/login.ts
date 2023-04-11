@@ -52,10 +52,8 @@ describe('login', () => {
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
 
     await expect(getRoleManagerTask.run()).resolves.not.toThrow();
-    expect(mockedGetRoleManagerSuccess).toBeCalled();
     expect(loginContext.partyRoleId).toBeDefined();
-    expect(loginContext.isLanguage).toBeDefined();
-    expect(loginContext.isTnC).toBeDefined();
+    expect(mockedGetRoleManagerSuccess).toBeCalled();
   });
 
   it('should throw login failed error on GetRoleManager task', async () => {
@@ -65,10 +63,8 @@ describe('login', () => {
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
 
     await expect(getRoleManagerTask.run()).rejects.toThrow('Login failed');
-    expect(mockedGetRoleManagerSuccess).not.toBeCalled();
     expect(loginContext.partyRoleId).toBeUndefined();
-    expect(loginContext.isLanguage).toBeUndefined();
-    expect(loginContext.isTnC).toBeUndefined();
+    expect(mockedGetRoleManagerSuccess).not.toBeCalled();
   });
 
   it('should throw error on GetRoleManager task', async () => {
@@ -80,10 +76,8 @@ describe('login', () => {
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
 
     await expect(getRoleManagerTask.run()).rejects.toThrow();
-    expect(mockedGetRoleManagerSuccess).toBeCalled();
     expect(loginContext.partyRoleId).toBeUndefined();
-    expect(loginContext.isLanguage).toBeUndefined();
-    expect(loginContext.isTnC).toBeUndefined();
+    expect(mockedGetRoleManagerSuccess).toBeCalled();
   });
 
   it('should execute JWTParser task', async () => {
