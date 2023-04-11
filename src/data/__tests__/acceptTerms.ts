@@ -1,9 +1,11 @@
-import { AcceptTermsTask, SaveAcceptTermsDataTask } from '../acceptTerms';
 import {
   mockAcceptTermsError,
   mockAcceptTermsSuccess,
 } from '../__mocks__/acceptTerms';
 import { AuthStore } from '../../stores/AuthStore';
+import { exportedForTesting } from '../acceptTerms';
+
+const { AcceptTermsTask, SaveAcceptTermsDataTask } = exportedForTesting;
 
 describe('acceptTerms', () => {
   it('should execute AcceptTerms task', async () => {

@@ -8,13 +8,13 @@ export const onAcceptTerms = async (authStore: AuthStore) =>
     new SaveAcceptTermsDataTask(authStore),
   ]).execute();
 
-export class AcceptTermsTask extends Task {
+class AcceptTermsTask extends Task {
   async run(): Promise<void> {
     await acceptTermsAPI();
   }
 }
 
-export class SaveAcceptTermsDataTask extends Task {
+class SaveAcceptTermsDataTask extends Task {
   authStore: AuthStore;
 
   constructor(authStore: AuthStore) {
@@ -26,3 +26,8 @@ export class SaveAcceptTermsDataTask extends Task {
     this.authStore.setIsTnC(true);
   }
 }
+
+export const exportedForTesting = {
+  AcceptTermsTask,
+  SaveAcceptTermsDataTask,
+};

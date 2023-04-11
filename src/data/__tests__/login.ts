@@ -1,13 +1,8 @@
 import jwt_decode from 'jwt-decode';
 import { clone } from 'ramda';
 
-import {
-  GetRoleManagerTask,
-  JWTParserTask,
-  LoginFlowContext,
-  LoginTask,
-  SaveAuthDataTask,
-} from '../login';
+import { exportedForTesting, LoginFlowContext } from '../login';
+import { AuthStore } from '../../stores/AuthStore';
 import {
   JWT_DECODE_RESULT,
   LOGIN_CONTEXT,
@@ -17,9 +12,11 @@ import {
   mockLoginError,
   mockLoginSuccess,
 } from '../__mocks__/login';
-import { AuthStore } from '../../stores/AuthStore';
 
 jest.mock('jwt-decode');
+
+const { LoginTask, GetRoleManagerTask, JWTParserTask, SaveAuthDataTask } =
+  exportedForTesting;
 
 describe('login', () => {
   const mockedJWTDecode = jwt_decode as jest.MockedFunction<typeof jwt_decode>;

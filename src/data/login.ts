@@ -45,7 +45,7 @@ export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
   return result;
 };
 
-export class LoginTask extends Task {
+class LoginTask extends Task {
   loginFlowContext: LoginFlowContext;
   params: LoginAPIParams;
 
@@ -62,7 +62,7 @@ export class LoginTask extends Task {
   }
 }
 
-export class GetRoleManagerTask extends Task {
+class GetRoleManagerTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {
@@ -82,7 +82,7 @@ export class GetRoleManagerTask extends Task {
   }
 }
 
-export class JWTParserTask extends Task {
+class JWTParserTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {
@@ -126,7 +126,7 @@ export class JWTParserTask extends Task {
   }
 }
 
-export class GetSSOTask extends Task {
+class GetSSOTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {
@@ -236,7 +236,7 @@ export class GetSSOTask extends Task {
   }
 }
 
-export class SaveAuthDataTask extends Task {
+class SaveAuthDataTask extends Task {
   loginFlowContext: LoginFlowContext;
   authStore: AuthStore;
 
@@ -282,3 +282,10 @@ export class SaveAuthDataTask extends Task {
     }
   }
 }
+
+export const exportedForTesting = {
+  LoginTask,
+  GetRoleManagerTask,
+  JWTParserTask,
+  SaveAuthDataTask,
+};
