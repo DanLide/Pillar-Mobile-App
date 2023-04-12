@@ -9,13 +9,16 @@ interface TryAuthFetchParams extends TryFetchParams {
 export const tryAuthFetch = async <ResponseType>({
   url,
   request,
+  logoutListener,
   authToken = getAuthToken(),
-}: TryAuthFetchParams) =>
-  tryFetch<ResponseType>({
+}: TryAuthFetchParams) => {
+  const token = authToken?.getToken;
+
+  return tryFetch<ResponseType>({
     url,
-    request: assocPath(
-      ['headers', 'authorization'],
-      `Bearer ${authToken?.getToken}`,
-      request,
-    ),
+    logoutListener,
+    request: token
+      ? assocPath(['headers', 'authorization'], `Bearer ${token}`, request)
+      : request,
   });
+};
