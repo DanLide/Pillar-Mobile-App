@@ -23,5 +23,5 @@ export const TEST_URL = 'http://localhost:8080';
 
 export const TRY_FETCH_PARAMS: TryFetchParams = {
   url: TEST_URL,
-  request: { method: 'POST' },
+  request: { method: 'GET' },
 };
