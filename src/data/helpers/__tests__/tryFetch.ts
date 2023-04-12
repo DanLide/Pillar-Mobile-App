@@ -44,16 +44,16 @@ describe('tryFetch', () => {
   });
 
   it('should throw auth error and log out user', async () => {
-    const authStore = new AuthStore();
+    const authStoreSpy = new AuthStore();
     const mockedFetchAuthError = mockFetchError({ status: 401 });
 
-    authStore.setLoggedIn(true);
+    authStoreSpy.setLoggedIn(true);
 
-    const params = assoc('logoutListener', authStore, TRY_FETCH_PARAMS);
+    const params = assoc('logoutListener', authStoreSpy, TRY_FETCH_PARAMS);
 
-    expect(authStore.isLoggedIn).toBeTruthy();
+    expect(authStoreSpy.isLoggedIn).toBeTruthy();
     await expect(tryFetch(params)).rejects.toThrow(AuthError);
-    expect(authStore.isLoggedIn).toBeFalsy();
+    expect(authStoreSpy.isLoggedIn).toBeFalsy();
     expect(mockedFetchAuthError).toBeCalled();
   });
 

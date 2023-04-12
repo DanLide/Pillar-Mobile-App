@@ -12,33 +12,33 @@ enableFetchMocks();
 describe('tryAuthFetch', () => {
   it('should run tryAuthFetch with auth token', async () => {
     const mockedResponse = {};
-    const authStore = new AuthStore();
+    const authStoreSpy = new AuthStore();
     const mockedFetchAuth = mockAuthFetch(mockedResponse);
 
-    authStore.setToken('token');
+    authStoreSpy.setToken('token');
 
-    const params = assoc('authToken', authStore, TRY_FETCH_PARAMS);
+    const params = assoc('authToken', authStoreSpy, TRY_FETCH_PARAMS);
 
-    expect(authStore.getToken).toBeDefined();
+    expect(authStoreSpy.getToken).toBeDefined();
     await expect(tryAuthFetch(params)).resolves.toEqual(mockedResponse);
     expect(mockedFetchAuth).toBeCalled();
   });
 
   it('should throw AuthError when no token provided and log out user', async () => {
     const mockedResponse = {};
-    const authStore = new AuthStore();
+    const authStoreSpy = new AuthStore();
     const mockedFetchAuth = mockAuthFetch(mockedResponse);
 
-    authStore.setLoggedIn(true);
+    authStoreSpy.setLoggedIn(true);
 
     const params = mergeRight(TRY_FETCH_PARAMS, {
-      authToken: authStore,
-      logoutListener: authStore,
+      authToken: authStoreSpy,
+      logoutListener: authStoreSpy,
     });
 
-    expect(authStore.isLoggedIn).toBeTruthy();
+    expect(authStoreSpy.isLoggedIn).toBeTruthy();
     await expect(tryAuthFetch(params)).rejects.toThrow(AuthError);
-    expect(authStore.isLoggedIn).toBeFalsy();
+    expect(authStoreSpy.isLoggedIn).toBeFalsy();
     expect(mockedFetchAuth).toBeCalled();
   });
 });
