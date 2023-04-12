@@ -66,6 +66,10 @@ jobs:
         run: bundle exec pod install && rugby plans --plan ci
         working-directory: ios
 
+      - name: Difference between Podfile.lock and Manifest.lock
+        run: diff Podfile.lock Pods/Manifest.lock
+        working-directory: ios
+
       - name: Run unit tests
         run: yarn test
 
