@@ -43,7 +43,6 @@ jobs:
 
       - name: Install Ruby dependencies
         run: bundle install
-        working-directory: ios
 
       - name: Cache Pods
         uses: actions/cache@v3
@@ -64,7 +63,7 @@ jobs:
 
       - name: Install & build Pods
         if: steps.podcache.outputs.cache-hit != 'true'
-        run: pod install && rugby plans --plan ci
+        run: bundle exec pod install && rugby plans --plan ci
         working-directory: ios
 
       - name: Run unit tests
