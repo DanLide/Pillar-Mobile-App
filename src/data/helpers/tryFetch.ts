@@ -41,7 +41,7 @@ export const tryFetch = async <ResponseType>({
       return data as ResponseType;
     } else if (response.status === 401 || response.status === 403) {
       logoutListener.onServerLogout();
-      throw (new AuthError().message = data?.message || 'Unauthorized');
+      throw new AuthError(data?.message || 'Unauthorized');
     } else if (response.status === 400) {
       throw data as BadRequestError;
     } else {
