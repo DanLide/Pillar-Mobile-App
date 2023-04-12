@@ -15,7 +15,7 @@ export const tryAuthFetch = async <ResponseType>({
     url,
     request: assocPath(
       ['headers', 'authorization'],
-      `Bearer ${authToken?.getToken}`,
+      `Bearer ${authToken?.getToken ?? ''}`,
       request,
     ),
   });

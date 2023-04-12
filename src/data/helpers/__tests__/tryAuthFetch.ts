@@ -1,5 +1,5 @@
 import { enableFetchMocks } from 'jest-fetch-mock';
-import { assoc, mergeRight } from 'ramda';
+import { assoc } from 'ramda';
 
 import { AuthError } from '../tryFetch';
 import { AuthStore } from '../../../stores/AuthStore';
@@ -24,21 +24,15 @@ describe('tryAuthFetch', () => {
     expect(mockedFetchAuth).toBeCalled();
   });
 
-  it('should throw AuthError when no token provided and log out user', async () => {
+  it('should throw AuthError when no token provided', async () => {
     const mockedResponse = {};
     const authStoreSpy = new AuthStore();
     const mockedFetchAuth = mockAuthFetch(mockedResponse);
 
-    authStoreSpy.setLoggedIn(true);
+    const params = assoc('authToken', authStoreSpy, TRY_FETCH_PARAMS);
 
-    const params = mergeRight(TRY_FETCH_PARAMS, {
-      authToken: authStoreSpy,
-      logoutListener: authStoreSpy,
-    });
-
-    expect(authStoreSpy.isLoggedIn).toBeTruthy();
+    expect(authStoreSpy.getToken).toBeUndefined();
     await expect(tryAuthFetch(params)).rejects.toThrow(AuthError);
-    expect(authStoreSpy.isLoggedIn).toBeFalsy();
     expect(mockedFetchAuth).toBeCalled();
   });
 });

@@ -2,11 +2,13 @@ import fetchMock from 'jest-fetch-mock';
 
 export const mockAuthFetch = <T>(response: T) =>
   fetchMock.mockResponseOnce(req => {
-    const isAuthHeader = req.headers.has('authorization');
+    const hasAuthToken = req.headers
+      .get('authorization')
+      ?.replace(/^Bearer\s+/, '');
 
-    const status = isAuthHeader ? 200 : 401;
+    const status = hasAuthToken ? 200 : 401;
     const body = JSON.stringify(
-      isAuthHeader ? response : { message: 'Invalid token' },
+      hasAuthToken ? response : { message: 'Invalid token' },
     );
 
     return Promise.resolve({
