@@ -66,6 +66,16 @@ jobs:
         run: bundle exec pod install && rugby plans --plan ci
         working-directory: ios
 
+      - name: Get is Podfile.lock changed
+        if: steps.podcache.outputs.cache-hit != 'true'
+        uses: tj-actions/changed-files@v35
+        with:
+          files: ios/Podfile.lock
+
+      - name: Exit job if Podfile.lock is not synced
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        run: exit 1
+
       - name: Difference between Podfile.lock and Manifest.lock
         run: diff Podfile.lock Pods/Manifest.lock
         working-directory: ios
