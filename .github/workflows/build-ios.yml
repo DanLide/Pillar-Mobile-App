@@ -61,7 +61,7 @@ jobs:
           unzip rugby.zip
           mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
 
-      - name: Install & build Pods
+      - name: Install Pods
         if: steps.podcache.outputs.cache-hit != 'true'
         run: bundle exec pod install && rugby plans --plan ci
         working-directory: ios
@@ -79,6 +79,11 @@ jobs:
 
       - name: Difference between Podfile.lock and Manifest.lock
         run: diff Podfile.lock Pods/Manifest.lock
+        working-directory: ios
+
+      - name: Build Pods
+        if: steps.podcache.outputs.cache-hit != 'true'
+        run: rugby plans --plan ci
         working-directory: ios
 
       - name: Run unit tests
