@@ -1,16 +1,23 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { Button } from '../../components';
 import { onGetRoleManager } from '../../data/getRoleManager';
 import { authStore } from '../../stores';
 import { AppNavigator } from '../../navigation';
+import { permissionProvider } from '../../data/providers';
+import { Permission } from '../../constants';
+
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const canRemoveProduct = permissionProvider.hasPermission(
+    Permission.InventoryManagement_StockMobile_Remove,
+  );
+
   const onGetRoleManagerPress = async () => {
     const error = await onGetRoleManager('token');
   };
@@ -25,11 +32,13 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Button
-        buttonStyle={styles.button}
-        title="Remove Products"
-        onPress={onRemoveProducts}
-      />
+      {canRemoveProduct && (
+        <Button
+          buttonStyle={styles.button}
+          title="Remove Products"
+          onPress={onRemoveProducts}
+        />
+      )}
       <Button
         buttonStyle={styles.button}
         title="Try broken getRoleManager"
