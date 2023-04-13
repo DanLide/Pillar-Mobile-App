@@ -4,7 +4,7 @@ import { Permission } from '../../constants';
 const ENUM_BASE = 64; // .NET ULong base
 
 export class PermissionProvider {
-  permissions: Permissions;
+  private permissions: Permissions;
 
   constructor(_permissions = permissions()) {
     this.permissions = _permissions;
@@ -13,7 +13,7 @@ export class PermissionProvider {
   hasPermission(permission: Permission): boolean {
     const permissionSet = this.permissions.getPermissionSet;
 
-    if (!permissionSet) return false;
+    if (!permissionSet?.length) return false;
 
     const permissionMask = permissionSet[(permission / ENUM_BASE) >> 0];
     const permissionValue = BigInt(1) << BigInt(permission % ENUM_BASE);
