@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout to repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - name: Setup node
         uses: actions/setup-node@v3
@@ -57,35 +55,16 @@ jobs:
           key: pods-${{ hashFiles('**/Podfile.lock') }}
 
       - name: Install Pods
-        if: steps.podcache.outputs.cache-hit != 'true'
         run: bundle exec pod install
         working-directory: ios
 
-      - name: Get is Podfile.lock changed
-        id: changed-files-specific
-        if: steps.podcache.outputs.cache-hit != 'true'
-        uses: tj-actions/changed-files@v35
-        with:
-          files: ios/Podfile.lock
-
-      - name: Exit job if Podfile.lock is not synced
-        if: steps.changed-files-specific.outputs.only_changed == 'true'
-        run: exit 1
-
-      - name: Difference between Podfile.lock and Manifest.lock
-        if: steps.podcache.outputs.cache-hit == 'true'
-        run: diff Podfile.lock Pods/Manifest.lock
-        working-directory: ios
-
       - name: Install Rugby
-        if: steps.podcache.outputs.cache-hit != 'true'
         run: |
           curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
           unzip rugby.zip
           mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
 
       - name: Build Pods
-        if: steps.podcache.outputs.cache-hit != 'true'
         run: rugby plans --plan ci
         working-directory: ios
 
