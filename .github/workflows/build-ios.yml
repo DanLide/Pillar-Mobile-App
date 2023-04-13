@@ -67,6 +67,7 @@ jobs:
         working-directory: ios
 
       - name: Get is Podfile.lock changed
+        id: changed-files-specific
         if: steps.podcache.outputs.cache-hit != 'true'
         uses: tj-actions/changed-files@v35
         with:
