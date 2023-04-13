@@ -71,6 +71,7 @@ jobs:
         run: exit 1
 
       - name: Difference between Podfile.lock and Manifest.lock
+        if: steps.podcache.outputs.cache-hit == 'true'
         run: diff Podfile.lock Pods/Manifest.lock
         working-directory: ios
 
