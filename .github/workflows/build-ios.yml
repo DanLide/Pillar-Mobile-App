@@ -54,13 +54,6 @@ jobs:
             ios/.rugby/cache.yml
           key: pods-${{ hashFiles('**/Podfile.lock') }}
 
-      - name: Install Rugby
-        if: steps.podcache.outputs.cache-hit != 'true'
-        run: |
-          curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
-          unzip rugby.zip
-          mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
-
       - name: Install Pods
         if: steps.podcache.outputs.cache-hit != 'true'
         run: bundle exec pod install && rugby plans --plan ci
@@ -80,6 +73,13 @@ jobs:
       - name: Difference between Podfile.lock and Manifest.lock
         run: diff Podfile.lock Pods/Manifest.lock
         working-directory: ios
+
+      - name: Install Rugby
+        if: steps.podcache.outputs.cache-hit != 'true'
+        run: |
+          curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
+          unzip rugby.zip
+          mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
 
       - name: Build Pods
         if: steps.podcache.outputs.cache-hit != 'true'
