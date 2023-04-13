@@ -1,6 +1,6 @@
 import { URLProvider, tryFetch } from '../helpers';
 
-interface GetRoleManagerAPIResponse {
+export interface GetRoleManagerAPIResponse {
   username: string;
   roleTypeId: number;
   partyRoleId: number;

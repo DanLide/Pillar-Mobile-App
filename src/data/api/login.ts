@@ -5,7 +5,7 @@ export interface LoginAPIParams {
   password: string;
 }
 
-interface LoginAPIResponse {
+export interface LoginAPIResponse {
   access_token: string;
   refresh_token: string;
   expires_in: number;
