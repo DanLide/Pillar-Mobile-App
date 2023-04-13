@@ -1,5 +1,5 @@
 import { Task, TaskExecutor } from './helpers';
-// import { acceptTermsAPI } from './api/acceptTerms';
+import { acceptTermsAPI } from './api/acceptTerms';
 import { AuthStore } from '../stores/AuthStore';
 
 export const onAcceptTerms = async (authStore: AuthStore) =>
@@ -8,10 +8,9 @@ export const onAcceptTerms = async (authStore: AuthStore) =>
     new SaveAcceptTermsDataTask(authStore),
   ]).execute();
 
-export class AcceptTermsTask extends Task {
+class AcceptTermsTask extends Task {
   async run(): Promise<void> {
-    // await acceptTermsAPI();
-    await new Promise<void>(resolve => setTimeout(resolve, 1000));
+    await acceptTermsAPI();
   }
 }
 
@@ -27,3 +26,8 @@ class SaveAcceptTermsDataTask extends Task {
     this.authStore.setIsTnC(true);
   }
 }
+
+export const exportedForTesting = {
+  AcceptTermsTask,
+  SaveAcceptTermsDataTask,
+};
