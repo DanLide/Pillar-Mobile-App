@@ -56,7 +56,7 @@ jobs:
 
       - name: Install Pods
         if: steps.podcache.outputs.cache-hit != 'true'
-        run: bundle exec pod install && rugby plans --plan ci
+        run: bundle exec pod install
         working-directory: ios
 
       - name: Get is Podfile.lock changed
