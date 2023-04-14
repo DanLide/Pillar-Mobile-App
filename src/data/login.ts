@@ -14,7 +14,7 @@ import {
   MultiSSOAPIResponse,
 } from './api/ssoAPI';
 
-interface LoginFlowContext {
+export interface LoginFlowContext {
   token?: string;
   isTnC?: boolean;
   isLanguage?: boolean;
@@ -45,7 +45,7 @@ export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
   return result;
 };
 
-export class LoginTask extends Task {
+class LoginTask extends Task {
   loginFlowContext: LoginFlowContext;
   params: LoginAPIParams;
 
@@ -62,7 +62,7 @@ export class LoginTask extends Task {
   }
 }
 
-export class GetRoleManagerTask extends Task {
+class GetRoleManagerTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {
@@ -126,7 +126,7 @@ class JWTParserTask extends Task {
   }
 }
 
-export class GetSSOTask extends Task {
+class GetSSOTask extends Task {
   loginFlowContext: LoginFlowContext;
 
   constructor(loginFlowContext: LoginFlowContext) {
@@ -282,3 +282,10 @@ class SaveAuthDataTask extends Task {
     }
   }
 }
+
+export const exportedForTesting = {
+  LoginTask,
+  GetRoleManagerTask,
+  JWTParserTask,
+  SaveAuthDataTask,
+};
