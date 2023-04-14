@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 
-import { removeProductsStore, scanningProductStore } from './stores';
+import { scanningProductStore } from './stores';
 
 import { Button } from '../../components';
 import { ProductJobModal } from './ProductJobModal';
@@ -66,7 +66,7 @@ export const RemoveProductsScreen = observer(() => {
         buttonStyle={styles.scanButton}
         textStyle={styles.scanButtonText}
         title="SCAN PRODUCT"
-        onPress={() => fetchProductByCode('fn4yNTY4')}
+        onPress={onScanProduct}
       />
       <Button
         buttonStyle={styles.button}

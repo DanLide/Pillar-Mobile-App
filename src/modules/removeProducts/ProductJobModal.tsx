@@ -56,6 +56,23 @@ export const ProductJobModal: React.FC<Props> = observer(
       clearScanningProductStoreOnClose();
     };
 
+    const renderItem = ({ index }: { index: number }) =>
+      index === 0 ? (
+        <ConfirmProduct
+          onPressAddToList={onPressSkip}
+          onClose={clearScanningProductStoreOnClose}
+          onJobSelectNavigation={onJobSelectNavigation}
+        />
+      ) : (
+        <SelectProductJob
+          selectedIndex={selectedIndex}
+          onClose={clearScanningProductStoreOnClose}
+          onPressSkip={onPressSkip}
+          onPressBack={onPressBack}
+          onPressAdd={onPressAdd}
+        />
+      );
+
     return (
       <Modal visible={isVisible} transparent={true} animationType="slide">
         <View style={styles.container}>
@@ -70,23 +87,7 @@ export const ProductJobModal: React.FC<Props> = observer(
               windowSize={1}
               data={items}
               scrollAnimationDuration={500}
-              renderItem={({ index }) =>
-                index === 0 ? (
-                  <ConfirmProduct
-                    onPressAddToList={onPressSkip}
-                    onClose={clearScanningProductStoreOnClose}
-                    onJobSelectNavigation={onJobSelectNavigation}
-                  />
-                ) : (
-                  <SelectProductJob
-                    selectedIndex={selectedIndex}
-                    onClose={clearScanningProductStoreOnClose}
-                    onPressSkip={onPressSkip}
-                    onPressBack={onPressBack}
-                    onPressAdd={onPressAdd}
-                  />
-                )
-              }
+              renderItem={renderItem}
             />
           </View>
         </View>
