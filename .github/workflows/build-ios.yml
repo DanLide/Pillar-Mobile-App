@@ -43,7 +43,6 @@ jobs:
 
       - name: Install Ruby dependencies
         run: bundle install
-        working-directory: ios
 
       - name: Cache Pods
         uses: actions/cache@v3
@@ -55,16 +54,18 @@ jobs:
             ios/.rugby/cache.yml
           key: pods-${{ hashFiles('**/Podfile.lock') }}
 
+      - name: Install Pods
+        run: bundle exec pod install
+        working-directory: ios
+
       - name: Install Rugby
-        if: steps.podcache.outputs.cache-hit != 'true'
         run: |
           curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
           unzip rugby.zip
           mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
 
-      - name: Install & build Pods
-        if: steps.podcache.outputs.cache-hit != 'true'
-        run: pod install && rugby plans --plan ci
+      - name: Build Pods
+        run: rugby plans --plan ci
         working-directory: ios
 
       - name: Run unit tests
