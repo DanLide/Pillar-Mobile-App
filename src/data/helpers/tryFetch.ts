@@ -28,7 +28,7 @@ export const tryFetch = async <ResponseType>({
   logoutListener = getLogoutListener(),
 }: TryFetchParams) => {
   try {
-    const response = await fetch(is(URL, url) ? URL.toString() : url, request);
+    const response = await fetch(is(URL, url) ? url.toString() : url, request);
 
     const contentType = response.headers.get('content-type');
 
