@@ -13,7 +13,7 @@ export class Utils {
     return pipe(Utils.isNullOrEmpty, not)(value);
   }
 
-  static numbersToBigInts(collection: Array<number | undefined>) {
+  static stringsToBigInts(collection: Array<string | undefined>) {
     return pipe(filter(Utils.notNullOrEmpty), map(BigInt))(collection);
   }
 }

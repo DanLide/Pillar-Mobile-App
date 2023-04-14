@@ -4,7 +4,7 @@ import { Task, TaskExecutor } from './helpers';
 import { loginAPI, getRoleManagerAPI, LoginAPIParams } from './api';
 import { Utils } from './helpers/utils';
 import { AuthStore } from '../stores/AuthStore';
-import { SSOModel } from "../modules/sso/stores/SelectSSOStore";
+import { SSOModel } from '../modules/sso/stores/SelectSSOStore';
 import { ssoStore } from '../stores';
 import {
   singleSSOAPI,
@@ -21,8 +21,8 @@ export interface LoginFlowContext {
   partyRoleId?: number;
   username?: string;
   companyNumber?: string;
-  permissionSet1?: number;
-  permissionSet2?: number;
+  permissionSet1?: string;
+  permissionSet2?: string;
   msoID?: number;
   facilityID?: string;
 }
@@ -111,11 +111,11 @@ class JWTParserTask extends Task {
     this.loginFlowContext.companyNumber = Utils.zeroToUndefined<string>(
       decodedToken.extension_companyNumber,
     );
-    this.loginFlowContext.permissionSet1 = Utils.zeroToUndefined<number>(
-      +decodedToken.extension_permissionSet1,
+    this.loginFlowContext.permissionSet1 = Utils.zeroToUndefined<string>(
+      decodedToken.extension_permissionSet1,
     );
-    this.loginFlowContext.permissionSet2 = Utils.zeroToUndefined<number>(
-      +decodedToken.extension_permissionSet2,
+    this.loginFlowContext.permissionSet2 = Utils.zeroToUndefined<string>(
+      decodedToken.extension_permissionSet2,
     );
     this.loginFlowContext.msoID = Utils.zeroToUndefined<number>(
       +decodedToken.extension_msoPisaID,
