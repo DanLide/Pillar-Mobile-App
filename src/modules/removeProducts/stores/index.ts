@@ -1,7 +1,7 @@
 import { RemoveProductsStore } from './RemoveProductsStore';
-import { ProductJobStore } from './ProductJobStore';
+import { ScanningProductStore } from './ScanningProductStore';
 
 const removeProductsStore = new RemoveProductsStore();
-const productJobStore = new ProductJobStore();
+const scanningProductStore = new ScanningProductStore();
 
-export { removeProductsStore, productJobStore, RemoveProductsStore };
+export { removeProductsStore, scanningProductStore, RemoveProductsStore };

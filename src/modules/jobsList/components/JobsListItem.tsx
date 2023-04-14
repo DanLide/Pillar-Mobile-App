@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { JobModel } from '../../../data/api/jobsAPI';
+import { JobResponseModel } from '../../../data/api/jobsAPI';
 
 interface Props {
-  item: JobModel;
+  item: JobResponseModel;
   selectedId?: number;
 
-  onPressItem: (stock: JobModel) => void;
+  onPressItem: (stock: JobResponseModel) => void;
 }
 
 export const JobListItem: React.FC<Props> = ({
@@ -14,11 +14,10 @@ export const JobListItem: React.FC<Props> = ({
   selectedId,
   onPressItem,
 }) => {
+  const handlePress = useCallback(() => onPressItem(item), [item, onPressItem]);
+
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={() => onPressItem(item)}
-    >
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <View style={styles.underlineContainer}>
         <View style={styles.toggle}>
           {selectedId === item.jobId ? <View style={styles.selected} /> : null}

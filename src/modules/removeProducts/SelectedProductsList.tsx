@@ -3,66 +3,22 @@ import { View, SectionList, Text, StyleSheet } from 'react-native';
 import { removeProductsStore } from './stores';
 import { observer } from 'mobx-react';
 
-import { ProductJobModel } from './stores/ProductJobStore';
-import { jobsStore } from '../jobsList/stores';
+import { RemoveProductsType } from './stores/RemoveProductsStore';
 
-interface Section {
-  title: string | number;
-  data: ProductJobModel[];
-}
+const toSectionListData = (value: RemoveProductsType) =>
+  Object.keys(value).map(key => ({ title: key, data: value[key] }));
 
 export const SelectedProductsList = observer(() => {
-  const sectionListData = removeProductsStore.products.reduce<Section[]>(
-    (acc, item) => {
-      if (!item.jobId) {
-        const otherItem = acc.find(accItem => accItem.title === 'Other');
-        if (otherItem) {
-          acc.map(accItem => {
-            if (accItem.title === 'Other') {
-              accItem.data = [...accItem.data, item];
-            }
-            return accItem;
-          });
-          return acc;
-        } else {
-          return [
-            ...acc,
-            {
-              title: 'Other',
-              data: [item],
-            },
-          ];
-        }
-      } else {
-        const itemIndex = acc.findIndex(
-          accItem => +accItem.title === item.jobId,
-        );
+  const sectionListData = toSectionListData(removeProductsStore.products);
 
-        if (itemIndex > -1) {
-          acc[itemIndex].data = [...acc[itemIndex].data, item];
-          return acc;
-        } else {
-          return [
-            ...acc,
-            {
-              title: item.jobId,
-              data: [item],
-            },
-          ];
-        }
-      }
-    },
-    [],
-  );
   return (
     <View style={styles.container}>
-      {removeProductsStore.products.length ? (
+      {sectionListData.length ? (
         <SectionList
           sections={sectionListData}
           renderSectionHeader={({ section: { title } }) => (
             <Text style={styles.sectionTitle}>
-              {jobsStore.jobs.find(job => job.jobId === title)?.jobNumber ||
-                title}
+              {title === '-1' ? 'Other' : title}
             </Text>
           )}
           renderItem={({ item }) => (

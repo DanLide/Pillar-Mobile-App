@@ -1,13 +1,13 @@
 import { action, makeObservable, observable, computed } from 'mobx';
-import { ProductModel } from '../../../data/api/productsAPI';
+import { ProductResponseModel } from '../../../data/api/productsAPI';
 
-export interface ProductJobModel extends ProductModel {
+export interface ScanningProductModel extends ProductResponseModel {
   reservedCount?: number;
   jobId?: number;
 }
 
-export class ProductJobStore {
-  @observable currentProduct?: ProductJobModel;
+export class ScanningProductStore {
+  @observable currentProduct?: ScanningProductModel;
 
   constructor() {
     this.currentProduct = undefined;
@@ -25,7 +25,7 @@ export class ProductJobStore {
       : this.currentProduct?.reservedCount;
   }
 
-  @action setCurrentProduct(product: ProductJobModel) {
+  @action setCurrentProduct(product: ScanningProductModel) {
     product.reservedCount = 1;
     this.currentProduct = product;
   }

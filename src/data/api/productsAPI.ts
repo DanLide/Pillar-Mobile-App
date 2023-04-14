@@ -1,6 +1,6 @@
 import { URLProvider, tryAuthFetch } from '../helpers';
 
-export interface ProductModel {
+export interface ProductResponseModel {
   productId: number;
   name: string;
   isRecoverable: 'Yes' | 'No';
@@ -10,5 +10,5 @@ export interface ProductModel {
 export const getFetchProductAPI = (scanCode: string) => {
   const url = new URLProvider().getFetchProductUrl(scanCode);
 
-  return tryAuthFetch<ProductModel>({ url, request: { method: 'GET' } });
+  return tryAuthFetch<ProductResponseModel>({ url, request: { method: 'GET' } });
 };

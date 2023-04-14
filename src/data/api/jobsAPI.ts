@@ -1,6 +1,6 @@
 import { URLProvider, tryAuthFetch } from '../helpers';
 
-export interface JobModel {
+export interface JobResponseModel {
   jobId: number;
   jobNumber: string;
 }
@@ -8,5 +8,5 @@ export interface JobModel {
 export const getFetchJobsAPI = () => {
   const url = new URLProvider().getFetchJobsBySso();
 
-  return tryAuthFetch<JobModel[]>({ url, request: { method: 'GET' } });
+  return tryAuthFetch<JobResponseModel[]>({ url, request: { method: 'GET' } });
 };

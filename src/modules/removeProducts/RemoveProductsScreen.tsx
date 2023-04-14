@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 
-import { productJobStore } from './stores';
+import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button } from '../../components';
 import { ProductJobModal } from './ProductJobModal';
@@ -24,7 +24,7 @@ export const RemoveProductsScreen = observer(() => {
 
   const fetchProductByCode = async (code: string) => {
     setIsLoading(true);
-    const error = await fetchProduct(productJobStore, code);
+    const error = await fetchProduct(scanningProductStore, code);
     setIsLoading(false);
 
     if (error)
@@ -44,10 +44,10 @@ export const RemoveProductsScreen = observer(() => {
   };
 
   useEffect(() => {
-    if (productJobStore.currentProduct) {
+    if (scanningProductStore.currentProduct) {
       setIsModalVisible(true);
     }
-  }, [productJobStore.currentProduct]);
+  }, [scanningProductStore.currentProduct]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,7 +66,7 @@ export const RemoveProductsScreen = observer(() => {
         buttonStyle={styles.scanButton}
         textStyle={styles.scanButtonText}
         title="SCAN PRODUCT"
-        onPress={onScanProduct}
+        onPress={() => fetchProductByCode('fn4yNTY4')}
       />
       <Button
         buttonStyle={styles.button}

@@ -1,15 +1,20 @@
 import { action, makeObservable, observable } from 'mobx';
 
 import { StockModel } from '../../stocksList/stores/StocksStore';
-import { ProductJobModel } from './ProductJobStore';
+import { ScanningProductModel } from './ScanningProductStore';
+
+export type RemoveProductsType = Record<
+  string | string,
+  ScanningProductModel[]
+>;
 
 export class RemoveProductsStore {
   @observable currentStock?: StockModel;
-  @observable products: ProductJobModel[];
+  @observable products: RemoveProductsType;
 
   constructor() {
     this.currentStock = undefined;
-    this.products = [];
+    this.products = {};
 
     makeObservable(this);
   }
@@ -18,8 +23,18 @@ export class RemoveProductsStore {
     this.currentStock = stock;
   }
 
-  @action addProduct(product: ProductJobModel) {
-    this.products.push(product);
+  @action addProduct(product: ScanningProductModel) {
+    if (!product.jobId) {
+      this.products = {
+        ...this.products,
+        ['-1']: [...(this.products['-1'] || []), product],
+      };
+    } else {
+      this.products = {
+        ...this.products,
+        [product.jobId]: [...(this.products[product.jobId] || []), product],
+      };
+    }
   }
 
   @action clear() {

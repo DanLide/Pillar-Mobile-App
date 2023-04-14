@@ -1,18 +1,15 @@
 import { Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
-import {
-  ProductJobModel,
-  ProductJobStore,
-} from '../modules/removeProducts/stores/ProductJobStore';
-import { ProductModel } from './api/productsAPI';
+import { ScanningProductStore } from '../modules/removeProducts/stores/ScanningProductStore';
+import { ProductResponseModel } from './api/productsAPI';
 
 interface FetchProductContext {
-  product?: ProductModel;
+  product?: ProductResponseModel;
 }
 
 export const fetchProduct = async (
-  productJobStore: ProductJobStore,
+  scanningProductStore: ScanningProductStore,
   scanCode: string,
 ) => {
   const productContext: FetchProductContext = {
@@ -20,7 +17,7 @@ export const fetchProduct = async (
   };
   const result = await new TaskExecutor([
     new FetchProductTask(productContext, scanCode),
-    new SaveProductToStoreTask(productContext, productJobStore),
+    new SaveProductToStoreTask(productContext, scanningProductStore),
   ]).execute();
 
   return result;
@@ -38,27 +35,26 @@ class FetchProductTask extends Task {
 
   async run(): Promise<void> {
     const response = await getFetchProductAPI(this.scanCode);
-
     this.productContext.product = response;
   }
 }
 
 class SaveProductToStoreTask extends Task {
   productContext: FetchProductContext;
-  productJobStore: ProductJobStore;
+  scanningProductStore: ScanningProductStore;
 
   constructor(
     productContext: FetchProductContext,
-    productJobStore: ProductJobStore,
+    scanningProductStore: ScanningProductStore,
   ) {
     super();
     this.productContext = productContext;
-    this.productJobStore = productJobStore;
+    this.scanningProductStore = scanningProductStore;
   }
 
   async run(): Promise<void> {
     if (this.productContext.product) {
-      this.productJobStore.setCurrentProduct(this.productContext.product);
+      this.scanningProductStore.setCurrentProduct(this.productContext.product);
     }
   }
 }

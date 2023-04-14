@@ -1,23 +1,47 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, Alert, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import {
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  ListRenderItemInfo,
+} from 'react-native';
 import { observer } from 'mobx-react';
 
 import { jobsStore } from '../stores';
 import { fetchJobs } from '../../../data/fetchJobs';
 
 import { JobListItem } from './JobsListItem';
-import { JobModel } from '../../../data/api/jobsAPI';
+import { JobResponseModel } from '../../../data/api/jobsAPI';
 
 interface Props {
   selectedId?: number;
   filterValue: string;
 
-  onPressItem: (job: JobModel) => void;
+  onPressItem: (job: JobResponseModel) => void;
 }
 
 export const JobsList: React.FC<Props> = observer(
-  ({ selectedId, filterValue, onPressItem }) => {
+  ({ selectedId, filterValue = '', onPressItem }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const filteredList = useMemo(
+      () =>
+        jobsStore.jobs.filter(job =>
+          job.jobNumber.toLowerCase().includes(filterValue.toLowerCase()),
+        ),
+      [filterValue],
+    );
+
+    const renderJobListItem = useCallback(
+      ({ item }: ListRenderItemInfo<JobResponseModel>) => (
+        <JobListItem
+          item={item}
+          selectedId={selectedId}
+          onPressItem={onPressItem}
+        />
+      ),
+      [onPressItem, selectedId],
+    );
 
     const onFetchJobs = useCallback(async () => {
       setIsLoading(true);
@@ -36,20 +60,10 @@ export const JobsList: React.FC<Props> = observer(
       return <ActivityIndicator size="large" />;
     }
 
-    const filteredList = jobsStore.jobs.filter(job =>
-      job.jobNumber.toLowerCase().includes(filterValue.toLowerCase()),
-    );
-
     return (
       <FlatList
         data={filterValue ? filteredList : jobsStore.jobs}
-        renderItem={({ item }) => (
-          <JobListItem
-            item={item}
-            selectedId={selectedId}
-            onPressItem={onPressItem}
-          />
-        )}
+        renderItem={renderJobListItem}
       />
     );
   },

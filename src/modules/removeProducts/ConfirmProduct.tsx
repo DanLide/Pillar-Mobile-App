@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 
 import { Button } from '../../components';
 
-import { productJobStore } from './stores';
+import { scanningProductStore } from './stores';
 
 const { height } = Dimensions.get('window');
 
@@ -24,37 +24,37 @@ interface Props {
 export const ConfirmProduct: React.FC<Props> = observer(
   ({ onClose, onPressAddToList, onJobSelectNavigation }) => {
     const onChangeInputText = (text: string) => {
-      if (text === '') productJobStore.setProductReservedCount('0');
+      if (text === '') scanningProductStore.setProductReservedCount('0');
 
       if (
-        productJobStore.currentProduct?.onHand &&
-        productJobStore.currentProduct?.onHand <= +text
+        scanningProductStore.currentProduct?.onHand &&
+        scanningProductStore.currentProduct?.onHand <= +text
       )
         return;
 
       if (text) {
-        productJobStore.setProductReservedCount(text);
+        scanningProductStore.setProductReservedCount(text);
       }
     };
 
     const onIncreaseCount = () => {
       if (
-        productJobStore.currentProduct?.onHand &&
-        productJobStore.currentProduct?.onHand <=
-          productJobStore.currentProductReservedCount
+        scanningProductStore.currentProduct?.onHand &&
+        scanningProductStore.currentProduct?.onHand <=
+          scanningProductStore.currentProductReservedCount
       )
         return;
 
-      productJobStore.setProductReservedCount(
-        productJobStore.currentProductReservedCount + 1,
+      scanningProductStore.setProductReservedCount(
+        scanningProductStore.currentProductReservedCount + 1,
       );
     };
 
     const onDecreaseCount = () => {
-      if (productJobStore.currentProductReservedCount === 0) return;
+      if (scanningProductStore.currentProductReservedCount === 0) return;
 
-      productJobStore.setProductReservedCount(
-        productJobStore.currentProductReservedCount - 1,
+      scanningProductStore.setProductReservedCount(
+        scanningProductStore.currentProductReservedCount - 1,
       );
     };
     return (
@@ -69,7 +69,9 @@ export const ConfirmProduct: React.FC<Props> = observer(
           </View>
         </View>
 
-        <Text style={styles.name}>{productJobStore.currentProduct?.name}</Text>
+        <Text style={styles.name}>
+          {scanningProductStore.currentProduct?.name}
+        </Text>
 
         <View style={styles.quantityContainer}>
           <Button
@@ -80,7 +82,7 @@ export const ConfirmProduct: React.FC<Props> = observer(
           />
           <TextInput
             style={styles.input}
-            value={`${productJobStore.currentProductReservedCount}`}
+            value={`${scanningProductStore.currentProductReservedCount}`}
             keyboardType="number-pad"
             onChangeText={onChangeInputText}
           />
@@ -93,10 +95,10 @@ export const ConfirmProduct: React.FC<Props> = observer(
         </View>
 
         <Text style={styles.availableCount}>
-          Available {productJobStore.currentProduct?.onHand}
+          Available {scanningProductStore.currentProduct?.onHand}
         </Text>
 
-        {productJobStore.isProductRecoverable ? (
+        {scanningProductStore.isProductRecoverable ? (
           <Button
             buttonStyle={styles.continueButton}
             title="Continue"

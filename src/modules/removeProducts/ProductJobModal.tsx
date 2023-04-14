@@ -6,7 +6,7 @@ import { SelectProductJob } from './SelectProductJob';
 import { ConfirmProduct } from './ConfirmProduct';
 
 import { observer } from 'mobx-react';
-import { removeProductsStore, productJobStore } from './stores';
+import { removeProductsStore, scanningProductStore } from './stores';
 
 interface Props {
   isVisible: boolean;
@@ -22,6 +22,11 @@ export const ProductJobModal: React.FC<Props> = observer(
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const carouselRef = useRef<ICarouselInstance>(null);
 
+    const clearScanningProductStoreOnClose = () => {
+      scanningProductStore.clear();
+      onClose();
+    };
+
     const onJobSelectNavigation = () => {
       setSelectedIndex(1);
       carouselRef.current?.next();
@@ -33,22 +38,22 @@ export const ProductJobModal: React.FC<Props> = observer(
     };
 
     const onPressAdd = (jobId?: number) => {
-      if (productJobStore.currentProduct) {
+      if (scanningProductStore.currentProduct) {
         removeProductsStore.addProduct({
-          ...productJobStore.currentProduct,
+          ...scanningProductStore.currentProduct,
           jobId,
         });
-        productJobStore.clear();
+        scanningProductStore.clear();
       }
-      onClose();
+      clearScanningProductStoreOnClose();
     };
 
     const onPressSkip = () => {
-      if (productJobStore.currentProduct) {
-        removeProductsStore.addProduct(productJobStore.currentProduct);
-        productJobStore.clear();
+      if (scanningProductStore.currentProduct) {
+        removeProductsStore.addProduct(scanningProductStore.currentProduct);
+        scanningProductStore.clear();
       }
-      onClose();
+      clearScanningProductStoreOnClose();
     };
 
     return (
@@ -69,13 +74,13 @@ export const ProductJobModal: React.FC<Props> = observer(
                 index === 0 ? (
                   <ConfirmProduct
                     onPressAddToList={onPressSkip}
-                    onClose={onClose}
+                    onClose={clearScanningProductStoreOnClose}
                     onJobSelectNavigation={onJobSelectNavigation}
                   />
                 ) : (
                   <SelectProductJob
                     selectedIndex={selectedIndex}
-                    onClose={onClose}
+                    onClose={clearScanningProductStoreOnClose}
                     onPressSkip={onPressSkip}
                     onPressBack={onPressBack}
                     onPressAdd={onPressAdd}

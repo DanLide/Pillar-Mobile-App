@@ -2,10 +2,10 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchJobsAPI } from './api';
 
 import { JobsStore } from '../modules/jobsList/stores';
-import { JobModel } from './api/jobsAPI';
+import { JobResponseModel } from './api/jobsAPI';
 
 interface FetchJobsContext {
-  jobs?: JobModel[];
+  jobs?: JobResponseModel[];
 }
 
 export const fetchJobs = async (jobsStore: JobsStore) => {
