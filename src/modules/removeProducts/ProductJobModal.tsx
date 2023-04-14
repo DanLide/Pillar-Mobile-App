@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Modal, View, StyleSheet, Dimensions } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
@@ -56,22 +56,25 @@ export const ProductJobModal: React.FC<Props> = observer(
       clearScanningProductStoreOnClose();
     };
 
-    const renderItem = ({ index }: { index: number }) =>
-      index === 0 ? (
-        <ConfirmProduct
-          onPressAddToList={onPressSkip}
-          onClose={clearScanningProductStoreOnClose}
-          onJobSelectNavigation={onJobSelectNavigation}
-        />
-      ) : (
-        <SelectProductJob
-          selectedIndex={selectedIndex}
-          onClose={clearScanningProductStoreOnClose}
-          onPressSkip={onPressSkip}
-          onPressBack={onPressBack}
-          onPressAdd={onPressAdd}
-        />
-      );
+    const renderItem = useCallback(
+      ({ index }: { index: number }) =>
+        index === 0 ? (
+          <ConfirmProduct
+            onPressAddToList={onPressSkip}
+            onClose={clearScanningProductStoreOnClose}
+            onJobSelectNavigation={onJobSelectNavigation}
+          />
+        ) : (
+          <SelectProductJob
+            selectedIndex={selectedIndex}
+            onClose={clearScanningProductStoreOnClose}
+            onPressSkip={onPressSkip}
+            onPressBack={onPressBack}
+            onPressAdd={onPressAdd}
+          />
+        ),
+      [selectedIndex, onPressAdd],
+    );
 
     return (
       <Modal visible={isVisible} transparent={true} animationType="slide">
