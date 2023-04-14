@@ -21,6 +21,10 @@ const { LoginTask, GetRoleManagerTask, JWTParserTask, SaveAuthDataTask } =
 describe('login', () => {
   const mockedJWTDecode = jwt_decode as jest.MockedFunction<typeof jwt_decode>;
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should execute Login task', async () => {
     const loginContext: LoginFlowContext = {};
 
