@@ -12,6 +12,8 @@ import { observer } from 'mobx-react';
 
 import { productModalStore } from '../store';
 
+import { EditQuantity } from './EditQuantity';
+
 interface Props {
   onClose: () => void;
   onPressAddToList: () => void;
@@ -20,28 +22,11 @@ interface Props {
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({ onClose, onPressAddToList, onJobSelectNavigation }) => {
-    const product =
-      productModalStore?.product || ({ isRecoverable: false } as any);
-    const onChangeInputText = (text: string) => {
-      if (text === '') product.reservedCount = 0;
+    const product = productModalStore?.product || ({} as any);
 
-      if (product.onHand && product.onHand <= +text) return;
-
-      if (text) {
-        productModalStore.updateQuantity(+text);
-      }
-    };
-
-    const onIncreaseCount = () => {
-      if (product.onHand && product.onHand <= product.reservedCount) return;
-
-      productModalStore.updateQuantity(product.reservedCount + 1);
-    };
-
-    const onDecreaseCount = () => {
-      if (product.reservedCount === 0) return;
-
-      productModalStore.updateQuantity(product.reservedCount - 1);
+    const onChange = (quantity: number) => {
+      console.log(quantity, 'onChange');
+      productModalStore.updateQuantity(quantity);
     };
     return (
       <>
@@ -57,26 +42,11 @@ export const ProductQuantity: React.FC<Props> = observer(
 
         <Text style={styles.name}>{product.name}</Text>
 
-        <View style={styles.quantityContainer}>
-          <Button
-            buttonStyle={styles.quantityButton}
-            textStyle={styles.quantityButtonText}
-            title="-"
-            onPress={onDecreaseCount}
-          />
-          <TextInput
-            style={styles.input}
-            value={`${product.reservedCount}`}
-            keyboardType="number-pad"
-            onChangeText={onChangeInputText}
-          />
-          <Button
-            buttonStyle={styles.quantityButton}
-            textStyle={styles.quantityButtonText}
-            title="+"
-            onPress={onIncreaseCount}
-          />
-        </View>
+        <EditQuantity
+          maxValue={product.onHand}
+          currentValue={product?.reservedCount}
+          onChange={onChange}
+        />
 
         <Text style={styles.availableCount}>Available {product.onHand}</Text>
 
