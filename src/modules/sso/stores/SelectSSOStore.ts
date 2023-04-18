@@ -23,7 +23,7 @@ export class SelectSSOStore {
       const searchLowerCase = this.searchInSSOList.toLowerCase();
       const searchByName = item.name.toLowerCase().includes(searchLowerCase);
       const searchByAddress = item.address
-        .toLowerCase()
+        ?.toLowerCase()
         .includes(searchLowerCase);
       return searchByName || searchByAddress;
     });
@@ -50,8 +50,8 @@ export class SelectSSOStore {
 
 export interface SSOModel {
   pisaId: number;
-  address: string;
   name: string;
+  address?: string;
   pillarId?: string;
   msoPillarId?: string;
   distributorId?: string;
