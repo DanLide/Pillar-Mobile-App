@@ -20,5 +20,11 @@ export const environment = {
     pisaEquipment: {
       apiUri: 'https://api.repairstack-qa.3m.com/equipment',
     },
+    pisaProduct: {
+      apiUri: 'https://api.repairstack-qa.3m.com/im-product',
+    },
+    pisaJob: {
+      apiUri: 'https://api.repairstack-qa.3m.com/job',
+    },
   },
 };

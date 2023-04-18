@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Text, StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { StocksList } from '../stocksList/components/StocksList';
 import { AppNavigator } from '../../navigation';
@@ -12,6 +13,14 @@ interface Props {
 }
 
 export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      removeProductsStore.clear();
+    }
+  }, [isFocused]);
+
   const onItemPress = (stock: StockModel) => {
     removeProductsStore.setCurrentStocks(stock);
     navigation.navigate(AppNavigator.RemoveProductsScreen);

@@ -3,13 +3,20 @@ import { AuthStore } from '../../stores/AuthStore';
 import { authStore, ssoStore } from '../../stores';
 import { PartyRelationshipType } from '../../constants/common.enum';
 import { SSOStore } from '../../stores/SSOStore';
+import {
+  RemoveProductsStore,
+  removeProductsStore,
+} from '../../modules/removeProducts/stores';
 
 export class URLProvider {
   authStore: AuthStore;
   ssoStore: SSOStore;
+  removeProductsStore: RemoveProductsStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
+      pisaJob: { apiUri: string };
+      pisaProduct: { apiUri: string };
       pisaUser: { apiUri: string };
       common: { apiUri: string };
       companies: { apiUri: string };
@@ -18,9 +25,14 @@ export class URLProvider {
     };
   };
 
-  constructor(auth_store = authStore, sso_store = ssoStore) {
+  constructor(
+    auth_store = authStore,
+    sso_store = ssoStore,
+    remove_products_store = removeProductsStore,
+  ) {
     this.authStore = auth_store;
     this.ssoStore = sso_store;
+    this.removeProductsStore = remove_products_store;
     this.currentEnv = environment;
   }
 
@@ -77,6 +89,23 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${partyRoleID}/${PartyRelationshipType.UserToStorage}`,
+    );
+  }
+
+  getFetchProductUrl(scanCode: string) {
+    const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/${partyRoleID}/${scanCode}/${facilityId}/0`,
+    );
+  }
+
+  getFetchJobsBySso() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+ 
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/RepairFacilityJob/${facilityId}`,
     );
   }
 }
