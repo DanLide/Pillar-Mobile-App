@@ -141,8 +141,8 @@ class GetSSOTask extends Task {
       throw new Error('Login failed!');
     }
 
-    const ssoList = await this.fetchSSOList();
     jobsStore.clear();
+    const ssoList = await this.fetchSSOList();
 
     if (ssoList === undefined) {
       throw new Error('SSO fetching error!');

@@ -71,7 +71,7 @@ export const RemoveProductsScreen = observer(() => {
         buttonStyle={styles.scanButton}
         textStyle={styles.scanButtonText}
         title="SCAN PRODUCT"
-        onPress={() => fetchProductByCode('fn4yNTY4')}
+        onPress={onScanProduct}
       />
       <Button
         buttonStyle={styles.button}
