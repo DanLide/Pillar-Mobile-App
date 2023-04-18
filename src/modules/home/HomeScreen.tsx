@@ -7,16 +7,13 @@ import { onGetRoleManager } from '../../data/getRoleManager';
 import { authStore } from '../../stores';
 import { AppNavigator } from '../../navigation';
 import { permissionProvider } from '../../data/providers';
-import { Permission } from '../../constants';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
-  const canRemoveProduct = permissionProvider.hasPermission(
-    Permission.InventoryManagement_StockMobile_Remove,
-  );
+  const canRemoveProduct = permissionProvider.canRemoveProduct();
 
   const onGetRoleManagerPress = async () => {
     const error = await onGetRoleManager('token');
