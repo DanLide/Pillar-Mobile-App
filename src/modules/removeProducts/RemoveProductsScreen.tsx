@@ -1,20 +1,71 @@
-import React from 'react';
-import { StyleSheet, SafeAreaView, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Alert,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
+import { observer } from 'mobx-react';
+
+import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button } from '../../components';
+import { ProductModal } from '../productModal';
+import { fetchProduct } from '../../data/fetchProduct';
+import { SelectedProductsList } from './SelectedProductsList';
+import { ScanningProductModel } from './stores/ScanningProductStore';
 
-export const RemoveProductsScreen = () => {
-  const onScanProduct = () => {};
+const { width, height } = Dimensions.get('window');
+
+export const RemoveProductsScreen = observer(() => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const fetchProductByCode = async (code: string) => {
+    setIsLoading(true);
+    const error = await fetchProduct(scanningProductStore, code);
+    setIsLoading(false);
+
+    if (error)
+      return Alert.alert('Error', error.message || 'Loading is Failed!');
+  };
+
+  const onScanProduct = () => {
+    Alert.prompt('Product', 'Enter product code', (code: string) =>
+      fetchProductByCode(code),
+    );
+  };
 
   const onCompleteRemove = () => {};
 
+  const onCloseModal = () => {
+    setIsModalVisible(false);
+  };
+
+  const onAddProductToRemoveList = (product: ScanningProductModel) => {
+    removeProductsStore.addProduct(product);
+  };
+
+  useEffect(() => {
+    if (scanningProductStore.currentProduct) {
+      setIsModalVisible(true);
+    }
+  }, [scanningProductStore.currentProduct]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>
-          To begin scanning products, simply tap on the camera button below.
-        </Text>
-      </View>
+      {isLoading ? (
+        <View style={styles.loader}>
+          <ActivityIndicator
+            size="large"
+            color="white"
+            style={styles.activityIndicator}
+          />
+        </View>
+      ) : null}
+      <SelectedProductsList />
 
       <Button
         buttonStyle={styles.scanButton}
@@ -27,21 +78,35 @@ export const RemoveProductsScreen = () => {
         title="COMPLETE REMOVE"
         onPress={onCompleteRemove}
       />
+
+      {scanningProductStore.currentProduct ? (
+        <ProductModal
+          product={scanningProductStore.currentProduct}
+          isVisible={isModalVisible}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
+      ) : null}
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
   },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  loader: {
+    position: 'absolute',
+    width,
+    height,
+    backgroundColor: 'gray',
+    top: 0,
+    zIndex: 100,
+    opacity: 0.6,
   },
-  text: {
-    textAlign: 'center',
+  activityIndicator: {
+    marginTop: height / 2 - 150,
   },
   button: {
     margin: 12,

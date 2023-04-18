@@ -30,7 +30,7 @@ export interface StockModel {
   // onOrder: number;
   // isActiveTransfer: number;
   // isAssignedToUser: number;
-  // partyRoleId: number;
+  partyRoleId: number;
   // roleTypeId: number;
   // roleTypeDescription: string;
   // dateAssigned: string;

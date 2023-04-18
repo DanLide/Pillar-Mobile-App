@@ -1,67 +1,70 @@
-import React, {useRef} from "react";
-import { StyleSheet, TouchableOpacity, FlatList, Text } from "react-native";
-import { observer } from "mobx-react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useRef } from 'react';
+import { StyleSheet, TouchableOpacity, FlatList, Text } from 'react-native';
+import { observer } from 'mobx-react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { AppNavigator } from '../../navigation';
 
 import { Input } from '../../components';
-import {SSOModel} from '../../stores/SSOStore'
-import {ssoStore} from '../../stores'
-import { SelectSSOStore } from "./stores/SelectSSOStore";
-import { Button } from '../../components'
+import { SSOModel } from '../../stores/SSOStore';
+import { ssoStore } from '../../stores';
+import { SelectSSOStore } from './stores/SelectSSOStore';
+import { Button } from '../../components';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
-  const store = useRef(new SelectSSOStore(ssoStore)).current
+const keyExtractor = (item: SSOModel) => String(item.pisaId);
 
-  const data = store.searchedSSO || []
+export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
+  const store = useRef(new SelectSSOStore(ssoStore)).current;
+
+  const data = store.searchedSSO || [];
 
   const onChangeText = (value: string) => {
-    store.setSearchInSSOList(value)
-  }
+    store.setSearchInSSOList(value);
+  };
 
   const onPressSubmit = () => {
     if (store.preselectedSSO) {
-      store.setCurrentSSO()
+      store.setCurrentSSO();
       navigation.reset({
         index: 0,
         routes: [{ name: AppNavigator.HomeScreen }],
       });
     }
-  }
+  };
 
   const renderItem = ({ item }: { item: SSOModel }) => {
     const onPress = () => {
-      store.preselectSSO(item)
-    }
-    const isSelected = JSON.stringify(item) === JSON.stringify(store.preselectedSSO)
+      store.preselectSSO(item);
+    };
+    const isSelected =
+      JSON.stringify(item) === JSON.stringify(store.preselectedSSO);
     return (
-      <TouchableOpacity style={[
-        styles.item,
-        isSelected && styles.selectedItem
-      ]} onPress={onPress}>
+      <TouchableOpacity
+        style={[styles.item, isSelected && styles.selectedItem]}
+        onPress={onPress}
+      >
         <Text style={styles.title}>{item.name}</Text>
-        <Text style={styles.title}>{item.address}</Text>
+        {item.address && <Text style={styles.title}>{item.address}</Text>}
       </TouchableOpacity>
-    )
+    );
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <Input
         style={styles.input}
-        placeholder='Search'
+        placeholder="Search"
         onChangeText={onChangeText}
         value={store.searchInSSOList}
       />
       <FlatList
         data={data}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item.address + index}
+        keyExtractor={keyExtractor}
         contentContainerStyle={styles.list}
       />
       <Button
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     margin: 16,
-  }
+  },
 });
 
-export default observer(SelectSSOScreen)
+export default observer(SelectSSOScreen);

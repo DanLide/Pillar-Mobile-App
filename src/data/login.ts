@@ -13,6 +13,7 @@ import {
   SingleSSOAPIResponse,
   MultiSSOAPIResponse,
 } from './api/ssoAPI';
+import { jobsStore } from '../modules/jobsList/stores';
 
 export interface LoginFlowContext {
   token?: string;
@@ -57,7 +58,6 @@ class LoginTask extends Task {
 
   async run(): Promise<void> {
     const response = await loginAPI(this.params);
-
     this.loginFlowContext.token = response.access_token;
   }
 }
@@ -141,7 +141,9 @@ class GetSSOTask extends Task {
       throw new Error('Login failed!');
     }
 
+    jobsStore.clear();
     const ssoList = await this.fetchSSOList();
+
     if (ssoList === undefined) {
       throw new Error('SSO fetching error!');
     }
