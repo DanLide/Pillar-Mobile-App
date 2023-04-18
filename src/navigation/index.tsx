@@ -1,17 +1,17 @@
 import React from 'react';
-import { Button, StyleSheet, View, Alert, Text } from 'react-native';
+import { Button, StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
 import { defaultOptions, logout } from './helpers';
 import { authStore, ssoStore } from '../stores';
-import {AuthStore} from '../stores/AuthStore'
+import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
-import SelectSSOScreen from "../modules/sso/SelectSSOScreen";
+import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
@@ -25,7 +25,7 @@ export enum AppNavigator {
   HomeScreen = 'HomeScreen',
   TermsScreen = 'TermsScreen',
   LanguageSelectScreen = 'LanguageSelectScreen',
-  SelectSSOScreen = "SelectSSOScreen",
+  SelectSSOScreen = 'SelectSSOScreen',
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
@@ -81,21 +81,24 @@ const RemoveStack = () => {
   );
 };
 
-const getInitialScreen = (authStore: AuthStore, ssoStore: SSOStore): AppNavigator | undefined => {
+const getInitialScreen = (
+  authStore: AuthStore,
+  ssoStore: SSOStore,
+): AppNavigator | undefined => {
+  if (!authStore.isLanguageSelected) {
+    return AppNavigator.LanguageSelectScreen;
+  }
   if (!authStore.isTnCSelected) {
-    return AppNavigator.TermsScreen
+    return AppNavigator.TermsScreen;
   }
-  else if (!authStore.isLanguageSelected) {
-    return AppNavigator.LanguageSelectScreen
+  if (!ssoStore.getCurrentSSO) {
+    return AppNavigator.SelectSSOScreen;
   }
-  else if (!ssoStore.getCurrentSSO) {
-    return AppNavigator.SelectSSOScreen
-  }
-  return AppNavigator.HomeScreen
-}
+  return AppNavigator.HomeScreen;
+};
 
 const HomeStack = () => {
-  const initialRoute = getInitialScreen(authStore,ssoStore)
+  const initialRoute = getInitialScreen(authStore, ssoStore);
 
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
@@ -114,7 +117,7 @@ const HomeStack = () => {
         component={LanguageSelectScreen}
         options={defaultOptions}
       />
-       <Stack.Screen
+      <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
         options={defaultOptions}
