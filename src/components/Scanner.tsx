@@ -1,22 +1,47 @@
 import React, { useEffect } from 'react';
-import { View, ViewStyle, Text, StyleSheet, TouchableOpacity, Alert, ActivityIndicator } from 'react-native'
-import { useScanBarcodes, BarcodeFormat, Barcode } from 'vision-camera-code-scanner';
-import { useCameraDevices, Camera, CameraProps } from 'react-native-vision-camera';
-interface ScannerProps extends CameraProps {
+import {
+  ViewStyle,
+  ActivityIndicator
+} from 'react-native'
+import { runOnJS } from 'react-native-reanimated';
+import { scanBarcodes, BarcodeFormat, Barcode } from 'vision-camera-code-scanner'
+import {
+  useCameraDevices,
+  useFrameProcessor,
+  Frame,
+  Camera,
+  CameraProps,
+} from 'react-native-vision-camera'
+
+export interface ScannerProps extends Partial<CameraProps> {
   isCamera: boolean
   containerStyle?: ViewStyle
-  onRead?: (barcode: string) => void
-  onPressClose: () => void
+  onRead: (barcode: Barcode[], frame: Frame) => void
 }
 
-const Scanner: React.FC<ScannerProps> = ({ isCamera, containerStyle, onPressClose, onRead, ...props }) => {
+const Scanner: React.FC<ScannerProps> = ({
+  isCamera,
+  containerStyle,
+  isActive = true,
+  onRead,
+  ...props
+}) => {
   const devices = useCameraDevices();
   const device = devices.back;
 
-  const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.ALL_FORMATS]);
+  const frameProcessor = useFrameProcessor(
+    (frame) => {
+      'worklet';
+      const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
+        checkInverted: true,
+      });
+
+      const filtered = barcodes.filter((value, index, self) => self.findIndex((el) => el.content.data === value.content.data) === index);
+
+      onRead && runOnJS(onRead)(filtered, frame);
+    }, []);
 
   const [hasPermission, setHasPermission] = React.useState(false);
-  const [isScanned, setIsScanned] = React.useState(false);
 
   useEffect(() => {
     checkCameraPermission();
@@ -27,50 +52,21 @@ const Scanner: React.FC<ScannerProps> = ({ isCamera, containerStyle, onPressClos
     setHasPermission(status === 'authorized');
   };
 
-  useEffect(() => {
-    toggleActiveState();
-  }, [barcodes]);
-
-  const toggleActiveState = () => {
-    if (barcodes.length && isScanned === false) {
-      //setIsScanned(true)
-      barcodes.forEach((scannedBarcode: Barcode) => {
-        if (scannedBarcode.rawValue) {
-          onRead && onRead(scannedBarcode.rawValue);
-        }
-      });
-    }
-  };
-
   if (!device) return <ActivityIndicator />;
 
-  return <View style={containerStyle}>
-    <TouchableOpacity style={styles.buttonContainer} onPress={onPressClose}>
-      <Text style={styles.close}>X</Text>
-    </TouchableOpacity>
+  return (
     <Camera
-      device={device}
-      isActive={true}
       frameProcessor={frameProcessor}
-      frameProcessorFps={5}
       audio={false}
+      isActive={isActive}
+      frameProcessorFps={5}
       {...props}
+      device={device}
     />
-  </View>
+  )
 }
 
-const styles = StyleSheet.create({
-  buttonContainer: {
-    backgroundColor: 'white',
-    position: 'absolute',
-    zIndex: 1,
-    left: 10,
-    top: 5,
-  },
-  close: {
-    fontSize: 20,
-    padding: 5,
-  },
-});
 
-export default Scanner
+Scanner.displayName = 'Scanner'
+
+export default React.memo(Scanner)

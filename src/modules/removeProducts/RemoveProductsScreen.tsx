@@ -38,7 +38,7 @@ export const RemoveProductsScreen = observer(() => {
     );
   };
 
-  const onCompleteRemove = () => {};
+  const onCompleteRemove = () => { };
 
   const onCloseModal = () => {
     setIsModalVisible(false);
