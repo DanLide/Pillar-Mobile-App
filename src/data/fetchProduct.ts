@@ -1,11 +1,14 @@
 import { Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
-import { ScanningProductStore } from '../modules/removeProducts/stores/ScanningProductStore';
-import { ProductResponseModel } from './api/productsAPI';
+import {
+  ScanningProductModel,
+  ScanningProductStore,
+} from '../modules/removeProducts/stores/ScanningProductStore';
+import { ProductResponse } from './api/productsAPI';
 
 interface FetchProductContext {
-  product?: ProductResponseModel;
+  product?: ProductResponse;
 }
 
 export const fetchProduct = async (
@@ -54,7 +57,19 @@ class SaveProductToStoreTask extends Task {
 
   async run(): Promise<void> {
     if (this.productContext.product) {
-      this.scanningProductStore.setCurrentProduct(this.productContext.product);
+      this.scanningProductStore.setCurrentProduct(
+        this.mapProductResponse(this.productContext.product),
+      );
     }
+  }
+
+  private mapProductResponse(product: ProductResponse): ScanningProductModel {
+    return {
+      productId: product.productId,
+      onHand: product.onHand,
+      name: product.name,
+      isRecoverable: product.isRecoverable,
+      reservedCount: 1,
+    };
   }
 }

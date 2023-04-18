@@ -7,15 +7,13 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { JobResponseModel } from '../../data/api/jobsAPI';
-
-import { Button, Input } from '../../components';
-import { JobsList } from '../jobsList/components';
-import { scanningProductStore } from './stores';
+import { Button, Input } from '../../../components';
+import { JobsList } from '../../jobsList/components';
+import { JobModel } from '../../jobsList/stores/JobsStore';
+import { productModalStore } from '../store';
 
 interface Props {
   selectedIndex: number;
-
   onClose: () => void;
   onPressBack: () => void;
   onPressSkip: () => void;
@@ -25,16 +23,16 @@ interface Props {
 const { width } = Dimensions.get('window');
 
 export const SelectProductJob: React.FC<Props> = ({
-  selectedIndex,
   onClose,
   onPressBack,
   onPressSkip,
   onPressAdd,
+  selectedIndex,
 }) => {
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [filterValue, setFilterValue] = useState<string>('');
 
-  const onPressItem = (job: JobResponseModel) => {
+  const onPressItem = (job: JobModel) => {
     setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
   };
 
@@ -63,7 +61,7 @@ export const SelectProductJob: React.FC<Props> = ({
       ) : null}
 
       <View style={styles.buttons}>
-        {scanningProductStore.isProductRecoverable ? (
+        {productModalStore.product?.isRecoverable ? (
           <Button
             title="Skip"
             buttonStyle={styles.button}

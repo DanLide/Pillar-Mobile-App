@@ -11,13 +11,13 @@ import { jobsStore } from '../stores';
 import { fetchJobs } from '../../../data/fetchJobs';
 
 import { JobListItem } from './JobsListItem';
-import { JobResponseModel } from '../../../data/api/jobsAPI';
+import { JobModel } from '../stores/JobsStore';
 
 interface Props {
   selectedId?: number;
   filterValue: string;
 
-  onPressItem: (job: JobResponseModel) => void;
+  onPressItem: (job: JobModel) => void;
 }
 
 export const JobsList: React.FC<Props> = observer(
@@ -33,7 +33,7 @@ export const JobsList: React.FC<Props> = observer(
     );
 
     const renderJobListItem = useCallback(
-      ({ item }: ListRenderItemInfo<JobResponseModel>) => (
+      ({ item }: ListRenderItemInfo<JobModel>) => (
         <JobListItem
           item={item}
           selectedId={selectedId}

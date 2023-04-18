@@ -2,22 +2,25 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchJobsAPI } from './api';
 
 import { JobsStore } from '../modules/jobsList/stores';
-import { JobResponseModel } from './api/jobsAPI';
+import { JobResponse } from './api/jobsAPI';
+import { JobModel } from '../modules/jobsList/stores/JobsStore';
 
 interface FetchJobsContext {
-  jobs?: JobResponseModel[];
+  jobs?: JobResponse[];
 }
 
 export const fetchJobs = async (jobsStore: JobsStore) => {
   const fetchJobsContext: FetchJobsContext = {
     jobs: [],
   };
-  const result = await new TaskExecutor([
-    new FetchJobsTask(fetchJobsContext),
-    new SaveJobsToStoreTask(fetchJobsContext, jobsStore),
-  ]).execute();
+  if (!jobsStore.jobs.length) {
+    const result = await new TaskExecutor([
+      new FetchJobsTask(fetchJobsContext),
+      new SaveJobsToStoreTask(fetchJobsContext, jobsStore),
+    ]).execute();
 
-  return result;
+    return result;
+  }
 };
 
 class FetchJobsTask extends Task {
@@ -46,7 +49,11 @@ class SaveJobsToStoreTask extends Task {
 
   async run(): Promise<void> {
     if (this.fetchJobsContext.jobs) {
-      this.jobsStore.setJobs(this.fetchJobsContext.jobs);
+      this.jobsStore.setJobs(this.mapJobResponse(this.fetchJobsContext.jobs));
     }
+  }
+
+  private mapJobResponse(jobs: JobResponse[]): JobModel[] {
+    return jobs.map(job => ({ jobId: job.jobId, jobNumber: job.jobNumber }));
   }
 }

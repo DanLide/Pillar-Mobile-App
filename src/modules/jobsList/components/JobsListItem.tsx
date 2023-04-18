@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { JobResponseModel } from '../../../data/api/jobsAPI';
+import { JobModel } from '../stores/JobsStore';
 
 interface Props {
-  item: JobResponseModel;
+  item: JobModel;
   selectedId?: number;
 
-  onPressItem: (stock: JobResponseModel) => void;
+  onPressItem: (stock: JobModel) => void;
 }
 
 export const JobListItem: React.FC<Props> = ({

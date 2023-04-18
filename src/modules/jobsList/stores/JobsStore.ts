@@ -1,8 +1,12 @@
 import { action, makeObservable, observable } from 'mobx';
-import { JobResponseModel } from '../../../data/api/jobsAPI';
+
+export interface JobModel {
+  jobId: number;
+  jobNumber: string;
+}
 
 export class JobsStore {
-  @observable jobs: JobResponseModel[];
+  @observable jobs: JobModel[];
 
   constructor() {
     this.jobs = [];
@@ -10,7 +14,7 @@ export class JobsStore {
     makeObservable(this);
   }
 
-  @action setJobs(jobs: JobResponseModel[]) {
+  @action setJobs(jobs: JobModel[]) {
     this.jobs = jobs;
   }
 

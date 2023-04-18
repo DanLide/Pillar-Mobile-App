@@ -1,29 +1,33 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Modal, View, StyleSheet, Dimensions } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-
-import { SelectProductJob } from './SelectProductJob';
-import { ConfirmProduct } from './ConfirmProduct';
-
 import { observer } from 'mobx-react';
-import { removeProductsStore, scanningProductStore } from './stores';
+
+import { ScanningProductModel } from '../removeProducts/stores/ScanningProductStore';
+
+import { ProductQuantity } from './components/ProductQuantity';
+import { SelectProductJob } from './components/SelectProductJob';
+import { productModalStore } from './store';
 
 interface Props {
+  product: ScanningProductModel;
   isVisible: boolean;
+
   onClose: () => void;
+  onAddProductToList: (product: ScanningProductModel) => void;
 }
 
 const { width, height } = Dimensions.get('window');
 
 const items = ['first', 'second'];
 
-export const ProductJobModal: React.FC<Props> = observer(
-  ({ isVisible, onClose }) => {
+export const ProductModal: React.FC<Props> = observer(
+  ({ isVisible, product, onClose, onAddProductToList }) => {
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const carouselRef = useRef<ICarouselInstance>(null);
 
-    const clearScanningProductStoreOnClose = () => {
-      scanningProductStore.clear();
+    const clearProductModalStoreOnClose = () => {
+      productModalStore.clear();
       onClose();
     };
 
@@ -38,36 +42,31 @@ export const ProductJobModal: React.FC<Props> = observer(
     };
 
     const onPressAdd = (jobId?: number) => {
-      if (scanningProductStore.currentProduct) {
-        removeProductsStore.addProduct({
-          ...scanningProductStore.currentProduct,
-          jobId,
-        });
-        scanningProductStore.clear();
-      }
-      clearScanningProductStoreOnClose();
+      onAddProductToList({ ...product, jobId });
+      clearProductModalStoreOnClose();
     };
 
     const onPressSkip = () => {
-      if (scanningProductStore.currentProduct) {
-        removeProductsStore.addProduct(scanningProductStore.currentProduct);
-        scanningProductStore.clear();
-      }
-      clearScanningProductStoreOnClose();
+      onAddProductToList({ ...product });
+      clearProductModalStoreOnClose();
     };
+
+    useEffect(() => {
+      productModalStore.setProduct(product);
+    }, []);
 
     const renderItem = useCallback(
       ({ index }: { index: number }) =>
         index === 0 ? (
-          <ConfirmProduct
+          <ProductQuantity
             onPressAddToList={onPressSkip}
-            onClose={clearScanningProductStoreOnClose}
+            onClose={clearProductModalStoreOnClose}
             onJobSelectNavigation={onJobSelectNavigation}
           />
         ) : (
           <SelectProductJob
             selectedIndex={selectedIndex}
-            onClose={clearScanningProductStoreOnClose}
+            onClose={clearProductModalStoreOnClose}
             onPressSkip={onPressSkip}
             onPressBack={onPressBack}
             onPressAdd={onPressAdd}

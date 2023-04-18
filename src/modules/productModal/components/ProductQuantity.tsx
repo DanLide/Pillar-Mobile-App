@@ -7,13 +7,10 @@ import {
   StyleSheet,
   Dimensions,
 } from 'react-native';
+import { Button } from '../../../components';
 import { observer } from 'mobx-react';
 
-import { Button } from '../../components';
-
-import { scanningProductStore } from './stores';
-
-const { height } = Dimensions.get('window');
+import { productModalStore } from '../store';
 
 interface Props {
   onClose: () => void;
@@ -21,41 +18,30 @@ interface Props {
   onJobSelectNavigation: () => void;
 }
 
-export const ConfirmProduct: React.FC<Props> = observer(
+export const ProductQuantity: React.FC<Props> = observer(
   ({ onClose, onPressAddToList, onJobSelectNavigation }) => {
+    const product =
+      productModalStore?.product || ({ isRecoverable: false } as any);
     const onChangeInputText = (text: string) => {
-      if (text === '') scanningProductStore.setProductReservedCount('0');
+      if (text === '') product.reservedCount = 0;
 
-      if (
-        scanningProductStore.currentProduct?.onHand &&
-        scanningProductStore.currentProduct?.onHand <= +text
-      )
-        return;
+      if (product.onHand && product.onHand <= +text) return;
 
       if (text) {
-        scanningProductStore.setProductReservedCount(text);
+        productModalStore.updateQuantity(+text);
       }
     };
 
     const onIncreaseCount = () => {
-      if (
-        scanningProductStore.currentProduct?.onHand &&
-        scanningProductStore.currentProduct?.onHand <=
-          scanningProductStore.currentProductReservedCount
-      )
-        return;
+      if (product.onHand && product.onHand <= product.reservedCount) return;
 
-      scanningProductStore.setProductReservedCount(
-        scanningProductStore.currentProductReservedCount + 1,
-      );
+      productModalStore.updateQuantity(product.reservedCount + 1);
     };
 
     const onDecreaseCount = () => {
-      if (scanningProductStore.currentProductReservedCount === 0) return;
+      if (product.reservedCount === 0) return;
 
-      scanningProductStore.setProductReservedCount(
-        scanningProductStore.currentProductReservedCount - 1,
-      );
+      productModalStore.updateQuantity(product.reservedCount - 1);
     };
     return (
       <>
@@ -69,9 +55,7 @@ export const ConfirmProduct: React.FC<Props> = observer(
           </View>
         </View>
 
-        <Text style={styles.name}>
-          {scanningProductStore.currentProduct?.name}
-        </Text>
+        <Text style={styles.name}>{product.name}</Text>
 
         <View style={styles.quantityContainer}>
           <Button
@@ -82,7 +66,7 @@ export const ConfirmProduct: React.FC<Props> = observer(
           />
           <TextInput
             style={styles.input}
-            value={`${scanningProductStore.currentProductReservedCount}`}
+            value={`${product.reservedCount}`}
             keyboardType="number-pad"
             onChangeText={onChangeInputText}
           />
@@ -94,11 +78,9 @@ export const ConfirmProduct: React.FC<Props> = observer(
           />
         </View>
 
-        <Text style={styles.availableCount}>
-          Available {scanningProductStore.currentProduct?.onHand}
-        </Text>
+        <Text style={styles.availableCount}>Available {product.onHand}</Text>
 
-        {scanningProductStore.isProductRecoverable ? (
+        {product.isRecoverable ? (
           <Button
             buttonStyle={styles.continueButton}
             title="Continue"
@@ -122,16 +104,6 @@ export const ConfirmProduct: React.FC<Props> = observer(
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  background: {
-    backgroundColor: 'white',
-    marginTop: height * 0.25,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-  },
   header: {
     marginVertical: 24,
     flexDirection: 'row',
@@ -147,10 +119,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 18,
     marginTop: 36,
-  },
-  details: {
-    fontSize: 18,
-    textAlign: 'center',
   },
   quantityContainer: {
     alignItems: 'center',

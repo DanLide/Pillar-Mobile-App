@@ -1,8 +1,11 @@
 import { action, makeObservable, observable, computed } from 'mobx';
-import { ProductResponseModel } from '../../../data/api/productsAPI';
 
-export interface ScanningProductModel extends ProductResponseModel {
-  reservedCount?: number;
+export interface ScanningProductModel {
+  productId: number;
+  name: string;
+  isRecoverable: 'Yes' | 'No';
+  onHand: number;
+  reservedCount: number;
   jobId?: number;
 }
 

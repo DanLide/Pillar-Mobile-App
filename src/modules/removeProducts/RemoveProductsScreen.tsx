@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 
-import { scanningProductStore } from './stores';
+import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button } from '../../components';
-import { ProductJobModal } from './ProductJobModal';
+import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
 import { SelectedProductsList } from './SelectedProductsList';
+import { ScanningProductModel } from './stores/ScanningProductStore';
 
 const { width, height } = Dimensions.get('window');
 
@@ -43,6 +44,10 @@ export const RemoveProductsScreen = observer(() => {
     setIsModalVisible(false);
   };
 
+  const onAddProductToRemoveList = (product: ScanningProductModel) => {
+    removeProductsStore.addProduct(product);
+  };
+
   useEffect(() => {
     if (scanningProductStore.currentProduct) {
       setIsModalVisible(true);
@@ -66,7 +71,7 @@ export const RemoveProductsScreen = observer(() => {
         buttonStyle={styles.scanButton}
         textStyle={styles.scanButtonText}
         title="SCAN PRODUCT"
-        onPress={onScanProduct}
+        onPress={() => fetchProductByCode('fn4yNTY4')}
       />
       <Button
         buttonStyle={styles.button}
@@ -74,7 +79,14 @@ export const RemoveProductsScreen = observer(() => {
         onPress={onCompleteRemove}
       />
 
-      <ProductJobModal isVisible={isModalVisible} onClose={onCloseModal} />
+      {scanningProductStore.currentProduct ? (
+        <ProductModal
+          product={scanningProductStore.currentProduct}
+          isVisible={isModalVisible}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
+      ) : null}
     </SafeAreaView>
   );
 });
