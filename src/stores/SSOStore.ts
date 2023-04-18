@@ -31,8 +31,8 @@ export class SSOStore {
 
 export interface SSOModel {
   pisaId: number;
-  address: string;
   name: string;
+  address?: string;
   pillarId?: string;
   msoPillarId?: string;
   distributorId?: string;
