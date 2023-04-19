@@ -10,12 +10,13 @@ import { observer } from 'mobx-react';
 import { StockModel } from '../stores/StocksStore';
 import { stocksStore } from '../stores';
 import { fetchStocks } from '../../../data/fetchStocks';
-
 import { StocksListItem } from './StocksListItem';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
 }
+
+const keyExtractor = (item: StockModel) => String(item.partyRoleId);
 
 export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -43,6 +44,10 @@ export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
   }
 
   return (
-    <FlatList data={stocksStore.stocks} renderItem={renderStockListItem} />
+    <FlatList
+      data={stocksStore.stocks}
+      renderItem={renderStockListItem}
+      keyExtractor={keyExtractor}
+    />
   );
 });
