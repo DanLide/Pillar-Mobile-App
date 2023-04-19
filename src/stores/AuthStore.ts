@@ -87,8 +87,8 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.companyNumber = value;
   }
 
-  @action setPermissionSets(value: (number | undefined)[]) {
-    this.permissionSet = Utils.numbersToBigInts(value);
+  @action setPermissionSets(value: (string | undefined)[]) {
+    this.permissionSet = Utils.stringsToBigInts(value);
   }
 
   @action setMsoID(value?: number) {

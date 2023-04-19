@@ -10,7 +10,7 @@ export class PermissionProvider {
     this.permissions = _permissions;
   }
 
-  hasPermission(permission: Permission): boolean {
+  private hasPermission(permission: Permission): boolean {
     const permissionSet = this.permissions.getPermissionSet;
 
     if (!permissionSet?.length) return false;
@@ -19,5 +19,27 @@ export class PermissionProvider {
     const permissionValue = BigInt(1) << BigInt(permission % ENUM_BASE);
 
     return BigInt(permissionMask & permissionValue) == permissionValue;
+  }
+
+  canRemoveProduct() {
+    return this.hasPermission(
+      Permission.InventoryManagement_StockMobile_Remove,
+    );
+  }
+
+  canReturnProduct() {
+    return this.hasPermission(
+      Permission.InventoryManagement_StockMobile_Return,
+    );
+  }
+
+  canReceiveOrder() {
+    return this.hasPermission(
+      Permission.InventoryManagement_StockMobile_Receive,
+    );
+  }
+
+  canEditProduct() {
+    return this.hasPermission(Permission.InventoryManagement_StockMobile_Edit);
   }
 }

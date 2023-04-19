@@ -2,12 +2,9 @@ import { PermissionProvider } from '../PermissionProvider';
 import {
   getPermissionsMock,
   mockedPermissionSets,
-  testPermissions,
 } from '../__mocks__/PermissionProvider';
 
 const { technician, distributor, mso, admin, empty } = mockedPermissionSets;
-const { returnProduct, removeProduct, receiveOrder, editProduct } =
-  testPermissions;
 
 describe('PermissionProvider', () => {
   const technicianPermissionsMock = getPermissionsMock(technician);
@@ -19,13 +16,13 @@ describe('PermissionProvider', () => {
   it('should NOT grant permission if permission set is undefined', () => {
     const permissionProvider = new PermissionProvider();
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeFalsy();
+    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
   });
 
   it('should NOT grant permission if permission set is empty', () => {
     const permissionProvider = new PermissionProvider(emptyPermissionsMock);
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeFalsy();
+    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
   });
 
   it('should grant Remove Product permission for Technician', () => {
@@ -33,7 +30,7 @@ describe('PermissionProvider', () => {
       technicianPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeTruthy();
+    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
   });
 
   it('should NOT grant Remove Product permission for Distributor', () => {
@@ -41,19 +38,19 @@ describe('PermissionProvider', () => {
       distributorPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeFalsy();
+    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
   });
 
   it('should grant Remove Product permission for MSO', () => {
     const permissionProvider = new PermissionProvider(msoPermissionsMock);
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeTruthy();
+    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
   });
 
   it('should grant Remove Product permission for Admin', () => {
     const permissionProvider = new PermissionProvider(adminPermissionsMock);
 
-    expect(permissionProvider.hasPermission(removeProduct)).toBeTruthy();
+    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
   });
 
   it('should grant Return Product permission for Technician', () => {
@@ -61,7 +58,7 @@ describe('PermissionProvider', () => {
       technicianPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(returnProduct)).toBeTruthy();
+    expect(permissionProvider.canReturnProduct()).toBeTruthy();
   });
 
   it('should NOT grant Return Product permission for Distributor', () => {
@@ -69,19 +66,19 @@ describe('PermissionProvider', () => {
       distributorPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(returnProduct)).toBeFalsy();
+    expect(permissionProvider.canReturnProduct()).toBeFalsy();
   });
 
   it('should grant Return Product permission for MSO', () => {
     const permissionProvider = new PermissionProvider(msoPermissionsMock);
 
-    expect(permissionProvider.hasPermission(returnProduct)).toBeTruthy();
+    expect(permissionProvider.canReturnProduct()).toBeTruthy();
   });
 
   it('should grant Return Product permission for Admin', () => {
     const permissionProvider = new PermissionProvider(adminPermissionsMock);
 
-    expect(permissionProvider.hasPermission(returnProduct)).toBeTruthy();
+    expect(permissionProvider.canReturnProduct()).toBeTruthy();
   });
 
   it('should NOT grant Receive Order permission for Technician', () => {
@@ -89,7 +86,7 @@ describe('PermissionProvider', () => {
       technicianPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(receiveOrder)).toBeFalsy();
+    expect(permissionProvider.canReceiveOrder()).toBeFalsy();
   });
 
   it('should grant Receive Order permission for Distributor', () => {
@@ -97,19 +94,19 @@ describe('PermissionProvider', () => {
       distributorPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(receiveOrder)).toBeTruthy();
+    expect(permissionProvider.canReceiveOrder()).toBeTruthy();
   });
 
   it('should NOT grant Receive Order permission for MSO', () => {
     const permissionProvider = new PermissionProvider(msoPermissionsMock);
 
-    expect(permissionProvider.hasPermission(receiveOrder)).toBeFalsy();
+    expect(permissionProvider.canReceiveOrder()).toBeFalsy();
   });
 
   it('should grant Receive Order permission for Admin', () => {
     const permissionProvider = new PermissionProvider(adminPermissionsMock);
 
-    expect(permissionProvider.hasPermission(receiveOrder)).toBeTruthy();
+    expect(permissionProvider.canReceiveOrder()).toBeTruthy();
   });
 
   it('should NOT grant Edit Product permission for Technician', () => {
@@ -117,7 +114,7 @@ describe('PermissionProvider', () => {
       technicianPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(editProduct)).toBeFalsy();
+    expect(permissionProvider.canEditProduct()).toBeFalsy();
   });
 
   it('should NOT grant Edit Product permission for Distributor', () => {
@@ -125,18 +122,18 @@ describe('PermissionProvider', () => {
       distributorPermissionsMock,
     );
 
-    expect(permissionProvider.hasPermission(editProduct)).toBeFalsy();
+    expect(permissionProvider.canEditProduct()).toBeFalsy();
   });
 
   it('should grant Edit Product permission for MSO', () => {
     const permissionProvider = new PermissionProvider(msoPermissionsMock);
 
-    expect(permissionProvider.hasPermission(editProduct)).toBeTruthy();
+    expect(permissionProvider.canEditProduct()).toBeTruthy();
   });
 
   it('should grant Edit Product permission for Admin', () => {
     const permissionProvider = new PermissionProvider(adminPermissionsMock);
 
-    expect(permissionProvider.hasPermission(editProduct)).toBeTruthy();
+    expect(permissionProvider.canEditProduct()).toBeTruthy();
   });
 });
