@@ -1,5 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { FlatList, Alert, ActivityIndicator } from 'react-native';
+import {
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  ListRenderItem,
+} from 'react-native';
 import { observer } from 'mobx-react';
 
 import { StockModel } from '../stores/StocksStore';
@@ -24,6 +29,11 @@ export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
       return Alert.alert('Error', error.message || 'Loading is Failed!');
   }, []);
 
+  const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
+    ({ item }) => <StocksListItem item={item} onPressItem={onPressItem} />,
+    [onPressItem],
+  );
+
   useEffect(() => {
     onFetchStocks();
   }, []);
@@ -33,9 +43,6 @@ export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
   }
 
   return (
-    <FlatList
-      data={stocksStore.stocks}
-      renderItem={item => StocksListItem({ ...item, onPressItem })}
-    />
+    <FlatList data={stocksStore.stocks} renderItem={renderStockListItem} />
   );
 });
