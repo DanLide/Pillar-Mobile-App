@@ -1,0 +1,61 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/3MCircular-Bold.otf",
+      "sha1": "2c952a8f046e979e9dc2130615344c931d50132b"
+    },
+    {
+      "path": "assets/fonts/3MCircular-BoldItalic.otf",
+      "sha1": "e89bacbb362abd229d06cf5d11c279cf780dd59c"
+    },
+    {
+      "path": "assets/fonts/3MCircular-Book.otf",
+      "sha1": "f78e1a25873222ed70b601f5bc63840333fca9e1"
+    },
+    {
+      "path": "assets/fonts/3MCircular-BookItalic.otf",
+      "sha1": "a51b4322c7e67b36614a601d3b590007b77c3e51"
+    },
+    {
+      "path": "assets/fonts/3MCircular-Light.otf",
+      "sha1": "8cab06f95fed15536494f5aba288878dd50bf1e2"
+    },
+    {
+      "path": "assets/fonts/3MCircular-LightItalic.otf",
+      "sha1": "e44174cb4cee6a4889aaf9dd9a0fc70e4848791a"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-Black.otf",
+      "sha1": "dd73c4c0efd90948d7d2e974e269942c2298680d"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-BlackItalic.otf",
+      "sha1": "71fc85b9fc5857c15b431195c25b5911d5b8ab26"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-Bold.otf",
+      "sha1": "8ea463baaa4a68a7e543f1f15d11f9e38f8ec9a7"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-BoldItalic.otf",
+      "sha1": "18c59ca21efc9376951fe063198af62c7cb2cc98"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-Italic.otf",
+      "sha1": "a35d5e47b419aebef2e5d34e6ec75a77c05c4f12"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-Light.otf",
+      "sha1": "80c502211271aa5bd1cd0b600f6d75808429525d"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-LightItalic.otf",
+      "sha1": "3ef49c97afb391dd2a54aaa7edfba19a866175d1"
+    },
+    {
+      "path": "assets/fonts/3MCircularTT-Regular.otf",
+      "sha1": "d35ac45cfd4593b9932bedff159c5ff006ea874f"
+    }
+  ]
+}
