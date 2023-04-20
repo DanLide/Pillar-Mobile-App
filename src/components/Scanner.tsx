@@ -1,23 +1,26 @@
 import React, { useEffect } from 'react';
-import {
-  ViewStyle,
-  ActivityIndicator
-} from 'react-native'
+import { ViewStyle, ActivityIndicator } from 'react-native';
 import { runOnJS } from 'react-native-reanimated';
-import { scanBarcodes, BarcodeFormat, Barcode } from 'vision-camera-code-scanner'
+import {
+  scanBarcodes,
+  BarcodeFormat,
+  Barcode,
+} from 'vision-camera-code-scanner';
 import {
   useCameraDevices,
   useFrameProcessor,
   Frame,
   Camera,
   CameraProps,
-} from 'react-native-vision-camera'
+} from 'react-native-vision-camera';
 
 export interface ScannerProps extends Partial<CameraProps> {
-  isCamera: boolean
-  containerStyle?: ViewStyle
-  onRead: (barcode: Barcode[], frame: Frame) => void
+  isCamera: boolean;
+  containerStyle?: ViewStyle;
+  onRead: (barcode: Barcode[], frame: Frame) => void;
 }
+
+const CAMERA_ZOOM = 1.5;
 
 const Scanner: React.FC<ScannerProps> = ({
   isCamera,
@@ -29,17 +32,19 @@ const Scanner: React.FC<ScannerProps> = ({
   const devices = useCameraDevices();
   const device = devices.back;
 
-  const frameProcessor = useFrameProcessor(
-    (frame) => {
-      'worklet';
-      const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
-        checkInverted: true,
-      });
+  const frameProcessor = useFrameProcessor(frame => {
+    'worklet';
+    const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
+      checkInverted: true,
+    });
 
-      const filtered = barcodes.filter((value, index, self) => self.findIndex((el) => el.content.data === value.content.data) === index);
+    const filtered = barcodes.filter(
+      (value, index, self) =>
+        self.findIndex(el => el.content.data === value.content.data) === index,
+    );
 
-      onRead && runOnJS(onRead)(filtered, frame);
-    }, []);
+    onRead && runOnJS(onRead)(filtered, frame);
+  }, []);
 
   const [hasPermission, setHasPermission] = React.useState(false);
 
@@ -58,15 +63,15 @@ const Scanner: React.FC<ScannerProps> = ({
     <Camera
       frameProcessor={frameProcessor}
       audio={false}
+      zoom={CAMERA_ZOOM}
       isActive={isActive}
       frameProcessorFps={5}
       {...props}
       device={device}
     />
-  )
-}
+  );
+};
 
+Scanner.displayName = 'Scanner';
 
-Scanner.displayName = 'Scanner'
-
-export default React.memo(Scanner)
+export default React.memo(Scanner);
