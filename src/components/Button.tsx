@@ -15,9 +15,9 @@ import { colors, fonts } from '../theme';
 
 type ButtonProps = TouchableOpacityProps & TextProps;
 
-enum ButtonType {
-  primary = 'primary',
-  secondary = 'secondary',
+export enum ButtonType {
+  primary,
+  secondary,
 }
 
 interface ExtendedButtonProps extends ButtonProps {
