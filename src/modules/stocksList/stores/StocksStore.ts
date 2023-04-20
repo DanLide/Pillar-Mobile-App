@@ -31,7 +31,8 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
-  // roleTypeId: number;
+  roleTypeId: number;
+  leanTecSerialNo?: string;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }
