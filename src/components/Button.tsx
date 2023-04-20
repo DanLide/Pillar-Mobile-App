@@ -11,11 +11,14 @@ import {
 } from 'react-native';
 
 import Text from './Text';
-import { colors, fonts } from '../utils';
+import { colors, fonts } from '../theme';
 
 type ButtonProps = TouchableOpacityProps & TextProps;
 
-type ButtonType = 'primal' | 'secondary' | undefined;
+enum ButtonType {
+  primary = 'primary',
+  secondary = 'secondary',
+}
 
 interface ExtendedButtonProps extends ButtonProps {
   type?: ButtonType;
@@ -38,9 +41,9 @@ const Button: React.FC<ExtendedButtonProps> = ({
 
   const getStyleByType = (type?: ButtonType) => {
     switch (type) {
-      case 'primal':
-        return styles.primalContainer;
-      case 'secondary':
+      case ButtonType.primary:
+        return styles.primaryContainer;
+      case ButtonType.secondary:
         return styles.secondaryContainer;
       default:
         return null;
@@ -59,9 +62,9 @@ const Button: React.FC<ExtendedButtonProps> = ({
 
   const getTextStyleByType = (type?: ButtonType) => {
     switch (type) {
-      case 'primal':
-        return styles.primalText;
-      case 'secondary':
+      case ButtonType.primary:
+        return styles.primaryText;
+      case ButtonType.secondary:
         return styles.secondaryText;
       default:
         return null;
@@ -105,11 +108,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: 'white',
   },
-  primalContainer: {
+  primaryContainer: {
     borderRadius: 8,
     backgroundColor: colors.purple,
   },
-  primalText: {
+  primaryText: {
     color: colors.white,
     fontSize: 20,
     fontFamily: fonts.TT_Bold,
