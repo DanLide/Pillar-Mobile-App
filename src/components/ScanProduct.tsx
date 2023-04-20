@@ -6,13 +6,16 @@ import {
   Dimensions,
   View,
   TouchableOpacity,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
+import { Barcode } from 'vision-camera-code-scanner';
+import { Frame } from 'react-native-vision-camera';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from './';
 import Scanner, { ScannerProps } from './Scanner';
-
-import { Barcode } from 'vision-camera-code-scanner';
-import { Frame } from 'react-native-vision-camera';
+import { useSwitchState } from '../hooks';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
@@ -30,9 +33,17 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan }) => {
   const topShadowLayoutRef = useRef<LayoutRectangle | null>(null);
   const bottomShadowLayoutRef = useRef<LayoutRectangle | null>(null);
 
+  const [isTorchOn, toggleIsTorchOn] = useSwitchState();
+  const { top } = useSafeAreaInsets();
+
   const shadowHeight = topShadowLayoutRef.current?.height;
   const topLimit = shadowHeight;
   const bottomLimit = bottomShadowLayoutRef.current?.y;
+
+  const torchButtonStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.torch, { top }, isTorchOn && styles.torchOn],
+    [isTorchOn, top],
+  );
 
   const getCodeCoordinates = (barcode: Barcode) => {
     if (!frameRef.current || !scannerLayoutRef.current || !barcode.cornerPoints)
@@ -127,6 +138,7 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan }) => {
     <View style={styles.container}>
       <View style={[styles.scanner]}>
         <Scanner
+          torch={isTorchOn ? 'on' : 'off'}
           style={styles.scanner}
           onRead={onRead}
           isCamera
@@ -139,6 +151,11 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan }) => {
       <View
         style={[styles.shadow, styles.bottomShadow]}
         onLayout={onLayoutBottomShadow}
+      />
+      <Button
+        title="Torch"
+        buttonStyle={torchButtonStyle}
+        onPress={toggleIsTorchOn}
       />
       <Button
         title="Scan Product"
@@ -173,6 +190,14 @@ const styles = StyleSheet.create({
   },
   bottomShadow: {
     marginTop: 'auto',
+  },
+  torch: {
+    position: 'absolute',
+    left: 8,
+    padding: 4,
+  },
+  torchOn: {
+    backgroundColor: 'green',
   },
   scanButton: {
     top: '90%',

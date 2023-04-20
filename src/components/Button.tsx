@@ -17,8 +17,8 @@ type ButtonProps = TouchableOpacityProps & TextProps;
 interface ExtendedButtonProps extends ButtonProps {
   title: string;
   isLoading?: boolean;
-  buttonStyle?: ViewStyle;
-  textStyle?: TextStyle;
+  buttonStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 }
 
 const Button: React.FC<ExtendedButtonProps> = ({
@@ -50,7 +50,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
       {isLoading ? (
         <ActivityIndicator size="small" color="white" />
       ) : (
-        <Text {...props} style={textMergedStyle}>
+        <Text {...props} style={textMergedStyle} disabled>
           {title}
         </Text>
       )}
