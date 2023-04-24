@@ -103,9 +103,17 @@ export class URLProvider {
 
   getFetchJobsBySso() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
- 
+
     return new URL(
       `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/RepairFacilityJob/${facilityId}`,
+    );
+  }
+
+  removeProduct(productId: number, quantity: number, jobId: number | null) {
+    const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${jobId}/${quantity}`,
     );
   }
 }

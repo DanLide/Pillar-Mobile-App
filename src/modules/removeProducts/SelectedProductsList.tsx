@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 
 import { RemoveProductsType } from './stores/RemoveProductsStore';
 
-const toSectionListData = (value: RemoveProductsType) =>
+export const toSectionListData = (value: RemoveProductsType) =>
   Object.keys(value).map(key => ({ title: key, data: value[key] }));
 
 export const SelectedProductsList = observer(() => {
