@@ -28,7 +28,6 @@ export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.text}>Identify your Stock location</Text>
       <StocksList onPressItem={onItemPress} />
     </SafeAreaView>
   );

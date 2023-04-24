@@ -1,5 +1,6 @@
 export const colors = {
   purpleDark: '#7634BC',
+  purpleSemiDark: '#5A2099',
   purple: '#9657D9',
   purpleLight: '#DBC2F9',
   white: '#FFFFFF',
@@ -7,6 +8,8 @@ export const colors = {
   blackSemiLight: '#323237',
   blackLight: '#424247',
   grayDark: '#95959E',
+  graySemiDark: '#CBCBD4',
   gray: '#E1E1E8',
+  graySemiLight: '#F2F2F5',
   grayLight: '#F8F8FA',
 };
