@@ -5,7 +5,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AppStack } from "./src/navigation";
 
-const App = () => {
+const App = (prop:any) => {
+  console.log(prop);
   return (
     <SafeAreaProvider>
       <NavigationContainer>

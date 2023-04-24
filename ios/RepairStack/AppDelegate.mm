@@ -8,10 +8,31 @@
 {
   
   self.moduleName = @"RepairStack";
-  // You can add your custom initial props in the dictionary below.
-  // They will be passed down to the ViewController used by React Native.
-  self.initialProps = @{};
-
+  
+  NSString *appIdentifierPrefix =
+  [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppIdentifierPrefix"];
+  NSString *group = [NSString stringWithFormat:@"%@share_keychain", appIdentifierPrefix];
+  
+  // Read RN Token from the keychain
+  NSDictionary *dict = @{
+    (__bridge NSString *)kSecClass : (__bridge NSString *)kSecClassGenericPassword,
+    (__bridge id)kSecReturnData : (id)kCFBooleanTrue,
+    (__bridge id)kSecMatchLimit : (__bridge id)kSecMatchLimitOne,
+    (__bridge NSString *)kSecAttrAccount : @"some_key",
+    (__bridge id)kSecAttrAccessGroup : group
+  };
+  
+  CFTypeRef result = NULL;
+  OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)dict,&result);
+  NSString *keychainData = NULL;
+  if( status != errSecSuccess) {
+    keychainData = @"";
+  } else {
+    keychainData = [[NSString alloc] initWithData:(__bridge NSData *)result encoding:NSUTF8StringEncoding];
+  }
+  
+  self.initialProps = @{@"rntoken" : keychainData};
+  
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
