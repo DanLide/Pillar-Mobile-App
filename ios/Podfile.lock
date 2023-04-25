@@ -477,6 +477,8 @@ PODS:
     - React-perflogger (= 0.71.6)
   - RNGestureHandler (2.9.0):
     - React-Core
+  - RNKeychain (8.1.1):
+    - React-Core
   - RNPermissions (3.8.0):
     - React-Core
   - RNReanimated (2.15.0):
@@ -583,6 +585,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -693,6 +696,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNKeychain:
+    :path: "../node_modules/react-native-keychain"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -768,6 +773,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
   RNPermissions: 215c54462104b3925b412b0fb3c9c497b21c358b
   RNReanimated: 29295af754cdd6f8e4428427d4195e02ea8766e0
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
@@ -777,6 +783,6 @@ SPEC CHECKSUMS:
   Yoga: ba09b6b11e6139e3df8229238aa794205ca6a02a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 05723842054879512a27b92290e88d883e962370
+PODFILE CHECKSUM: 2ea68d8737bf76853a4c969a38db0547b220544f
 
 COCOAPODS: 1.12.0

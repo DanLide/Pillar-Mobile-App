@@ -74,6 +74,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RepairStack/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Light.otf"; path = "../assets/fonts/3MCircularTT-Light.otf"; sourceTree = "<group>"; };
 		91E5E186411975104EE3F062 /* libPods-RepairStackAbstract-RepairStackRelease.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackRelease.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
 		953DF4C929E3FDD900247A0B /* RepairStackRelease.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackRelease.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		953DF4CA29E3FDD900247A0B /* RepairStackRelease-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease-Info.plist"; path = "/Users/andriy/Documents/work/3m/Pillar-Mobile-App/ios/RepairStackRelease-Info.plist"; sourceTree = "<absolute>"; };
 		95C46AC429D55D300021495A /* RepairStack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RepairStack.entitlements; path = RepairStack/RepairStack.entitlements; sourceTree = "<group>"; };
@@ -137,6 +138,7 @@
 		13B07FAE1A68108700A75B9A /* RepairStack */ = {
 			isa = PBXGroup;
 			children = (
+				9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */,
 				95C46AC429D55D300021495A /* RepairStack.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -969,7 +971,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 4;
