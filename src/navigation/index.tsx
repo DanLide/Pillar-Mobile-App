@@ -3,7 +3,12 @@ import { Button, StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import { defaultOptions, logout } from './helpers';
+import {
+  getNavigationOptions,
+  getScreenOptions,
+  logout,
+  LeftBarType,
+} from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -70,7 +75,10 @@ const RemoveStack = () => {
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
-        options={{ title: 'Remove Products' }}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}
@@ -105,7 +113,7 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.TermsScreen}
@@ -115,17 +123,17 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}
         component={LanguageSelectScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
         component={SelectSSOScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
     </Stack.Navigator>
   );
@@ -138,13 +146,13 @@ export const AppStack = observer(() => {
         <Stack.Screen
           name={AppNavigator.HomeStack}
           component={HomeStack}
-          options={defaultOptions}
+          options={getNavigationOptions}
         />
       ) : (
         <Stack.Screen
           name={AppNavigator.LoginScreen}
           component={LoginScreen}
-          options={defaultOptions}
+          options={getNavigationOptions}
         />
       )}
     </Stack.Navigator>

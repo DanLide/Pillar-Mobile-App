@@ -1,5 +1,5 @@
 import type { StackNavigationOptions } from "@react-navigation/stack";
 
-export const defaultOptions: StackNavigationOptions = {
+export const getNavigationOptions: StackNavigationOptions = {
   headerShown: false,
 };
