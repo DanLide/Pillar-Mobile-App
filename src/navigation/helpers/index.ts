@@ -1,5 +1,5 @@
 import { getNavigationOptions } from './getNavigationOptions';
-import { getScreenOptions, LeftHeaderType } from './getScreenOptions';
+import { getScreenOptions, LeftBarType } from './getScreenOptions';
 import { logout } from './logout';
 
-export { getNavigationOptions, getScreenOptions, logout, LeftHeaderType };
+export { getNavigationOptions, getScreenOptions, logout, LeftBarType };

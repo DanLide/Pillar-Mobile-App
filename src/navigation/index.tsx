@@ -7,7 +7,7 @@ import {
   getNavigationOptions,
   getScreenOptions,
   logout,
-  LeftHeaderType,
+  LeftBarType,
 } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
@@ -77,7 +77,7 @@ const RemoveStack = () => {
         component={SelectStockScreen}
         options={getScreenOptions({
           title: 'Remove Products',
-          leftHeaderType: LeftHeaderType.Back,
+          leftBarButtonType: LeftBarType.Back,
         })}
       />
       <Stack.Screen
