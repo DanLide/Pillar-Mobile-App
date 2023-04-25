@@ -23,7 +23,7 @@ export const StocksListItem: React.FC<Props> = ({ item, onPressItem }) => {
         <Text style={styles.title}>{organizationName}</Text>
         <View style={styles.statusContainer}>
           {isLocked && <Text style={styles.statusText}>Unlock</Text>}
-          <SVGs.ArrowChevron color={colors.purpleSemiDark} />
+          <SVGs.ChevronIcon color={colors.purpleDark} />
         </View>
       </View>
     </TouchableOpacity>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
-    borderBottomColor: colors.graySemiDark,
+    borderBottomColor: colors.gray,
   },
   title: {
     paddingLeft: 5,
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     paddingRight: 16,
-    color: colors.purpleSemiDark,
+    color: colors.purpleDark,
     fontSize: 18,
     lineHeight: 23.5,
     fontFamily: fonts.TT_Regular,

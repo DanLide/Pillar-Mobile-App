@@ -1,8 +1,6 @@
 import * as React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 
-import { colors } from './colors';
-
 export const CloseIcon = (props: SvgProps) => (
   <Svg width={16} height={16} viewBox="0 0 16 16" fill="none" {...props}>
     <Path
@@ -14,7 +12,7 @@ export const CloseIcon = (props: SvgProps) => (
   </Svg>
 );
 
-export const ArrowChevron = (props: SvgProps) => (
+export const ChevronIcon = (props: SvgProps) => (
   <Svg height="14.5" width="8.5" viewBox="0 0 7 12" {...props}>
     <Path
       d="M1.047 0L0 1.055 4.906 6 0 10.945 1.046 12h.002L7 6 1.047 0z"

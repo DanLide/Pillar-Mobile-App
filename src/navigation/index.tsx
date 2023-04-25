@@ -1,9 +1,14 @@
 import React from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import { defaultOptions, logout } from './helpers';
+import {
+  getNavigationOptions,
+  getScreenOptions,
+  logout,
+  LeftHeaderType,
+} from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -16,12 +21,6 @@ import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
-import { SVGs, colors, fonts } from '../theme';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -69,34 +68,6 @@ const removeProductsScreenOptions: ScreenOptions = {
   headerBackTitle: 'Back',
   headerTitle: RemoveProductsScreenHeader,
 };
-const BaseHeader = () => <Text style={styles.baseHeder}>Remove Products</Text>;
-
-const HeaderLeft = () => {
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
-
-  const onIconPress = () => {
-    navigation.reset({ index: 0, routes: [{ name: AppNavigator.HomeScreen }] });
-  };
-
-  return (
-    <TouchableOpacity style={styles.iconButton} onPress={onIconPress}>
-      <SVGs.ArrowChevron
-        style={styles.backArrow}
-        color={colors.white}
-        width={11}
-        height={20}
-      />
-    </TouchableOpacity>
-  );
-};
-
-const removeProductsWithBackNavResultOptions = {
-  headerTitle: BaseHeader,
-  headerLeft: HeaderLeft,
-  headerStyle: {
-    backgroundColor: colors.purple,
-  },
-};
 
 const RemoveStack = () => {
   return (
@@ -104,7 +75,10 @@ const RemoveStack = () => {
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
-        options={removeProductsWithBackNavResultOptions}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftHeaderType: LeftHeaderType.Back,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}
@@ -139,7 +113,7 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.TermsScreen}
@@ -149,17 +123,17 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}
         component={LanguageSelectScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
         component={SelectSSOScreen}
-        options={defaultOptions}
+        options={getNavigationOptions}
       />
     </Stack.Navigator>
   );
@@ -172,13 +146,13 @@ export const AppStack = observer(() => {
         <Stack.Screen
           name={AppNavigator.HomeStack}
           component={HomeStack}
-          options={defaultOptions}
+          options={getNavigationOptions}
         />
       ) : (
         <Stack.Screen
           name={AppNavigator.LoginScreen}
           component={LoginScreen}
-          options={defaultOptions}
+          options={getNavigationOptions}
         />
       )}
     </Stack.Navigator>
@@ -187,12 +161,4 @@ export const AppStack = observer(() => {
 
 const styles = StyleSheet.create({
   logoutButton: { marginRight: 8 },
-  iconButton: { padding: 14 },
-  baseHeder: {
-    fontSize: 19,
-    lineHeight: 26,
-    fontFamily: fonts.TT_Bold,
-    color: colors.white,
-  },
-  backArrow: { transform: [{ rotateY: '180deg' }] },
 });
