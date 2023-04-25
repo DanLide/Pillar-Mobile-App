@@ -9,41 +9,35 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { LeftBarType } from '../helpers';
 import { AppNavigator } from '..';
-import { SVGs, colors, fonts } from '../../theme';
+import { SVGs, colors } from '../../theme';
 
 interface LeftBarButtonProps {
   leftBarButtonType?: LeftBarType;
-  leftBarButtonAction?: () => void;
 }
 
 export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   leftBarButtonType,
-  leftBarButtonAction,
 }) => {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
 
   const onIconPress = () => {
-    if (leftBarButtonAction) {
-      leftBarButtonAction();
-    } else {
-      switch (leftBarButtonType) {
-        case LeftBarType.Back: {
-          if (navigation.canGoBack()) {
-            navigation.goBack();
-          }
-          break;
+    switch (leftBarButtonType) {
+      case LeftBarType.Back: {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
         }
-
-        case LeftBarType.Close:
-          navigation.reset({
-            index: 0,
-            routes: [{ name: AppNavigator.HomeScreen }],
-          });
-          break;
-
-        default:
-          break;
+        break;
       }
+
+      case LeftBarType.Close:
+        navigation.reset({
+          index: 0,
+          routes: [{ name: AppNavigator.HomeScreen }],
+        });
+        break;
+
+      default:
+        break;
     }
   };
 

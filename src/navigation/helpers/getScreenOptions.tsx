@@ -12,17 +12,12 @@ export enum LeftBarType {
 interface GetScreenOptions {
   title: string;
   leftBarButtonType?: LeftBarType;
-
-  leftBarButtonAction?: () => void;
 }
 
 export const getScreenOptions = (params: GetScreenOptions) => ({
   headerTitle: () => <TitleBar title={params.title} />,
   headerLeft: () => (
-    <LeftBarButton
-      leftBarButtonAction={params.leftBarButtonAction}
-      leftBarButtonType={params.leftBarButtonType}
-    />
+    <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
   ),
   headerRight: () => <RightBarButton />,
   headerStyle: {
