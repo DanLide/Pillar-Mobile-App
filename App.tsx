@@ -5,8 +5,12 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AppStack } from "./src/navigation";
 
-const App = (prop:any) => {
-  console.log(prop);
+interface InitialProps {
+   [key: string]: string;
+}
+
+const App = (initialProps:InitialProps) => {
+  console.log(initialProps['rntoken']);
   return (
     <SafeAreaProvider>
       <NavigationContainer>
