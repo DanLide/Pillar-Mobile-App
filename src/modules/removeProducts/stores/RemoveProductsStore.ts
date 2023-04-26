@@ -1,24 +1,42 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, computed } from 'mobx';
 
 import { StockModel } from '../../stocksList/stores/StocksStore';
 import { ScanningProductModel } from './ScanningProductStore';
 
-export type RemoveProductsType = Record<
-  string | string,
-  ScanningProductModel[]
->;
+interface RemoveProductModel extends ScanningProductModel {
+  isRemoved: boolean;
+}
+
+export type RemoveProductsType = Record<string | string, RemoveProductModel[]>;
 
 export class RemoveProductsStore {
   @observable currentStock?: StockModel;
   @observable products: RemoveProductsType;
-  @observable removedProducts: RemoveProductsType;
 
   constructor() {
     this.currentStock = undefined;
     this.products = {};
-    this.removedProducts = {};
 
     makeObservable(this);
+  }
+
+  @computed
+  get getRemovedProducts() {
+    const products = Object.keys(this.products).reduce((acc, jobId) => {
+      const removedProducts = this.products[jobId].filter(
+        product => product.isRemoved === true,
+      );
+      if (removedProducts.length > 0) {
+        return {
+          ...acc,
+          [jobId]: removedProducts,
+        };
+      } else {
+        return acc;
+      }
+    }, {});
+
+    return products;
   }
 
   @action setCurrentStocks(stock: StockModel) {
@@ -29,58 +47,28 @@ export class RemoveProductsStore {
     if (!product.jobId) {
       this.products = {
         ...this.products,
-        ['-1']: [...(this.products['-1'] || []), product],
+        ['-1']: [
+          ...(this.products['-1'] || []),
+          { ...product, isRemoved: false },
+        ],
       };
     } else {
       this.products = {
         ...this.products,
-        [product.jobId]: [...(this.products[product.jobId] || []), product],
-      };
-    }
-  }
-
-  @action removeProduct(product: ScanningProductModel) {
-    if (!product.jobId) {
-      this.products = {
-        ...this.products,
-        ['-1']: this.products['-1'].filter(
-          currentProduct =>
-            currentProduct.productId === product.productId &&
-            currentProduct.reservedCount === product.reservedCount,
-        ),
-      };
-    } else {
-      this.products = {
-        ...this.products,
-        [product.jobId]: this.products['-1'].filter(
-          currentProduct =>
-            currentProduct.productId === product.productId &&
-            currentProduct.reservedCount === product.reservedCount,
-        ),
-      };
-    }
-  }
-
-  @action addProductToRemovedList(product: ScanningProductModel) {
-    if (!product.jobId) {
-      this.removedProducts = {
-        ...this.removedProducts,
-        ['-1']: [...(this.removedProducts['-1'] || []), product],
-      };
-    } else {
-      this.removedProducts = {
-        ...this.removedProducts,
         [product.jobId]: [
-          ...(this.removedProducts[product.jobId] || []),
-          product,
+          ...(this.products[product.jobId] || []),
+          { ...product, isRemoved: false },
         ],
       };
     }
   }
 
+  @action updateProductsByKey(key: string, products: RemoveProductModel[]) {
+    this.products = { ...this.products, [key]: products };
+  }
+
   @action clear() {
     this.currentStock = undefined;
     this.products = {};
-    this.removedProducts = {};
   }
 }

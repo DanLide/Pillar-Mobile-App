@@ -1,14 +1,13 @@
-import { Task, TaskExecutor } from './helpers';
+import { Task } from './helpers';
 import { RemoveProductsStore } from '../modules/removeProducts/stores';
 import { removeProductAPI } from './api';
 import { flatten } from 'ramda';
+import { RemoveProductResponse } from './api/productsAPI';
 
 export const onRemoveProducts = async (
   removeProductsStore: RemoveProductsStore,
 ) => {
-  const result = await new TaskExecutor([
-    new RemoveProductTask(removeProductsStore),
-  ]).execute();
+  const result = await new RemoveProductTask(removeProductsStore).run();
 
   return result;
 };
@@ -22,21 +21,29 @@ export class RemoveProductTask extends Task {
   }
 
   async run(): Promise<void> {
-    await this.recurseRequest(this.removeProductsStore);
+    const productsJobIds = Object.keys(this.removeProductsStore.products);
+
+    for (const jobId of productsJobIds) {
+      const responses = await Promise.allSettled(
+        this.removeProductsStore.products[jobId].map(product =>
+          removeProductAPI(product),
+        ),
+      );
+
+      this.updateProductsByResponses(responses, jobId);
+    }
   }
 
-  private async recurseRequest(
-    removeProductsStore: RemoveProductsStore,
-    position = 1,
+  private updateProductsByResponses(
+    responses: PromiseSettledResult<RemoveProductResponse>[],
+    jobId: string,
   ) {
-    const products = flatten(Object.values(removeProductsStore.products));
-    const product = products[0];
+    const products = responses.map((response, index) => {
+      const product = this.removeProductsStore.products[jobId][index];
+      if (response.status === 'fulfilled') product.isRemoved = true;
+      return product;
+    });
 
-    await removeProductAPI(product);
-    this.removeProductsStore.addProductToRemovedList(product);
-
-    if (products.length > position) {
-      this.recurseRequest(removeProductsStore, (position = position + 1));
-    }
+    this.removeProductsStore.updateProductsByKey(jobId, products);
   }
 }

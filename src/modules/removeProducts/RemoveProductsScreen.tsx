@@ -50,7 +50,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       setIsLoading(true);
       const error = await onRemoveProducts(removeProductsStore);
       setIsLoading(false);
-
+      console.log(error, 'error');
       if (error)
         return Alert.alert('Error', error.message || 'Removing is Failed!');
 

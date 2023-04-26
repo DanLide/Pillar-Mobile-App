@@ -1,11 +1,6 @@
 import React from 'react';
-import { Button, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Button, StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  useNavigation,
-  NavigationProp,
-  ParamListBase,
-} from '@react-navigation/native';
 import { observer } from 'mobx-react';
 
 import {
@@ -28,7 +23,7 @@ import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
 
-import { colors, fonts, SVGs } from '../theme';
+import { colors, fonts } from '../theme';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -73,33 +68,9 @@ const RemoveProductsScreenHeader = () => (
   </View>
 );
 
-const BaseHeader = () => <Text style={styles.baseHeder}>Remove Products</Text>;
-
-const HeaderLeft = () => {
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
-
-  const onIconPress = () => {
-    navigation.reset({ index: 0, routes: [{ name: AppNavigator.HomeScreen }] });
-  };
-
-  return (
-    <TouchableOpacity style={styles.iconButton} onPress={onIconPress}>
-      <SVGs.CloseIcon />
-    </TouchableOpacity>
-  );
-};
-
 const removeProductsScreenOptions: ScreenOptions = {
   headerBackTitle: 'Back',
   headerTitle: RemoveProductsScreenHeader,
-};
-
-const removeProductsResultOptions = {
-  headerTitle: BaseHeader,
-  headerLeft: HeaderLeft,
-  headerStyle: {
-    backgroundColor: colors.purple,
-  },
 };
 
 const RemoveStack = () => {
@@ -121,7 +92,10 @@ const RemoveStack = () => {
       <Stack.Screen
         name={AppNavigator.ResultScreen}
         component={ResultScreen}
-        options={removeProductsResultOptions}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Close,
+        })}
       />
     </Stack.Navigator>
   );

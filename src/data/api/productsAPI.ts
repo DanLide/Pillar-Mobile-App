@@ -9,7 +9,6 @@ export interface ProductResponse {
 }
 
 export interface RemoveProductResponse {
-  onHand: number;
   qty: number;
   jobDetailed: number;
 }

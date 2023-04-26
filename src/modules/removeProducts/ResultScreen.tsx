@@ -30,7 +30,7 @@ interface Props {
 export const ResultScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const stockName = removeProductsStore.currentStock?.organizationName || '';
-    const sections = toSectionListData(removeProductsStore.removedProducts);
+    const sections = toSectionListData(removeProductsStore.getRemovedProducts);
 
     const onPressLogout = () => {
       authStore.logOut();
