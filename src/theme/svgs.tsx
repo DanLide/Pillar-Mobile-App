@@ -20,3 +20,23 @@ export const ChevronIcon = (props: SvgProps) => (
     />
   </Svg>
 );
+
+export const LogoutIcon = (props: SvgProps) => (
+  <Svg width={28} height={28} viewBox="0 0 24 24" fill="none" {...props}>
+    <Path
+      d="M16 17v-3H9v-4h7V7l5 5-5 5zM14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z"
+      fill={props.color}
+    />
+  </Svg>
+);
+
+export const CheckMarkIcon = (props: SvgProps) => (
+  <Svg width={13} height={10.5} viewBox="0 0 11 9" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.083 0L3.667 6.417l-2.75-2.75L0 4.584l2.75 2.75.917.916.916-.917L11 .917 10.083 0z"
+      fill={props.color}
+    />
+  </Svg>
+);

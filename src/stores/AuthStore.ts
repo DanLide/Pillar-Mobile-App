@@ -12,6 +12,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private isLanguage?: boolean;
   private partyRoleId?: number;
   private username?: string;
+  private name?: string;
   private companyNumber?: string;
   private permissionSet?: bigint[];
   private msoID?: number;
@@ -53,6 +54,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   }
   @computed public get getFacilityID() {
     return this.facilityID;
+  }
+
+  @computed public get getName() {
+    return this.name;
   }
 
   onServerLogout() {
@@ -97,6 +102,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
 
   @action setFacilityID(value?: string) {
     this.facilityID = value;
+  }
+
+  @action setName(value?: string) {
+    this.name = value;
   }
 
   @action logOut() {

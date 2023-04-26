@@ -21,6 +21,7 @@ import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
+import { RightBarType } from './helpers/getScreenOptions';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -40,19 +41,6 @@ export enum AppNavigator {
 
 const Stack = createStackNavigator();
 
-type ScreenOptions = React.ComponentProps<
-  typeof Stack.Navigator
->['screenOptions'];
-
-const termsScreenOptions: ScreenOptions = {
-  title: 'Terms & Conditions',
-  headerRight: () => (
-    <View style={styles.logoutButton}>
-      <Button title="Logout" onPress={logout} />
-    </View>
-  ),
-};
-
 const RemoveProductsScreenHeader = () => (
   <View style={{ flexDirection: 'column' }}>
     <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
@@ -64,7 +52,7 @@ const RemoveProductsScreenHeader = () => (
   </View>
 );
 
-const removeProductsScreenOptions: ScreenOptions = {
+const removeProductsScreenOptions = {
   headerBackTitle: 'Back',
   headerTitle: RemoveProductsScreenHeader,
 };
@@ -118,7 +106,10 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.TermsScreen}
         component={TermsScreen}
-        options={termsScreenOptions}
+        options={getScreenOptions({
+          title: 'Terms & Conditions',
+          rightBarButtonType: RightBarType.Logout,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}

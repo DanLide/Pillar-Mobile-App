@@ -1,16 +1,18 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';
 
 import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
-import { Switch, Button } from '../../components';
+import { Button, Checkbox } from '../../components';
 import { authStore, ssoStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
 import { AppNavigator } from '../../navigation';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Loading from '../../components/Loading';
+import { colors, fonts } from '../../theme';
+import { ButtonType } from '../../components/Button';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -35,7 +37,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
     if (error)
       return Alert.alert('Error', error.message || 'Accept Terms failed!');
     if (!ssoStore.getCurrentSSO) {
-      return navigation.navigate(AppNavigator.SelectSSOScreen)
+      return navigation.navigate(AppNavigator.SelectSSOScreen);
     }
 
     navigation.reset({
@@ -49,6 +51,9 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.nameContainer}>
+        <Text style={styles.nameTitle}>{authStore.getName}</Text>
+      </View>
       <WebView
         source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
@@ -56,15 +61,19 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
         renderLoading={renderLoading}
         onLoadStart={startWebViewLoading}
         onLoadEnd={endWebViewLoading}
+        containerStyle={styles.webView}
       />
       <View style={styles.controlsContainer}>
-        <Switch
-          value={isTermsAccepted}
-          onPress={toggleTermsAccepted}
-          label="I agree to Terms"
-        />
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            isChecked={isTermsAccepted}
+            onChange={toggleTermsAccepted}
+          />
+          <Text style={styles.checkboxTitle}>Accept Terms & Conditions</Text>
+        </View>
         <Button
-          title="Submit"
+          type={ButtonType.primary}
+          title="Next"
           disabled={isSubmitDisabled}
           buttonStyle={styles.submitButton}
           onPress={onSubmitTerms}
@@ -76,8 +85,42 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  controlsContainer: { padding: 16, paddingBottom: 0 },
-  submitButton: { marginTop: 8 },
+  container: { flex: 1, backgroundColor: colors.white },
+  controlsContainer: { paddingHorizontal: 16, marginBottom: 24 },
+  submitButton: { marginTop: 56, height: 65.5, width: '100%' },
+  webView: {
+    marginHorizontal: 16,
+    marginTop: 16,
+  },
+  nameContainer: {
+    width: '100%',
+    height: 39,
+    backgroundColor: colors.grayLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomColor: colors.gray,
+    borderBottomWidth: 1,
+  },
+  nameTitle: {
+    fontSize: 18,
+    lineHeight: 23.5,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackLight,
+    alignSelf: 'center',
+    paddingVertical: 5,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 24,
+  },
+  checkboxTitle: {
+    fontSize: 20,
+    lineHeight: 28,
+    color: colors.purpleDark,
+    fontFamily: fonts.TT_Bold,
+    paddingLeft: 8,
+  },
 });
+
 export default observer(TermsScreen);
