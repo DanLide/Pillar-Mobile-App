@@ -21,6 +21,11 @@ export class RemoveProductsStore {
   }
 
   @computed
+  get getProducts() {
+    return this.products;
+  }
+
+  @computed
   get getRemovedProducts() {
     const products = Object.keys(this.products).reduce((acc, jobId) => {
       const removedProducts = this.products[jobId].filter(
@@ -36,7 +41,26 @@ export class RemoveProductsStore {
       }
     }, {});
 
-    return products;
+    return products as RemoveProductsType;
+  }
+
+  @computed
+  get getSelectedProducts() {
+    const products = Object.keys(this.products).reduce((acc, jobId) => {
+      const removedProducts = this.products[jobId].filter(
+        product => product.isRemoved === false,
+      );
+      if (removedProducts.length > 0) {
+        return {
+          ...acc,
+          [jobId]: removedProducts,
+        };
+      } else {
+        return acc;
+      }
+    }, {});
+
+    return products as RemoveProductsType;
   }
 
   @action setCurrentStocks(stock: StockModel) {

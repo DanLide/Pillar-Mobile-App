@@ -53,7 +53,7 @@ export const ProductModal: React.FC<Props> = observer(
 
     useEffect(() => {
       productModalStore.setProduct(product);
-    }, []);
+    }, [product]);
 
     const renderItem = useCallback(
       ({ index }: { index: number }) =>

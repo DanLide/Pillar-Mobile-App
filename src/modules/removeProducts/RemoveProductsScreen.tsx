@@ -50,9 +50,19 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       setIsLoading(true);
       const error = await onRemoveProducts(removeProductsStore);
       setIsLoading(false);
-      console.log(error, 'error');
+      // TODO discuss with business how we should handle partly crashed requests
       if (error)
-        return Alert.alert('Error', error.message || 'Removing is Failed!');
+        return Alert.alert('Error', error.message || 'Removing is Failed!', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Go Result',
+            onPress: () => navigation.navigate(AppNavigator.ResultScreen),
+          },
+        ]);
 
       navigation.navigate(AppNavigator.ResultScreen);
     };
@@ -66,10 +76,10 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     useEffect(() => {
-      if (scanningProductStore.currentProduct) {
+      if (scanningProductStore.getCurrentProduct) {
         setIsModalVisible(true);
       }
-    }, [scanningProductStore.currentProduct]);
+    }, [scanningProductStore.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -91,15 +101,15 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
           onPress={onScanProduct}
         />
         <Button
-          disabled={!Object.keys(removeProductsStore.products).length}
+          disabled={!Object.keys(removeProductsStore.getProducts).length}
           buttonStyle={styles.button}
           title="COMPLETE REMOVE"
           onPress={onCompleteRemove}
         />
 
-        {scanningProductStore.currentProduct ? (
+        {scanningProductStore.getCurrentProduct ? (
           <ProductModal
-            product={scanningProductStore.currentProduct}
+            product={scanningProductStore.getCurrentProduct}
             isVisible={isModalVisible}
             onAddProductToList={onAddProductToRemoveList}
             onClose={onCloseModal}

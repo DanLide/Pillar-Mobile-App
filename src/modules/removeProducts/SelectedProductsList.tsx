@@ -9,7 +9,7 @@ export const toSectionListData = (value: RemoveProductsType) =>
   Object.keys(value).map(key => ({ title: key, data: value[key] }));
 
 export const SelectedProductsList = observer(() => {
-  const sectionListData = toSectionListData(removeProductsStore.products);
+  const sectionListData = toSectionListData(removeProductsStore.getSelectedProducts);
 
   return (
     <View style={styles.container}>
