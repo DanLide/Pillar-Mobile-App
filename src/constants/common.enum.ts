@@ -207,14 +207,14 @@ export enum RoleType {
 //   Percent = 3
 // }
 //
-// export enum InventoryUseType {
-//   Stock = -1,
-//   Container = 1,
-//   Percent = 2,
-//   Each = 3,
-//   NonStock = 4,
-//   All = null
-// }
+export enum InventoryUseType {
+  Stock = -1,
+  Container = 1,
+  Percent = 2,
+  Each = 3,
+  NonStock = 4,
+  All = null
+}
 //
 // export enum SimulateScanScreenSelection {
 //   MngP_EAorContainer = 1,

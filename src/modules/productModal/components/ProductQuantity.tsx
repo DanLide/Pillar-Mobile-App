@@ -3,14 +3,14 @@ import {
   View,
   Text,
   TouchableOpacity,
-  TextInput,
   StyleSheet,
-  Dimensions,
 } from 'react-native';
 import { Button } from '../../../components';
 import { observer } from 'mobx-react';
-
+import { CloseIcon, TableIcon } from '../../../../assets/svg'
+import { fonts } from '../../../theme'
 import { productModalStore } from '../store';
+
 
 import { EditQuantity } from './EditQuantity';
 
@@ -28,16 +28,20 @@ export const ProductQuantity: React.FC<Props> = observer(
       console.log(quantity, 'onChange');
       productModalStore.updateQuantity(quantity);
     };
+
+    const isRenderStockNumber = product.onHand > 99
+
+
     return (
       <>
         <View style={styles.header}>
-          <View style={{ width: 100 }} />
-          <Text style={styles.headerTitle}>Add to list</Text>
-          <View style={{ width: 100 }}>
+          <View style={{ width: 20, }}>
             <TouchableOpacity onPress={onClose}>
-              <Text style={{ textAlign: 'center' }}>Close</Text>
+              <CloseIcon />
             </TouchableOpacity>
           </View>
+          <Text style={styles.headerTitle}>Adjust Quantity</Text>
+          <View style={{ width: 20 }} />
         </View>
 
         <Text style={styles.name}>{product.name}</Text>
@@ -47,9 +51,18 @@ export const ProductQuantity: React.FC<Props> = observer(
           currentValue={product?.reservedCount}
           onChange={onChange}
         />
-
-        <Text style={styles.availableCount}>Available {product.onHand}</Text>
-
+        <View style={styles.labelContainer}>
+          {
+            isRenderStockNumber && <View style={[styles.container, { marginRight: 8 }]}>
+              <Text style={styles.smallTitle}>In Stock</Text>
+              <Text style={styles.subTitle2}>99+</Text>
+            </View>
+          }
+          <View style={[styles.container, isRenderStockNumber && { marginLeft: 8 }]}>
+            <Text style={styles.smallTitle}>Remove by</Text>
+            <Text style={styles.subTitle}>{productModalStore?.userTypeName}</Text>
+          </View>
+        </View>
         {product.isRecoverable ? (
           <Button
             buttonStyle={styles.continueButton}
@@ -58,16 +71,22 @@ export const ProductQuantity: React.FC<Props> = observer(
           />
         ) : (
           <>
-            <Text onPress={onJobSelectNavigation} style={styles.availableCount}>
-              Link to job number
-            </Text>
+            <TouchableOpacity
+              onPress={onJobSelectNavigation}
+              style={styles.linkButton}>
+              <TableIcon />
+              <Text style={styles.linkText}>
+                Link to job number
+              </Text>
+            </TouchableOpacity>
             <Button
               buttonStyle={styles.continueButton}
               title="Add to List"
               onPress={onPressAddToList}
             />
           </>
-        )}
+        )
+        }
       </>
     );
   },
@@ -76,6 +95,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 const styles = StyleSheet.create({
   header: {
     marginVertical: 24,
+    marginHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -120,7 +140,53 @@ const styles = StyleSheet.create({
     margin: 12,
     textAlign: 'center',
   },
+  linkText: {
+    color: '#5A2099',
+    fontSize: 18,
+    marginLeft: 8,
+  },
+  linkButton: {
+    marginTop: 34,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  smallTitle: {
+    color: '#95959E',
+    fontFamily: fonts.TT_Regular,
+    fontSize: 10,
+    marginBottom: 4,
+  },
+  subTitle: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#0A672F',
+    backgroundColor: '#D9FAE6',
+    borderRadius: 12,
+    overflow: 'hidden',
+    paddingVertical: 2,
+    paddingHorizontal: 13
+  },
+  subTitle2: {
+    color: '#58585F',
+    backgroundColor: '#F2F2F5',
+    borderRadius: 12,
+    overflow: 'hidden',
+    paddingVertical: 2,
+    paddingHorizontal: 13,
+    fontSize: 18,
+    textAlign: 'center',
+  },
   continueButton: {
     margin: 36,
+    marginTop: 'auto',
+  },
+  container: {
+    alignItems: 'center',
+  },
+  labelContainer: {
+    alignSelf: 'center',
+    flexDirection: 'row',
   },
 });

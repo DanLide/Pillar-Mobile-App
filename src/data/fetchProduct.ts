@@ -70,6 +70,7 @@ class SaveProductToStoreTask extends Task {
       name: product.name,
       isRecoverable: product.isRecoverable,
       reservedCount: 1,
+      inventoryUseTypeId: product?.inventoryUseTypeId, 
     };
   }
 }

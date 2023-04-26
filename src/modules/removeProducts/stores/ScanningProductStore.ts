@@ -1,4 +1,5 @@
 import { action, makeObservable, observable, computed } from 'mobx';
+import { InventoryUseType } from '../../../constants/common.enum';
 
 export interface ScanningProductModel {
   productId: number;
@@ -7,6 +8,7 @@ export interface ScanningProductModel {
   onHand: number;
   reservedCount: number;
   jobId?: number;
+  inventoryUseTypeId: InventoryUseType;
 }
 
 export class ScanningProductStore {

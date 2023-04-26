@@ -5,6 +5,7 @@ export interface ProductResponse {
   name: string;
   isRecoverable: 'Yes' | 'No';
   onHand: number;
+  inventoryUseTypeId: number;
 }
 
 export const getFetchProductAPI = (scanCode: string) => {
