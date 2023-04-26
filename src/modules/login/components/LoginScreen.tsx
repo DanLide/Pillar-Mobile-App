@@ -7,7 +7,7 @@ import { onLogin } from '../../../data/login';
 import { authStore } from '../../../stores';
 
 import { LoginForm } from './LoginForm';
-import LoginWithPIN, { LoginWithLinkPIN } from './LoginWithPIN';
+import LoginWithPIN, { LoginWithPINProps } from './LoginWithPIN';
 
 export const LoginScreen = observer(() => {
   const store = useRef(authStore).current;
@@ -39,7 +39,7 @@ export const LoginScreen = observer(() => {
     [store],
   );
 
-  const handleLoginWithPIN = useCallback<LoginWithLinkPIN['onTokenReceived']>(
+  const handleLoginWithPIN = useCallback<LoginWithPINProps['onTokenReceived']>(
     token => console.log('TOKEN', token),
     [],
   );
