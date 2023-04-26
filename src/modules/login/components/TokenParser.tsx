@@ -6,9 +6,10 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { WebView, WebViewProps } from 'react-native-webview';
-import { useTimeout } from '../../../hooks';
 import { StyleSheet } from 'react-native';
+import { WebView, WebViewProps } from 'react-native-webview';
+
+import { useTimeout } from '../../../hooks';
 
 export interface TokenParserProps
   extends Pick<WebViewProps, 'onError' | 'onHttpError'> {
