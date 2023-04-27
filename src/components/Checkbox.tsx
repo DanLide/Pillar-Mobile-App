@@ -19,7 +19,7 @@ export const Checkbox: React.FC<Props> = ({
       style={[
         styles.container,
         {
-          backgroundColor: isChecked ? colors.purple : 'transparent',
+          backgroundColor: isChecked ? colors.purple : colors.transparent,
           borderColor: isChecked ? colors.purple : colors.grayDark,
         },
       ]}
