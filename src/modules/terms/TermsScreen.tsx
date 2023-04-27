@@ -13,6 +13,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { colors, fonts } from '../../theme';
 import { ButtonType } from '../../components/Button';
+import UsernameBar from '../../components/UsernameBar';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -51,9 +52,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.nameContainer}>
-        <Text style={styles.nameTitle}>{authStore.getName}</Text>
-      </View>
+      <UsernameBar username={store.getName} />
       <WebView
         source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}

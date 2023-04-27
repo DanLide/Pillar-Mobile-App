@@ -1,15 +1,22 @@
 import React, { useRef } from 'react';
-import { StyleSheet, TouchableOpacity, FlatList, Text } from 'react-native';
+import {
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  FlatList,
+  Text,
+} from 'react-native';
 import { observer } from 'mobx-react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { AppNavigator } from '../../navigation';
 
 import { Input } from '../../components';
 import { SSOModel } from '../../stores/SSOStore';
-import { ssoStore } from '../../stores';
+import { authStore, ssoStore } from '../../stores';
 import { SelectSSOStore } from './stores/SelectSSOStore';
 import { Button } from '../../components';
+import UsernameBar from '../../components/UsernameBar';
+import { colors } from '../../theme';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -55,6 +62,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <UsernameBar username={authStore.getName} />
       <Input
         style={styles.input}
         placeholder="Search"
@@ -80,7 +88,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: colors.white,
   },
   input: {
     margin: 16,
