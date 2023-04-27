@@ -17,7 +17,7 @@ const LoginWithPIN: React.FC<LoginWithPINProps> = ({ onTokenReceived }) => {
 
   const handleError = useCallback<NonNullable<TokenParserProps['onError']>>(
     ({ nativeEvent: { description } }) =>
-      Alert.alert(`Magic link error: ${description}`),
+      Alert.alert(`Could not log in with a PIN: ${description}`),
     [],
   );
 
