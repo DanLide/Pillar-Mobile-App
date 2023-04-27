@@ -12,7 +12,7 @@ import LoginWithPIN, { LoginWithPINProps } from './LoginWithPIN';
 export const LoginScreen = observer(() => {
   const store = useRef(authStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isPIN, setIsPIN] = useState(false);
+  const [isLoginWithPIN, setIsLoginWithPIN] = useState(false);
 
   const { top } = useSafeAreaInsets();
 
@@ -44,8 +44,8 @@ export const LoginScreen = observer(() => {
     [],
   );
 
-  const onPressPIN = () => setIsPIN(true);
-  const onPressForm = () => setIsPIN(false);
+  const onPressPIN = () => setIsLoginWithPIN(true);
+  const onPressForm = () => setIsLoginWithPIN(false);
 
   return (
     <View style={styles.container}>
@@ -58,7 +58,7 @@ export const LoginScreen = observer(() => {
           <Text style={styles.switchText}>PIN</Text>
         </TouchableOpacity>
       </View>
-      {isPIN ? (
+      {isLoginWithPIN ? (
         <LoginWithPIN onTokenReceived={handleLoginWithPIN} />
       ) : (
         <LoginForm onPress={onSubmitLogin} isLoading={isLoading} />
