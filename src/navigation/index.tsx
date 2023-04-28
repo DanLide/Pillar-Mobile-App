@@ -1,14 +1,9 @@
 import React from 'react';
-import { Button, StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import {
-  getNavigationOptions,
-  getScreenOptions,
-  logout,
-  LeftBarType,
-} from './helpers';
+import { getNavigationOptions, getScreenOptions, LeftBarType } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -17,6 +12,7 @@ import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
+import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
@@ -37,6 +33,7 @@ export enum AppNavigator {
   RemoveProductsStack = 'RemoveProductsStack',
   SelectStockScreen = 'SelectStockScreen',
   RemoveProductsScreen = 'RemoveProductsScreen',
+  HowToScanScreen = 'HowToScanScreen',
 }
 
 const Stack = createStackNavigator();
@@ -72,6 +69,14 @@ const RemoveStack = () => {
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
         options={removeProductsScreenOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.HowToScanScreen}
+        component={HowToScanScreen}
+        options={getScreenOptions({
+          title: 'How to Scan',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
     </Stack.Navigator>
   );
