@@ -26,6 +26,7 @@ const Input: React.FC<Props> = ({
     () => [styles.container, containerStyle],
     [containerStyle],
   );
+
   const inputStyle = useMemo<StyleProp<TextStyle>>(
     () => [styles.input, style],
     [style],
