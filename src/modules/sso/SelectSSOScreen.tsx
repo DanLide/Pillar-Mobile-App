@@ -17,6 +17,7 @@ import { SelectSSOStore } from './stores/SelectSSOStore';
 import { Button } from '../../components';
 import UsernameBar from '../../components/UsernameBar';
 import { colors } from '../../theme';
+import { SearchIcon } from '../../theme/svgs';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -64,8 +65,9 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <UsernameBar username={authStore.getName} />
       <Input
-        style={styles.input}
-        placeholder="Search"
+        containerStyle={styles.input}
+        placeholder="Select a Shop Location"
+        rightIcon={SearchIcon}
         onChangeText={onChangeText}
         value={store.searchInSSOList}
       />

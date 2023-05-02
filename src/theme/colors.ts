@@ -9,5 +9,7 @@ export const colors = {
   grayDark: '#95959E',
   gray: '#E1E1E8',
   grayLight: '#F8F8FA',
+  neutral3: '#58585F',
+  neutral30: '#CBCBD4',
   transparent: 'transparent',
 };

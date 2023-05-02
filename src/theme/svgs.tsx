@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
+import { memo } from 'react';
 
 export const CloseIcon = (props: SvgProps) => (
   <Svg width={16} height={16} viewBox="0 0 16 16" fill="none" {...props}>
@@ -40,3 +41,14 @@ export const CheckMarkIcon = (props: SvgProps) => (
     />
   </Svg>
 );
+
+export const SearchIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M3.5 10c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5A6.508 6.508 0 0 1 3.5 10ZM22 20.817l-5.785-5.784A7.962 7.962 0 0 0 18 10a8 8 0 1 0-8 8c1.97 0 3.771-.715 5.166-1.896l5.773 5.774L22 20.817Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));

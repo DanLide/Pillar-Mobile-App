@@ -91,23 +91,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 16,
   },
-  nameContainer: {
-    width: '100%',
-    height: 39,
-    backgroundColor: colors.grayLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomColor: colors.gray,
-    borderBottomWidth: 1,
-  },
-  nameTitle: {
-    fontSize: 18,
-    lineHeight: 23.5,
-    fontFamily: fonts.TT_Regular,
-    color: colors.blackLight,
-    alignSelf: 'center',
-    paddingVertical: 5,
-  },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',

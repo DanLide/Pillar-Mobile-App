@@ -31,7 +31,7 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
   return (
     <View style={styles.container}>
       <Input
-        style={styles.input}
+        containerStyle={styles.input}
         placeholder={'username'}
         value={store.username}
         editable={!isLoading}
@@ -41,7 +41,7 @@ export const LoginForm: React.FC<Props> = observer(({ isLoading, onPress }) => {
         autoCorrect={false}
       />
       <Input
-        style={styles.input}
+        containerStyle={styles.input}
         placeholder={'password'}
         value={store.password}
         editable={!isLoading}
