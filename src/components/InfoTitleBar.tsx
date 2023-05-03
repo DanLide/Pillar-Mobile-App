@@ -6,7 +6,7 @@ interface Props {
   title?: string;
 }
 
-const SemiHeaderTitle: React.FC<Props> = ({ title }) =>
+const InfoTitleBar: React.FC<Props> = ({ title }) =>
   title ? (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(SemiHeaderTitle);
+export default memo(InfoTitleBar);

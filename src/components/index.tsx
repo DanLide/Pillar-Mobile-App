@@ -5,7 +5,7 @@ import Text from './Text';
 import Switch from './Switch';
 import ScanProduct from './ScanProduct';
 import { Checkbox } from './Checkbox';
-import SemiHeaderTitle from './SemiHeaderTitle';
+import InfoTitleBar from './InfoTitleBar';
 
 export {
   Scanner,
@@ -15,6 +15,6 @@ export {
   Switch,
   ScanProduct,
   Checkbox,
-  SemiHeaderTitle,
+  InfoTitleBar,
   ButtonType,
 };

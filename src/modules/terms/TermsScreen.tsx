@@ -4,12 +4,7 @@ import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';
 
 import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
-import {
-  Button,
-  Checkbox,
-  SemiHeaderTitle,
-  ButtonType,
-} from '../../components';
+import { Button, Checkbox, InfoTitleBar, ButtonType } from '../../components';
 import { authStore, ssoStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
@@ -55,7 +50,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <SemiHeaderTitle title={store.getName} />
+      <InfoTitleBar title={store.getName} />
       <WebView
         source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
