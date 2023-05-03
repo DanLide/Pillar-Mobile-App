@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.white,
-    borderColor: colors.grayLightDark,
+    borderColor: colors.gray,
     borderRadius: 9.5,
     borderWidth: 1,
     flexDirection: 'row',
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: colors.graySemiDark,
+    color: colors.blackLight,
     fontFamily: fonts.TT_Regular,
     fontSize: 19,
     lineHeight: 23.5,

@@ -46,7 +46,6 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
       <Input
         containerStyle={styles.input}
         placeholder="Select a Shop Location"
-        placeholderTextColor={colors.graySemiDark}
         rightIcon={SVGs.SearchIcon}
         onChangeText={onChangeText}
         value={store.searchInSSOList}
