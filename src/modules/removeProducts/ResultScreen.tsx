@@ -33,7 +33,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const stockName = store.currentStock?.organizationName || '';
   const sections = useMemo(
     () => toSectionListData(store.getRemovedProducts),
-    [store.get],
+    [store.getRemovedProducts],
   );
 
   const onPressLogout = () => {
