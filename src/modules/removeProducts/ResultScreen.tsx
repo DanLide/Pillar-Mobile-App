@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,108 +16,113 @@ import { colors, fonts } from '../../theme';
 import { removeProductsStore } from './stores';
 import { authStore } from '../../stores';
 
-import { toSectionListData } from './SelectedProductsList';
-import { ScanningProductModel } from './stores/ScanningProductStore';
-
 import { AppNavigator } from '../../navigation';
 
 import { ButtonType } from '../../components/Button';
+
+import { toSectionListData } from './helpers';
+import { RemoveProductModel } from './stores/RemoveProductsStore';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export const ResultScreen: React.FC<Props> = observer(
-  ({ navigation }) => {
-    const stockName = removeProductsStore.currentStock?.organizationName || '';
-    const sections = toSectionListData(removeProductsStore.getRemovedProducts);
+export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
+  const store = useRef(removeProductsStore).current;
 
-    const onPressLogout = () => {
-      authStore.logOut();
-    };
-    const onReturnHome = () => {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: AppNavigator.HomeScreen }],
-      });
-    };
+  const stockName = store.currentStock?.organizationName || '';
+  const sections = useMemo(
+    () => toSectionListData(store.getRemovedProducts),
+    [store.get],
+  );
 
-    const renderItem = ({ item }: ListRenderItemInfo<ScanningProductModel>) => (
+  const onPressLogout = () => {
+    authStore.logOut();
+  };
+  const onReturnHome = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: AppNavigator.HomeScreen }],
+    });
+  };
+
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<RemoveProductModel>) => (
       <View style={styles.sectionItemContainer}>
         <Text numberOfLines={1} style={styles.sectionItemLeft}>
           {item.name}
         </Text>
         <Text style={styles.sectionItemRight}>{item.reservedCount}</Text>
       </View>
-    );
+    ),
+    [],
+  );
 
-    const renderSectionHeader = ({
-      section,
-    }: {
-      section: SectionListData<ScanningProductModel>;
-    }) => (
+  const renderSectionHeader = useCallback(
+    (info: { section: SectionListData<RemoveProductModel> }) => (
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
-          {section.title === '-1' ? 'Other' : `Job ${section.title}`}
+          {info.section.title === '-1' ? 'Other' : `Job ${info.section.title}`}
         </Text>
         <Text style={styles.sectionTitleRight}>Qty</Text>
       </View>
-    );
+    ),
+    [],
+  );
 
-    return (
-      <>
-        <View style={styles.cabinetContainer}>
-          <Text style={styles.cabinetTitle}>{stockName}</Text>
+  return (
+    <>
+      <View style={styles.cabinetContainer}>
+        <Text style={styles.cabinetTitle}>{stockName}</Text>
+      </View>
+      <View
+        style={{
+          backgroundColor: colors.white,
+          flex: 1,
+          paddingHorizontal: 10,
+          paddingBottom: 24,
+        }}
+      >
+        <View style={styles.contentContainer}>
+          <Text style={styles.contextTitle}>Remove Complete</Text>
+          <Text style={styles.contextBody}>
+            You Have successfully removed the following items from{' '}
+            <Text style={styles.contextBodyBold}>{stockName}</Text>
+          </Text>
+
+          <SectionList
+            sections={sections}
+            style={styles.list}
+            renderSectionHeader={renderSectionHeader}
+            renderItem={renderItem}
+          />
+
+          <Text style={styles.contextFooter}>
+            If the products are associated with a job, you will get an email to
+            download an invoice. You can also retrieve the invoice in
+            RepairStack. These products will also be sent to the associated job
+            in CCC.
+          </Text>
         </View>
-        <View
-          style={{
-            backgroundColor: colors.white,
-            flex: 1,
-            paddingHorizontal: 10,
-            paddingBottom: 24,
-          }}
-        >
-          <View style={styles.contentContainer}>
-            <Text style={styles.contextTitle}>Remove Complete</Text>
-            <Text style={styles.contextBody}>
-              You Have successfully removed the following items from{' '}
-              <Text style={styles.contextBodyBold}>{stockName}</Text>
-            </Text>
 
-            <SectionList
-              sections={sections}
-              style={styles.list}
-              renderSectionHeader={renderSectionHeader}
-              renderItem={renderItem}
-            />
-
-            <Text style={styles.contextFooter}>
-              If the products are associated with a job, you will get an email
-              to download an invoice. You can also retrieve the invoice in
-              RepairStack. These products will also be sent to the associated
-              job in CCC.
-            </Text>
-          </View>
-
-          <View style={styles.buttonsContainer}>
-            <Button
-              type={ButtonType.secondary}
-              title="Logout"
-              buttonStyle={styles.logout}
-              onPress={onPressLogout}
-            />
-            <Button
-              type={ButtonType.primary}
-              title="Return Home"
-              buttonStyle={styles.returnHome}
-              onPress={onReturnHome}
-            />
-          </View>
+        <View style={styles.buttonsContainer}>
+          <Button
+            type={ButtonType.secondary}
+            title="Logout"
+            buttonStyle={styles.logout}
+            onPress={onPressLogout}
+          />
+          <Button
+            type={ButtonType.primary}
+            title="Return Home"
+            buttonStyle={styles.returnHome}
+            onPress={onReturnHome}
+          />
         </View>
-      </>
-    );
-  },
-);
+      </View>
+    </>
+  );
+});
 
 const styles = StyleSheet.create({
   cabinetContainer: {

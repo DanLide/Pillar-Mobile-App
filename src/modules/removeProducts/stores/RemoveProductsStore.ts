@@ -3,19 +3,17 @@ import { action, makeObservable, observable, computed } from 'mobx';
 import { StockModel } from '../../stocksList/stores/StocksStore';
 import { ScanningProductModel } from './ScanningProductStore';
 
-interface RemoveProductModel extends ScanningProductModel {
+export interface RemoveProductModel extends ScanningProductModel {
   isRemoved: boolean;
 }
 
-export type RemoveProductsType = Record<string | string, RemoveProductModel[]>;
-
 export class RemoveProductsStore {
   @observable currentStock?: StockModel;
-  @observable products: RemoveProductsType;
+  @observable products: RemoveProductModel[];
 
   constructor() {
     this.currentStock = undefined;
-    this.products = {};
+    this.products = [];
 
     makeObservable(this);
   }
@@ -27,40 +25,12 @@ export class RemoveProductsStore {
 
   @computed
   get getRemovedProducts() {
-    const products = Object.keys(this.products).reduce((acc, jobId) => {
-      const removedProducts = this.products[jobId].filter(
-        product => product.isRemoved === true,
-      );
-      if (removedProducts.length > 0) {
-        return {
-          ...acc,
-          [jobId]: removedProducts,
-        };
-      } else {
-        return acc;
-      }
-    }, {});
-
-    return products as RemoveProductsType;
+    return this.products.filter(product => product.isRemoved);
   }
 
   @computed
   get getSelectedProducts() {
-    const products = Object.keys(this.products).reduce((acc, jobId) => {
-      const removedProducts = this.products[jobId].filter(
-        product => product.isRemoved === false,
-      );
-      if (removedProducts.length > 0) {
-        return {
-          ...acc,
-          [jobId]: removedProducts,
-        };
-      } else {
-        return acc;
-      }
-    }, {});
-
-    return products as RemoveProductsType;
+    return this.products.filter(product => !product.isRemoved);
   }
 
   @action setCurrentStocks(stock: StockModel) {
@@ -68,31 +38,16 @@ export class RemoveProductsStore {
   }
 
   @action addProduct(product: ScanningProductModel) {
-    if (!product.jobId) {
-      this.products = {
-        ...this.products,
-        ['-1']: [
-          ...(this.products['-1'] || []),
-          { ...product, isRemoved: false },
-        ],
-      };
-    } else {
-      this.products = {
-        ...this.products,
-        [product.jobId]: [
-          ...(this.products[product.jobId] || []),
-          { ...product, isRemoved: false },
-        ],
-      };
-    }
+    const removedProduct = { ...product, isRemoved: false };
+    this.products = [...this.products, removedProduct];
   }
 
-  @action updateProductsByKey(key: string, products: RemoveProductModel[]) {
-    this.products = { ...this.products, [key]: products };
+  @action saveProducts(products: RemoveProductModel[]) {
+    this.products = products;
   }
 
   @action clear() {
     this.currentStock = undefined;
-    this.products = {};
+    this.products = [];
   }
 }

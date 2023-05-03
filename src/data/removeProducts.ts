@@ -2,7 +2,7 @@ import { clone } from 'ramda';
 
 import { Task } from './helpers';
 import { RemoveProductsStore } from '../modules/removeProducts/stores';
-import { removeProductAPI, RemoveProductResponse } from './api';
+import { removeProductAPI } from './api';
 
 export const onRemoveProducts = async (
   removeProductsStore: RemoveProductsStore,
@@ -25,51 +25,21 @@ export class RemoveProductTask extends Task {
   }
 
   async run() {
-    const productsJobIds = Object.keys(this.removeProductsStore.getProducts);
+    const products = clone(this.removeProductsStore.getProducts);
 
-    for (const jobId of productsJobIds) {
-      const removeProductRequests = this.removeProductsStore.getProducts[
-        jobId
-      ].reduce<Promise<RemoveProductResponse>[]>((acc, product) => {
-        if (!product.isRemoved) {
-          acc = [...acc, removeProductAPI(product)];
+    for (const product of products) {
+      if (!product.isRemoved) {
+        try {
+          await removeProductAPI(product);
+          product.isRemoved = true;
+        } catch (error) {
+          this.hasError = true;
         }
-        return acc;
-      }, []);
-
-      const responses = await Promise.allSettled(removeProductRequests);
-
-      this.updateProductsByResponses(responses, jobId);
+      }
     }
 
+    this.removeProductsStore.saveProducts(products);
+
     if (this.hasError) throw Error('Request failed!');
-  }
-
-  private updateProductsByResponses(
-    responses: PromiseSettledResult<RemoveProductResponse>[],
-    jobId: string,
-  ) {
-    const products = responses.map((response, index) => {
-      const product = clone(
-        this.removeProductsStore.getProducts[jobId].filter(
-          product => product.isRemoved === false,
-        )[index],
-      );
-
-      if (response.status === 'fulfilled') {
-        product.isRemoved = true;
-      } else {
-        this.hasError = true;
-      }
-      return product;
-    });
-
-    const removedProducts =
-      this.removeProductsStore.getRemovedProducts[jobId] || [];
-
-    this.removeProductsStore.updateProductsByKey(jobId, [
-      ...products,
-      ...removedProducts,
-    ]);
   }
 }

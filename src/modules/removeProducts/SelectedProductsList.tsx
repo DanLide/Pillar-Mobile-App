@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, SectionList, Text, StyleSheet } from 'react-native';
-import { removeProductsStore } from './stores';
 import { observer } from 'mobx-react';
 
-import { RemoveProductsType } from './stores/RemoveProductsStore';
-
-export const toSectionListData = (value: RemoveProductsType) =>
-  Object.keys(value).map(key => ({ title: key, data: value[key] }));
+import { removeProductsStore } from './stores';
+import { toSectionListData } from './helpers';
 
 export const SelectedProductsList = observer(() => {
   const sectionListData = toSectionListData(removeProductsStore.getSelectedProducts);

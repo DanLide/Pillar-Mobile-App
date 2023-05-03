@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -28,6 +28,7 @@ interface Props {
 
 export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
+    const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
@@ -76,10 +77,10 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     useEffect(() => {
-      if (scanningProductStore.getCurrentProduct) {
+      if (store.getCurrentProduct) {
         setIsModalVisible(true);
       }
-    }, [scanningProductStore.getCurrentProduct]);
+    }, [store.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
