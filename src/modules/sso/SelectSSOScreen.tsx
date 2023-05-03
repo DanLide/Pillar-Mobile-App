@@ -25,7 +25,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
     store.setSearchInSSOList(value);
   };
 
-  const handleItemPress = useCallback<NonNullable<SSOListProps['onPressItem']>>(
+  const preselectSSO = useCallback<NonNullable<SSOListProps['onPressItem']>>(
     item => store.preselectSSO(item),
     [store],
   );
@@ -54,7 +54,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
       <SSOList
         data={data}
         contentContainerStyle={styles.list}
-        onPressItem={handleItemPress}
+        onPressItem={preselectSSO}
         selectedSSOId={selectedSSOId}
       />
       <Button
