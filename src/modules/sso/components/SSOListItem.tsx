@@ -48,7 +48,7 @@ const SSOListItem: React.FC<Props> = ({ item, isSelected, onPressItem }) => {
 
 const styles = StyleSheet.create({
   address: {
-    color: colors.graySemiDark2,
+    color: colors.graySemiDark,
     flexShrink: 1,
     fontFamily: fonts.TT_Regular,
     fontSize: 14,
@@ -69,11 +69,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 23.5,
   },
-  selectedContainer: { backgroundColor: colors.purpleSemiLight },
+  selectedContainer: { backgroundColor: colors.purpleLighter },
   separator: { width: 8 },
   line: {
     borderBottomWidth: 0.5,
-    borderBottomColor: colors.graySemiLight,
+    borderBottomColor: colors.grayLightDark,
     marginLeft: 16,
   },
   textContainer: { flexShrink: 1 },

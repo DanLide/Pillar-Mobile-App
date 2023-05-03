@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.white,
-    borderColor: colors.graySemiLight,
+    borderColor: colors.grayLightDark,
     borderRadius: 9.5,
     borderWidth: 1,
     flexDirection: 'row',
