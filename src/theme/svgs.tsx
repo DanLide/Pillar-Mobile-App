@@ -7,7 +7,7 @@ export const CloseIcon = (props: SvgProps) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M14.142 0l-6.54 6.541L1.061 0 0 1.06l6.542 6.541L0 14.143l1.061 1.06 6.541-6.541 6.54 6.541 1.061-1.06-6.541-6.542 6.541-6.541L14.142 0z"
-      fill="#fff"
+      fill={props.color}
     />
   </Svg>
 );
