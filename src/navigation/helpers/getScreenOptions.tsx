@@ -9,9 +9,14 @@ export enum LeftBarType {
   Close,
 }
 
+export enum RightBarType {
+  Logout,
+}
+
 interface GetScreenOptions {
   title: string;
   leftBarButtonType?: LeftBarType;
+  rightBarButtonType?: RightBarType;
 }
 
 export const getScreenOptions = (params: GetScreenOptions) => ({
@@ -19,7 +24,7 @@ export const getScreenOptions = (params: GetScreenOptions) => ({
   headerLeft: () => (
     <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
   ),
-  headerRight: () => <RightBarButton />,
+  headerRight: () => <RightBarButton rightBarButtonType={params.rightBarButtonType} />,
   headerStyle: {
     backgroundColor: colors.purple,
   },
