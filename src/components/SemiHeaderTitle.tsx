@@ -3,13 +3,13 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors, fonts } from '../theme';
 
 interface Props {
-  username?: string;
+  title?: string;
 }
 
-const UsernameBar: React.FC<Props> = ({ username }) =>
-  username ? (
+const SemiHeaderTitle: React.FC<Props> = ({ title }) =>
+  title ? (
     <View style={styles.container}>
-      <Text style={styles.title}>{username}</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   ) : null;
 
@@ -31,4 +31,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(UsernameBar);
+export default memo(SemiHeaderTitle);
