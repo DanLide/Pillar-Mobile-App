@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button } from '../../../components';
 import { observer } from 'mobx-react';
 
@@ -25,7 +18,6 @@ export const ProductQuantity: React.FC<Props> = observer(
     const product = productModalStore?.product || ({} as any);
 
     const onChange = (quantity: number) => {
-      console.log(quantity, 'onChange');
       productModalStore.updateQuantity(quantity);
     };
     return (

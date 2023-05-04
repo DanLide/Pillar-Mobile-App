@@ -1,22 +1,36 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, computed } from 'mobx';
 
 import { StockModel } from '../../stocksList/stores/StocksStore';
 import { ScanningProductModel } from './ScanningProductStore';
 
-export type RemoveProductsType = Record<
-  string | string,
-  ScanningProductModel[]
->;
+export interface RemoveProductModel extends ScanningProductModel {
+  isRemoved: boolean;
+}
 
 export class RemoveProductsStore {
   @observable currentStock?: StockModel;
-  @observable products: RemoveProductsType;
+  @observable products: RemoveProductModel[];
 
   constructor() {
     this.currentStock = undefined;
-    this.products = {};
+    this.products = [];
 
     makeObservable(this);
+  }
+
+  @computed
+  get getProducts() {
+    return this.products;
+  }
+
+  @computed
+  get getSyncedProducts() {
+    return this.products.filter(product => product.isRemoved);
+  }
+
+  @computed
+  get getNotSyncedProducts() {
+    return this.products.filter(product => !product.isRemoved);
   }
 
   @action setCurrentStocks(stock: StockModel) {
@@ -24,20 +38,16 @@ export class RemoveProductsStore {
   }
 
   @action addProduct(product: ScanningProductModel) {
-    if (!product.jobId) {
-      this.products = {
-        ...this.products,
-        ['-1']: [...(this.products['-1'] || []), product],
-      };
-    } else {
-      this.products = {
-        ...this.products,
-        [product.jobId]: [...(this.products[product.jobId] || []), product],
-      };
-    }
+    const removedProduct = { ...product, isRemoved: false };
+    this.products = [...this.products, removedProduct];
+  }
+
+  @action setProducts(products: RemoveProductModel[]) {
+    this.products = products;
   }
 
   @action clear() {
     this.currentStock = undefined;
+    this.products = [];
   }
 }

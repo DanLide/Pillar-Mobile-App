@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   primaryText: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: 23.5,
     fontFamily: fonts.TT_Bold,
   },
   secondaryContainer: {
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: colors.purpleDark,
-    fontSize: 20,
+    fontSize: 23.5,
     fontFamily: fonts.TT_Bold,
   },
 });
