@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
@@ -98,6 +98,11 @@ const getInitialScreen = (
   return AppNavigator.HomeScreen;
 };
 
+const ssoScreenOptions = getScreenOptions({
+  title: 'Shop Location',
+  rightBarButtonType: RightBarType.Logout,
+});
+
 const HomeStack = () => {
   const initialRoute = getInitialScreen(authStore, ssoStore);
 
@@ -129,7 +134,7 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
         component={SelectSSOScreen}
-        options={getNavigationOptions}
+        options={ssoScreenOptions}
       />
     </Stack.Navigator>
   );
@@ -153,8 +158,4 @@ export const AppStack = observer(() => {
       )}
     </Stack.Navigator>
   );
-});
-
-const styles = StyleSheet.create({
-  logoutButton: { marginRight: 8 },
 });
