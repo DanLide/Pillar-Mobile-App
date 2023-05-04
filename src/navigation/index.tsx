@@ -15,6 +15,7 @@ import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
+import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
 import { RightBarType } from './helpers/getScreenOptions';
@@ -33,6 +34,7 @@ export enum AppNavigator {
   RemoveProductsStack = 'RemoveProductsStack',
   SelectStockScreen = 'SelectStockScreen',
   RemoveProductsScreen = 'RemoveProductsScreen',
+  ResultScreen = 'ResultScreen',
   HowToScanScreen = 'HowToScanScreen',
 }
 
@@ -76,6 +78,14 @@ const RemoveStack = () => {
         options={getScreenOptions({
           title: 'How to Scan',
           leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ResultScreen}
+        component={ResultScreen}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Close,
         })}
       />
     </Stack.Navigator>

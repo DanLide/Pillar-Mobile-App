@@ -53,7 +53,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
           />
         );
       case LeftBarType.Close:
-        return <SVGs.CloseIcon />;
+        return <SVGs.CloseIcon color={colors.white} />;
 
       default:
         return null;
