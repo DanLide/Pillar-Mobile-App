@@ -1,14 +1,9 @@
 import React from 'react';
-import { Button, StyleSheet, View, Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import {
-  getNavigationOptions,
-  getScreenOptions,
-  logout,
-  LeftBarType,
-} from './helpers';
+import { getNavigationOptions, getScreenOptions, LeftBarType } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -17,10 +12,13 @@ import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
+import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
+import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
+import { RightBarType } from './helpers/getScreenOptions';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -36,22 +34,11 @@ export enum AppNavigator {
   RemoveProductsStack = 'RemoveProductsStack',
   SelectStockScreen = 'SelectStockScreen',
   RemoveProductsScreen = 'RemoveProductsScreen',
+  ResultScreen = 'ResultScreen',
+  HowToScanScreen = 'HowToScanScreen',
 }
 
 const Stack = createStackNavigator();
-
-type ScreenOptions = React.ComponentProps<
-  typeof Stack.Navigator
->['screenOptions'];
-
-const termsScreenOptions: ScreenOptions = {
-  title: 'Terms & Conditions',
-  headerRight: () => (
-    <View style={styles.logoutButton}>
-      <Button title="Logout" onPress={logout} />
-    </View>
-  ),
-};
 
 const RemoveProductsScreenHeader = () => (
   <View style={{ flexDirection: 'column' }}>
@@ -64,7 +51,7 @@ const RemoveProductsScreenHeader = () => (
   </View>
 );
 
-const removeProductsScreenOptions: ScreenOptions = {
+const removeProductsScreenOptions = {
   headerBackTitle: 'Back',
   headerTitle: RemoveProductsScreenHeader,
 };
@@ -84,6 +71,22 @@ const RemoveStack = () => {
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
         options={removeProductsScreenOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.HowToScanScreen}
+        component={HowToScanScreen}
+        options={getScreenOptions({
+          title: 'How to Scan',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ResultScreen}
+        component={ResultScreen}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Close,
+        })}
       />
     </Stack.Navigator>
   );
@@ -105,6 +108,11 @@ const getInitialScreen = (
   return AppNavigator.HomeScreen;
 };
 
+const ssoScreenOptions = getScreenOptions({
+  title: 'Shop Location',
+  rightBarButtonType: RightBarType.Logout,
+});
+
 const HomeStack = () => {
   const initialRoute = getInitialScreen(authStore, ssoStore);
 
@@ -118,7 +126,10 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.TermsScreen}
         component={TermsScreen}
-        options={termsScreenOptions}
+        options={getScreenOptions({
+          title: 'Terms & Conditions',
+          rightBarButtonType: RightBarType.Logout,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.LanguageSelectScreen}
@@ -133,7 +144,7 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
         component={SelectSSOScreen}
-        options={getNavigationOptions}
+        options={ssoScreenOptions}
       />
     </Stack.Navigator>
   );
@@ -157,8 +168,4 @@ export const AppStack = observer(() => {
       )}
     </Stack.Navigator>
   );
-});
-
-const styles = StyleSheet.create({
-  logoutButton: { marginRight: 8 },
 });

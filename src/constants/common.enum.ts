@@ -97,6 +97,13 @@ export enum RoleType {
   ThreeMRep = 20,
 }
 
+export enum TransactionType {
+  Order = 1,
+  JobScan = 2,
+  Adjustment = 3,
+  BeginningBalance = 4,
+}
+
 // export enum PartyRelationshipType {
 //   DistributorUsers = 1,
 //   MsoUsers = 2,
@@ -183,12 +190,6 @@ export enum RoleType {
 //   VideoUrl = 11
 // }
 //
-// export enum TransactionType {
-//   Order = 1,
-//   JobScan = 2,
-//   Adjustment = 3,
-//   BeginningBalance = 4
-// }
 //
 // export enum LanguageType {
 //   English = 1,

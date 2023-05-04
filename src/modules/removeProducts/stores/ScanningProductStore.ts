@@ -20,14 +20,8 @@ export class ScanningProductStore {
     makeObservable(this);
   }
 
-  @computed public get isProductRecoverable() {
-    return this.currentProduct?.isRecoverable === 'Yes';
-  }
-
-  @computed public get currentProductReservedCount() {
-    return this.currentProduct?.reservedCount === undefined
-      ? 1
-      : this.currentProduct?.reservedCount;
+  @computed get getCurrentProduct() {
+    return this.currentProduct;
   }
 
   @action setCurrentProduct(product: ScanningProductModel) {

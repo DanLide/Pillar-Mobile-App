@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button } from '../../../components';
 import { observer } from 'mobx-react';
-import { CloseIcon, TableIcon } from '../../../../assets/svg'
-import { fonts } from '../../../theme'
+import { CloseIcon, TableIcon } from '../../../../assets/svg';
+import { fonts } from '../../../theme';
 import { productModalStore } from '../store';
-
 
 import { EditQuantity } from './EditQuantity';
 
@@ -25,17 +19,15 @@ export const ProductQuantity: React.FC<Props> = observer(
     const product = productModalStore?.product || ({} as any);
 
     const onChange = (quantity: number) => {
-      console.log(quantity, 'onChange');
       productModalStore.updateQuantity(quantity);
     };
 
-    const isRenderStockNumber = product.onHand > 99
-
+    const isRenderStockNumber = product.onHand > 99;
 
     return (
       <>
         <View style={styles.header}>
-          <View style={{ width: 20, }}>
+          <View style={{ width: 20 }}>
             <TouchableOpacity onPress={onClose}>
               <CloseIcon />
             </TouchableOpacity>
@@ -52,15 +44,19 @@ export const ProductQuantity: React.FC<Props> = observer(
           onChange={onChange}
         />
         <View style={styles.labelContainer}>
-          {
-            isRenderStockNumber && <View style={[styles.container, { marginRight: 8 }]}>
+          {isRenderStockNumber && (
+            <View style={[styles.container, { marginRight: 8 }]}>
               <Text style={styles.smallTitle}>In Stock</Text>
               <Text style={styles.subTitle2}>99+</Text>
             </View>
-          }
-          <View style={[styles.container, isRenderStockNumber && { marginLeft: 8 }]}>
+          )}
+          <View
+            style={[styles.container, isRenderStockNumber && { marginLeft: 8 }]}
+          >
             <Text style={styles.smallTitle}>Remove by</Text>
-            <Text style={styles.subTitle}>{productModalStore?.userTypeName}</Text>
+            <Text style={styles.subTitle}>
+              {productModalStore?.userTypeName}
+            </Text>
           </View>
         </View>
         {product.isRecoverable ? (
@@ -73,11 +69,10 @@ export const ProductQuantity: React.FC<Props> = observer(
           <>
             <TouchableOpacity
               onPress={onJobSelectNavigation}
-              style={styles.linkButton}>
+              style={styles.linkButton}
+            >
               <TableIcon />
-              <Text style={styles.linkText}>
-                Link to job number
-              </Text>
+              <Text style={styles.linkText}>Link to job number</Text>
             </TouchableOpacity>
             <Button
               buttonStyle={styles.continueButton}
@@ -85,8 +80,7 @@ export const ProductQuantity: React.FC<Props> = observer(
               onPress={onPressAddToList}
             />
           </>
-        )
-        }
+        )}
       </>
     );
   },
@@ -166,7 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: 'hidden',
     paddingVertical: 2,
-    paddingHorizontal: 13
+    paddingHorizontal: 13,
   },
   subTitle2: {
     color: '#58585F',
