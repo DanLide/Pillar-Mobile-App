@@ -75,14 +75,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
       <View style={styles.cabinetContainer}>
         <Text style={styles.cabinetTitle}>{stockName}</Text>
       </View>
-      <View
-        style={{
-          backgroundColor: colors.white,
-          flex: 1,
-          paddingHorizontal: 10,
-          paddingBottom: 24,
-        }}
-      >
+      <View style={styles.container}>
         <View style={styles.contentContainer}>
           <Text style={styles.contextTitle}>Remove Complete</Text>
           <Text style={styles.contextBody}>
@@ -125,6 +118,12 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
 });
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.white,
+    flex: 1,
+    paddingHorizontal: 10,
+    paddingBottom: 24,
+  },
   cabinetContainer: {
     width: '100%',
     height: 33,

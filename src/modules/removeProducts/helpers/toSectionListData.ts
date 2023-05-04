@@ -11,7 +11,7 @@ function toSectionListDataLike<T>(value: T[], key: string) {
 
 export const toSectionListData = (data: RemoveProductModel[]) =>
   pipe(
-    groupBy(propOr('Other', 'jobId')),
+    groupBy(propOr('-1', 'jobId')),
     mapObjIndexed(toSectionListDataLike),
     values,
   )(data);
