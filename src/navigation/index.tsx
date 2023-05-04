@@ -12,6 +12,7 @@ import { HomeScreen } from '../modules/home/HomeScreen';
 import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
+import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { ResultScreen } from '../modules/removeProducts/ResultScreen';
@@ -34,6 +35,7 @@ export enum AppNavigator {
   SelectStockScreen = 'SelectStockScreen',
   RemoveProductsScreen = 'RemoveProductsScreen',
   ResultScreen = 'ResultScreen',
+  HowToScanScreen = 'HowToScanScreen',
 }
 
 const Stack = createStackNavigator();
@@ -69,6 +71,14 @@ const RemoveStack = () => {
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
         options={removeProductsScreenOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.HowToScanScreen}
+        component={HowToScanScreen}
+        options={getScreenOptions({
+          title: 'How to Scan',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.ResultScreen}
