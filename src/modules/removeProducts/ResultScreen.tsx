@@ -20,7 +20,7 @@ import { AppNavigator } from '../../navigation';
 
 import { ButtonType } from '../../components/Button';
 
-import { groupProductsByJob } from './helpers';
+import { groupProductsByJobId } from './helpers';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { OTHER_JOB_ID } from './constants';
 
@@ -33,7 +33,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
 
   const stockName = store.currentStock?.organizationName || '';
   const sections = useMemo(
-    () => groupProductsByJob(store.getSyncedProducts),
+    () => groupProductsByJobId(store.getSyncedProducts),
     [store.getSyncedProducts],
   );
 
@@ -63,7 +63,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
     (info: { section: SectionListData<RemoveProductModel> }) => (
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
-          {info.section.title === OTHER_JOB_ID ? 'Other' : `Job ${info.section.title}`}
+          {info.section.jobId === OTHER_JOB_ID ? 'Other' : `Job ${info.section.jobId}`}
         </Text>
         <Text style={styles.sectionTitleRight}>Qty</Text>
       </View>

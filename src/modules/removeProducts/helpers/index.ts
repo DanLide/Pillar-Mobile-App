@@ -1,3 +1,3 @@
-import { groupProductsByJob } from './groupProductsByJob';
+import { groupProductsByJobId } from './groupProductsByJobId';
 
-export { groupProductsByJob };
+export { groupProductsByJobId };
