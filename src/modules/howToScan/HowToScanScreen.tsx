@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 
 import QRCode from '../../../assets/images/QRCode.png';
@@ -9,52 +9,49 @@ import productPackage from '../../../assets/images/productPackage.png';
 
 import { colors, fonts } from '../../theme';
 
-export const HowToScanScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>How to scan a product?</Text>
+export const HowToScanScreen = memo(() => (
+  <View style={styles.container}>
+    <Text style={styles.title}>How to scan a product?</Text>
 
-      <Text style={styles.text}>
-        Scanning a product is the first step in managing your shops inventory.
-      </Text>
-      <Text style={styles.text}>You can either use the product QR code or</Text>
-      <Text style={[styles.text, { marginTop: 0 }]}>UPC for scanning.</Text>
+    <Text style={styles.text}>
+      Scanning a product is the first step in managing your shops inventory.
+    </Text>
+    <Text style={styles.text}>
+      You can either use the product QR code or{'\n'}UPC for scanning.
+    </Text>
 
-      <View style={styles.codeContainer}>
-        <View style={styles.codeItemContainer}>
-          <Image source={QRCode} style={styles.QRImage} />
-          <Text style={styles.imageSubtitle}>QR Code</Text>
-        </View>
-        <View style={styles.codeItemContainer}>
-          <Image source={UPC} style={styles.UPCImage} />
-          <Text style={styles.imageSubtitle}>UPC</Text>
-        </View>
+    <View style={styles.codeContainer}>
+      <View style={styles.codeItemContainer}>
+        <Image source={QRCode} style={styles.QRImage} />
+        <Text style={styles.imageSubtitle}>QR Code</Text>
       </View>
-
-      <Text style={styles.title}>How to find the QR Code or UPC</Text>
-      <Text style={styles.text}>
-        You can scan products in 3 different ways.
-      </Text>
-
-      <View style={styles.productsContainer}>
-        <View style={styles.productItemContainer}>
-          <Image source={cabinet} style={styles.cabinetImage} />
-          <Text style={styles.imageSubtitle}>Cabinet</Text>
-        </View>
-        <View style={styles.productItemContainer}>
-          <Image source={productPackage} style={styles.productPackageImage} />
-          <Text style={[styles.imageSubtitle, styles.productPackageText]}>
-            Product Package
-          </Text>
-        </View>
-        <View style={styles.productItemContainer}>
-          <Image source={product} style={styles.productImage} />
-          <Text style={styles.imageSubtitle}>Product</Text>
-        </View>
+      <View style={styles.codeItemContainer}>
+        <Image source={UPC} style={styles.UPCImage} />
+        <Text style={styles.imageSubtitle}>UPC</Text>
       </View>
     </View>
-  );
-};
+
+    <Text style={styles.title}>How to find the QR Code or UPC</Text>
+    <Text style={styles.text}>You can scan products in 3 different ways.</Text>
+
+    <View style={styles.productsContainer}>
+      <View style={styles.productItemContainer}>
+        <Image source={cabinet} style={styles.cabinetImage} />
+        <Text style={styles.imageSubtitle}>Cabinet</Text>
+      </View>
+      <View style={styles.productItemContainer}>
+        <Image source={productPackage} style={styles.productPackageImage} />
+        <Text style={[styles.imageSubtitle, styles.productPackageText]}>
+          Product Package
+        </Text>
+      </View>
+      <View style={styles.productItemContainer}>
+        <Image source={product} style={styles.productImage} />
+        <Text style={styles.imageSubtitle}>Product</Text>
+      </View>
+    </View>
+  </View>
+));
 
 const styles = StyleSheet.create({
   container: {
@@ -89,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 18,
-    marginBottom: 16,
+    marginBottom: 38,
   },
   codeItemContainer: {
     alignItems: 'center',
@@ -108,7 +105,7 @@ const styles = StyleSheet.create({
   productsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 24,
+    marginTop: 28,
   },
   productItemContainer: {
     alignItems: 'center',
