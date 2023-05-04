@@ -60,8 +60,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
             style: 'cancel',
           },
           {
-            text: 'Go Result',
-            onPress: () => navigation.navigate(AppNavigator.ResultScreen),
+            text: 'Retry',
+            onPress: onCompleteRemove,
           },
         ]);
 
@@ -108,14 +108,11 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
           onPress={onCompleteRemove}
         />
 
-        {scanningProductStore.getCurrentProduct ? (
-          <ProductModal
-            product={scanningProductStore.getCurrentProduct}
-            isVisible={isModalVisible}
-            onAddProductToList={onAddProductToRemoveList}
-            onClose={onCloseModal}
-          />
-        ) : null}
+        <ProductModal
+          isVisible={isModalVisible}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
       </SafeAreaView>
     );
   },

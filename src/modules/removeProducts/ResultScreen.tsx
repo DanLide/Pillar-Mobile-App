@@ -20,8 +20,9 @@ import { AppNavigator } from '../../navigation';
 
 import { ButtonType } from '../../components/Button';
 
-import { toSectionListData } from './helpers';
+import { groupProductsByJob } from './helpers';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
+import { OTHER_JOB_ID } from './constants';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -32,8 +33,8 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
 
   const stockName = store.currentStock?.organizationName || '';
   const sections = useMemo(
-    () => toSectionListData(store.getRemovedProducts),
-    [store.getRemovedProducts],
+    () => groupProductsByJob(store.getSyncedProducts),
+    [store.getSyncedProducts],
   );
 
   const onPressLogout = () => {
@@ -62,7 +63,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
     (info: { section: SectionListData<RemoveProductModel> }) => (
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
-          {info.section.title === '-1' ? 'Other' : `Job ${info.section.title}`}
+          {info.section.title === OTHER_JOB_ID ? 'Other' : `Job ${info.section.title}`}
         </Text>
         <Text style={styles.sectionTitleRight}>Qty</Text>
       </View>

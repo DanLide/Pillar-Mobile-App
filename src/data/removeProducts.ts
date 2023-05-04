@@ -38,7 +38,7 @@ export class RemoveProductTask extends Task {
       }
     }
 
-    this.removeProductsStore.saveProducts(products);
+    this.removeProductsStore.setProducts(products);
 
     if (this.hasError) throw Error('Request failed!');
   }

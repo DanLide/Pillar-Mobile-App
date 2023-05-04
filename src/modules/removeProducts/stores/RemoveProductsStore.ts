@@ -24,12 +24,12 @@ export class RemoveProductsStore {
   }
 
   @computed
-  get getRemovedProducts() {
+  get getSyncedProducts() {
     return this.products.filter(product => product.isRemoved);
   }
 
   @computed
-  get getSelectedProducts() {
+  get getNotSyncedProducts() {
     return this.products.filter(product => !product.isRemoved);
   }
 
@@ -42,7 +42,7 @@ export class RemoveProductsStore {
     this.products = [...this.products, removedProduct];
   }
 
-  @action saveProducts(products: RemoveProductModel[]) {
+  @action setProducts(products: RemoveProductModel[]) {
     this.products = products;
   }
 

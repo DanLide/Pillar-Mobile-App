@@ -8,9 +8,9 @@ import { ScanningProductModel } from '../removeProducts/stores/ScanningProductSt
 import { ProductQuantity } from './components/ProductQuantity';
 import { SelectProductJob } from './components/SelectProductJob';
 import { productModalStore } from './store';
+import { scanningProductStore } from '../removeProducts/stores';
 
 interface Props {
-  product: ScanningProductModel;
   isVisible: boolean;
 
   onClose: () => void;
@@ -22,7 +22,9 @@ const { width, height } = Dimensions.get('window');
 const items = ['first', 'second'];
 
 export const ProductModal: React.FC<Props> = observer(
-  ({ isVisible, product, onClose, onAddProductToList }) => {
+  ({ isVisible, onClose, onAddProductToList }) => {
+    const product = scanningProductStore.getCurrentProduct as ScanningProductModel;
+
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const carouselRef = useRef<ICarouselInstance>(null);
 

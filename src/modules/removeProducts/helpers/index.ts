@@ -1,3 +1,3 @@
-import { toSectionListData } from './toSectionListData';
+import { groupProductsByJob } from './groupProductsByJob';
 
-export { toSectionListData };
+export { groupProductsByJob };

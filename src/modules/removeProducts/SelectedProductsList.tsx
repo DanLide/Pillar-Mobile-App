@@ -3,10 +3,11 @@ import { View, SectionList, Text, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 
 import { removeProductsStore } from './stores';
-import { toSectionListData } from './helpers';
+import { groupProductsByJob } from './helpers';
+import { OTHER_JOB_ID } from './constants';
 
 export const SelectedProductsList = observer(() => {
-  const sectionListData = toSectionListData(removeProductsStore.getSelectedProducts);
+  const sectionListData = groupProductsByJob(removeProductsStore.getNotSyncedProducts);
 
   return (
     <View style={styles.container}>
@@ -15,7 +16,7 @@ export const SelectedProductsList = observer(() => {
           sections={sectionListData}
           renderSectionHeader={({ section: { title } }) => (
             <Text style={styles.sectionTitle}>
-              {title === '-1' ? 'Other' : title}
+              {title === OTHER_JOB_ID ? 'Other' : title}
             </Text>
           )}
           renderItem={({ item }) => (
