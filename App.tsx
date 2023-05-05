@@ -6,7 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppStack } from "./src/navigation";
 
 interface InitialProps {
-  [key: string]: string;
+   [key: string]: string;
 }
 
 const App = (initialProps:InitialProps) => {
