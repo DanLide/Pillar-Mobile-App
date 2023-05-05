@@ -31,20 +31,19 @@ const Scanner: React.FC<ScannerProps> = ({
 }) => {
   const devices = useCameraDevices();
   const device = devices.back;
-
+  // const prevBarcodes = useRef<Barcode[]>([])
   const frameProcessor = useFrameProcessor(frame => {
-    'worklet';
-    const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
-      checkInverted: true,
-    });
+      'worklet';
+      const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
+        checkInverted: true,
+      });
 
-    const filtered = barcodes.filter(
-      (value, index, self) =>
-        self.findIndex(el => el.content.data === value.content.data) === index,
-    );
+      const filtered = barcodes.filter((value, index, self) => {
+        return self.findIndex((el) => JSON.stringify(el.content.data) === JSON.stringify(value.content.data)) === index
+      });
 
-    onRead && runOnJS(onRead)(filtered, frame);
-  }, []);
+      onRead && runOnJS(onRead)(filtered, frame);
+    }, [onRead]);
 
   const [hasPermission, setHasPermission] = React.useState(false);
 
@@ -65,7 +64,7 @@ const Scanner: React.FC<ScannerProps> = ({
       audio={false}
       zoom={CAMERA_ZOOM}
       isActive={isActive}
-      frameProcessorFps={5}
+      frameProcessorFps={20}
       {...props}
       device={device}
     />
