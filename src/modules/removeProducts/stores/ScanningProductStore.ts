@@ -9,6 +9,8 @@ export interface ScanningProductModel {
   reservedCount: number;
   jobId?: number;
   inventoryUseTypeId: InventoryUseType;
+  size: string;
+  partNo: string;
 }
 
 export class ScanningProductStore {

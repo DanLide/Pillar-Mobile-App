@@ -71,6 +71,8 @@ class SaveProductToStoreTask extends Task {
       isRecoverable: product.isRecoverable,
       reservedCount: 1,
       inventoryUseTypeId: product?.inventoryUseTypeId, 
+      size: product.size,
+      partNo: product.partNo,
     };
   }
 }

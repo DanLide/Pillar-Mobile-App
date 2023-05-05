@@ -103,11 +103,11 @@ export const ProductModal: React.FC<Props> = observer(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   background: {
     backgroundColor: 'white',
-    marginTop: height * 0.25,
+    marginTop: 169,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
   },

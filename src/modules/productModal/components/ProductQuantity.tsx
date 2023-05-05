@@ -2,11 +2,12 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button } from '../../../components';
 import { observer } from 'mobx-react';
-import { CloseIcon, TableIcon } from '../../../../assets/svg';
-import { fonts } from '../../../theme';
+import { colors, fonts, SVGs } from '../../../theme';
 import { productModalStore } from '../store';
 
 import { EditQuantity } from './EditQuantity';
+import { ModalHeader } from './ModalHeader';
+import { EditQuantityDescription } from './EditQuantityDescription';
 
 interface Props {
   onClose: () => void;
@@ -16,7 +17,9 @@ interface Props {
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({ onClose, onPressAddToList, onJobSelectNavigation }) => {
-    const product = productModalStore?.product || ({} as any);
+    const product = productModalStore?.product;
+
+    if (!product) return null;
 
     const onChange = (quantity: number) => {
       productModalStore.updateQuantity(quantity);
@@ -26,17 +29,8 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     return (
       <>
-        <View style={styles.header}>
-          <View style={{ width: 20 }}>
-            <TouchableOpacity onPress={onClose}>
-              <CloseIcon />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.headerTitle}>Adjust Quantity</Text>
-          <View style={{ width: 20 }} />
-        </View>
-
-        <Text style={styles.name}>{product.name}</Text>
+        <ModalHeader onClose={onClose} />
+        <EditQuantityDescription product={product} />
 
         <EditQuantity
           maxValue={product.onHand}
@@ -71,7 +65,7 @@ export const ProductQuantity: React.FC<Props> = observer(
               onPress={onJobSelectNavigation}
               style={styles.linkButton}
             >
-              <TableIcon />
+              {/* <TableIcon /> */}
               <Text style={styles.linkText}>Link to job number</Text>
             </TouchableOpacity>
             <Button
@@ -87,16 +81,6 @@ export const ProductQuantity: React.FC<Props> = observer(
 );
 
 const styles = StyleSheet.create({
-  header: {
-    marginVertical: 24,
-    marginHorizontal: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-  },
   name: {
     fontSize: 22,
     fontWeight: 'bold',

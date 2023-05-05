@@ -8,6 +8,8 @@ export interface ProductResponse {
   isRecoverable: 'Yes' | 'No';
   onHand: number;
   inventoryUseTypeId: number;
+  size: string;
+  partNo: string;
 }
 
 export interface RemoveProductResponse {
