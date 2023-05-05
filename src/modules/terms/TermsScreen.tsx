@@ -4,7 +4,7 @@ import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';
 
 import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
-import { Button, Checkbox } from '../../components';
+import { Button, Checkbox, InfoTitleBar, ButtonType } from '../../components';
 import { authStore, ssoStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
@@ -12,7 +12,6 @@ import { AppNavigator } from '../../navigation';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { colors, fonts } from '../../theme';
-import { ButtonType } from '../../components/Button';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -51,9 +50,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.nameContainer}>
-        <Text style={styles.nameTitle}>{authStore.getName}</Text>
-      </View>
+      <InfoTitleBar title={store.getName} />
       <WebView
         source={TERMS_SOURCE}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
@@ -91,23 +88,6 @@ const styles = StyleSheet.create({
   webView: {
     marginHorizontal: 16,
     marginTop: 16,
-  },
-  nameContainer: {
-    width: '100%',
-    height: 39,
-    backgroundColor: colors.grayLight,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomColor: colors.gray,
-    borderBottomWidth: 1,
-  },
-  nameTitle: {
-    fontSize: 18,
-    lineHeight: 23.5,
-    fontFamily: fonts.TT_Regular,
-    color: colors.blackLight,
-    alignSelf: 'center',
-    paddingVertical: 5,
   },
   checkboxContainer: {
     flexDirection: 'row',

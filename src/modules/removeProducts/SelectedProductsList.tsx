@@ -1,24 +1,22 @@
 import React from 'react';
 import { View, SectionList, Text, StyleSheet } from 'react-native';
-import { removeProductsStore } from './stores';
 import { observer } from 'mobx-react';
 
-import { RemoveProductsType } from './stores/RemoveProductsStore';
-
-const toSectionListData = (value: RemoveProductsType) =>
-  Object.keys(value).map(key => ({ title: key, data: value[key] }));
+import { removeProductsStore } from './stores';
+import { groupProductsByJobId } from './helpers';
+import { OTHER_JOB_ID } from './constants';
 
 export const SelectedProductsList = observer(() => {
-  const sectionListData = toSectionListData(removeProductsStore.products);
+  const sectionListData = groupProductsByJobId(removeProductsStore.getNotSyncedProducts);
 
   return (
     <View style={styles.container}>
       {sectionListData.length ? (
         <SectionList
           sections={sectionListData}
-          renderSectionHeader={({ section: { title } }) => (
+          renderSectionHeader={({ section: { jobId } }) => (
             <Text style={styles.sectionTitle}>
-              {title === '-1' ? 'Other' : title}
+              {jobId === OTHER_JOB_ID ? 'Other' : jobId}
             </Text>
           )}
           renderItem={({ item }) => (

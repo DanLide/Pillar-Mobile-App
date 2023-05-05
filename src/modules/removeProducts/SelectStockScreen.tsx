@@ -5,7 +5,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 import { StocksList } from '../stocksList/components/StocksList';
 import { AppNavigator } from '../../navigation';
-import { removeProductsStore } from './stores';
+import { removeProductsStore, scanningProductStore } from './stores';
 import { StockModel } from '../stocksList/stores/StocksStore';
 
 interface Props {
@@ -18,6 +18,7 @@ export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
   useEffect(() => {
     if (isFocused) {
       removeProductsStore.clear();
+      scanningProductStore.clear();
     }
   }, [isFocused]);
 

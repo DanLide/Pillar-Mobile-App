@@ -1,10 +1,22 @@
 import Scanner from './Scanner';
 import Input from './Input';
-import Button from './Button';
+import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
 import ScanProduct from './ScanProduct';
 import Toast from './Toast';
 import { Checkbox } from './Checkbox';
+import InfoTitleBar from './InfoTitleBar';
 
-export { Scanner, Input, Button, Text, Switch, ScanProduct, Toast, Checkbox };
+export {
+  Scanner,
+  Input,
+  Button,
+  Text,
+  Switch,
+  ScanProduct,
+  Checkbox,
+  Toast,
+  InfoTitleBar,
+  ButtonType,
+};
