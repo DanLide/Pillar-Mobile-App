@@ -33,9 +33,9 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    const [isScannerActive, setIsScannerActive] = useState(true)
+    const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const [isScanner, setIsScanner] = useState(false)
+    const [isScanner, setIsScanner] = useState(false);
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
@@ -47,11 +47,11 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onPressScan = () => {
-      setIsScanner(true)
-    }
-    const onScanProduct = (data) => {
-      setIsScannerActive(false)
-      fetchProductByCode(data)
+      setIsScanner(true);
+    };
+    const onScanProduct = data => {
+      setIsScannerActive(false);
+      fetchProductByCode(data);
     };
 
     const onCompleteRemove = async () => {
@@ -77,8 +77,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onCloseModal = () => {
       setIsModalVisible(false);
-      setIsScanner(false)
-      setIsScannerActive(true)
+      setIsScanner(false);
+      setIsScannerActive(true);
     };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
@@ -87,15 +87,16 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     useEffect(() => {
       if (store.getCurrentProduct) {
-        setIsScanner(false)
+        setIsScanner(false);
         setIsModalVisible(true);
       }
     }, [store.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
-        {isScanner ?
-          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} /> :
+        {isScanner ? (
+          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+        ) : (
           <>
             {isLoading ? (
               <View style={styles.loader}>
@@ -125,7 +126,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               onClose={onCloseModal}
             />
           </>
-        }
+        )}
       </SafeAreaView>
     );
   },
