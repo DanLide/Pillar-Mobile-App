@@ -11,36 +11,33 @@ import {
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 
 import { colors, fonts, toastColors, SVGs } from '../theme';
+import { ToastType } from '../contexts';
 
 const { width } = Dimensions.get('window');
 
-export enum ToastIconType {
-  Error = 'Error',
-  Info = 'Info',
-  Success = 'Success',
-}
-
 export enum ToastActionType {
   Close = 'Close',
+  Undo = 'Undo',
 }
 
 interface Props extends ToastProps {
-  iconType?: ToastIconType;
+  type: ToastType;
   actionType?: ToastActionType;
 }
 
 const Toast: React.FC<Props> = ({
-  type = 'normal',
+  id,
+  type = ToastType.Info,
   message,
-  iconType,
   actionType,
   onHide,
+  onPress,
 }) => {
   const { primary, secondary, action } = toastColors[type] ?? {};
 
   const Icon = useMemo<JSX.Element | null>(() => {
-    switch (iconType) {
-      case ToastIconType.Error:
+    switch (type) {
+      case ToastType.Error:
         return (
           <SVGs.ListErrorIcon
             color={colors.blackSemiLight}
@@ -48,7 +45,7 @@ const Toast: React.FC<Props> = ({
             secondaryColor={secondary}
           />
         );
-      case ToastIconType.Info:
+      case ToastType.Info:
         return (
           <SVGs.ListAffirmativeIcon
             color={colors.blackSemiLight}
@@ -56,7 +53,7 @@ const Toast: React.FC<Props> = ({
             secondaryColor={secondary}
           />
         );
-      case ToastIconType.Success:
+      case ToastType.Success:
         return (
           <SVGs.ListErrorIcon
             color={colors.blackSemiLight}
@@ -67,7 +64,7 @@ const Toast: React.FC<Props> = ({
       default:
         return null;
     }
-  }, [iconType, primary, secondary]);
+  }, [primary, secondary, type]);
 
   const Message = useMemo<JSX.Element>(
     () =>
@@ -85,6 +82,8 @@ const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
         return <SVGs.CloseSmallIcon color={action} />;
+      case ToastActionType.Undo:
+        return <Text style={[styles.action, { color: action }]}>Undo</Text>;
       default:
         return null;
     }
@@ -99,14 +98,16 @@ const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
         return onHide();
+      case ToastActionType.Undo:
+        return onPress?.(id);
     }
-  }, [onHide, actionType]);
+  }, [actionType, onHide, onPress, id]);
 
   return (
     <View style={containerStyle}>
       {Icon}
       {Message}
-      <TouchableOpacity hitSlop={16} onPress={handleRightButtonPress}>
+      <TouchableOpacity hitSlop={27} onPress={handleRightButtonPress}>
         {ActionButtonContent}
       </TouchableOpacity>
     </View>
@@ -114,6 +115,12 @@ const Toast: React.FC<Props> = ({
 };
 
 const styles = StyleSheet.create({
+  action: {
+    fontFamily: fonts.TT_Bold,
+    fontSize: 15,
+    letterSpacing: 0.18,
+    lineHeight: 18.5,
+  },
   container: {
     alignItems: 'center',
     borderRadius: 6,

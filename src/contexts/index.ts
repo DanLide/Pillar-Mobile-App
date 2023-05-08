@@ -1,3 +1,3 @@
-import { ToastContextProvider } from './ToastContext';
+import { ToastContextProvider, ToastType } from './ToastContext';
 
-export { ToastContextProvider };
+export { ToastContextProvider, ToastType };

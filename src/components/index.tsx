@@ -4,7 +4,7 @@ import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
 import ScanProduct from './ScanProduct';
-import Toast from './Toast';
+import Toast, { ToastActionType } from './Toast';
 import { Checkbox } from './Checkbox';
 import InfoTitleBar from './InfoTitleBar';
 
@@ -17,6 +17,7 @@ export {
   ScanProduct,
   Checkbox,
   Toast,
+  ToastActionType,
   InfoTitleBar,
   ButtonType,
 };
