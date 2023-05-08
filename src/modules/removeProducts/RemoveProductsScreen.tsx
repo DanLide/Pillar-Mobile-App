@@ -33,103 +33,103 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    const [isScannerActive, setIsScannerActive] = useState(true)
+  const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const [isScanner, setIsScanner] = useState(false)
+  const [isScanner, setIsScanner] = useState(false);
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
       const error = await fetchProduct(scanningProductStore, btoa(code));
       setIsLoading(false);
 
-      if (error)
-        return Alert.alert('Error', error.message || 'Loading is Failed!');
-    };
+    if (error)
+      return Alert.alert('Error', error.message || 'Loading is Failed!');
+  };
 
-    const onPressScan = () => {
-      setIsScanner(true)
-    }
-    const onScanProduct = (data) => {
-      setIsScannerActive(false)
-      fetchProductByCode(data)
-    };
+  const onPressScan = () => {
+    setIsScanner(true);
+  };
+  const onScanProduct = data => {
+    setIsScannerActive(false);
+    fetchProductByCode(data);
+  };
 
-    const onCompleteRemove = async () => {
-      setIsLoading(true);
-      const error = await onRemoveProducts(removeProductsStore);
-      setIsLoading(false);
-      // TODO discuss with business how we should handle partly crashed requests
-      if (error)
-        return Alert.alert('Error', error.message || 'Removing is Failed!', [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          {
-            text: 'Retry',
-            onPress: onCompleteRemove,
-          },
-        ]);
+  const onCompleteRemove = async () => {
+    setIsLoading(true);
+    const error = await onRemoveProducts(removeProductsStore);
+    setIsLoading(false);
+    // TODO discuss with business how we should handle partly crashed requests
+    if (error)
+      return Alert.alert('Error', error.message || 'Removing is Failed!', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Retry',
+          onPress: onCompleteRemove,
+        },
+      ]);
 
-      navigation.navigate(AppNavigator.ResultScreen);
-    };
+    navigation.navigate(AppNavigator.ResultScreen);
+  };
 
-    const onCloseModal = () => {
-      setIsModalVisible(false);
-      setIsScanner(false)
-      setIsScannerActive(true)
-    };
+  const onCloseModal = () => {
+    setIsModalVisible(false);
+    setIsScanner(false);
+    setIsScannerActive(true);
+  };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
       removeProductsStore.addProduct(product);
     };
 
-    useEffect(() => {
-      if (store.getCurrentProduct) {
-        setIsScanner(false)
-        setIsModalVisible(true);
-      }
-    }, [store.getCurrentProduct]);
+  useEffect(() => {
+    if (store.getCurrentProduct) {
+      setIsScanner(false);
+      setIsModalVisible(true);
+    }
+  }, [store.getCurrentProduct]);
 
-    return (
-      <SafeAreaView style={styles.container}>
-        {isScanner ?
-          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} /> :
-          <>
-            {isLoading ? (
-              <View style={styles.loader}>
-                <ActivityIndicator
-                  size="large"
-                  color="white"
-                  style={styles.activityIndicator}
-                />
-              </View>
-            ) : null}
-            <SelectedProductsList />
-            <Button
-              buttonStyle={styles.scanButton}
-              textStyle={styles.scanButtonText}
-              title="SCAN PRODUCT"
-              onPress={onPressScan}
-            />
-            <Button
-              disabled={!Object.keys(removeProductsStore.getProducts).length}
-              buttonStyle={styles.button}
-              title="COMPLETE REMOVE"
-              onPress={onCompleteRemove}
-            />
-            <ProductModal
-              isVisible={isModalVisible}
-              onAddProductToList={onAddProductToRemoveList}
-              onClose={onCloseModal}
-            />
-          </>
-        }
-      </SafeAreaView>
-    );
-  },
-);
+  return (
+    <SafeAreaView style={styles.container}>
+      {isScanner ? (
+        <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+      ) : (
+        <>
+          {isLoading ? (
+            <View style={styles.loader}>
+              <ActivityIndicator
+                size="large"
+                color="white"
+                style={styles.activityIndicator}
+              />
+            </View>
+          ) : null}
+          <SelectedProductsList />
+          <Button
+            buttonStyle={styles.scanButton}
+            textStyle={styles.scanButtonText}
+            title="SCAN PRODUCT"
+            onPress={onPressScan}
+          />
+          <Button
+            disabled={!Object.keys(removeProductsStore.getProducts).length}
+            buttonStyle={styles.button}
+            title="COMPLETE REMOVE"
+            onPress={onCompleteRemove}
+          />
+          <ProductModal
+            isVisible={isModalVisible}
+            onAddProductToList={onAddProductToRemoveList}
+            onClose={onCloseModal}
+          />
+        </>
+      )}
+    </SafeAreaView>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
