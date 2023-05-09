@@ -1,6 +1,6 @@
 import Scanner from './Scanner';
 import Input from './Input';
-import Button, { ButtonType, BUTTON_HEIGHT } from './Button';
+import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
 import ScanProduct from './ScanProduct';
@@ -22,5 +22,4 @@ export {
   ToastMessage,
   InfoTitleBar,
   ButtonType,
-  BUTTON_HEIGHT,
 };

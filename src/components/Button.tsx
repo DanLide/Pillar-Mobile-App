@@ -20,8 +20,6 @@ export enum ButtonType {
   secondary,
 }
 
-export const BUTTON_HEIGHT = 50;
-
 interface ExtendedButtonProps extends ButtonProps {
   type?: ButtonType;
   title: string;
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
-    height: BUTTON_HEIGHT,
+    height: 50,
     borderRadius: 16,
   },
   disabledStyle: {

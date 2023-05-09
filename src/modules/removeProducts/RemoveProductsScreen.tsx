@@ -10,16 +10,10 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import {
-  Button,
-  BUTTON_HEIGHT,
-  ScanProduct,
-  ToastMessage,
-} from '../../components';
+import { Button, ScanProduct, ToastMessage } from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -34,8 +28,6 @@ const { width, height } = Dimensions.get('window');
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
-
-const BUTTON_MARGIN = 12;
 
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(scanningProductStore).current;
@@ -190,14 +182,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default (props: Props) => {
-  const { bottom } = useSafeAreaInsets();
-
-  const bottomOffset = bottom + (BUTTON_HEIGHT + BUTTON_MARGIN) * 2;
-
-  return (
-    <ToastContextProvider offset={bottomOffset}>
-      <RemoveProductsScreen {...props} />
-    </ToastContextProvider>
-  );
-};
+export default (props: Props) => (
+  <ToastContextProvider offset={82}>
+    <RemoveProductsScreen {...props} />
+  </ToastContextProvider>
+);

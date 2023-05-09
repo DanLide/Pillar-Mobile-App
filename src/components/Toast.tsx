@@ -116,23 +116,23 @@ const Toast: React.FC<Props> = ({
 const styles = StyleSheet.create({
   action: {
     fontFamily: fonts.TT_Bold,
-    fontSize: 15,
-    letterSpacing: 0.18,
-    lineHeight: 18.5,
+    fontSize: 13,
+    letterSpacing: 0.16,
+    lineHeight: 16,
   },
   container: {
     alignItems: 'center',
-    borderRadius: 6,
+    borderRadius: 5,
     flexDirection: 'row',
-    gap: 18.5,
-    height: 54,
+    gap: 16,
+    height: 46,
     marginVertical: 4,
-    paddingHorizontal: 18.5,
+    paddingHorizontal: 16,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    width: width - 18.5,
+    width: width - 16,
   },
 });
 
