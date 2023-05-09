@@ -10,4 +10,6 @@ export const colors = {
   gray: '#E1E1E8',
   grayLight: '#F8F8FA',
   transparent: 'transparent',
+  green: '#0A672F',
+  greenLight: '#D9FAE6',
 };

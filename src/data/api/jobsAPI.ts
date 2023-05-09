@@ -3,6 +3,7 @@ import { URLProvider, tryAuthFetch } from '../helpers';
 export interface JobResponse {
   jobId: number;
   jobNumber: string;
+  jobDescription?: string;
   status: 'OPEN' | 'CLOSE';
 }
 

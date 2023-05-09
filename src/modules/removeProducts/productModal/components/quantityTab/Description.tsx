@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { ScanningProductModel } from '../../removeProducts/stores/ScanningProductStore';
+import { ScanningProductModel } from '../../../stores/ScanningProductStore';
 
-import { SVGs, colors, fonts } from '../../../theme';
+import { SVGs, colors, fonts } from '../../../../../theme';
 
 interface Props {
   product: ScanningProductModel;
 }
 
-export const EditQuantityDescription: React.FC<Props> = ({ product }) => (
+export const Description = memo(({ product }: Props) => (
   <View style={styles.container}>
     <View
       style={[
@@ -17,19 +17,21 @@ export const EditQuantityDescription: React.FC<Props> = ({ product }) => (
         product.isRecoverable ? styles.refundIconPadding : null,
       ]}
     >
-      {product.isRecoverable ? (
-        <SVGs.RefundIcon color={colors.purple} />
-      ) : null}
+      {product.isRecoverable ? <SVGs.RefundIcon color={colors.purple} /> : null}
       <View>
-        <Text style={styles.partNo}>{product.partNo}</Text>
+        <Text style={styles.partNo} numberOfLines={1} ellipsizeMode="middle">
+          {product.manufactureCode} {product.partNo}
+        </Text>
       </View>
     </View>
     <Text style={styles.name} numberOfLines={2} ellipsizeMode="middle">
       {product.name}
     </Text>
-    <Text style={styles.size}>{product.size}</Text>
+    <Text style={styles.size} numberOfLines={1} ellipsizeMode="middle">
+      {product.size}
+    </Text>
   </View>
-);
+));
 
 const styles = StyleSheet.create({
   container: {

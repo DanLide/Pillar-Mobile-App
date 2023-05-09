@@ -1,14 +1,15 @@
 import React, { memo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ViewStyle, StyleProp } from 'react-native';
 import { colors, fonts } from '../theme';
 
 interface Props {
   title?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-const InfoTitleBar: React.FC<Props> = ({ title }) =>
+const InfoTitleBar: React.FC<Props> = ({ title, containerStyle }) =>
   title ? (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <Text style={styles.title}>{title}</Text>
     </View>
   ) : null;

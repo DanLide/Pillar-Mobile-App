@@ -10,6 +10,7 @@ export interface ProductResponse {
   inventoryUseTypeId: number;
   size: string;
   partNo: string;
+  manufactureCode: string;
 }
 
 export interface RemoveProductResponse {

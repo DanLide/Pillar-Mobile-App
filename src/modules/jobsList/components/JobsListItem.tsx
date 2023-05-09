@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { JobModel } from '../stores/JobsStore';
+import { colors, fonts } from '../../../theme';
 
 interface Props {
   item: JobModel;
@@ -23,7 +24,10 @@ export const JobListItem: React.FC<Props> = ({
           {selectedId === item.jobId ? <View style={styles.selected} /> : null}
         </View>
 
-        <Text style={styles.title}>{item.jobNumber}</Text>
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{item.jobNumber}</Text>
+          <Text style={styles.description}>{item.jobDescription}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -31,30 +35,43 @@ export const JobListItem: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingHorizontal: 8,
   },
   underlineContainer: {
+    height: 46,
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: 'gray',
+    borderBottomColor: colors.gray,
     alignItems: 'center',
   },
+  textContainer: {
+    marginLeft: 12,
+  },
   title: {
-    fontSize: 18,
-    margin: 16,
+    fontSize: 15,
+    lineHeight: 20,
+    color: colors.purpleDark,
+    fontFamily: fonts.TT_Bold,
+  },
+  description: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackSemiLight,
   },
   toggle: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderRadius: 24,
+    borderRadius: 22,
+    borderColor: colors.grayDark,
   },
   selected: {
-    width: 16,
-    height: 16,
-    borderRadius: 16,
-    backgroundColor: 'black',
+    width: 16.5,
+    height: 16.5,
+    borderRadius: 16.5,
+    backgroundColor: colors.purple,
   },
 });

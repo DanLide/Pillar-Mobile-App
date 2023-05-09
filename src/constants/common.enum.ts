@@ -208,14 +208,24 @@ export enum TransactionType {
 //   Percent = 3
 // }
 //
+
 export enum InventoryUseType {
   Stock = -1,
   Container = 1,
   Percent = 2,
   Each = 3,
   NonStock = 4,
-  All = null
+  All = null,
 }
+
+export const InventoryTypeName = {
+  [InventoryUseType.Stock]: 'Stack',
+  [InventoryUseType.Percent]: 'Percent',
+  [InventoryUseType.Container]: 'Container',
+  [InventoryUseType.Each]: 'Each Piece',
+  [InventoryUseType.NonStock]: 'NonStock',
+  [InventoryUseType.All]: 'All',
+};
 //
 // export enum SimulateScanScreenSelection {
 //   MngP_EAorContainer = 1,

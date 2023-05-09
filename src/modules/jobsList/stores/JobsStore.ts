@@ -3,6 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 export interface JobModel {
   jobId: number;
   jobNumber: string;
+  jobDescription?: string;
 }
 
 export class JobsStore {

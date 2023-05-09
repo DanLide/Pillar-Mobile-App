@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -13,7 +13,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button } from '../../components';
-import { ProductModal } from '../productModal';
+import { ProductModal } from './productModal';
 import { fetchProduct } from '../../data/fetchProduct';
 import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
@@ -30,15 +30,20 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<
+      ScanningProductModel | undefined
+    >(undefined);
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
       const error = await fetchProduct(scanningProductStore, code);
       setIsLoading(false);
 
-      if (error)
-        return Alert.alert('Error', error.message || 'Loading is Failed!');
+      if (error) {
+        Alert.alert('Error', error.message || 'Loading is Failed!');
+      } else {
+        setSelectedProduct(store.getCurrentProduct);
+      }
     };
 
     const onScanProduct = () => {
@@ -69,18 +74,12 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onCloseModal = () => {
-      setIsModalVisible(false);
+      setSelectedProduct(undefined);
     };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
       removeProductsStore.addProduct(product);
     };
-
-    useEffect(() => {
-      if (store.getCurrentProduct) {
-        setIsModalVisible(true);
-      }
-    }, [store.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -109,7 +108,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
         />
 
         <ProductModal
-          isVisible={isModalVisible}
+          product={selectedProduct}
           onAddProductToList={onAddProductToRemoveList}
           onClose={onCloseModal}
         />

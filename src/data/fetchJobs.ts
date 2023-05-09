@@ -54,6 +54,10 @@ class SaveJobsToStoreTask extends Task {
   }
 
   private mapJobResponse(jobs: JobResponse[]): JobModel[] {
-    return jobs.map(job => ({ jobId: job.jobId, jobNumber: job.jobNumber }));
+    return jobs.map(job => ({
+      jobId: job.jobId,
+      jobNumber: job.jobNumber,
+      jobDescription: job.jobDescription,
+    }));
   }
 }
