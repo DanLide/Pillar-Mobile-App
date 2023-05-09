@@ -13,9 +13,11 @@ export enum ToastType {
 type Props = PropsWithChildren<ToastProviderProps>;
 
 const TOAST_DURATION_MS = 3000;
+const OFFSET_DEFAULT = 16;
 
 export const ToastContextProvider: React.FC<Props> = ({
   children,
+  offset = 0,
   ...props
 }) => {
   const renderType = useMemo<
@@ -53,6 +55,7 @@ export const ToastContextProvider: React.FC<Props> = ({
       animationType="zoom-in"
       swipeEnabled={false}
       renderType={renderType}
+      offset={OFFSET_DEFAULT + offset}
       {...props}
     >
       {children}

@@ -12,6 +12,7 @@ import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toas
 
 import { colors, fonts, toastColors, SVGs } from '../theme';
 import { ToastType } from '../contexts';
+import { ToastMessage } from './ToastMessage';
 
 const { width } = Dimensions.get('window');
 
@@ -69,9 +70,7 @@ const Toast: React.FC<Props> = ({
   const Message = useMemo<JSX.Element>(
     () =>
       typeof message === 'string' ? (
-        <Text numberOfLines={2} style={styles.message}>
-          {message}
-        </Text>
+        <ToastMessage>{message}</ToastMessage>
       ) : (
         message
       ),
@@ -134,13 +133,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     width: width - 18.5,
-  },
-  message: {
-    color: colors.blackSemiLight,
-    flex: 1,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 16.5,
-    lineHeight: 20.5,
   },
 });
 
