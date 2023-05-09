@@ -64,12 +64,6 @@ class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    return {
-      productId: product.productId,
-      onHand: product.onHand,
-      name: product.name,
-      isRecoverable: product.isRecoverable,
-      reservedCount: 1,
-    };
+    return { ...product, reservedCount: 1 };
   }
 }
