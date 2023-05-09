@@ -22,7 +22,7 @@ export const StocksListItem: React.FC<Props> = ({ item, onPressItem }) => {
       <View style={styles.underlineContainer}>
         <Text style={styles.title}>{organizationName}</Text>
         <View style={styles.statusContainer}>
-          {isLocked && <Text style={styles.statusText}>Unlock</Text>}
+          {isLocked && <Text style={styles.statusText}>Unlock.</Text>}
           <SVGs.ChevronIcon color={colors.purpleDark} />
         </View>
       </View>
