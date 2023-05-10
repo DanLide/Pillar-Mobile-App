@@ -7,6 +7,7 @@ import ScanProduct from './ScanProduct';
 import Toast, { ToastActionType } from './Toast';
 import { Checkbox } from './Checkbox';
 import InfoTitleBar from './InfoTitleBar';
+import ToastMessage from './ToastMessage';
 
 export {
   Scanner,
@@ -18,6 +19,7 @@ export {
   Checkbox,
   Toast,
   ToastActionType,
+  ToastMessage,
   InfoTitleBar,
   ButtonType,
 };

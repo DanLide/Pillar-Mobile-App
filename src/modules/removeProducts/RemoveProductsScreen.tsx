@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { useToast } from 'react-native-toast-notifications';
 
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import { Button, ScanProduct } from '../../components';
+import { Button, ScanProduct, ToastMessage } from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -20,12 +21,16 @@ import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
+import { ToastContextProvider, ToastType } from '../../contexts';
+import { Utils } from '../../data/helpers/utils';
 
 const { width, height } = Dimensions.get('window');
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 82;
 
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(scanningProductStore).current;
@@ -35,6 +40,8 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const [isScannerActive, setIsScannerActive] = useState(true);
 
   const [isScanner, setIsScanner] = useState(false);
+
+  const toast = useToast();
 
   const fetchProductByCode = async (code: string) => {
     setIsLoading(true);
@@ -80,9 +87,24 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     setIsScannerActive(true);
   };
 
-  const onAddProductToRemoveList = (product: ScanningProductModel) => {
-    removeProductsStore.addProduct(product);
-  };
+  const onAddProductToRemoveList = useCallback(
+    (product: ScanningProductModel) => {
+      const { reservedCount, nameDetails } = product;
+
+      removeProductsStore.addProduct(product);
+
+      toast.show?.(
+        <ToastMessage>
+          <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+          {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+          <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
+          added to List
+        </ToastMessage>,
+        { type: ToastType.Info },
+      );
+    },
+    [toast],
+  );
 
   useEffect(() => {
     if (store.getCurrentProduct) {
@@ -159,4 +181,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RemoveProductsScreen;
+export default (props: Props) => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <RemoveProductsScreen {...props} />
+  </ToastContextProvider>
+);

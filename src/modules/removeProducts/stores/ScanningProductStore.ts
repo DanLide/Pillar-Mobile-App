@@ -3,6 +3,7 @@ import { action, makeObservable, observable, computed } from 'mobx';
 export interface ScanningProductModel {
   productId: number;
   name: string;
+  nameDetails: string;
   isRecoverable: 'Yes' | 'No';
   onHand: number;
   reservedCount: number;
