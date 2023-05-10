@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { observer } from 'mobx-react';
@@ -105,7 +105,7 @@ export const ProductModal: React.FC<Props> = observer(
       ],
     );
 
-    const renderTitle = useCallback(() => {
+    const title = useMemo<string>(() => {
       switch (selectedTab) {
         case Tabs.EditQuantity:
           return 'Adjust Quantity';
@@ -123,7 +123,7 @@ export const ProductModal: React.FC<Props> = observer(
         title={removeProductsStore.stockName}
         titleContainerStyle={styles.titleContainer}
         topOffset={64}
-        semiTitle={renderTitle()}
+        semiTitle={title}
       >
         <Carousel
           ref={carouselRef}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Button, ButtonType, Input } from '../../../../components';
@@ -30,34 +30,37 @@ export const SelectProductJob: React.FC<Props> = ({
     setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
   };
 
-  const renderFooter = () => (
-    <View style={styles.buttons}>
-      {isRecoverable ? (
+  const Footer = useMemo(
+    () => (
+      <View style={styles.buttons}>
+        {isRecoverable ? (
+          <Button
+            type={ButtonType.secondary}
+            title="Skip"
+            buttonStyle={styles.button}
+            onPress={onPressSkip}
+          />
+        ) : (
+          <Button
+            type={ButtonType.secondary}
+            title="Back"
+            buttonStyle={styles.button}
+            onPress={onPressBack}
+          />
+        )}
         <Button
-          type={ButtonType.secondary}
-          title="Skip"
+          type={ButtonType.primary}
+          disabled={!selectedId}
+          title="Done"
           buttonStyle={styles.button}
-          onPress={onPressSkip}
+          onPress={() => onPressAdd(selectedId)}
         />
-      ) : (
-        <Button
-          type={ButtonType.secondary}
-          title="Back"
-          buttonStyle={styles.button}
-          onPress={onPressBack}
-        />
-      )}
-      <Button
-        type={ButtonType.primary}
-        disabled={!selectedId}
-        title="Done"
-        buttonStyle={styles.button}
-        onPress={() => onPressAdd(selectedId)}
-      />
-    </View>
+      </View>
+    ),
+    [isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedId],
   );
 
-  const renderHeader = () => (
+  const Header = useMemo(() => (
     <Input
       style={styles.input}
       containerStyle={styles.inputContainer}
@@ -69,7 +72,7 @@ export const SelectProductJob: React.FC<Props> = ({
       onChangeText={text => setFilterValue(text)}
       placeholderTextColor={colors.blackSemiLight}
     />
-  );
+  ), [filterValue]);
 
   if (selectedTab === Tabs.LinkJob) {
     return (
@@ -77,8 +80,8 @@ export const SelectProductJob: React.FC<Props> = ({
         selectedId={selectedId}
         onPressItem={onPressItem}
         filterValue={filterValue}
-        footerComponent={renderFooter()}
-        headerComponent={renderHeader()}
+        footerComponent={Footer}
+        headerComponent={Header}
       />
     );
   } else {

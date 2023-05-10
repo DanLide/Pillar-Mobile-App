@@ -1,4 +1,4 @@
-import React, { useCallback, memo } from 'react';
+import React, { useCallback, memo, useMemo } from 'react';
 import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 
 import { colors, fonts, SVGs } from '../../../../../theme';
@@ -32,7 +32,7 @@ export const EditQuantity = memo(
       onChange(currentValue - 1);
     }, [currentValue, onChange]);
 
-    const renderDecreaseButton = () => {
+    const DecreaseButton = useMemo(() => {
       return currentValue > 1 ? (
         <TouchableOpacity
           style={[styles.quantityButton, styles.border]}
@@ -43,11 +43,11 @@ export const EditQuantity = memo(
       ) : (
         <View style={styles.quantityButton} />
       );
-    };
+    }, [currentValue, onDecreaseCount]);
 
     return (
       <View style={styles.container}>
-        {renderDecreaseButton()}
+        {DecreaseButton}
         <TextInput
           style={styles.input}
           value={`${currentValue}`}

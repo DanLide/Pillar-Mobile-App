@@ -8,6 +8,8 @@ interface Props {
   product: ScanningProductModel;
 }
 
+const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
+
 export const FooterDescription: React.FC<Props> = ({ product }) => {
   const store = useRef(productModalStore).current;
 
@@ -16,7 +18,9 @@ export const FooterDescription: React.FC<Props> = ({ product }) => {
       <View style={[styles.itemContainer, { marginRight: 16 }]}>
         <Text style={styles.title}>In Stock</Text>
         <Text style={styles.subtitleInStock}>
-          {product.onHand > 99 ? '99+' : product.onHand}
+          {product.onHand > 99
+            ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY
+            : product.onHand}
         </Text>
       </View>
 
