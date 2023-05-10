@@ -18,14 +18,7 @@ export const ToastMessage: React.FC<Props> = ({ bold, style, ...props }) => {
     [bold, style],
   );
 
-  return (
-    <Text
-      ellipsizeMode="middle"
-      numberOfLines={2}
-      style={textStyle}
-      {...props}
-    />
-  );
+  return <Text style={textStyle} {...props} />;
 };
 
 const styles = StyleSheet.create({

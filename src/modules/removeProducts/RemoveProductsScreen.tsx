@@ -22,6 +22,7 @@ import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
 import { ToastContextProvider, ToastType } from '../../contexts';
+import { Utils } from '../../data/helpers/utils';
 
 const { width, height } = Dimensions.get('window');
 
@@ -86,7 +87,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
 
   const onAddProductToRemoveList = useCallback(
     (product: ScanningProductModel) => {
-      const { reservedCount, manufactureCode, partNo, size } = product;
+      const { reservedCount, nameDetails } = product;
 
       removeProductsStore.addProduct(product);
 
@@ -94,10 +95,8 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
         <ToastMessage>
           <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
           {reservedCount > 1 ? 'units' : 'unit'} of{' '}
-          <ToastMessage bold>
-            {manufactureCode} {partNo} {size}{' '}
-          </ToastMessage>
-          added to List{' '}
+          <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
+          added to List
         </ToastMessage>,
         {
           type: ToastType.Info,
@@ -183,7 +182,7 @@ const styles = StyleSheet.create({
 });
 
 export default (props: Props) => (
-  <ToastContextProvider offset={82}>
+  <ToastContextProvider duration={0} offset={82}>
     <RemoveProductsScreen {...props} />
   </ToastContextProvider>
 );

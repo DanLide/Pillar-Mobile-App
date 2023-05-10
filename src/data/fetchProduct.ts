@@ -63,7 +63,16 @@ class SaveProductToStoreTask extends Task {
     }
   }
 
-  private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    return { ...product, reservedCount: 1 };
+  private mapProductResponse({
+    manufactureCode,
+    partNo,
+    size,
+    ...product
+  }: ProductResponse): ScanningProductModel {
+    return {
+      ...product,
+      nameDetails: [manufactureCode, partNo, size].join(' '),
+      reservedCount: 1,
+    };
   }
 }
