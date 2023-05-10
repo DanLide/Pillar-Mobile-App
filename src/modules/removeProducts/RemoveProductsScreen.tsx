@@ -30,6 +30,8 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 82;
+
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(scanningProductStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -98,9 +100,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
           <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
           added to List
         </ToastMessage>,
-        {
-          type: ToastType.Info,
-        },
+        { type: ToastType.Info },
       );
     },
     [toast],
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
 });
 
 export default (props: Props) => (
-  <ToastContextProvider duration={0} offset={82}>
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
     <RemoveProductsScreen {...props} />
   </ToastContextProvider>
 );
