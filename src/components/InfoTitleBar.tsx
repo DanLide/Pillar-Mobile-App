@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text, View, ViewStyle, StyleProp } from 'react-native';
 import { colors, fonts } from '../theme';
 
@@ -7,12 +7,18 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
-const InfoTitleBar: React.FC<Props> = ({ title, containerStyle }) =>
-  title ? (
-    <View style={[styles.container, containerStyle]}>
+const InfoTitleBar: React.FC<Props> = ({ title, containerStyle }) => {
+  const mergedStyle = useMemo(
+    () => [styles.container, containerStyle],
+    [containerStyle],
+  );
+
+  return title ? (
+    <View style={mergedStyle}>
       <Text style={styles.title}>{title}</Text>
     </View>
   ) : null;
+};
 
 const styles = StyleSheet.create({
   container: {
