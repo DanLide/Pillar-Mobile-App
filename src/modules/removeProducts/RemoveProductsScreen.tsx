@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -31,27 +31,32 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<
+      ScanningProductModel | undefined
+    >(undefined);
 
-    const [isScannerActive, setIsScannerActive] = useState(true)
+    const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const [isScanner, setIsScanner] = useState(false)
+    const [isScanner, setIsScanner] = useState(false);
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
       const error = await fetchProduct(scanningProductStore, btoa(code));
       setIsLoading(false);
 
-      if (error)
-        return Alert.alert('Error', error.message || 'Loading is Failed!');
+      if (error) {
+        Alert.alert('Error', error.message || 'Loading is Failed!');
+      } else {
+        setSelectedProduct(store.getCurrentProduct);
+      }
     };
 
     const onPressScan = () => {
-      setIsScanner(true)
-    }
-    const onScanProduct = (data) => {
-      setIsScannerActive(false)
-      fetchProductByCode(data)
+      setIsScanner(true);
+    };
+    const onScanProduct = data => {
+      setIsScannerActive(false);
+      fetchProductByCode(data);
     };
 
     const onCompleteRemove = async () => {
@@ -76,26 +81,20 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onCloseModal = () => {
-      setIsModalVisible(false);
-      setIsScanner(false)
-      setIsScannerActive(true)
+      setSelectedProduct(undefined);
+      setIsScanner(false);
+      setIsScannerActive(true);
     };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
       removeProductsStore.addProduct(product);
     };
 
-    useEffect(() => {
-      if (store.getCurrentProduct) {
-        setIsScanner(false)
-        setIsModalVisible(true);
-      }
-    }, [store.getCurrentProduct]);
-
     return (
       <SafeAreaView style={styles.container}>
-        {isScanner ?
-          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} /> :
+        {isScanner ? (
+          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+        ) : (
           <>
             {isLoading ? (
               <View style={styles.loader}>
@@ -113,6 +112,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               title="SCAN PRODUCT"
               onPress={onPressScan}
             />
+
             <Button
               disabled={!Object.keys(removeProductsStore.getProducts).length}
               buttonStyle={styles.button}
@@ -120,12 +120,12 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               onPress={onCompleteRemove}
             />
             <ProductModal
-              isVisible={isModalVisible}
+              product={selectedProduct}
               onAddProductToList={onAddProductToRemoveList}
               onClose={onCloseModal}
             />
           </>
-        }
+        )}
       </SafeAreaView>
     );
   },

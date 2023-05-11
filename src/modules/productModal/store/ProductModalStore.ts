@@ -1,4 +1,5 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, computed } from 'mobx';
+
 import { ScanningProductModel } from '../../removeProducts/stores/ScanningProductStore';
 
 interface ProductModal {
@@ -10,6 +11,10 @@ export class ProductModalStore implements ProductModal {
 
   constructor() {
     makeObservable(this);
+  }
+
+  @computed get getProduct() {
+    return this.product;
   }
 
   @action setProduct(product: ScanningProductModel) {

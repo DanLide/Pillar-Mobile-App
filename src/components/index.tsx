@@ -6,6 +6,7 @@ import Switch from './Switch';
 import ScanProduct from './ScanProduct';
 import { Checkbox } from './Checkbox';
 import InfoTitleBar from './InfoTitleBar';
+import { Modal } from './Modal';
 
 export {
   Scanner,
@@ -17,4 +18,5 @@ export {
   Checkbox,
   InfoTitleBar,
   ButtonType,
+  Modal,
 };

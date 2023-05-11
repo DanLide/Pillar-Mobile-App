@@ -105,7 +105,7 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/RepairFacilityJob/${facilityId}`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetAllJobs/${facilityId}`,
     );
   }
 

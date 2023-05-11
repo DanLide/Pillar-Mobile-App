@@ -1,33 +1,27 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet } from 'react-native';
 
-import { Button, Input } from '../../../components';
+import { Button, ButtonType, Input } from '../../../components';
 import { JobsList } from '../../jobsList/components';
 import { JobModel } from '../../jobsList/stores/JobsStore';
-import { productModalStore } from '../store';
+import { SVGs, colors, fonts } from '../../../theme';
+import { Tabs } from '../ProductModal';
 
 interface Props {
-  selectedIndex: number;
-  onClose: () => void;
+  isRecoverable?: boolean;
+  selectedTab: Tabs;
+
   onPressBack: () => void;
   onPressSkip: () => void;
   onPressAdd: (jobId?: number) => void;
 }
 
-const { width } = Dimensions.get('window');
-
 export const SelectProductJob: React.FC<Props> = ({
-  onClose,
+  isRecoverable,
+  selectedTab,
   onPressBack,
   onPressSkip,
   onPressAdd,
-  selectedIndex,
 }) => {
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [filterValue, setFilterValue] = useState<string>('');
@@ -36,53 +30,63 @@ export const SelectProductJob: React.FC<Props> = ({
     setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
   };
 
-  return (
-    <>
-      <View style={styles.header}>
-        <View style={{ width: 100 }} />
-        <Text style={styles.headerTitle}>Add job Number</Text>
-        <View style={{ width: 100 }}>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={{ textAlign: 'center' }}>Close</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <Input
-        style={styles.input}
-        value={filterValue}
-        onChangeText={text => setFilterValue(text)}
-      />
-      {selectedIndex === 1 ? (
-        <JobsList
-          selectedId={selectedId}
-          onPressItem={onPressItem}
-          filterValue={filterValue}
-        />
-      ) : null}
-
+  const Footer = useMemo(
+    () => (
       <View style={styles.buttons}>
-        {productModalStore.product?.isRecoverable ? (
+        {isRecoverable ? (
           <Button
+            type={ButtonType.secondary}
             title="Skip"
             buttonStyle={styles.button}
             onPress={onPressSkip}
           />
         ) : (
           <Button
+            type={ButtonType.secondary}
             title="Back"
             buttonStyle={styles.button}
             onPress={onPressBack}
           />
         )}
         <Button
+          type={ButtonType.primary}
           disabled={!selectedId}
-          title="Add"
+          title="Done"
           buttonStyle={styles.button}
           onPress={() => onPressAdd(selectedId)}
         />
       </View>
-    </>
+    ),
+    [isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedId],
   );
+
+  const Header = useMemo(() => (
+    <Input
+      style={styles.input}
+      containerStyle={styles.inputContainer}
+      value={filterValue}
+      placeholder="Search"
+      rightIcon={() => (
+        <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
+      )}
+      onChangeText={text => setFilterValue(text)}
+      placeholderTextColor={colors.blackSemiLight}
+    />
+  ), [filterValue]);
+
+  if (selectedTab === Tabs.LinkJob) {
+    return (
+      <JobsList
+        selectedId={selectedId}
+        onPressItem={onPressItem}
+        filterValue={filterValue}
+        footerComponent={Footer}
+        headerComponent={Header}
+      />
+    );
+  } else {
+    return null;
+  }
 };
 
 const styles = StyleSheet.create({
@@ -96,18 +100,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   input: {
-    width: width - 32,
-    borderWidth: 1,
-    borderRadius: 12,
-    height: 42,
-    margin: 16,
+    height: 32,
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackSemiLight,
+  },
+  inputContainer: {
+    height: 32,
+    marginHorizontal: 16,
+    marginTop: 19,
+    borderColor: colors.gray,
   },
   buttons: {
     flexDirection: 'row',
-    margin: 32,
+    margin: 16,
     justifyContent: 'space-between',
   },
   button: {
-    width: width / 2 - 48,
+    width: 163.5,
+    height: 48,
   },
 });

@@ -1,12 +1,17 @@
 import { action, makeObservable, observable, computed } from 'mobx';
+import { InventoryUseType } from '../../../constants/common.enum';
 
 export interface ScanningProductModel {
   productId: number;
   name: string;
-  isRecoverable: 'Yes' | 'No';
+  isRecoverable: boolean;
   onHand: number;
   reservedCount: number;
   jobId?: number;
+  inventoryUseTypeId: InventoryUseType;
+  size: string;
+  partNo: string;
+  manufactureCode: string;
 }
 
 export class ScanningProductStore {
