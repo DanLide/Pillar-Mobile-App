@@ -12,7 +12,8 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import { Button } from '../../components';
+import { Button, ScanProduct } from '../../components';
+import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
 import { SelectedProductsList } from './SelectedProductsList';
@@ -34,9 +35,13 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       ScanningProductModel | undefined
     >(undefined);
 
+    const [isScannerActive, setIsScannerActive] = useState(true);
+
+    const [isScanner, setIsScanner] = useState(false);
+
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
-      const error = await fetchProduct(scanningProductStore, code);
+      const error = await fetchProduct(scanningProductStore, btoa(code));
       setIsLoading(false);
 
       if (error) {
@@ -46,10 +51,12 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       }
     };
 
-    const onScanProduct = () => {
-      Alert.prompt('Product', 'Enter product code', (code: string) =>
-        fetchProductByCode(code),
-      );
+    const onPressScan = () => {
+      setIsScanner(true);
+    };
+    const onScanProduct = data => {
+      setIsScannerActive(false);
+      fetchProductByCode(data);
     };
 
     const onCompleteRemove = async () => {
@@ -75,6 +82,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onCloseModal = () => {
       setSelectedProduct(undefined);
+      setIsScanner(false);
+      setIsScannerActive(true);
     };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
@@ -83,35 +92,40 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     return (
       <SafeAreaView style={styles.container}>
-        {isLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator
-              size="large"
-              color="white"
-              style={styles.activityIndicator}
+        {isScanner ? (
+          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+        ) : (
+          <>
+            {isLoading ? (
+              <View style={styles.loader}>
+                <ActivityIndicator
+                  size="large"
+                  color="white"
+                  style={styles.activityIndicator}
+                />
+              </View>
+            ) : null}
+            <SelectedProductsList />
+            <Button
+              buttonStyle={styles.scanButton}
+              textStyle={styles.scanButtonText}
+              title="SCAN PRODUCT"
+              onPress={onPressScan}
             />
-          </View>
-        ) : null}
-        <SelectedProductsList />
 
-        <Button
-          buttonStyle={styles.scanButton}
-          textStyle={styles.scanButtonText}
-          title="SCAN PRODUCT"
-          onPress={onScanProduct}
-        />
-        <Button
-          disabled={!Object.keys(removeProductsStore.getProducts).length}
-          buttonStyle={styles.button}
-          title="COMPLETE REMOVE"
-          onPress={onCompleteRemove}
-        />
-
-        <ProductModal
-          product={selectedProduct}
-          onAddProductToList={onAddProductToRemoveList}
-          onClose={onCloseModal}
-        />
+            <Button
+              disabled={!Object.keys(removeProductsStore.getProducts).length}
+              buttonStyle={styles.button}
+              title="COMPLETE REMOVE"
+              onPress={onCompleteRemove}
+            />
+            <ProductModal
+              product={selectedProduct}
+              onAddProductToList={onAddProductToRemoveList}
+              onClose={onCloseModal}
+            />
+          </>
+        )}
       </SafeAreaView>
     );
   },
