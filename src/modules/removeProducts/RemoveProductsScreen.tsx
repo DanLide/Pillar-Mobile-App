@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button, ScanProduct } from '../../components';
@@ -33,9 +33,9 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-    const [isScannerActive, setIsScannerActive] = useState(true)
+    const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const [isScanner, setIsScanner] = useState(false)
+    const [isScanner, setIsScanner] = useState(false);
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
@@ -46,12 +46,26 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
         return Alert.alert('Error', error.message || 'Loading is Failed!');
     };
 
-    const onPressScan = () => {
-      setIsScanner(true)
-    }
-    const onScanProduct = (data) => {
-      setIsScannerActive(false)
-      fetchProductByCode(data)
+    const turnOnScanner = () => {
+      setIsScannerActive(true);
+      setIsScanner(true);
+    };
+
+    const onPressScan = async () => {
+      const result = await check(PERMISSIONS.IOS.CAMERA);
+      if (result !== RESULTS.GRANTED) {
+        navigation.navigate(AppNavigator.CameraPermissionScreen, {
+          turnOnScanner,
+        });
+        return;
+      }
+
+      setIsScanner(true);
+    };
+
+    const onScanProduct = data => {
+      setIsScannerActive(false);
+      fetchProductByCode(data);
     };
 
     const onCompleteRemove = async () => {
@@ -77,8 +91,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onCloseModal = () => {
       setIsModalVisible(false);
-      setIsScanner(false)
-      setIsScannerActive(true)
+      setIsScanner(false);
+      setIsScannerActive(true);
     };
 
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
@@ -87,15 +101,16 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     useEffect(() => {
       if (store.getCurrentProduct) {
-        setIsScanner(false)
+        setIsScanner(false);
         setIsModalVisible(true);
       }
     }, [store.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
-        {isScanner ?
-          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} /> :
+        {isScanner ? (
+          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+        ) : (
           <>
             {isLoading ? (
               <View style={styles.loader}>
@@ -125,7 +140,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               onClose={onCloseModal}
             />
           </>
-        }
+        )}
       </SafeAreaView>
     );
   },
