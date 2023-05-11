@@ -1,8 +1,19 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+
 import { ScanningProductModel } from '../../../stores/ScanningProductStore';
 import { colors, fonts } from '../../../../../theme';
 import { productModalStore } from '../../store';
+import { InventoryUseType } from '../../../../../constants/common.enum';
+
+const InventoryTypeName = {
+  [InventoryUseType.Stock]: 'Stock',
+  [InventoryUseType.Percent]: 'Percent',
+  [InventoryUseType.Container]: 'Container',
+  [InventoryUseType.Each]: 'Each Piece',
+  [InventoryUseType.NonStock]: 'NonStock',
+  [InventoryUseType.All]: 'All',
+};
 
 interface Props {
   product: ScanningProductModel;
@@ -12,6 +23,9 @@ const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
 export const FooterDescription: React.FC<Props> = ({ product }) => {
   const store = useRef(productModalStore).current;
+  const InventoryTypeNameString = store.getProduct?.inventoryUseTypeId
+    ? InventoryTypeName[store.getProduct.inventoryUseTypeId]
+    : undefined;
 
   return (
     <View style={styles.container}>
@@ -26,8 +40,8 @@ export const FooterDescription: React.FC<Props> = ({ product }) => {
 
       <View style={styles.itemContainer}>
         <Text style={styles.title}>Remove by</Text>
-        {store?.userTypeName ? (
-          <Text style={styles.subtitleRemoveBy}>{store.userTypeName}</Text>
+        {InventoryTypeNameString ? (
+          <Text style={styles.subtitleRemoveBy}>{InventoryTypeNameString}</Text>
         ) : null}
       </View>
     </View>

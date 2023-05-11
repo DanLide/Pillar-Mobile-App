@@ -1,5 +1,4 @@
 import { action, makeObservable, observable, computed } from 'mobx';
-import { InventoryTypeName } from '../../../../constants/common.enum';
 
 import { ScanningProductModel } from '../../stores/ScanningProductStore';
 
@@ -12,12 +11,6 @@ export class ProductModalStore implements ProductModal {
 
   constructor() {
     makeObservable(this);
-  }
-
-  @computed get userTypeName() {
-    if (!this.product) return undefined;
-
-    return InventoryTypeName[this.product.inventoryUseTypeId];
   }
 
   @computed get getProduct() {

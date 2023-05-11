@@ -218,14 +218,6 @@ export enum InventoryUseType {
   All = null,
 }
 
-export const InventoryTypeName = {
-  [InventoryUseType.Stock]: 'Stack',
-  [InventoryUseType.Percent]: 'Percent',
-  [InventoryUseType.Container]: 'Container',
-  [InventoryUseType.Each]: 'Each Piece',
-  [InventoryUseType.NonStock]: 'NonStock',
-  [InventoryUseType.All]: 'All',
-};
 //
 // export enum SimulateScanScreenSelection {
 //   MngP_EAorContainer = 1,
