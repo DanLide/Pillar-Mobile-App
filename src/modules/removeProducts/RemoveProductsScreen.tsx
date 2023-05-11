@@ -13,7 +13,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button } from '../../components';
-import { ProductModal } from './productModal';
+import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
 import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';

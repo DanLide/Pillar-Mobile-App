@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import { Button, ButtonType, Input } from '../../../../components';
-import { JobsList } from '../../../jobsList/components';
-import { JobModel } from '../../../jobsList/stores/JobsStore';
-import { SVGs, colors, fonts } from '../../../../theme';
+import { Button, ButtonType, Input } from '../../../components';
+import { JobsList } from '../../jobsList/components';
+import { JobModel } from '../../jobsList/stores/JobsStore';
+import { SVGs, colors, fonts } from '../../../theme';
 import { Tabs } from '../ProductModal';
 
 interface Props {

@@ -1,6 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 
-import { ScanningProductModel } from '../../stores/ScanningProductStore';
+import { ScanningProductModel } from '../../removeProducts/stores/ScanningProductStore';
 
 interface ProductModal {
   product?: ScanningProductModel;

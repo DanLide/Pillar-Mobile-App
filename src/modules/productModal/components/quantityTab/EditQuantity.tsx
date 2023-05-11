@@ -1,7 +1,7 @@
 import React, { useCallback, memo, useMemo } from 'react';
 import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 
-import { colors, fonts, SVGs } from '../../../../../theme';
+import { colors, fonts, SVGs } from '../../../../theme';
 
 interface Props {
   currentValue: number;

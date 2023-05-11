@@ -3,15 +3,15 @@ import { StyleSheet, Dimensions, View } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { observer } from 'mobx-react';
 
-import { ScanningProductModel } from '../stores/ScanningProductStore';
+import { ScanningProductModel } from '../removeProducts/stores/ScanningProductStore';
 
-import { Modal } from '../../../components';
+import { Modal } from '../../components';
 import { ProductQuantity } from './components/quantityTab/ProductQuantity';
 import { SelectProductJob } from './components/SelectProductJob';
 
-import { colors } from '../../../theme';
+import { colors } from '../../theme';
 import { productModalStore } from './store';
-import { removeProductsStore } from '../stores';
+import { removeProductsStore } from '../removeProducts/stores';
 
 interface Props {
   product?: ScanningProductModel;

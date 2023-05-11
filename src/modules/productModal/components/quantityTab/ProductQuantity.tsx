@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
-import { Button, ButtonType } from '../../../../../components';
+import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
-import { colors, fonts, SVGs } from '../../../../../theme';
+import { colors, fonts, SVGs } from '../../../../theme';
 import { productModalStore } from '../../store';
 
 import { EditQuantity } from './EditQuantity';

@@ -1,10 +1,10 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { ScanningProductModel } from '../../../stores/ScanningProductStore';
-import { colors, fonts } from '../../../../../theme';
+import { ScanningProductModel } from '../../../removeProducts/stores/ScanningProductStore';
+import { colors, fonts } from '../../../../theme';
 import { productModalStore } from '../../store';
-import { InventoryUseType } from '../../../../../constants/common.enum';
+import { InventoryUseType } from '../../../../constants/common.enum';
 
 const InventoryTypeName = {
   [InventoryUseType.Stock]: 'Stock',
