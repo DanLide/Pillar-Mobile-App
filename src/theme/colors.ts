@@ -12,4 +12,5 @@ export const colors = {
   transparent: 'transparent',
   green: '#0A672F',
   greenLight: '#D9FAE6',
+  red: '#E02E3A',
 };

@@ -61,21 +61,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onCompleteRemove = async () => {
       setIsLoading(true);
-      const error = await onRemoveProducts(removeProductsStore);
+      await onRemoveProducts(removeProductsStore);
       setIsLoading(false);
-      // TODO discuss with business how we should handle partly crashed requests
-      if (error)
-        return Alert.alert('Error', error.message || 'Removing is Failed!', [
-          {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          {
-            text: 'Retry',
-            onPress: onCompleteRemove,
-          },
-        ]);
 
       navigation.navigate(AppNavigator.ResultScreen);
     };
