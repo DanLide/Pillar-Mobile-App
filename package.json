@@ -7,8 +7,12 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "postinstall": "react-native setup-ios-permissions && cd ios && pod install"
   },
+  "reactNativePermissionsIOS": [
+    "Camera"
+  ],
   "dependencies": {
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
@@ -32,10 +36,6 @@
     "react-native-webview": "^11.26.1",
     "vision-camera-code-scanner": "^0.2.0"
   },
-  "reactNativePermissionsIOS": [
-    "Camera",
-    "PhotoLibrary"
-  ],
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/plugin-proposal-decorators": "^7.21.0",
