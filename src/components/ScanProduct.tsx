@@ -15,6 +15,11 @@ import Animated, {
   SharedValue,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  NavigationProp,
+  ParamListBase,
+  useNavigation,
+} from '@react-navigation/native';
 
 import { useSwitchState } from '../hooks';
 import { Button } from './';
@@ -23,6 +28,7 @@ import { SVGs, colors, fonts } from '../theme';
 
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
+import { AppNavigator } from '../navigation';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
@@ -148,6 +154,7 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
   const ratio = useRef<number | null>(null)
   const widthCorrection = useRef<number | null>(null)
   const heightCorrection = useRef<number | null>(null)
+  const navigation: NavigationProp<ParamListBase> = useNavigation();
 
   const [barcodesState, setBarcodesState] = useState<BarcodeStateItem[]>([])
 
@@ -343,6 +350,9 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
       <View
         style={[styles.shadow, styles.bottomShadow]}
       />
+      <TouchableOpacity onPress={() => navigation.navigate(AppNavigator.HowToScanScreen)} style={styles.questionMark}>
+        <SVGs.QuestionMark color={colors.white}/>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={onPressScanButton}
         disabled={isScanButtonDisabled}
@@ -411,11 +421,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     zIndex: 100,
   },
+  questionMark: {
+    bottom: 16,
+    left: 16,
+  },
   scanButton: {
     top: '90%',
     position: 'absolute',
     alignSelf: 'center',
-    width: '85%',
+    width: 243,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.purple,
