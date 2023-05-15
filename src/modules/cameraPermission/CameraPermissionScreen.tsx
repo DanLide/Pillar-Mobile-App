@@ -12,17 +12,26 @@ import {
   NavigationProp,
   ParamListBase,
   RouteProp,
+  useRoute,
 } from '@react-navigation/native';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
+import { AppNavigator } from '../../navigation';
 
 interface Props {
-  route: RouteProp<{ params: { turnOnScanner: () => void } }, 'params'>;
   navigation: NavigationProp<ParamListBase>;
 }
 
-export const CameraPermissionScreen = memo(({ navigation, route }: Props) => {
+type ParamList = {
+  CameraPermissionScreen: {
+    turnOnScanner: () => void;
+  };
+};
+
+export const CameraPermissionScreen = memo(({ navigation }: Props) => {
+  const route = useRoute<RouteProp<ParamList, 'CameraPermissionScreen'>>();
+
   const [cameraPermission, setCameraPermission] = useState<PermissionStatus>(
     RESULTS.DENIED,
   );

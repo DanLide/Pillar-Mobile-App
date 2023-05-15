@@ -68,8 +68,12 @@ class SaveProductToStoreTask extends Task {
       productId: product.productId,
       onHand: product.onHand,
       name: product.name,
-      isRecoverable: product.isRecoverable,
+      isRecoverable: product.isRecoverable === 'Yes',
       reservedCount: 1,
+      inventoryUseTypeId: product?.inventoryUseTypeId,
+      size: product.size,
+      partNo: product.partNo,
+      manufactureCode: product.manufactureCode,
     };
   }
 }

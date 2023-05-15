@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -31,7 +31,9 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<
+      ScanningProductModel | undefined
+    >(undefined);
 
     const [isScannerActive, setIsScannerActive] = useState(true);
 
@@ -42,8 +44,11 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       const error = await fetchProduct(scanningProductStore, btoa(code));
       setIsLoading(false);
 
-      if (error)
-        return Alert.alert('Error', error.message || 'Loading is Failed!');
+      if (error) {
+        Alert.alert('Error', error.message || 'Loading is Failed!');
+      } else {
+        setSelectedProduct(store.getCurrentProduct);
+      }
     };
 
     const turnOnScanner = () => {
@@ -90,7 +95,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onCloseModal = () => {
-      setIsModalVisible(false);
+      setSelectedProduct(undefined);
       setIsScanner(false);
       setIsScannerActive(true);
     };
@@ -98,13 +103,6 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const onAddProductToRemoveList = (product: ScanningProductModel) => {
       removeProductsStore.addProduct(product);
     };
-
-    useEffect(() => {
-      if (store.getCurrentProduct) {
-        setIsScanner(false);
-        setIsModalVisible(true);
-      }
-    }, [store.getCurrentProduct]);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -128,19 +126,20 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               title="SCAN PRODUCT"
               onPress={onPressScan}
             />
+
             <Button
               disabled={!Object.keys(removeProductsStore.getProducts).length}
               buttonStyle={styles.button}
               title="COMPLETE REMOVE"
               onPress={onCompleteRemove}
             />
-            <ProductModal
-              isVisible={isModalVisible}
-              onAddProductToList={onAddProductToRemoveList}
-              onClose={onCloseModal}
-            />
           </>
         )}
+        <ProductModal
+          product={selectedProduct}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
       </SafeAreaView>
     );
   },
