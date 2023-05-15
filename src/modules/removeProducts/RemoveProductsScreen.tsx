@@ -119,13 +119,13 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               title="COMPLETE REMOVE"
               onPress={onCompleteRemove}
             />
-            <ProductModal
-              product={selectedProduct}
-              onAddProductToList={onAddProductToRemoveList}
-              onClose={onCloseModal}
-            />
           </>
         )}
+        <ProductModal
+          product={selectedProduct}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
       </SafeAreaView>
     );
   },
