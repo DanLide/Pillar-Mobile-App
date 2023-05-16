@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useMemo, useState } from 'react';
 import {
   StyleSheet,
   LayoutChangeEvent,
@@ -17,9 +17,8 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useSwitchState } from '../hooks';
-import { Button } from './';
 import Scanner from './Scanner';
-import { SVGs, colors, fonts } from '../theme';
+import { SVGs, TorchIconState, colors, fonts } from '../theme';
 
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
@@ -288,7 +287,7 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
     data && onPressScan(data);
   };
 
-  const torchButtonStyle = [styles.torch, { top }, isTorchOn && styles.torchOn]
+  const torchButtonStyle = useMemo(() => [styles.torch, { top }], [])
 
   const renderBarcodes = () => barcodesState?.map(
     (barcodeData, index) => {
@@ -325,6 +324,11 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
       </View>)
   }
 
+  const renderTorchIcon = useCallback(({ pressed }) => {
+    const state = pressed ? TorchIconState.Pressed : isTorchOn ? TorchIconState.Active : TorchIconState.Passive
+    return <SVGs.TorchIcon state={state} />
+  }, [isTorchOn])
+
   return (
     <View style={styles.container}>
       {renderToolTip()}
@@ -343,6 +347,7 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
       <View
         style={[styles.shadow, styles.bottomShadow]}
       />
+      {renderBarcodes()}
       <TouchableOpacity
         onPress={onPressScanButton}
         disabled={isScanButtonDisabled}
@@ -353,12 +358,12 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
           Capture
         </Text>
       </TouchableOpacity>
-      {renderBarcodes()}
-      <Button
-        title="Torch"
-        buttonStyle={torchButtonStyle}
+      <Pressable
         onPress={toggleIsTorchOn}
-      />
+        style={torchButtonStyle}
+      >
+        {renderTorchIcon}
+      </Pressable>
     </View >
   );
 };
@@ -403,13 +408,14 @@ const styles = StyleSheet.create({
   },
   torch: {
     position: 'absolute',
-    left: 8,
+    left: 10,
     padding: 4,
     zIndex: 100,
-  },
-  torchOn: {
-    backgroundColor: 'green',
-    zIndex: 100,
+    width: 42,
+    height: 42,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
   },
   scanButton: {
     top: '90%',
@@ -422,6 +428,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 56,
     borderRadius: 8,
+    zIndex: 100,
   },
   iconWrapper: {
     width: 19,
