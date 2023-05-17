@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
-
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { removeProductsStore, scanningProductStore } from './stores';
 
 import { Button, ScanProduct } from '../../components';
@@ -51,11 +51,24 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       }
     };
 
-    const onPressScan = () => {
+    const turnOnScanner = () => {
+      setIsScannerActive(true);
       setIsScanner(true);
     };
+
+    const onPressScan = async () => {
+      const result = await check(PERMISSIONS.IOS.CAMERA);
+      if (result !== RESULTS.GRANTED) {
+        navigation.navigate(AppNavigator.CameraPermissionScreen, {
+          turnOnScanner,
+        });
+        return;
+      }
+
+      setIsScanner(true);
+    };
+
     const onScanProduct = data => {
-      setIsScannerActive(false);
       fetchProductByCode(data);
     };
 
@@ -69,7 +82,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onCloseModal = () => {
       setSelectedProduct(undefined);
-      setIsScanner(false);
+      setIsScanner(true);
       setIsScannerActive(true);
     };
 
@@ -106,13 +119,13 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
               title="COMPLETE REMOVE"
               onPress={onCompleteRemove}
             />
-            <ProductModal
-              product={selectedProduct}
-              onAddProductToList={onAddProductToRemoveList}
-              onClose={onCloseModal}
-            />
           </>
         )}
+        <ProductModal
+          product={selectedProduct}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
       </SafeAreaView>
     );
   },
