@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+} from 'react';
+import { StyleSheet, Dimensions, View, Alert } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { observer } from 'mobx-react';
 
@@ -12,12 +18,16 @@ import { SelectProductJob } from './components/SelectProductJob';
 import { colors } from '../../theme';
 import { productModalStore } from './store';
 import { removeProductsStore } from '../removeProducts/stores';
+import { ModalType } from '../removeProducts/RemoveProductsScreen';
+import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
 
 interface Props {
   product?: ScanningProductModel;
+  type?: ModalType;
 
+  onRemove?: (product: RemoveProductModel) => void;
   onClose: () => void;
-  onAddProductToList: (product: ScanningProductModel) => void;
+  onSubmit: (product: ScanningProductModel) => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -30,7 +40,7 @@ export enum Tabs {
 const tabs = [Tabs.EditQuantity, Tabs.LinkJob];
 
 export const ProductModal: React.FC<Props> = observer(
-  ({ product, onClose, onAddProductToList }) => {
+  ({ type, product, onClose, onSubmit, onRemove }) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const store = useRef(productModalStore).current;
 
@@ -59,18 +69,36 @@ export const ProductModal: React.FC<Props> = observer(
       onClose();
     }, [onClose]);
 
+    const onRemoveAlert = useCallback(() => {
+      Alert.alert('Remove confirmation', '', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'Remove',
+          onPress: () => {
+            if (onRemove && productFromStore)
+              onRemove(productFromStore as RemoveProductModel);
+            clearProductModalStoreOnClose();
+          },
+        },
+      ]);
+    }, [clearProductModalStoreOnClose, onRemove, productFromStore]);
+
     const renderItem = useCallback(
       ({ index }: { index: number }) => {
         const onPressAdd = (jobId?: number) => {
           if (productFromStore) {
-            onAddProductToList({ ...productFromStore, jobId });
+            onSubmit({ ...productFromStore, jobId });
             clearProductModalStoreOnClose();
           }
         };
 
         const onPressSkip = () => {
           if (productFromStore) {
-            onAddProductToList({ ...productFromStore });
+            onSubmit({ ...productFromStore });
             clearProductModalStoreOnClose();
           }
         };
@@ -79,13 +107,17 @@ export const ProductModal: React.FC<Props> = observer(
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
+                isEdit={type === ModalType.Edit}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
+                onRemove={onRemoveAlert}
               />
             );
           case Tabs.LinkJob:
             return (
               <SelectProductJob
+                isEdit={type === ModalType.Edit}
+                productJobId={productFromStore?.jobId}
                 selectedTab={selectedTab}
                 isRecoverable={productFromStore?.isRecoverable}
                 onPressSkip={onPressSkip}
@@ -99,9 +131,11 @@ export const ProductModal: React.FC<Props> = observer(
       },
       [
         clearProductModalStoreOnClose,
-        onAddProductToList,
+        onSubmit,
+        onRemoveAlert,
         productFromStore,
         selectedTab,
+        type,
       ],
     );
 

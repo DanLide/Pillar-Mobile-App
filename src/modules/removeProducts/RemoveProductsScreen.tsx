@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
   SafeAreaView,
@@ -12,7 +12,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import { Button, ScanProduct } from '../../components';
+import { Button, ButtonType, ScanProduct } from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -20,6 +20,9 @@ import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
+import { SVGs, colors } from '../../theme';
+import { clone } from 'ramda';
+import { RemoveProductModel } from './stores/RemoveProductsStore';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,13 +30,24 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+export enum ModalType {
+  Add,
+  Edit,
+}
+
+interface ModalParams {
+  type?: ModalType;
+  product?: RemoveProductModel | ScanningProductModel;
+}
+
 export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [selectedProduct, setSelectedProduct] = useState<
-      ScanningProductModel | undefined
-    >(undefined);
+    const [modalParams, setModalParams] = useState<ModalParams>({
+      product: undefined,
+      type: undefined,
+    });
 
     const [isScannerActive, setIsScannerActive] = useState(true);
 
@@ -47,7 +61,10 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       if (error) {
         Alert.alert('Error', error.message || 'Loading is Failed!');
       } else {
-        setSelectedProduct(store.getCurrentProduct);
+        setModalParams({
+          type: ModalType.Add,
+          product: store.getCurrentProduct,
+        });
       }
     };
 
@@ -95,13 +112,39 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onCloseModal = () => {
-      setSelectedProduct(undefined);
+      setModalParams({
+        type: undefined,
+        product: undefined,
+      });
       setIsScanner(false);
       setIsScannerActive(true);
     };
 
-    const onAddProductToRemoveList = (product: ScanningProductModel) => {
-      removeProductsStore.addProduct(product);
+    const onSubmitProduct = useCallback(
+      (product: ScanningProductModel | RemoveProductModel) => {
+        switch (modalParams?.type) {
+          case ModalType.Add:
+            removeProductsStore.addProduct(product);
+            break;
+          case ModalType.Edit:
+            removeProductsStore.updateProduct(product as RemoveProductModel);
+            break;
+          default:
+            break;
+        }
+      },
+      [modalParams?.type],
+    );
+
+    const onEditProduct = (product: RemoveProductModel) => {
+      setModalParams({
+        type: ModalType.Edit,
+        product: clone(product),
+      });
+    };
+
+    const onRemoveProduct = (product: RemoveProductModel) => {
+      removeProductsStore.removeProduct(product);
     };
 
     return (
@@ -119,26 +162,40 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
                 />
               </View>
             ) : null}
-            <SelectedProductsList />
-            <Button
-              buttonStyle={styles.scanButton}
-              textStyle={styles.scanButtonText}
-              title="SCAN PRODUCT"
-              onPress={onPressScan}
-            />
+            <SelectedProductsList onEditProduct={onEditProduct} />
 
-            <Button
-              disabled={!Object.keys(removeProductsStore.getProducts).length}
-              buttonStyle={styles.button}
-              title="COMPLETE REMOVE"
-              onPress={onCompleteRemove}
-            />
+            <View style={styles.buttons}>
+              <Button
+                type={ButtonType.secondary}
+                icon={
+                  <SVGs.CodeIcon
+                    color={colors.purple}
+                    width={32}
+                    height={23.33}
+                  />
+                }
+                textStyle={styles.scanText}
+                buttonStyle={styles.buttonContainer}
+                title="Scan"
+                onPress={onPressScan}
+              />
+
+              <Button
+                type={ButtonType.primary}
+                disabled={!Object.keys(removeProductsStore.getProducts).length}
+                buttonStyle={styles.buttonContainer}
+                title="Complete"
+                onPress={onCompleteRemove}
+              />
+            </View>
           </>
         )}
         <ProductModal
-          product={selectedProduct}
-          onAddProductToList={onAddProductToRemoveList}
+          type={modalParams.type}
+          product={modalParams.product}
+          onSubmit={onSubmitProduct}
           onClose={onCloseModal}
+          onRemove={onRemoveProduct}
         />
       </SafeAreaView>
     );
@@ -162,14 +219,17 @@ const styles = StyleSheet.create({
   activityIndicator: {
     marginTop: height / 2 - 150,
   },
-  button: {
-    margin: 12,
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: colors.white,
   },
-  scanButton: {
-    margin: 12,
-    backgroundColor: 'transparent',
+  scanText: {
+    paddingLeft: 8,
   },
-  scanButtonText: {
-    color: 'black',
+  buttonContainer: {
+    width: 163.5,
+    height: 48,
   },
 });

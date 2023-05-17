@@ -10,12 +10,15 @@ import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
 
 interface Props {
+  isEdit: boolean;
+
+  onRemove?: () => void;
   onPressAddToList: () => void;
   onJobSelectNavigation: () => void;
 }
 
 export const ProductQuantity: React.FC<Props> = observer(
-  ({ onPressAddToList, onJobSelectNavigation }) => {
+  ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
 
@@ -39,21 +42,22 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
+          isEdit={isEdit}
           maxValue={product.onHand}
           currentValue={product?.reservedCount}
           onChange={onChange}
+          onRemove={onRemove}
         />
         <FooterDescription product={product} />
 
-        {product.isRecoverable ? null : (
-          <Pressable
-            onPress={onJobSelectNavigation}
-            style={styles.jobContainer}
-          >
-            <SVGs.JobIcon color={colors.purple} />
-            <Text style={styles.jobText}>Link to Job Number</Text>
-          </Pressable>
-        )}
+        <Pressable onPress={onJobSelectNavigation} style={styles.jobContainer}>
+          <SVGs.JobIcon color={colors.purple} />
+          <Text style={styles.jobText}>
+            {isEdit && product.jobId
+              ? `Job ${product.jobId}`
+              : 'Link to Job Number'}
+          </Text>
+        </Pressable>
 
         <Button
           type={ButtonType.primary}

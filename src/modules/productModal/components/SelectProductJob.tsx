@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Button, ButtonType, Input } from '../../../components';
@@ -10,6 +10,8 @@ import { Tabs } from '../ProductModal';
 interface Props {
   isRecoverable?: boolean;
   selectedTab: Tabs;
+  productJobId?: number;
+  isEdit?: boolean;
 
   onPressBack: () => void;
   onPressSkip: () => void;
@@ -19,6 +21,8 @@ interface Props {
 export const SelectProductJob: React.FC<Props> = ({
   isRecoverable,
   selectedTab,
+  productJobId,
+  isEdit,
   onPressBack,
   onPressSkip,
   onPressAdd,
@@ -29,6 +33,12 @@ export const SelectProductJob: React.FC<Props> = ({
   const onPressItem = (job: JobModel) => {
     setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
   };
+
+  useEffect(() => {
+    if (selectedTab === Tabs.LinkJob) {
+      setSelectedId(productJobId);
+    }
+  }, [selectedTab, productJobId]);
 
   const Footer = useMemo(
     () => (
@@ -50,7 +60,7 @@ export const SelectProductJob: React.FC<Props> = ({
         )}
         <Button
           type={ButtonType.primary}
-          disabled={!selectedId}
+          disabled={isEdit ? false : !selectedId}
           title="Done"
           buttonStyle={styles.button}
           onPress={() => onPressAdd(selectedId)}
@@ -60,19 +70,22 @@ export const SelectProductJob: React.FC<Props> = ({
     [isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedId],
   );
 
-  const Header = useMemo(() => (
-    <Input
-      style={styles.input}
-      containerStyle={styles.inputContainer}
-      value={filterValue}
-      placeholder="Search"
-      rightIcon={() => (
-        <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
-      )}
-      onChangeText={text => setFilterValue(text)}
-      placeholderTextColor={colors.blackSemiLight}
-    />
-  ), [filterValue]);
+  const Header = useMemo(
+    () => (
+      <Input
+        style={styles.input}
+        containerStyle={styles.inputContainer}
+        value={filterValue}
+        placeholder="Search"
+        rightIcon={() => (
+          <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
+        )}
+        onChangeText={text => setFilterValue(text)}
+        placeholderTextColor={colors.blackSemiLight}
+      />
+    ),
+    [filterValue],
+  );
 
   if (selectedTab === Tabs.LinkJob) {
     return (

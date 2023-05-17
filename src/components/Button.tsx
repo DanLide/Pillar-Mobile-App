@@ -8,6 +8,7 @@ import {
   TextProps,
   ActivityIndicator,
   StyleProp,
+  View,
 } from 'react-native';
 
 import Text from './Text';
@@ -26,6 +27,7 @@ interface ExtendedButtonProps extends ButtonProps {
   isLoading?: boolean;
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  icon?: JSX.Element;
 }
 
 const Button: React.FC<ExtendedButtonProps> = ({
@@ -35,6 +37,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
   buttonStyle,
   textStyle,
   disabled,
+  icon,
   ...props
 }) => {
   const isDisabled = isLoading || disabled;
@@ -85,9 +88,12 @@ const Button: React.FC<ExtendedButtonProps> = ({
       {isLoading ? (
         <ActivityIndicator size="small" color="white" />
       ) : (
-        <Text {...props} style={textMergedStyle} disabled>
-          {title}
-        </Text>
+        <View style={styles.buttonContainer}>
+          {icon ? icon : null}
+          <Text {...props} style={textMergedStyle} disabled>
+            {title}
+          </Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -103,6 +109,11 @@ const styles = StyleSheet.create({
   },
   disabledStyle: {
     opacity: 0.2,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonText: {
     fontSize: 17,

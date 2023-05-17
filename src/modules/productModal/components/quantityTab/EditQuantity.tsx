@@ -6,12 +6,14 @@ import { colors, fonts, SVGs } from '../../../../theme';
 interface Props {
   currentValue: number;
   maxValue: number;
+  isEdit?: boolean;
 
+  onRemove?: () => void;
   onChange: (quantity: number) => void;
 }
 
 export const EditQuantity = memo(
-  ({ currentValue, maxValue, onChange }: Props) => {
+  ({ isEdit, currentValue, maxValue, onChange, onRemove }: Props) => {
     const onChangeInputText = (text: string) => {
       if (!Number(text) || maxValue < +text) return;
 
@@ -33,17 +35,28 @@ export const EditQuantity = memo(
     }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
-      return currentValue > 1 ? (
-        <TouchableOpacity
-          style={[styles.quantityButton, styles.border]}
-          onPress={onDecreaseCount}
-        >
-          <SVGs.MinusIcon color={colors.black} />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.quantityButton} />
-      );
-    }, [currentValue, onDecreaseCount]);
+      if (currentValue > 1) {
+        return (
+          <TouchableOpacity
+            style={[styles.quantityButton, styles.border]}
+            onPress={onDecreaseCount}
+          >
+            <SVGs.MinusIcon color={colors.black} />
+          </TouchableOpacity>
+        );
+      } else if (isEdit) {
+        return (
+          <TouchableOpacity
+            style={[styles.quantityButton, styles.border]}
+            onPress={onRemove}
+          >
+            <SVGs.TrashIcon color={colors.black} />
+          </TouchableOpacity>
+        );
+      } else {
+        return <View style={styles.quantityButton} />;
+      }
+    }, [currentValue, isEdit, onDecreaseCount, onRemove]);
 
     return (
       <View style={styles.container}>
