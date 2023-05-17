@@ -120,7 +120,7 @@ export const ProductModal: React.FC<Props> = observer(
                 isEdit={type === ModalType.Edit}
                 productJob={productFromStore?.job}
                 selectedTab={selectedTab}
-                isRecoverable={productFromStore?.isRecoverable}
+                isRecoverableProduct={productFromStore?.isRecoverable}
                 onPressSkip={onPressSkip}
                 onPressBack={onPressBack}
                 onPressAdd={onPressAdd}

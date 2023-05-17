@@ -8,7 +8,7 @@ import { SVGs, colors, fonts } from '../../../theme';
 import { Tabs } from '../ProductModal';
 
 interface Props {
-  isRecoverable?: boolean;
+  isRecoverableProduct?: boolean;
   selectedTab: Tabs;
   productJob?: JobModel;
   isEdit?: boolean;
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export const SelectProductJob: React.FC<Props> = ({
-  isRecoverable,
+  isRecoverableProduct,
   selectedTab,
   productJob,
   isEdit,
@@ -45,7 +45,7 @@ export const SelectProductJob: React.FC<Props> = ({
   const Footer = useMemo(
     () => (
       <View style={styles.buttons}>
-        {isRecoverable ? (
+        {isRecoverableProduct ? (
           <Button
             type={ButtonType.secondary}
             title="Skip"
@@ -69,7 +69,7 @@ export const SelectProductJob: React.FC<Props> = ({
         />
       </View>
     ),
-    [isEdit, isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedJob],
+    [isEdit, isRecoverableProduct, onPressAdd, onPressBack, onPressSkip, selectedJob],
   );
 
   const Header = useMemo(

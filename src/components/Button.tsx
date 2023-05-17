@@ -89,7 +89,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
         <ActivityIndicator size="small" color="white" />
       ) : (
         <View style={styles.buttonContainer}>
-          {icon ? icon : null}
+          {icon}
           <Text {...props} style={textMergedStyle} disabled>
             {title}
           </Text>
