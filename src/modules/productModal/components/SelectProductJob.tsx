@@ -10,35 +10,37 @@ import { Tabs } from '../ProductModal';
 interface Props {
   isRecoverable?: boolean;
   selectedTab: Tabs;
-  productJobId?: number;
+  productJob?: JobModel;
   isEdit?: boolean;
 
   onPressBack: () => void;
   onPressSkip: () => void;
-  onPressAdd: (jobId?: number) => void;
+  onPressAdd: (job?: JobModel) => void;
 }
 
 export const SelectProductJob: React.FC<Props> = ({
   isRecoverable,
   selectedTab,
-  productJobId,
+  productJob,
   isEdit,
   onPressBack,
   onPressSkip,
   onPressAdd,
 }) => {
-  const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+  const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
+    undefined,
+  );
   const [filterValue, setFilterValue] = useState<string>('');
 
   const onPressItem = (job: JobModel) => {
-    setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
+    setSelectedJob(selectedJob?.jobId === job.jobId ? undefined : job);
   };
 
   useEffect(() => {
     if (selectedTab === Tabs.LinkJob) {
-      setSelectedId(productJobId);
+      setSelectedJob(productJob);
     }
-  }, [selectedTab, productJobId]);
+  }, [selectedTab, productJob]);
 
   const Footer = useMemo(
     () => (
@@ -60,14 +62,14 @@ export const SelectProductJob: React.FC<Props> = ({
         )}
         <Button
           type={ButtonType.primary}
-          disabled={isEdit ? false : !selectedId}
+          disabled={isEdit ? false : !selectedJob}
           title="Done"
           buttonStyle={styles.button}
-          onPress={() => onPressAdd(selectedId)}
+          onPress={() => onPressAdd(selectedJob)}
         />
       </View>
     ),
-    [isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedId],
+    [isEdit, isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedJob],
   );
 
   const Header = useMemo(
@@ -90,7 +92,7 @@ export const SelectProductJob: React.FC<Props> = ({
   if (selectedTab === Tabs.LinkJob) {
     return (
       <JobsList
-        selectedId={selectedId}
+        selectedId={selectedJob?.jobId}
         onPressItem={onPressItem}
         filterValue={filterValue}
         footerComponent={Footer}

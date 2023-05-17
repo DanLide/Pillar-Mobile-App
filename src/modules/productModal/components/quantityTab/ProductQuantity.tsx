@@ -53,8 +53,8 @@ export const ProductQuantity: React.FC<Props> = observer(
         <Pressable onPress={onJobSelectNavigation} style={styles.jobContainer}>
           <SVGs.JobIcon color={colors.purple} />
           <Text style={styles.jobText}>
-            {isEdit && product.jobId
-              ? `Job ${product.jobId}`
+            {isEdit && product.job?.jobNumber
+              ? `Job ${product.job?.jobNumber}`
               : 'Link to Job Number'}
           </Text>
         </Pressable>

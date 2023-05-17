@@ -20,6 +20,7 @@ import { productModalStore } from './store';
 import { removeProductsStore } from '../removeProducts/stores';
 import { ModalType } from '../removeProducts/RemoveProductsScreen';
 import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
+import { JobModel } from '../jobsList/stores/JobsStore';
 
 interface Props {
   product?: ScanningProductModel;
@@ -89,9 +90,9 @@ export const ProductModal: React.FC<Props> = observer(
 
     const renderItem = useCallback(
       ({ index }: { index: number }) => {
-        const onPressAdd = (jobId?: number) => {
+        const onPressAdd = (job?: JobModel) => {
           if (productFromStore) {
-            onSubmit({ ...productFromStore, jobId });
+            onSubmit({ ...productFromStore, job });
             clearProductModalStoreOnClose();
           }
         };
@@ -117,7 +118,7 @@ export const ProductModal: React.FC<Props> = observer(
             return (
               <SelectProductJob
                 isEdit={type === ModalType.Edit}
-                productJobId={productFromStore?.jobId}
+                productJob={productFromStore?.job}
                 selectedTab={selectedTab}
                 isRecoverable={productFromStore?.isRecoverable}
                 onPressSkip={onPressSkip}

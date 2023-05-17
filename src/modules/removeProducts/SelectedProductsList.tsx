@@ -29,10 +29,15 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
   );
 
   const renderEmptyList = () => (
-    <View style={styles.emptyContainer}>
-      <Text style={styles.emptyText}>Nothing here</Text>
-      <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />
-      <Text style={styles.emptyText}>Start Scanning</Text>
+    <View style={styles.container}>
+      <View style={styles.tooltip}>
+        <Text>Scan to add products to list</Text>
+      </View>
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>Nothing here</Text>
+        <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />
+        <Text style={styles.emptyText}>Start Scanning</Text>
+      </View>
     </View>
   );
 
@@ -113,7 +118,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.grayLight,
   },
   emptyText: {
     fontSize: 20,
@@ -178,5 +182,27 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: colors.blackSemiLight,
     fontFamily: fonts.TT_Regular,
+  },
+  tooltip: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    width: width - 8,
+    height: 25,
+    backgroundColor: colors.white2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+
+    shadowColor: colors.black,
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  tooltipText: {
+    fontSize: 14,
+    fontFamily: fonts.TT_Regular,
+    lineHeight: 14,
+    color: colors.black,
   },
 });
