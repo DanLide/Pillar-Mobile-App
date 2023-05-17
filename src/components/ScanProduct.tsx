@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     top: '90%',
     position: 'absolute',
     alignSelf: 'center',
-    width: 243,
+    width: '64.8%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.purple,
