@@ -86,7 +86,6 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onScanProduct = data => {
-      setIsScannerActive(false);
       fetchProductByCode(data);
     };
 
@@ -116,7 +115,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
         type: undefined,
         product: undefined,
       });
-      setIsScanner(false);
+      setIsScanner(true);
       setIsScannerActive(true);
     };
 
