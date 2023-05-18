@@ -10,7 +10,7 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { Button, ToastMessage } from '../../components';
+import { Button } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { removeProductsStore } from './stores';
@@ -52,10 +52,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   useEffect(() => {
     if (notSyncedProductsSection.length) {
       toast.show?.(
-        <ToastMessage>
-          Sorry, some of the products on your list were not removed from
-          inventory
-        </ToastMessage>,
+        'Sorry, some of the products on your list were not removed from inventory',
         { type: ToastType.Error },
       );
     }
