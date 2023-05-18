@@ -23,6 +23,7 @@ import { onRemoveProducts } from '../../data/removeProducts';
 import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
+import { isRemoveProductModel } from './helpers';
 
 const { width, height } = Dimensions.get('window');
 
@@ -126,7 +127,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
             removeProductsStore.addProduct(product);
             break;
           case ModalType.Edit:
-            removeProductsStore.updateProduct(product as RemoveProductModel);
+            if (isRemoveProductModel(product))
+              removeProductsStore.updateProduct(product);
             break;
           default:
             break;

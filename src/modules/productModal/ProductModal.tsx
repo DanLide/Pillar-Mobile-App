@@ -21,6 +21,7 @@ import { removeProductsStore } from '../removeProducts/stores';
 import { ModalType } from '../removeProducts/RemoveProductsScreen';
 import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
 import { JobModel } from '../jobsList/stores/JobsStore';
+import { isRemoveProductModel } from '../removeProducts/helpers';
 
 interface Props {
   product?: ScanningProductModel;
@@ -80,8 +81,8 @@ export const ProductModal: React.FC<Props> = observer(
         {
           text: 'Remove',
           onPress: () => {
-            if (onRemove && productFromStore)
-              onRemove(productFromStore as RemoveProductModel);
+            if (onRemove && isRemoveProductModel(productFromStore))
+              onRemove(productFromStore); 
             clearProductModalStoreOnClose();
           },
         },
@@ -99,7 +100,7 @@ export const ProductModal: React.FC<Props> = observer(
 
         const onPressSkip = () => {
           if (productFromStore) {
-            onSubmit({ ...productFromStore });
+            onSubmit(productFromStore);
             clearProductModalStoreOnClose();
           }
         };

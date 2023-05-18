@@ -44,7 +44,9 @@ export const EditQuantity = memo(
             <SVGs.MinusIcon color={colors.black} />
           </TouchableOpacity>
         );
-      } else if (isEdit) {
+      }
+
+      if (isEdit) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -53,9 +55,9 @@ export const EditQuantity = memo(
             <SVGs.TrashIcon color={colors.black} />
           </TouchableOpacity>
         );
-      } else {
-        return <View style={styles.quantityButton} />;
       }
+
+      return <View style={styles.quantityButton} />;
     }, [currentValue, isEdit, onDecreaseCount, onRemove]);
 
     return (

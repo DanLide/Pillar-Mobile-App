@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
@@ -21,6 +21,10 @@ export const ProductQuantity: React.FC<Props> = observer(
   ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
+    const jobNumber = useMemo(
+      () => product?.job?.jobNumber,
+      [product?.job?.jobNumber],
+    );
 
     if (!product) return null;
 
@@ -53,9 +57,7 @@ export const ProductQuantity: React.FC<Props> = observer(
         <Pressable onPress={onJobSelectNavigation} style={styles.jobContainer}>
           <SVGs.JobIcon color={colors.purple} />
           <Text style={styles.jobText}>
-            {isEdit && product.job?.jobNumber
-              ? `Job ${product.job?.jobNumber}`
-              : 'Link to Job Number'}
+            {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
           </Text>
         </Pressable>
 
