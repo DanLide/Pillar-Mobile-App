@@ -13,8 +13,12 @@ import { useToast } from 'react-native-toast-notifications';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import { removeProductsStore, scanningProductStore } from './stores';
-
-import { Button, ScanProduct, ToastMessage } from '../../components';
+import {
+  Button,
+  ButtonType,
+  ScanProduct,
+  ToastMessage,
+} from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -27,6 +31,10 @@ import {
   ToastContextProvider,
   ToastType,
 } from '../../contexts';
+import { SVGs, colors } from '../../theme';
+import { clone } from 'ramda';
+import { RemoveProductModel } from './stores/RemoveProductsStore';
+import { isRemoveProductModel } from './helpers';
 import { Utils } from '../../data/helpers/utils';
 import { scanMelody } from '../../components/Sound';
 
@@ -36,135 +44,184 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+export enum ModalType {
+  Add,
+  Edit,
+}
+
+interface ModalParams {
+  type?: ModalType;
+  product?: RemoveProductModel | ScanningProductModel;
+}
+
 const hapticOptions = {
   enableVibrateFallback: true,
 };
 
-export const RemoveProductsScreen: React.FC<Props> = observer(
-  ({ navigation }) => {
-    const store = useRef(scanningProductStore).current;
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [selectedProduct, setSelectedProduct] = useState<
-      ScanningProductModel | undefined
-    >(undefined);
+const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
+  const store = useRef(scanningProductStore).current;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalParams, setModalParams] = useState<ModalParams>({
+    product: undefined,
+    type: undefined,
+  });
 
-    const [isScannerActive, setIsScannerActive] = useState(true);
+  const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const [isScanner, setIsScanner] = useState(false);
+  const [isScanner, setIsScanner] = useState(false);
 
-    const toast = useToast();
+  const toast = useToast();
 
-    const fetchProductByCode = async (code: string) => {
-      setIsLoading(true);
-      const error = await fetchProduct(scanningProductStore, btoa(code));
-      setIsLoading(false);
+  const fetchProductByCode = async (code: string) => {
+    setIsLoading(true);
+    const error = await fetchProduct(scanningProductStore, btoa(code));
+    setIsLoading(false);
 
-      if (error) {
-        Alert.alert('Error', error.message || 'Loading is Failed!');
-      } else {
-        setSelectedProduct(store.getCurrentProduct);
+    if (error) {
+      Alert.alert('Error', error.message || 'Loading is Failed!');
+    } else {
+      setModalParams({
+        type: ModalType.Add,
+        product: store.getCurrentProduct,
+      });
+    }
+  };
+
+  const turnOnScanner = () => {
+    setIsScannerActive(true);
+    setIsScanner(true);
+  };
+
+  const onPressScan = async () => {
+    const result = await check(PERMISSIONS.IOS.CAMERA);
+    if (result !== RESULTS.GRANTED) {
+      navigation.navigate(AppNavigator.CameraPermissionScreen, {
+        turnOnScanner,
+      });
+      return;
+    }
+
+    setIsScanner(true);
+  };
+
+  const onScanProduct = data => {
+    setIsScannerActive(false);
+    ReactNativeHapticFeedback.trigger('selection', hapticOptions);
+    scanMelody.play();
+    fetchProductByCode(data);
+  };
+
+  const onCompleteRemove = async () => {
+    setIsLoading(true);
+    await onRemoveProducts(removeProductsStore);
+    setIsLoading(false);
+
+    navigation.navigate(AppNavigator.ResultScreen);
+  };
+
+  const onCloseModal = () => {
+    setModalParams({
+      type: undefined,
+      product: undefined,
+    });
+    setIsScanner(true);
+    setIsScannerActive(true);
+  };
+
+  const onSubmitProduct = useCallback(
+    (product: ScanningProductModel | RemoveProductModel) => {
+      const { reservedCount, nameDetails } = product;
+
+      switch (modalParams?.type) {
+        case ModalType.Add:
+          removeProductsStore.addProduct(product);
+          toast.show?.(
+            <ToastMessage>
+              <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+              {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+              <ToastMessage bold>
+                {Utils.truncateString(nameDetails)}
+              </ToastMessage>{' '}
+              added to List
+            </ToastMessage>,
+            { type: ToastType.Info },
+          );
+          break;
+        case ModalType.Edit:
+          if (isRemoveProductModel(product))
+            removeProductsStore.updateProduct(product);
+          break;
+        default:
+          break;
       }
-    };
+    },
+    [modalParams?.type, toast],
+  );
 
-    const turnOnScanner = () => {
-      setIsScannerActive(true);
-      setIsScanner(true);
-    };
+  const onEditProduct = (product: RemoveProductModel) => {
+    setModalParams({
+      type: ModalType.Edit,
+      product: clone(product),
+    });
+  };
 
-    const onPressScan = async () => {
-      const result = await check(PERMISSIONS.IOS.CAMERA);
-      if (result !== RESULTS.GRANTED) {
-        navigation.navigate(AppNavigator.CameraPermissionScreen, {
-          turnOnScanner,
-        });
-        return;
-      }
+  const onRemoveProduct = (product: RemoveProductModel) => {
+    removeProductsStore.removeProduct(product);
+  };
 
-      setIsScanner(true);
-    };
+  return (
+    <View style={styles.container}>
+      {isScanner ? (
+        <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+      ) : (
+        <>
+          {isLoading ? (
+            <View style={styles.loader}>
+              <ActivityIndicator
+                size="large"
+                color="white"
+                style={styles.activityIndicator}
+              />
+            </View>
+          ) : null}
+          <SelectedProductsList onEditProduct={onEditProduct} />
 
-    const onScanProduct = data => {
-      setIsScannerActive(false);
-      ReactNativeHapticFeedback.trigger('selection', hapticOptions);
-      scanMelody.play();
-      fetchProductByCode(data);
-    };
-
-    const onCompleteRemove = async () => {
-      setIsLoading(true);
-      await onRemoveProducts(removeProductsStore);
-      setIsLoading(false);
-
-      navigation.navigate(AppNavigator.ResultScreen);
-    };
-
-    const onCloseModal = () => {
-      setSelectedProduct(undefined);
-      setIsScanner(true);
-      setIsScannerActive(true);
-    };
-
-    const onAddProductToRemoveList = useCallback(
-      (product: ScanningProductModel) => {
-        const { reservedCount, nameDetails } = product;
-
-        removeProductsStore.addProduct(product);
-
-        toast.show?.(
-          <ToastMessage>
-            <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-            {reservedCount > 1 ? 'units' : 'unit'} of{' '}
-            <ToastMessage bold>
-              {Utils.truncateString(nameDetails)}
-            </ToastMessage>{' '}
-            added to List
-          </ToastMessage>,
-          { type: ToastType.Info },
-        );
-      },
-      [toast],
-    );
-
-    return (
-      <View style={styles.container}>
-        {isScanner ? (
-          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
-        ) : (
-          <>
-            {isLoading ? (
-              <View style={styles.loader}>
-                <ActivityIndicator
-                  size="large"
-                  color="white"
-                  style={styles.activityIndicator}
-                />
-              </View>
-            ) : null}
-            <SelectedProductsList />
+          <View style={styles.buttons}>
             <Button
-              buttonStyle={styles.scanButton}
-              textStyle={styles.scanButtonText}
-              title="SCAN PRODUCT"
+              type={ButtonType.secondary}
+              icon={
+                <SVGs.CodeIcon
+                  color={colors.purple}
+                  width={32}
+                  height={23.33}
+                />
+              }
+              textStyle={styles.scanText}
+              buttonStyle={styles.buttonContainer}
+              title="Scan"
               onPress={onPressScan}
             />
 
             <Button
+              type={ButtonType.primary}
               disabled={!Object.keys(removeProductsStore.getProducts).length}
-              buttonStyle={styles.button}
-              title="COMPLETE REMOVE"
+              buttonStyle={styles.buttonContainer}
+              title="Complete"
               onPress={onCompleteRemove}
             />
-          </>
-        )}
-        <ProductModal
-          product={selectedProduct}
-          onAddProductToList={onAddProductToRemoveList}
-          onClose={onCloseModal}
-        />
-      </View>
-    );
-  },
-);
+          </View>
+        </>
+      )}
+      <ProductModal
+        type={modalParams.type}
+        product={modalParams.product}
+        onSubmit={onSubmitProduct}
+        onClose={onCloseModal}
+        onRemove={onRemoveProduct}
+      />
+    </View>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -183,15 +240,18 @@ const styles = StyleSheet.create({
   activityIndicator: {
     marginTop: height / 2 - 150,
   },
-  button: {
-    margin: 12,
+  buttons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: colors.white,
   },
-  scanButton: {
-    margin: 12,
-    backgroundColor: 'transparent',
+  scanText: {
+    paddingLeft: 8,
   },
-  scanButtonText: {
-    color: 'black',
+  buttonContainer: {
+    width: 163.5,
+    height: 48,
   },
 });
 

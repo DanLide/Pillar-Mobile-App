@@ -1,5 +1,4 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
@@ -17,7 +16,6 @@ import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
-import { removeProductsStore } from '../modules/removeProducts/stores';
 import { RightBarType } from './helpers/getScreenOptions';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 
@@ -42,22 +40,6 @@ export enum AppNavigator {
 
 const Stack = createStackNavigator();
 
-const RemoveProductsScreenHeader = () => (
-  <View style={{ flexDirection: 'column' }}>
-    <Text style={{ textAlign: 'center', fontWeight: 'bold' }}>
-      Remove Products
-    </Text>
-    <Text style={{ textAlign: 'center' }}>
-      {removeProductsStore.currentStock?.organizationName}
-    </Text>
-  </View>
-);
-
-const removeProductsScreenOptions = {
-  headerBackTitle: 'Back',
-  headerTitle: RemoveProductsScreenHeader,
-};
-
 const RemoveStack = () => {
   return (
     <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
@@ -72,7 +54,10 @@ const RemoveStack = () => {
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
-        options={removeProductsScreenOptions}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.HowToScanScreen}
