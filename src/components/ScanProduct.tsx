@@ -20,12 +20,10 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
-import { scanMelody } from './Sound';
 
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
@@ -70,10 +68,6 @@ type BarcodeStateItem = Barcode & {
   isSelected: boolean;
   isOnScanLine: boolean;
   isItemShouldBeDeleted: boolean;
-};
-
-const hapticOptions = {
-  enableVibrateFallback: true,
 };
 
 const QRButton: React.FC<QRButtonProps> = ({
@@ -310,12 +304,8 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
   const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
   const onPressScanButton = () => {
-    const data = selectedBarcode ? selectedBarcode?.content.data : barcodesOnScanLine?.[0].content.data
-    if (data) {
-      ReactNativeHapticFeedback.trigger('selection', hapticOptions)
-      scanMelody.play()
-      onPressScan(data);
-    }
+    const data = selectedBarcode ? selectedBarcode?.content?.data : barcodesOnScanLine?.[0].content?.data
+      data && onPressScan(data);
   };
 
   const torchButtonStyle = useMemo(() => [styles.torch, { top }], []);
