@@ -4,6 +4,7 @@ import { InventoryUseType } from '../../../constants/common.enum';
 export interface ScanningProductModel {
   productId: number;
   name: string;
+  nameDetails: string;
   isRecoverable: boolean;
   onHand: number;
   reservedCount: number;

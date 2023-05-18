@@ -16,4 +16,28 @@ export class Utils {
   static stringsToBigInts(collection: Array<string | undefined>) {
     return pipe(filter(Utils.notNullOrEmpty), map(BigInt))(collection);
   }
+
+  static truncateString(str: string, maxLen = 35): string {
+    if (str.length <= maxLen) {
+      return str;
+    }
+
+    const maxHalfLength = Math.floor((maxLen - 3) / 2);
+    const firstHalf = str.substring(0, maxHalfLength);
+    const secondHalf = str.substring(str.length - maxHalfLength);
+
+    // Find the last whitespace character in the first half
+    const lastSpaceIndex = firstHalf.lastIndexOf(' ');
+    const truncatedFirstHalf =
+      lastSpaceIndex !== -1
+        ? firstHalf.substring(0, lastSpaceIndex)
+        : firstHalf;
+
+    // Find the first whitespace character in the second half
+    const nextSpaceIndex = secondHalf.indexOf(' ');
+    const truncatedSecondHalf =
+      nextSpaceIndex !== -1 ? secondHalf.substring(nextSpaceIndex) : secondHalf;
+
+    return `${truncatedFirstHalf}...${truncatedSecondHalf}`;
+  }
 }

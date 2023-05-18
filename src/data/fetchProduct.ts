@@ -64,16 +64,13 @@ class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ScanningProductModel {
+    const { manufactureCode, partNo, size } = product;
+
     return {
-      productId: product.productId,
-      onHand: product.onHand,
-      name: product.name,
+      ...product,
       isRecoverable: product.isRecoverable === 'Yes',
+      nameDetails: [manufactureCode, partNo, size].join(' '),
       reservedCount: 1,
-      inventoryUseTypeId: product?.inventoryUseTypeId,
-      size: product.size,
-      partNo: product.partNo,
-      manufactureCode: product.manufactureCode,
     };
   }
 }
