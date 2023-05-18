@@ -6,6 +6,7 @@ import { JobModel } from '../../jobsList/stores/JobsStore';
 export interface ScanningProductModel {
   productId: number;
   name: string;
+  nameDetails: string;
   isRecoverable: boolean;
   onHand: number;
   reservedCount: number;

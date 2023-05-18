@@ -11,6 +11,7 @@ export interface ProductResponse {
   size: string;
   partNo: string;
   manufactureCode: string;
+  nameDetails: string;
 }
 
 export interface RemoveProductResponse {

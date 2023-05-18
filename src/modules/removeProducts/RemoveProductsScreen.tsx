@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Alert,
   Dimensions,
@@ -10,8 +9,10 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { removeProductsStore, scanningProductStore } from './stores';
+import { useToast } from 'react-native-toast-notifications';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
+import { removeProductsStore, scanningProductStore } from './stores';
 import { Button, ButtonType, ScanProduct } from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
@@ -24,6 +25,9 @@ import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { isRemoveProductModel } from './helpers';
+import { ToastContextProvider, ToastType } from '../../contexts';
+import { Utils } from '../../data/helpers/utils';
+import { scanMelody } from '../../components/Sound';
 
 const { width, height } = Dimensions.get('window');
 
@@ -41,6 +45,12 @@ interface ModalParams {
   product?: RemoveProductModel | ScanningProductModel;
 }
 
+const hapticOptions = {
+  enableVibrateFallback: true,
+};
+
+const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
+
 export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
@@ -53,6 +63,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const [isScanner, setIsScanner] = useState(false);
+
+    const toast = useToast();
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
@@ -87,6 +99,9 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onScanProduct = data => {
+      setIsScannerActive(false);
+      ReactNativeHapticFeedback.trigger('selection', hapticOptions);
+      scanMelody.play();
       fetchProductByCode(data);
     };
 
@@ -149,7 +164,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {isScanner ? (
           <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
         ) : (
@@ -198,7 +213,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
           onClose={onCloseModal}
           onRemove={onRemoveProduct}
         />
-      </SafeAreaView>
+      </View>
     );
   },
 );
@@ -234,3 +249,9 @@ const styles = StyleSheet.create({
     height: 48,
   },
 });
+
+export default (props: Props) => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <RemoveProductsScreen {...props} />
+  </ToastContextProvider>
+);
