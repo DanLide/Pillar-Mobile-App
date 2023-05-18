@@ -3,6 +3,7 @@ import { ToastProvider } from 'react-native-toast-notifications';
 import { Props as ToastProviderProps } from 'react-native-toast-notifications/lib/typescript/toast-container';
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 import { Toast, ToastActionType } from '../components';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 export enum ToastType {
   Error = 'Error',
@@ -50,15 +51,23 @@ export const ToastContextProvider: React.FC<Props> = ({
   );
 
   return (
-    <ToastProvider
-      duration={TOAST_DURATION_MS}
-      animationType="zoom-in"
-      swipeEnabled={false}
-      renderType={renderType}
-      offset={OFFSET_DEFAULT + offset}
-      {...props}
-    >
-      {children}
-    </ToastProvider>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <ToastProvider
+          duration={TOAST_DURATION_MS}
+          animationType="zoom-in"
+          swipeEnabled={false}
+          renderType={renderType}
+          offset={OFFSET_DEFAULT + offset}
+          {...props}
+        >
+          {children}
+        </ToastProvider>
+      </View>
+    </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+});

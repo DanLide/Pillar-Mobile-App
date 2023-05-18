@@ -18,6 +18,10 @@ export class RemoveProductsStore {
     makeObservable(this);
   }
 
+  @computed get stockName() {
+    return this.currentStock?.organizationName;
+  }
+
   @computed
   get getProducts() {
     return this.products;

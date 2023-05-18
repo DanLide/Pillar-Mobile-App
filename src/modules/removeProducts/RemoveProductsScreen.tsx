@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Alert,
   Dimensions,
@@ -9,6 +8,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useToast } from 'react-native-toast-notifications';
 
 import { removeProductsStore, scanningProductStore } from './stores';
@@ -30,127 +30,143 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 82;
+const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 
-const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
-  const store = useRef(scanningProductStore).current;
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+export const RemoveProductsScreen: React.FC<Props> = observer(
+  ({ navigation }) => {
+    const store = useRef(scanningProductStore).current;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [selectedProduct, setSelectedProduct] = useState<
+      ScanningProductModel | undefined
+    >(undefined);
 
-  const [isScannerActive, setIsScannerActive] = useState(true);
+    const [isScannerActive, setIsScannerActive] = useState(true);
 
-  const [isScanner, setIsScanner] = useState(false);
+    const [isScanner, setIsScanner] = useState(false);
 
-  const toast = useToast();
+    const toast = useToast();
 
-  const fetchProductByCode = async (code: string) => {
-    setIsLoading(true);
-    const error = await fetchProduct(scanningProductStore, btoa(code));
-    setIsLoading(false);
+    const fetchProductByCode = async (code: string) => {
+      setIsLoading(true);
+      const error = await fetchProduct(scanningProductStore, btoa(code));
+      setIsLoading(false);
 
-    if (error)
-      return Alert.alert('Error', error.message || 'Loading is Failed!');
-  };
+      if (error) {
+        Alert.alert('Error', error.message || 'Loading is Failed!');
+      } else {
+        setSelectedProduct(store.getCurrentProduct);
+      }
+    };
 
-  const onPressScan = () => {
-    setIsScanner(true);
-  };
-  const onScanProduct = data => {
-    setIsScannerActive(false);
-    fetchProductByCode(data);
-  };
+    const turnOnScanner = () => {
+      setIsScannerActive(true);
+      setIsScanner(true);
+    };
 
-  const onCompleteRemove = async () => {
-    setIsLoading(true);
-    const error = await onRemoveProducts(removeProductsStore);
-    setIsLoading(false);
-    // TODO discuss with business how we should handle partly crashed requests
-    if (error)
-      return Alert.alert('Error', error.message || 'Removing is Failed!', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Retry',
-          onPress: onCompleteRemove,
-        },
-      ]);
+    const onPressScan = async () => {
+      const result = await check(PERMISSIONS.IOS.CAMERA);
+      if (result !== RESULTS.GRANTED) {
+        navigation.navigate(AppNavigator.CameraPermissionScreen, {
+          turnOnScanner,
+        });
+        return;
+      }
 
-    navigation.navigate(AppNavigator.ResultScreen);
-  };
+      setIsScanner(true);
+    };
 
-  const onCloseModal = () => {
-    setIsModalVisible(false);
-    setIsScanner(false);
-    setIsScannerActive(true);
-  };
+    const onScanProduct = data => {
+      fetchProductByCode(data);
+    };
 
-  const onAddProductToRemoveList = useCallback(
-    (product: ScanningProductModel) => {
-      const { reservedCount, nameDetails } = product;
+    const onCompleteRemove = async () => {
+      setIsLoading(true);
+      const error = await onRemoveProducts(removeProductsStore);
+      setIsLoading(false);
+      // TODO discuss with business how we should handle partly crashed requests
+      if (error)
+        return Alert.alert('Error', error.message || 'Removing is Failed!', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Retry',
+            onPress: onCompleteRemove,
+          },
+        ]);
 
-      removeProductsStore.addProduct(product);
+      navigation.navigate(AppNavigator.ResultScreen);
+    };
 
-      toast.show?.(
-        <ToastMessage>
-          <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-          {reservedCount > 1 ? 'units' : 'unit'} of{' '}
-          <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
-          added to List
-        </ToastMessage>,
-        { type: ToastType.Info },
-      );
-    },
-    [toast],
-  );
+    const onCloseModal = () => {
+      setSelectedProduct(undefined);
+      setIsScanner(true);
+      setIsScannerActive(true);
+    };
 
-  useEffect(() => {
-    if (store.getCurrentProduct) {
-      setIsScanner(false);
-      setIsModalVisible(true);
-    }
-  }, [store.getCurrentProduct]);
+    const onAddProductToRemoveList = useCallback(
+      (product: ScanningProductModel) => {
+        const { reservedCount, nameDetails } = product;
 
-  return (
-    <SafeAreaView style={styles.container}>
-      {isScanner ? (
-        <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
-      ) : (
-        <>
-          {isLoading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator
-                size="large"
-                color="white"
-                style={styles.activityIndicator}
-              />
-            </View>
-          ) : null}
-          <SelectedProductsList />
-          <Button
-            buttonStyle={styles.scanButton}
-            textStyle={styles.scanButtonText}
-            title="SCAN PRODUCT"
-            onPress={onPressScan}
-          />
-          <Button
-            disabled={!Object.keys(removeProductsStore.getProducts).length}
-            buttonStyle={styles.button}
-            title="COMPLETE REMOVE"
-            onPress={onCompleteRemove}
-          />
-          <ProductModal
-            isVisible={isModalVisible}
-            onAddProductToList={onAddProductToRemoveList}
-            onClose={onCloseModal}
-          />
-        </>
-      )}
-    </SafeAreaView>
-  );
-});
+        removeProductsStore.addProduct(product);
+
+        toast.show?.(
+          <ToastMessage>
+            <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+            {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+            <ToastMessage bold>
+              {Utils.truncateString(nameDetails)}
+            </ToastMessage>{' '}
+            added to List
+          </ToastMessage>,
+          { type: ToastType.Info },
+        );
+      },
+      [toast],
+    );
+
+    return (
+      <View style={styles.container}>
+        {isScanner ? (
+          <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+        ) : (
+          <>
+            {isLoading ? (
+              <View style={styles.loader}>
+                <ActivityIndicator
+                  size="large"
+                  color="white"
+                  style={styles.activityIndicator}
+                />
+              </View>
+            ) : null}
+            <SelectedProductsList />
+            <Button
+              buttonStyle={styles.scanButton}
+              textStyle={styles.scanButtonText}
+              title="SCAN PRODUCT"
+              onPress={onPressScan}
+            />
+
+            <Button
+              disabled={!Object.keys(removeProductsStore.getProducts).length}
+              buttonStyle={styles.button}
+              title="COMPLETE REMOVE"
+              onPress={onCompleteRemove}
+            />
+          </>
+        )}
+        <ProductModal
+          product={selectedProduct}
+          onAddProductToList={onAddProductToRemoveList}
+          onClose={onCloseModal}
+        />
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

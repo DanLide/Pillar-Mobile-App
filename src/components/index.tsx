@@ -5,9 +5,10 @@ import Text from './Text';
 import Switch from './Switch';
 import ScanProduct from './ScanProduct';
 import Toast, { ToastActionType } from './Toast';
+import ToastMessage from './ToastMessage';
 import { Checkbox } from './Checkbox';
 import InfoTitleBar from './InfoTitleBar';
-import ToastMessage from './ToastMessage';
+import { Modal } from './Modal';
 
 export {
   Scanner,
@@ -22,4 +23,5 @@ export {
   ToastMessage,
   InfoTitleBar,
   ButtonType,
+  Modal,
 };

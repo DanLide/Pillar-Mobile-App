@@ -7,9 +7,11 @@ export interface ProductResponse {
   name: string;
   isRecoverable: 'Yes' | 'No';
   onHand: number;
-  manufactureCode: string;
-  partNo: string;
+  inventoryUseTypeId: number;
   size: string;
+  partNo: string;
+  manufactureCode: string;
+  nameDetails: string;
 }
 
 export interface RemoveProductResponse {

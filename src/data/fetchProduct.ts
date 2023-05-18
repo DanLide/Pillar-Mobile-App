@@ -63,14 +63,12 @@ class SaveProductToStoreTask extends Task {
     }
   }
 
-  private mapProductResponse({
-    manufactureCode,
-    partNo,
-    size,
-    ...product
-  }: ProductResponse): ScanningProductModel {
+  private mapProductResponse(product: ProductResponse): ScanningProductModel {
+    const { manufactureCode, partNo, size } = product;
+
     return {
       ...product,
+      isRecoverable: product.isRecoverable === 'Yes',
       nameDetails: [manufactureCode, partNo, size].join(' '),
       reservedCount: 1,
     };

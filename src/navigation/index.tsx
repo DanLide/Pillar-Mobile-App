@@ -19,6 +19,7 @@ import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
 import { removeProductsStore } from '../modules/removeProducts/stores';
 import { RightBarType } from './helpers/getScreenOptions';
+import { CameraPermissionScreen } from '../modules/cameraPermission';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -36,6 +37,7 @@ export enum AppNavigator {
   RemoveProductsScreen = 'RemoveProductsScreen',
   ResultScreen = 'ResultScreen',
   HowToScanScreen = 'HowToScanScreen',
+  CameraPermissionScreen = 'CameraPermissionScreen',
 }
 
 const Stack = createStackNavigator();
@@ -86,6 +88,14 @@ const RemoveStack = () => {
         options={getScreenOptions({
           title: 'Remove Products',
           leftBarButtonType: LeftBarType.Close,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.CameraPermissionScreen}
+        component={CameraPermissionScreen}
+        options={getScreenOptions({
+          title: 'Camera Access',
+          leftBarButtonType: LeftBarType.Back,
         })}
       />
     </Stack.Navigator>
