@@ -1,7 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   Alert,
   Dimensions,
@@ -10,9 +9,11 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { useToast } from 'react-native-toast-notifications';
+
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import { Button, ScanProduct } from '../../components';
+import { Button, ScanProduct, ToastMessage } from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -20,12 +21,16 @@ import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
+import { ToastContextProvider, ToastType } from '../../contexts';
+import { Utils } from '../../data/helpers/utils';
 
 const { width, height } = Dimensions.get('window');
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 
 export const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
@@ -38,6 +43,8 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const [isScanner, setIsScanner] = useState(false);
+
+    const toast = useToast();
 
     const fetchProductByCode = async (code: string) => {
       setIsLoading(true);
@@ -99,12 +106,29 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       setIsScannerActive(true);
     };
 
-    const onAddProductToRemoveList = (product: ScanningProductModel) => {
-      removeProductsStore.addProduct(product);
-    };
+    const onAddProductToRemoveList = useCallback(
+      (product: ScanningProductModel) => {
+        const { reservedCount, nameDetails } = product;
+
+        removeProductsStore.addProduct(product);
+
+        toast.show?.(
+          <ToastMessage>
+            <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+            {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+            <ToastMessage bold>
+              {Utils.truncateString(nameDetails)}
+            </ToastMessage>{' '}
+            added to List
+          </ToastMessage>,
+          { type: ToastType.Info },
+        );
+      },
+      [toast],
+    );
 
     return (
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         {isScanner ? (
           <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
         ) : (
@@ -139,7 +163,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
           onAddProductToList={onAddProductToRemoveList}
           onClose={onCloseModal}
         />
-      </SafeAreaView>
+      </View>
     );
   },
 );
@@ -172,3 +196,9 @@ const styles = StyleSheet.create({
     color: 'black',
   },
 });
+
+export default (props: Props) => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <RemoveProductsScreen {...props} />
+  </ToastContextProvider>
+);
