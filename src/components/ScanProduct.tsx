@@ -113,12 +113,12 @@ const QRButton: React.FC<QRButtonProps> = ({
         animatedStyleButton,
         isSelected
           ? {
-              backgroundColor: colors.purpleWithOpacity,
-              borderColor: colors.purple,
-            }
+            backgroundColor: colors.purpleWithOpacity,
+            borderColor: colors.purple,
+          }
           : {
-              borderColor: isGreenBorder ? colors.green2 : colors.yellow,
-            },
+            borderColor: isGreenBorder ? colors.green2 : colors.yellow,
+          },
       ]}
       onPress={onPress}
       disabled={isDisabled}
@@ -304,16 +304,15 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
   const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
   const onPressScanButton = () => {
-    const data = selectedBarcode
-      ? selectedBarcode.content.data
-      : barcodesOnScanLine?.[0].content.data;
-    data && onPressScan(data);
+    const data = selectedBarcode ? selectedBarcode?.content?.data : barcodesOnScanLine?.[0].content?.data
+      data && onPressScan(data);
   };
 
   const torchButtonStyle = useMemo(() => [styles.torch, { top }], []);
 
-  const renderBarcodes = () =>
-    barcodesState?.map((barcodeData, index) => {
+  const renderBarcodes = () => barcodesState?.map(
+    (barcodeData, index) => {
+      if (!barcodeData) { return null }
       const onPress = () => {
         const data = barcodeData.content.data;
         barcodesState.forEach(_barcode => (_barcode.isSelected = false));
@@ -353,8 +352,8 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
       const state = pressed
         ? TorchIconState.Pressed
         : isTorchOn
-        ? TorchIconState.Active
-        : TorchIconState.Passive;
+          ? TorchIconState.Active
+          : TorchIconState.Passive;
       return <SVGs.TorchIcon state={state} />;
     },
     [isTorchOn],

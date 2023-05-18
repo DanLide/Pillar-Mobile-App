@@ -10,6 +10,8 @@ import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useToast } from 'react-native-toast-notifications';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+
 
 import { removeProductsStore, scanningProductStore } from './stores';
 
@@ -23,12 +25,17 @@ import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
 import { ToastContextProvider, ToastType } from '../../contexts';
 import { Utils } from '../../data/helpers/utils';
+import { scanMelody } from '../../components/Sound';
 
 const { width, height } = Dimensions.get('window');
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
+
+const hapticOptions = {
+  enableVibrateFallback: true,
+};
 
 const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 
@@ -76,6 +83,9 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onScanProduct = data => {
+      setIsScannerActive(false);
+      ReactNativeHapticFeedback.trigger('selection', hapticOptions)
+      scanMelody.play()
       fetchProductByCode(data);
     };
 
