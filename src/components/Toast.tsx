@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { NamedExoticComponent, useCallback, useMemo } from 'react';
 import {
   Dimensions,
   StyleProp,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 
-import { colors, fonts, toastColors, SVGs } from '../theme';
+import { colors, fonts, SVGs, toastColors } from '../theme';
 import { ToastType } from '../contexts';
 import { ToastMessage } from './ToastMessage';
 
@@ -26,6 +26,16 @@ interface Props extends ToastProps {
   actionType?: ToastActionType;
 }
 
+const icons: Record<
+  ToastType,
+  NamedExoticComponent<SVGs.SvgPropsWithColors>
+> = {
+  [ToastType.Error]: SVGs.ListErrorIcon,
+  [ToastType.Info]: SVGs.ListAffirmativeIcon,
+  [ToastType.Success]: SVGs.ListAffirmativeIcon,
+  [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
+};
+
 const Toast: React.FC<Props> = ({
   id,
   type = ToastType.Info,
@@ -36,35 +46,16 @@ const Toast: React.FC<Props> = ({
 }) => {
   const { primary, secondary, action } = toastColors[type] ?? {};
 
-  const Icon = useMemo<JSX.Element | null>(() => {
-    switch (type) {
-      case ToastType.Error:
-        return (
-          <SVGs.ListErrorIcon
-            color={colors.blackSemiLight}
-            primaryColor={primary}
-            secondaryColor={secondary}
-          />
-        );
-      case ToastType.Info:
-        return (
-          <SVGs.ListAffirmativeIcon
-            color={colors.blackSemiLight}
-            primaryColor={primary}
-            secondaryColor={secondary}
-          />
-        );
-      case ToastType.Success:
-        return (
-          <SVGs.ListErrorIcon
-            color={colors.blackSemiLight}
-            primaryColor={primary}
-            secondaryColor={secondary}
-          />
-        );
-      default:
-        return null;
-    }
+  const LeftIcon = useMemo<JSX.Element>(() => {
+    const Icon = icons[type];
+
+    return (
+      <Icon
+        color={colors.blackSemiLight}
+        primaryColor={primary}
+        secondaryColor={secondary}
+      />
+    );
   }, [primary, secondary, type]);
 
   const Message = useMemo<JSX.Element>(
@@ -104,7 +95,7 @@ const Toast: React.FC<Props> = ({
 
   return (
     <View style={containerStyle}>
-      {Icon}
+      {LeftIcon}
       {Message}
       <TouchableOpacity hitSlop={27} onPress={handleRightButtonPress}>
         {ActionButtonContent}

@@ -46,4 +46,9 @@ export const toastColors: Record<
     secondary: colors.greenLight,
     action: colors.green,
   },
+  [ToastType.ScanError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
 };

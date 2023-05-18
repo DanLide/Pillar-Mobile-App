@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import Svg, { Path, SvgProps, Mask, G, Rect } from 'react-native-svg';
 import { StyleSheet, View } from 'react-native';
 
-interface SvgPropsWithColors extends SvgProps {
+export interface SvgPropsWithColors extends SvgProps {
   primaryColor?: string;
   secondaryColor?: string;
 }
@@ -347,6 +347,17 @@ export const ListIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const BarcodeSmallIcon = memo((props: SvgProps) => (
+  <Svg width={25} height={24} fill="none" {...props}>
+    <Path
+      fill="#000"
+      fillRule="evenodd"
+      d="M.5 20h24V4H.5v16ZM2 18.5h21v-13H2v13Zm18.25-1.75h1.001v-9.5H20.25v9.5Zm-3 0h1.5v-9.5h-1.5v9.5Zm-2.5 0h1v-9.5h-1v9.5Zm-3 0h1.5v-9.5h-1.5v9.5Zm-3 0h1.499v-9.5H8.75v9.5Zm-2.5 0h1v-9.5h-1v9.5Zm-2.5 0h1v-9.5h-1v9.5Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const AffirmativeIcon = memo(
   ({ primaryColor, secondaryColor, ...props }: SvgPropsWithColors) => (
     <Svg width={17} height={17} fill="none" {...props}>
@@ -432,6 +443,19 @@ export const ListErrorIcon = memo(
   ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
     <View style={styles.iconRelative}>
       <ListIcon color={color} />
+      <ErrorIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
+
+export const BarcodeErrorIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <BarcodeSmallIcon color={color} />
       <ErrorIcon
         primaryColor={primaryColor}
         secondaryColor={secondaryColor}
