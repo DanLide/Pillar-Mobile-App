@@ -57,29 +57,33 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const toast = useToast();
 
+    const showProductNotFoundError = useCallback(
+      () =>
+        toast.show('This product cannot be found in our product database', {
+          type: ToastType.ScanError,
+        }),
+      [toast],
+    );
+
     const fetchProductByCode = useCallback(
       async (code: string) => {
         setIsLoading(true);
         const error = await fetchProduct(scanningProductStore, btoa(code));
         setIsLoading(false);
 
-        if (error)
-          return toast.show(
-            'This product cannot be found in our product database',
-            { type: ToastType.Error },
-          );
+        if (error) return showProductNotFoundError();
 
         const product = store.getCurrentProduct;
 
         if (!product)
           return toast.show(
             'This product is not assigned to a this stock location',
-            { type: ToastType.Error },
+            { type: ToastType.ScanError },
           );
 
         setSelectedProduct(product);
       },
-      [store.getCurrentProduct, toast],
+      [showProductNotFoundError, store.getCurrentProduct, toast],
     );
 
     const turnOnScanner = () => {
@@ -100,13 +104,17 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
-      code => {
+      async code => {
         setIsScannerActive(false);
         ReactNativeHapticFeedback.trigger('selection', hapticOptions);
         scanMelody.play();
-        return fetchProductByCode(code.toString());
+
+        if (typeof code === 'string') await fetchProductByCode(code);
+        else showProductNotFoundError();
+
+        setIsScannerActive(true);
       },
-      [fetchProductByCode],
+      [fetchProductByCode, showProductNotFoundError],
     );
 
     const onCompleteRemove = async () => {
@@ -133,7 +141,6 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     const onCloseModal = () => {
       setSelectedProduct(undefined);
       setIsScanner(true);
-      setIsScannerActive(true);
     };
 
     const onAddProductToRemoveList = useCallback(
