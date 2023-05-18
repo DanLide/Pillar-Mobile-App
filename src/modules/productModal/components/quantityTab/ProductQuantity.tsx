@@ -21,10 +21,7 @@ export const ProductQuantity: React.FC<Props> = observer(
   ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
-    const jobNumber = useMemo(
-      () => product?.job?.jobNumber,
-      [product?.job?.jobNumber],
-    );
+    const jobNumber = product?.job?.jobNumber;
 
     if (!product) return null;
 
