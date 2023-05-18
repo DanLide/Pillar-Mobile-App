@@ -20,6 +20,7 @@ import {
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
@@ -69,6 +70,10 @@ type BarcodeStateItem = Barcode & {
   isSelected: boolean;
   isOnScanLine: boolean;
   isItemShouldBeDeleted: boolean;
+};
+
+const hapticOptions = {
+  enableVibrateFallback: true,
 };
 
 const QRButton: React.FC<QRButtonProps> = ({
@@ -307,16 +312,17 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
   const onPressScanButton = () => {
     const data = selectedBarcode ? selectedBarcode?.content.data : barcodesOnScanLine?.[0].content.data
     if (data) {
+      ReactNativeHapticFeedback.trigger('selection', hapticOptions)
       scanMelody.play()
       onPressScan(data);
     }
-
   };
 
   const torchButtonStyle = useMemo(() => [styles.torch, { top }], []);
 
-  const renderBarcodes = () =>
-    barcodesState?.map((barcodeData, index) => {
+  const renderBarcodes = () => barcodesState?.map(
+    (barcodeData, index) => {
+      if (!barcodeData) { return null }
       const onPress = () => {
         const data = barcodeData.content.data;
         barcodesState.forEach(_barcode => (_barcode.isSelected = false));
