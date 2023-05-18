@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
@@ -10,14 +10,18 @@ import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
 
 interface Props {
+  isEdit: boolean;
+
+  onRemove?: () => void;
   onPressAddToList: () => void;
   onJobSelectNavigation: () => void;
 }
 
 export const ProductQuantity: React.FC<Props> = observer(
-  ({ onPressAddToList, onJobSelectNavigation }) => {
+  ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
+    const jobNumber = product?.job?.jobNumber;
 
     if (!product) return null;
 
@@ -39,21 +43,20 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
+          isEdit={isEdit}
           maxValue={product.onHand}
           currentValue={product?.reservedCount}
           onChange={onChange}
+          onRemove={onRemove}
         />
         <FooterDescription product={product} />
 
-        {product.isRecoverable ? null : (
-          <Pressable
-            onPress={onJobSelectNavigation}
-            style={styles.jobContainer}
-          >
-            <SVGs.JobIcon color={colors.purple} />
-            <Text style={styles.jobText}>Link to Job Number</Text>
-          </Pressable>
-        )}
+        <Pressable onPress={onJobSelectNavigation} style={styles.jobContainer}>
+          <SVGs.JobIcon color={colors.purple} />
+          <Text style={styles.jobText}>
+            {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
+          </Text>
+        </Pressable>
 
         <Button
           type={ButtonType.primary}

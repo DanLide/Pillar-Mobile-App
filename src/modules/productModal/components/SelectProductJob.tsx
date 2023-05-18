@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Button, ButtonType, Input } from '../../../components';
@@ -8,32 +8,44 @@ import { SVGs, colors, fonts } from '../../../theme';
 import { Tabs } from '../ProductModal';
 
 interface Props {
-  isRecoverable?: boolean;
+  isRecoverableProduct?: boolean;
   selectedTab: Tabs;
+  productJob?: JobModel;
+  isEdit?: boolean;
 
   onPressBack: () => void;
   onPressSkip: () => void;
-  onPressAdd: (jobId?: number) => void;
+  onPressAdd: (job?: JobModel) => void;
 }
 
 export const SelectProductJob: React.FC<Props> = ({
-  isRecoverable,
+  isRecoverableProduct,
   selectedTab,
+  productJob,
+  isEdit,
   onPressBack,
   onPressSkip,
   onPressAdd,
 }) => {
-  const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
+  const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
+    undefined,
+  );
   const [filterValue, setFilterValue] = useState<string>('');
 
   const onPressItem = (job: JobModel) => {
-    setSelectedId(selectedId === job.jobId ? undefined : job.jobId);
+    setSelectedJob(selectedJob?.jobId === job.jobId ? undefined : job);
   };
+
+  useEffect(() => {
+    if (selectedTab === Tabs.LinkJob) {
+      setSelectedJob(productJob);
+    }
+  }, [selectedTab, productJob]);
 
   const Footer = useMemo(
     () => (
       <View style={styles.buttons}>
-        {isRecoverable ? (
+        {isRecoverableProduct ? (
           <Button
             type={ButtonType.secondary}
             title="Skip"
@@ -50,34 +62,37 @@ export const SelectProductJob: React.FC<Props> = ({
         )}
         <Button
           type={ButtonType.primary}
-          disabled={!selectedId}
+          disabled={isEdit ? false : !selectedJob}
           title="Done"
           buttonStyle={styles.button}
-          onPress={() => onPressAdd(selectedId)}
+          onPress={() => onPressAdd(selectedJob)}
         />
       </View>
     ),
-    [isRecoverable, onPressAdd, onPressBack, onPressSkip, selectedId],
+    [isEdit, isRecoverableProduct, onPressAdd, onPressBack, onPressSkip, selectedJob],
   );
 
-  const Header = useMemo(() => (
-    <Input
-      style={styles.input}
-      containerStyle={styles.inputContainer}
-      value={filterValue}
-      placeholder="Search"
-      rightIcon={() => (
-        <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
-      )}
-      onChangeText={text => setFilterValue(text)}
-      placeholderTextColor={colors.blackSemiLight}
-    />
-  ), [filterValue]);
+  const Header = useMemo(
+    () => (
+      <Input
+        style={styles.input}
+        containerStyle={styles.inputContainer}
+        value={filterValue}
+        placeholder="Search"
+        rightIcon={() => (
+          <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
+        )}
+        onChangeText={text => setFilterValue(text)}
+        placeholderTextColor={colors.blackSemiLight}
+      />
+    ),
+    [filterValue],
+  );
 
   if (selectedTab === Tabs.LinkJob) {
     return (
       <JobsList
-        selectedId={selectedId}
+        selectedId={selectedJob?.jobId}
         onPressItem={onPressItem}
         filterValue={filterValue}
         footerComponent={Footer}

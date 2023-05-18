@@ -1,6 +1,8 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { InventoryUseType } from '../../../constants/common.enum';
 
+import { JobModel } from '../../jobsList/stores/JobsStore';
+
 export interface ScanningProductModel {
   productId: number;
   name: string;
@@ -8,7 +10,7 @@ export interface ScanningProductModel {
   isRecoverable: boolean;
   onHand: number;
   reservedCount: number;
-  jobId?: number;
+  job?: JobModel;
   inventoryUseTypeId: InventoryUseType;
   size: string;
   partNo: string;
@@ -37,8 +39,8 @@ export class ScanningProductStore {
     this.currentProduct!.reservedCount = +count;
   }
 
-  @action setProductJob(jobId: number) {
-    this.currentProduct!.jobId = jobId;
+  @action setProductJob(job: JobModel) {
+    this.currentProduct!.job = job;
   }
 
   @action clear() {

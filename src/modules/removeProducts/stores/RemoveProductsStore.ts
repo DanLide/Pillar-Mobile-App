@@ -1,9 +1,10 @@
 import { action, makeObservable, observable, computed } from 'mobx';
-
+import { v1 as uuid } from 'uuid';
 import { StockModel } from '../../stocksList/stores/StocksStore';
 import { ScanningProductModel } from './ScanningProductStore';
 
 export interface RemoveProductModel extends ScanningProductModel {
+  uuid: string;
   isRemoved: boolean;
 }
 
@@ -37,12 +38,24 @@ export class RemoveProductsStore {
     return this.products.filter(product => !product.isRemoved);
   }
 
+  @action updateProduct(product: RemoveProductModel) {
+    this.products = this.products.map(currentProduct =>
+      currentProduct.uuid === product.uuid ? product : currentProduct,
+    );
+  }
+
+  @action removeProduct(product: RemoveProductModel) {
+    this.products = this.products.filter(
+      currentProduct => currentProduct.uuid !== product.uuid,
+    );
+  }
+
   @action setCurrentStocks(stock: StockModel) {
     this.currentStock = stock;
   }
 
   @action addProduct(product: ScanningProductModel) {
-    const removedProduct = { ...product, isRemoved: false };
+    const removedProduct = { ...product, isRemoved: false, uuid: uuid() };
     this.products = [...this.products, removedProduct];
   }
 

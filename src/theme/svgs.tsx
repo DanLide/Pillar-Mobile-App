@@ -284,6 +284,28 @@ export const CameraIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const CodeIcon = memo((props: SvgProps) => (
+  <Svg width={123} height={82} viewBox="0 0 123 82" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M.25 81.667h122.5V0H.25v81.667zm7.656-7.657h107.188V7.656H7.906V74.01zm93.154-8.932h5.109v-48.49h-5.109v48.49zm-15.313 0h7.657v-48.49h-7.657v48.49zm-12.763 0h5.105v-48.49h-5.105v48.49zm-15.312 0h7.656v-48.49h-7.656v48.49zm-15.313 0h7.652v-48.49h-7.652v48.49zm-12.763 0h5.105v-48.49h-5.105v48.49zm-12.755 0h5.104v-48.49h-5.104v48.49z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
+export const TrashIcon = memo((props: SvgProps) => (
+  <Svg width={30} height={35} viewBox="0 0 30 35" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M21.112 31.667H8.89L6.147 8.333h17.71l-2.745 23.334zM12.5 5.833h5v-2.5h-5v2.5zm17.5 0H20v-3.75c0-.69-.558-1.25-1.25-1.25h-7.5c-.69 0-1.25.56-1.25 1.25v3.75H0v2.5h3.628l3.039 25.834h16.666l3.04-25.834H30v-2.5z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
 export const QuestionMark = memo((props: SvgProps) => (
   <Svg width={42} height={42} viewBox="0 0 42 42" fill="none" {...props}>
     <Path
