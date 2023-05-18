@@ -56,7 +56,7 @@ const hapticOptions = {
 
 const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 
-export const RemoveProductsScreen: React.FC<Props> = observer(
+const RemoveProductsScreen: React.FC<Props> = observer(
   ({ navigation }) => {
     const store = useRef(scanningProductStore).current;
     const [isLoading, setIsLoading] = useState<boolean>(false);
