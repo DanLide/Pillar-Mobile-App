@@ -13,7 +13,12 @@ import { useToast } from 'react-native-toast-notifications';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 
 import { removeProductsStore, scanningProductStore } from './stores';
-import { Button, ButtonType, ScanProduct } from '../../components';
+import {
+  Button,
+  ButtonType,
+  ScanProduct,
+  ToastMessage,
+} from '../../components';
 import { encode as btoa } from 'base-64';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
@@ -137,9 +142,22 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const onSubmitProduct = useCallback(
       (product: ScanningProductModel | RemoveProductModel) => {
+        const { reservedCount, nameDetails } = product;
+
         switch (modalParams?.type) {
           case ModalType.Add:
             removeProductsStore.addProduct(product);
+            toast.show?.(
+              <ToastMessage>
+                <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+                {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+                <ToastMessage bold>
+                  {Utils.truncateString(nameDetails)}
+                </ToastMessage>{' '}
+                added to List
+              </ToastMessage>,
+              { type: ToastType.Info },
+            );
             break;
           case ModalType.Edit:
             if (isRemoveProductModel(product))
@@ -149,7 +167,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
             break;
         }
       },
-      [modalParams?.type],
+      [modalParams?.type, toast],
     );
 
     const onEditProduct = (product: RemoveProductModel) => {
