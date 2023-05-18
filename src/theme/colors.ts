@@ -13,9 +13,6 @@ export const colors = {
   redDark: '#B20E18',
   red: '#E02E3A',
   redLight: '#FEEFF0',
-  greenDark: '#2A854E',
-  green3: '#51C981',
-  greenLight2: '#F2FFF7',
   black: '#000000',
   blackWidthOpacity: 'rgba(0, 0, 0, 0.3)',
   blackSemiLight: '#323237',
@@ -45,8 +42,8 @@ export const toastColors: Record<
     action: colors.purpleDark,
   },
   [ToastType.Success]: {
-    primary: colors.green,
+    primary: colors.green2,
     secondary: colors.greenLight,
-    action: colors.greenDark,
+    action: colors.green,
   },
 };
