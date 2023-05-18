@@ -139,6 +139,7 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
     };
 
     const onCloseModal = () => {
+      store.clear();
       setSelectedProduct(undefined);
       setIsScanner(true);
     };
