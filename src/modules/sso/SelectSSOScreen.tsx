@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -41,7 +41,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <InfoTitleBar title={authStore.getName} />
       <Input
         containerStyle={styles.input}
@@ -63,7 +63,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
         title="Submit"
         type={ButtonType.primary}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
