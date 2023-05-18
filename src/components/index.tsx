@@ -3,7 +3,7 @@ import Input from './Input';
 import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
-import ScanProduct from './ScanProduct';
+import ScanProduct, { ScanProductProps } from './ScanProduct';
 import Toast, { ToastActionType } from './Toast';
 import ToastMessage from './ToastMessage';
 import { Checkbox } from './Checkbox';
@@ -25,3 +25,5 @@ export {
   ButtonType,
   Modal,
 };
+
+export type { ScanProductProps };

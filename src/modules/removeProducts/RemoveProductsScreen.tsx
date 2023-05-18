@@ -10,13 +10,17 @@ import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { useToast } from 'react-native-toast-notifications';
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+import { encode as btoa } from 'base-64';
 
 import { removeProductsStore, scanningProductStore } from './stores';
 
-import { Button, ScanProduct, ToastMessage } from '../../components';
-import { encode as btoa } from 'base-64';
+import {
+  Button,
+  ScanProduct,
+  ScanProductProps,
+  ToastMessage,
+} from '../../components';
 import { ProductModal } from '../productModal';
 import { fetchProduct } from '../../data/fetchProduct';
 import { SelectedProductsList } from './SelectedProductsList';
@@ -53,17 +57,30 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
 
     const toast = useToast();
 
-    const fetchProductByCode = async (code: string) => {
-      setIsLoading(true);
-      const error = await fetchProduct(scanningProductStore, btoa(code));
-      setIsLoading(false);
+    const fetchProductByCode = useCallback(
+      async (code: string) => {
+        setIsLoading(true);
+        const error = await fetchProduct(scanningProductStore, btoa(code));
+        setIsLoading(false);
 
-      if (error) {
-        Alert.alert('Error', error.message || 'Loading is Failed!');
-      } else {
-        setSelectedProduct(store.getCurrentProduct);
-      }
-    };
+        if (error)
+          return toast.show(
+            'This product cannot be found in our product database',
+            { type: ToastType.Error },
+          );
+
+        const product = store.getCurrentProduct;
+
+        if (!product)
+          return toast.show(
+            'This product is not assigned to a this stock location',
+            { type: ToastType.Error },
+          );
+
+        setSelectedProduct(product);
+      },
+      [store.getCurrentProduct, toast],
+    );
 
     const turnOnScanner = () => {
       setIsScannerActive(true);
@@ -82,12 +99,15 @@ export const RemoveProductsScreen: React.FC<Props> = observer(
       setIsScanner(true);
     };
 
-    const onScanProduct = data => {
-      setIsScannerActive(false);
-      ReactNativeHapticFeedback.trigger('selection', hapticOptions)
-      scanMelody.play()
-      fetchProductByCode(data);
-    };
+    const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
+      code => {
+        setIsScannerActive(false);
+        ReactNativeHapticFeedback.trigger('selection', hapticOptions);
+        scanMelody.play();
+        return fetchProductByCode(code.toString());
+      },
+      [fetchProductByCode],
+    );
 
     const onCompleteRemove = async () => {
       setIsLoading(true);
