@@ -24,6 +24,7 @@ import {
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
+import { scanMelody } from './Sound';
 
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
@@ -113,12 +114,12 @@ const QRButton: React.FC<QRButtonProps> = ({
         animatedStyleButton,
         isSelected
           ? {
-              backgroundColor: colors.purpleWithOpacity,
-              borderColor: colors.purple,
-            }
+            backgroundColor: colors.purpleWithOpacity,
+            borderColor: colors.purple,
+          }
           : {
-              borderColor: isGreenBorder ? colors.green2 : colors.yellow,
-            },
+            borderColor: isGreenBorder ? colors.green2 : colors.yellow,
+          },
       ]}
       onPress={onPress}
       disabled={isDisabled}
@@ -304,10 +305,12 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
   const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
   const onPressScanButton = () => {
-    const data = selectedBarcode
-      ? selectedBarcode.content.data
-      : barcodesOnScanLine?.[0].content.data;
-    data && onPressScan(data);
+    const data = selectedBarcode ? selectedBarcode?.content.data : barcodesOnScanLine?.[0].content.data
+    if (data) {
+      scanMelody.play()
+      onPressScan(data);
+    }
+
   };
 
   const torchButtonStyle = useMemo(() => [styles.torch, { top }], []);
@@ -353,8 +356,8 @@ const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
       const state = pressed
         ? TorchIconState.Pressed
         : isTorchOn
-        ? TorchIconState.Active
-        : TorchIconState.Passive;
+          ? TorchIconState.Active
+          : TorchIconState.Passive;
       return <SVGs.TorchIcon state={state} />;
     },
     [isTorchOn],
