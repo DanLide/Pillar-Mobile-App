@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useMemo } from 'react';
+import React, { useRef, useCallback, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { Button } from '../../components';
+import { Button, ToastMessage } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { removeProductsStore } from './stores';
@@ -23,6 +23,12 @@ import { ButtonType } from '../../components/Button';
 import { groupProductsByJobId } from './helpers';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { OTHER_JOB_ID } from './constants';
+import { useToast } from 'react-native-toast-notifications';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+  ToastType,
+} from '../../contexts';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -30,6 +36,7 @@ interface Props {
 
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(removeProductsStore).current;
+  const toast = useToast();
 
   const stockName = store.currentStock?.organizationName || '';
   const syncedProductsSections = useMemo(
@@ -41,6 +48,18 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
     () => groupProductsByJobId(store.getNotSyncedProducts),
     [store.getNotSyncedProducts],
   );
+
+  useEffect(() => {
+    if (notSyncedProductsSection.length) {
+      toast.show?.(
+        <ToastMessage>
+          Sorry, some of the products on your list were not removed from
+          inventory
+        </ToastMessage>,
+        { type: ToastType.Error },
+      );
+    }
+  }, [notSyncedProductsSection.length, toast]);
 
   const onPressLogout = () => {
     authStore.logOut();
@@ -293,3 +312,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
+
+export default (props: Props) => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <ResultScreen {...props} />
+  </ToastContextProvider>
+);

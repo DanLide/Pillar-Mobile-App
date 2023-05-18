@@ -1,3 +1,7 @@
-import { ToastContextProvider, ToastType } from './ToastContext';
+import {
+  ToastContextProvider,
+  ToastType,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from './ToastContext';
 
-export { ToastContextProvider, ToastType };
+export { ToastContextProvider, ToastType, TOAST_OFFSET_ABOVE_SINGLE_BUTTON };
