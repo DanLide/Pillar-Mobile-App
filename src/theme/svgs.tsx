@@ -273,6 +273,17 @@ export const CaptureIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ExclamationMarkIcon = memo((props: SvgProps) => (
+  <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.001 17.104A7.112 7.112 0 012.897 10a7.112 7.112 0 017.104-7.104A7.112 7.112 0 0117.105 10a7.112 7.112 0 01-7.104 7.104zm0-15.437c-4.595 0-8.333 3.738-8.333 8.333 0 4.595 3.738 8.333 8.333 8.333 4.595 0 8.334-3.738 8.334-8.333 0-4.595-3.739-8.333-8.334-8.333zm.516 10.36l.246-7.11h-1.47l.26 7.11h.964zM9.11 14.205c0-.5.392-.891.892-.891s.892.391.892.891c0 .485-.4.88-.892.88a.886.886 0 01-.892-.88z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
 export const CameraIcon = memo((props: SvgProps) => (
   <Svg width={107} height={78} viewBox="0 0 107 78" fill="none" {...props}>
     <Path

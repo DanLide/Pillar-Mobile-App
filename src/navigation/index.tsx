@@ -14,7 +14,7 @@ import SelectSSOScreen from '../modules/sso/SelectSSOScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
-import { ResultScreen } from '../modules/removeProducts/ResultScreen';
+import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
 import { RightBarType } from './helpers/getScreenOptions';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
