@@ -451,7 +451,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   questionMark: {
-    bottom: 16,
+    position: 'absolute',
+    bottom: 23,
     left: 16,
   },
   scanButton: {
