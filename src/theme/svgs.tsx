@@ -273,12 +273,45 @@ export const CaptureIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ExclamationMarkIcon = memo((props: SvgProps) => (
+  <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10.001 17.104A7.112 7.112 0 012.897 10a7.112 7.112 0 017.104-7.104A7.112 7.112 0 0117.105 10a7.112 7.112 0 01-7.104 7.104zm0-15.437c-4.595 0-8.333 3.738-8.333 8.333 0 4.595 3.738 8.333 8.333 8.333 4.595 0 8.334-3.738 8.334-8.333 0-4.595-3.739-8.333-8.334-8.333zm.516 10.36l.246-7.11h-1.47l.26 7.11h.964zM9.11 14.205c0-.5.392-.891.892-.891s.892.391.892.891c0 .485-.4.88-.892.88a.886.886 0 01-.892-.88z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
 export const CameraIcon = memo((props: SvgProps) => (
   <Svg width={107} height={78} viewBox="0 0 107 78" fill="none" {...props}>
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M53.5 30c-8.821 0-16 7.178-16 16 0 8.821 7.179 16 16 16s16-7.179 16-16c0-8.822-7.179-16-16-16zm41.333 0c-2.208 0-4-1.792-4-4s1.792-4 4-4 4 1.792 4 4-1.792 4-4 4zM53.5 70c-13.253 0-24-10.747-24-24 0-13.254 10.747-24 24-24s24 10.746 24 24c0 13.253-10.747 24-24 24zm48-56H76.572L66.492 1.648a2.662 2.662 0 00-2.064-.981H42.572c-.795 0-1.557.357-2.064.98L30.428 14H5.5a5.332 5.332 0 00-5.333 5.333v53.334A5.332 5.332 0 005.5 78h96a5.332 5.332 0 005.333-5.334V19.334A5.332 5.332 0 00101.5 14z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
+export const CodeIcon = memo((props: SvgProps) => (
+  <Svg width={123} height={82} viewBox="0 0 123 82" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M.25 81.667h122.5V0H.25v81.667zm7.656-7.657h107.188V7.656H7.906V74.01zm93.154-8.932h5.109v-48.49h-5.109v48.49zm-15.313 0h7.657v-48.49h-7.657v48.49zm-12.763 0h5.105v-48.49h-5.105v48.49zm-15.312 0h7.656v-48.49h-7.656v48.49zm-15.313 0h7.652v-48.49h-7.652v48.49zm-12.763 0h5.105v-48.49h-5.105v48.49zm-12.755 0h5.104v-48.49h-5.104v48.49z"
+      fill={props.color}
+    />
+  </Svg>
+));
+
+export const TrashIcon = memo((props: SvgProps) => (
+  <Svg width={30} height={35} viewBox="0 0 30 35" fill="none" {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M21.112 31.667H8.89L6.147 8.333h17.71l-2.745 23.334zM12.5 5.833h5v-2.5h-5v2.5zm17.5 0H20v-3.75c0-.69-.558-1.25-1.25-1.25h-7.5c-.69 0-1.25.56-1.25 1.25v3.75H0v2.5h3.628l3.039 25.834h16.666l3.04-25.834H30v-2.5z"
       fill={props.color}
     />
   </Svg>

@@ -29,14 +29,14 @@ export const removeProductAPI = (product: ScanningProductModel) => {
   const url = new URLProvider().removeProduct(
     product.productId,
     product.reservedCount,
-    product.jobId || 0,
+    product.job?.jobId || 0,
   );
 
   const body = JSON.stringify([
     {
       QuantityOriginal: '-' + product.reservedCount,
       TransactionTypeID: TransactionType.JobScan,
-      Number: product.jobId || 0,
+      Number: product.job?.jobId || 0,
       Description: 'Remove Product',
     },
   ]);
