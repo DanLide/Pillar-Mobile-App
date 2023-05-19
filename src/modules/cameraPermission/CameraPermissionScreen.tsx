@@ -13,6 +13,7 @@ import {
   ParamListBase,
   RouteProp,
   useRoute,
+  StackActions,
 } from '@react-navigation/native';
 
 import { SVGs, colors, fonts } from '../../theme';
@@ -25,7 +26,7 @@ interface Props {
 
 type ParamList = {
   CameraPermissionScreen: {
-    turnOnScanner: () => void;
+    nextRoute: AppNavigator;
   };
 };
 
@@ -55,8 +56,9 @@ export const CameraPermissionScreen = memo(({ navigation }: Props) => {
     const result = await request(PERMISSIONS.IOS.CAMERA);
 
     if (result === RESULTS.GRANTED) {
-      route.params?.turnOnScanner();
-      navigation.goBack();
+      navigation.dispatch(
+        StackActions.replace(AppNavigator.RemoveProductScannerScreen),
+      );
       return;
     }
 

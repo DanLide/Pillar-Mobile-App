@@ -1,3 +1,9 @@
-import { ProductModal } from './ProductModal';
+import {
+  ProductModal,
+  ProductModalType,
+  ProductModalParams,
+} from './ProductModal';
 
-export { ProductModal };
+export { ProductModal, ProductModalType };
+
+export type { ProductModalParams };

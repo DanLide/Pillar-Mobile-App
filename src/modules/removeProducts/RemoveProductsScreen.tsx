@@ -1,38 +1,24 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View, Dimensions, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { useToast } from 'react-native-toast-notifications';
-import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
-import { encode as btoa } from 'base-64';
 
-import { removeProductsStore, scanningProductStore } from './stores';
-
+import { removeProductsStore } from './stores';
+import { Button, ButtonType } from '../../components';
 import {
-  Button,
-  ButtonType,
-  ScanProduct,
-  ScanProductProps,
-  ToastMessage,
-} from '../../components';
-import { ProductModal } from '../productModal';
-import { fetchProduct } from '../../data/fetchProduct';
+  ProductModal,
+  ProductModalParams,
+  ProductModalType,
+} from '../productModal';
 import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
-import {
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-  ToastContextProvider,
-  ToastType,
-} from '../../contexts';
 import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { isRemoveProductModel } from './helpers';
-import { Utils } from '../../data/helpers/utils';
-import { scanMelody } from '../../components/Sound';
 
 const { width, height } = Dimensions.get('window');
 
@@ -40,96 +26,23 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export enum ModalType {
-  Add,
-  Edit,
-}
-
-interface ModalParams {
-  type?: ModalType;
-  product?: RemoveProductModel | ScanningProductModel;
-}
-
-const hapticOptions = {
-  enableVibrateFallback: true,
-};
-
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
-  const store = useRef(scanningProductStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modalParams, setModalParams] = useState<ModalParams>({
+  const [modalParams, setModalParams] = useState<ProductModalParams>({
     product: undefined,
     type: undefined,
   });
-
-  const [isScannerActive, setIsScannerActive] = useState(true);
-
-  const [isScanner, setIsScanner] = useState(false);
-
-  const toast = useToast();
-
-  const showProductNotFoundError = useCallback(
-    () =>
-      toast.show('This product cannot be found in our product database', {
-        type: ToastType.ScanError,
-      }),
-    [toast],
-  );
-
-  const fetchProductByCode = useCallback(
-    async (code: string) => {
-      setIsLoading(true);
-      const error = await fetchProduct(scanningProductStore, btoa(code));
-      setIsLoading(false);
-
-      if (error) return showProductNotFoundError();
-
-      const product = store.getCurrentProduct;
-
-      if (!product)
-        return toast.show(
-          'This product is not assigned to a this stock location',
-          { type: ToastType.ScanError },
-        );
-
-      setModalParams({
-        type: ModalType.Add,
-        product: store.getCurrentProduct,
-      });
-    },
-    [showProductNotFoundError, store.getCurrentProduct, toast],
-  );
-
-  const turnOnScanner = () => {
-    setIsScannerActive(true);
-    setIsScanner(true);
-  };
 
   const onPressScan = async () => {
     const result = await check(PERMISSIONS.IOS.CAMERA);
     if (result !== RESULTS.GRANTED) {
       navigation.navigate(AppNavigator.CameraPermissionScreen, {
-        turnOnScanner,
+        nextRoute: AppNavigator.RemoveProductScannerScreen,
       });
       return;
     }
-
-    setIsScanner(true);
+    navigation.navigate(AppNavigator.RemoveProductScannerScreen);
   };
-
-  const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
-    async code => {
-      setIsScannerActive(false);
-      ReactNativeHapticFeedback.trigger('selection', hapticOptions);
-      scanMelody.play();
-
-      if (typeof code === 'string') await fetchProductByCode(code);
-      else showProductNotFoundError();
-
-      setIsScannerActive(true);
-    },
-    [fetchProductByCode, showProductNotFoundError],
-  );
 
   const onCompleteRemove = async () => {
     setIsLoading(true);
@@ -140,47 +53,22 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   };
 
   const onCloseModal = () => {
-    store.clear();
     setModalParams({
       type: undefined,
       product: undefined,
     });
-    setIsScanner(true);
   };
 
-  const onSubmitProduct = useCallback(
-    (product: ScanningProductModel | RemoveProductModel) => {
-      const { reservedCount, nameDetails } = product;
-
-      switch (modalParams?.type) {
-        case ModalType.Add:
-          removeProductsStore.addProduct(product);
-          toast.show?.(
-            <ToastMessage>
-              <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-              {reservedCount > 1 ? 'units' : 'unit'} of{' '}
-              <ToastMessage bold>
-                {Utils.truncateString(nameDetails)}
-              </ToastMessage>{' '}
-              added to List
-            </ToastMessage>,
-            { type: ToastType.Info },
-          );
-          break;
-        case ModalType.Edit:
-          if (isRemoveProductModel(product))
-            removeProductsStore.updateProduct(product);
-          break;
-        default:
-          break;
-      }
-    },
-    [modalParams?.type, toast],
-  );
+  const onSubmitProduct = (
+    product: ScanningProductModel | RemoveProductModel,
+  ) => {
+    if (isRemoveProductModel(product))
+      removeProductsStore.updateProduct(product);
+  };
 
   const onEditProduct = (product: RemoveProductModel) => {
     setModalParams({
-      type: ModalType.Edit,
+      type: ProductModalType.Edit,
       product: clone(product),
     });
   };
@@ -191,47 +79,39 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {isScanner ? (
-        <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
-      ) : (
-        <>
-          {isLoading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator
-                size="large"
-                color="white"
-                style={styles.activityIndicator}
-              />
-            </View>
-          ) : null}
-          <SelectedProductsList onEditProduct={onEditProduct} />
-
-          <View style={styles.buttons}>
-            <Button
-              type={ButtonType.secondary}
-              icon={
-                <SVGs.CodeIcon
-                  color={colors.purple}
-                  width={32}
-                  height={23.33}
-                />
-              }
-              textStyle={styles.scanText}
-              buttonStyle={styles.buttonContainer}
-              title="Scan"
-              onPress={onPressScan}
-            />
-
-            <Button
-              type={ButtonType.primary}
-              disabled={!Object.keys(removeProductsStore.getProducts).length}
-              buttonStyle={styles.buttonContainer}
-              title="Complete"
-              onPress={onCompleteRemove}
+      <>
+        {isLoading ? (
+          <View style={styles.loader}>
+            <ActivityIndicator
+              size="large"
+              color="white"
+              style={styles.activityIndicator}
             />
           </View>
-        </>
-      )}
+        ) : null}
+        <SelectedProductsList onEditProduct={onEditProduct} />
+
+        <View style={styles.buttons}>
+          <Button
+            type={ButtonType.secondary}
+            icon={
+              <SVGs.CodeIcon color={colors.purple} width={32} height={23.33} />
+            }
+            textStyle={styles.scanText}
+            buttonStyle={styles.buttonContainer}
+            title="Scan"
+            onPress={onPressScan}
+          />
+
+          <Button
+            type={ButtonType.primary}
+            disabled={!Object.keys(removeProductsStore.getProducts).length}
+            buttonStyle={styles.buttonContainer}
+            title="Complete"
+            onPress={onCompleteRemove}
+          />
+        </View>
+      </>
       <ProductModal
         type={modalParams.type}
         product={modalParams.product}
@@ -275,8 +155,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default (props: Props) => (
-  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-    <RemoveProductsScreen {...props} />
-  </ToastContextProvider>
-);
+export default RemoveProductsScreen;
