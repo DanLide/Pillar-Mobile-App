@@ -4,38 +4,42 @@ import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { colors, fonts, SVGs } from '../../../../theme';
 
 interface Props {
-  currentValue: number;
+  currentValue: number | string;
   maxValue: number;
   isEdit?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity: number) => void;
+  onChange: (quantity: number | string) => void;
 }
 
 export const EditQuantity = memo(
   ({ isEdit, currentValue, maxValue, onChange, onRemove }: Props) => {
     const onChangeInputText = (text: string) => {
-      if (!Number(text) || maxValue < +text) return;
+      if (maxValue < +text) return;
 
-      if (text) {
-        onChange(+text);
-      }
+      onChange(text);
     };
 
     const onIncreaseCount = useCallback(() => {
-      if (currentValue >= maxValue) return;
+      if (Number(currentValue) >= maxValue) return;
 
-      onChange(currentValue + 1);
+      onChange(Number(currentValue) + 1);
     }, [currentValue, maxValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
       if (currentValue === 0) return;
 
-      onChange(currentValue - 1);
+      onChange(Number(currentValue) - 1);
+    }, [currentValue, onChange]);
+
+    const onBluer = useCallback(() => {
+      if (currentValue === '') {
+        onChange(1);
+      }
     }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
-      if (currentValue > 1) {
+      if (Number(currentValue) > 1) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -69,6 +73,7 @@ export const EditQuantity = memo(
           keyboardType="number-pad"
           onChangeText={onChangeInputText}
           returnKeyType="done"
+          onBlur={onBluer}
         />
         <TouchableOpacity
           style={[styles.quantityButton, styles.border]}

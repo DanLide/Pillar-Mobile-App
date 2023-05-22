@@ -27,7 +27,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const buttonLabel = product.isRecoverable ? 'Next' : 'Done';
 
-    const onChange = (quantity: number) => {
+    const onChange = (quantity: number | string) => {
       store.updateQuantity(quantity);
     };
 
