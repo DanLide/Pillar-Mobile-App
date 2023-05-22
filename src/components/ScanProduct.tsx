@@ -32,7 +32,7 @@ import { AppNavigator } from '../navigation';
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
-type ScanProduct = {
+export type ScanProductProps = {
   onPressScan: (code: Barcode['content']['data']) => void;
   isActive?: boolean;
 };
@@ -144,7 +144,7 @@ const getToolTipText = (barcodesOnScanLine, isSeletedBarcode) => {
   return '';
 };
 
-const ScanProduct: React.FC<ScanProduct> = ({ onPressScan, isActive }) => {
+const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
   const scanLineLayoutRef = useRef<LayoutRectangle | null>(null);

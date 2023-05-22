@@ -6,7 +6,11 @@ import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 import { removeProductsStore } from './stores';
 import { Button, ButtonType } from '../../components';
-import { ProductModal } from '../productModal';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalType,
+} from '../productModal';
 import { SelectedProductsList } from './SelectedProductsList';
 import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
@@ -22,19 +26,9 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export enum ModalType {
-  Add,
-  Edit,
-}
-
-interface ModalParams {
-  type?: ModalType;
-  product?: RemoveProductModel | ScanningProductModel;
-}
-
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modalParams, setModalParams] = useState<ModalParams>({
+  const [modalParams, setModalParams] = useState<ProductModalParams>({
     product: undefined,
     type: undefined,
   });
@@ -43,7 +37,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     const result = await check(PERMISSIONS.IOS.CAMERA);
     if (result !== RESULTS.GRANTED) {
       navigation.navigate(AppNavigator.CameraPermissionScreen, {
-        nextRoute: AppNavigator.RemoveProductScannerScreen
+        nextRoute: AppNavigator.RemoveProductScannerScreen,
       });
       return;
     }
@@ -74,7 +68,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
 
   const onEditProduct = (product: RemoveProductModel) => {
     setModalParams({
-      type: ModalType.Edit,
+      type: ProductModalType.Edit,
       product: clone(product),
     });
   };

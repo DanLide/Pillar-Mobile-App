@@ -12,21 +12,27 @@ import { observer } from 'mobx-react';
 import { ScanningProductModel } from '../removeProducts/stores/ScanningProductStore';
 
 import { Modal } from '../../components';
-import { ProductQuantity } from './components/quantityTab/ProductQuantity';
+import { ProductQuantity } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { colors } from '../../theme';
 import { productModalStore } from './store';
 import { removeProductsStore } from '../removeProducts/stores';
-import { ModalType } from '../removeProducts/RemoveProductsScreen';
 import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import { isRemoveProductModel } from '../removeProducts/helpers';
 
-interface Props {
-  product?: ScanningProductModel;
-  type?: ModalType;
+export enum ProductModalType {
+  Add,
+  Edit,
+}
 
+export interface ProductModalParams {
+  type?: ProductModalType;
+  product?: RemoveProductModel | ScanningProductModel;
+}
+
+interface Props extends ProductModalParams {
   onRemove?: (product: RemoveProductModel) => void;
   onClose: () => void;
   onSubmit: (product: ScanningProductModel) => void;
@@ -82,7 +88,7 @@ export const ProductModal: React.FC<Props> = observer(
           text: 'Remove',
           onPress: () => {
             if (onRemove && isRemoveProductModel(productFromStore))
-              onRemove(productFromStore); 
+              onRemove(productFromStore);
             clearProductModalStoreOnClose();
           },
         },
@@ -109,7 +115,7 @@ export const ProductModal: React.FC<Props> = observer(
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
-                isEdit={type === ModalType.Edit}
+                isEdit={type === ProductModalType.Edit}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
@@ -118,7 +124,7 @@ export const ProductModal: React.FC<Props> = observer(
           case Tabs.LinkJob:
             return (
               <SelectProductJob
-                isEdit={type === ModalType.Edit}
+                isEdit={type === ProductModalType.Edit}
                 productJob={productFromStore?.job}
                 selectedTab={selectedTab}
                 isRecoverableProduct={productFromStore?.isRecoverable}

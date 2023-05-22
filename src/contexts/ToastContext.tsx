@@ -1,14 +1,16 @@
 import React, { PropsWithChildren, useMemo } from 'react';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { Props as ToastProviderProps } from 'react-native-toast-notifications/lib/typescript/toast-container';
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
+
 import { Toast, ToastActionType } from '../components';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 export enum ToastType {
   Error = 'Error',
   Info = 'Info',
   Success = 'Success',
+  ScanError = 'ScanError',
 }
 
 type Props = PropsWithChildren<ToastProviderProps>;
@@ -45,6 +47,13 @@ export const ToastContextProvider: React.FC<Props> = ({
         <Toast
           {...toast}
           type={ToastType.Success}
+          actionType={ToastActionType.Close}
+        />
+      ),
+      [ToastType.ScanError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ScanError}
           actionType={ToastActionType.Close}
         />
       ),

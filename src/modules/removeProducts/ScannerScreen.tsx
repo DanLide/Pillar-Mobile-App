@@ -1,11 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
 import { useToast } from 'react-native-toast-notifications';
 import { encode as btoa } from 'base-64';
 
-import { ProductModal } from '../productModal';
-import { ScanProduct, ToastMessage } from '../../components';
+import {
+  ProductModal,
+  ProductModalType,
+  ProductModalParams,
+} from '../productModal';
+import { ScanProduct, ScanProductProps, ToastMessage } from '../../components';
 
 import { fetchProduct } from '../../data/fetchProduct';
 
@@ -22,16 +26,6 @@ import {
 } from '../../contexts';
 import { Utils } from '../../data/helpers/utils';
 
-export enum ModalType {
-  Add,
-  Edit,
-}
-
-interface ModalParams {
-  type?: ModalType;
-  product?: RemoveProductModel | ScanningProductModel;
-}
-
 const hapticOptions = {
   enableVibrateFallback: true,
 };
@@ -42,32 +36,57 @@ const ScannerScreen = () => {
   const toast = useToast();
 
   const [isScannerActive, setIsScannerActive] = useState(true);
-  const [modalParams, setModalParams] = useState<ModalParams>({
+  const [modalParams, setModalParams] = useState<ProductModalParams>({
     product: undefined,
     type: undefined,
   });
 
-  const fetchProductByCode = async (code: string) => {
-    const error = await fetchProduct(scanningProductStore, btoa(code));
+  const showProductNotFoundError = useCallback(
+    () =>
+      toast.show('This product cannot be found in our product database', {
+        type: ToastType.ScanError,
+      }),
+    [toast],
+  );
 
-    if (error) {
-      Alert.alert('Error', error.message || 'Loading is Failed!');
-    } else {
+  const fetchProductByCode = useCallback(
+    async (code: string) => {
+      const error = await fetchProduct(scanningProductStore, btoa(code));
+
+      if (error) return showProductNotFoundError();
+
+      const product = store.getCurrentProduct;
+
+      if (!product)
+        return toast.show(
+          'This product is not assigned to a this stock location',
+          { type: ToastType.ScanError },
+        );
+
       setModalParams({
-        type: ModalType.Add,
+        type: ProductModalType.Add,
         product: store.getCurrentProduct,
       });
-    }
-  };
+    },
+    [showProductNotFoundError, store.getCurrentProduct, toast],
+  );
 
-  const onScanProduct = (data: string) => {
-    setIsScannerActive(false);
-    ReactNativeHapticFeedback.trigger('selection', hapticOptions);
-    scanMelody.play();
-    fetchProductByCode(data);
-  };
+  const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
+    async code => {
+      setIsScannerActive(false);
+      ReactNativeHapticFeedback.trigger('selection', hapticOptions);
+      scanMelody.play();
+
+      if (typeof code === 'string') await fetchProductByCode(code);
+      else showProductNotFoundError();
+
+      setIsScannerActive(true);
+    },
+    [fetchProductByCode, showProductNotFoundError],
+  );
 
   const onCloseModal = () => {
+    store.clear();
     setModalParams({
       type: undefined,
       product: undefined,
