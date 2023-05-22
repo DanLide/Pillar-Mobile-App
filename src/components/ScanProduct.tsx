@@ -113,12 +113,12 @@ const QRButton: React.FC<QRButtonProps> = ({
         animatedStyleButton,
         isSelected
           ? {
-            backgroundColor: colors.purpleWithOpacity,
-            borderColor: colors.purple,
-          }
+              backgroundColor: colors.purpleWithOpacity,
+              borderColor: colors.purple,
+            }
           : {
-            borderColor: isGreenBorder ? colors.green2 : colors.yellow,
-          },
+              borderColor: isGreenBorder ? colors.green2 : colors.yellow,
+            },
       ]}
       onPress={onPress}
       disabled={isDisabled}
@@ -156,7 +156,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
   const [barcodesState, setBarcodesState] = useState<BarcodeStateItem[]>([]);
 
   const [isTorchOn, toggleIsTorchOn] = useSwitchState();
-  const { top } = useSafeAreaInsets();
   const barcodesSharedValue = useSharedValue<Coordinate[]>([]);
 
   const mapToScreenCoordinates = useCallback(cornerPoints => {
@@ -304,15 +303,17 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
   const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
   const onPressScanButton = () => {
-    const data = selectedBarcode ? selectedBarcode?.content?.data : barcodesOnScanLine?.[0].content?.data
-      data && onPressScan(data);
+    const data = selectedBarcode
+      ? selectedBarcode?.content?.data
+      : barcodesOnScanLine?.[0].content?.data;
+    data && onPressScan(data);
   };
 
-  const torchButtonStyle = useMemo(() => [styles.torch, { top }], []);
-
-  const renderBarcodes = () => barcodesState?.map(
-    (barcodeData, index) => {
-      if (!barcodeData) { return null }
+  const renderBarcodes = () =>
+    barcodesState?.map((barcodeData, index) => {
+      if (!barcodeData) {
+        return null;
+      }
       const onPress = () => {
         const data = barcodeData.content.data;
         barcodesState.forEach(_barcode => (_barcode.isSelected = false));
@@ -352,8 +353,8 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
       const state = pressed
         ? TorchIconState.Pressed
         : isTorchOn
-          ? TorchIconState.Active
-          : TorchIconState.Passive;
+        ? TorchIconState.Active
+        : TorchIconState.Passive;
       return <SVGs.TorchIcon state={state} />;
     },
     [isTorchOn],
@@ -393,7 +394,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
         <SVGs.CaptureIcon />
         <Text style={styles.captureText}>Capture</Text>
       </TouchableOpacity>
-      <Pressable onPress={toggleIsTorchOn} style={torchButtonStyle}>
+      <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
         {renderTorchIcon}
       </Pressable>
     </View>
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white2,
     borderRadius: 5,
     paddingVertical: 5,
-    top: 10,
+    top: 4,
     position: 'absolute',
     zIndex: 10,
     alignSelf: 'center',
@@ -441,6 +442,7 @@ const styles = StyleSheet.create({
   torch: {
     position: 'absolute',
     left: 10,
+    top: 43,
     padding: 4,
     zIndex: 100,
     width: 42,
@@ -455,7 +457,7 @@ const styles = StyleSheet.create({
     left: 16,
   },
   scanButton: {
-    top: '90%',
+    bottom: 16,
     position: 'absolute',
     alignSelf: 'center',
     width: '64.8%',
