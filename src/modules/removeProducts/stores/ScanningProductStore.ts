@@ -9,7 +9,7 @@ export interface ScanningProductModel {
   nameDetails: string;
   isRecoverable: boolean;
   onHand: number;
-  reservedCount: number;
+  reservedCount?: number;
   job?: JobModel;
   inventoryUseTypeId: InventoryUseType;
   size: string;

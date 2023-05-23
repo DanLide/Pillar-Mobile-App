@@ -17,6 +17,8 @@ interface Props {
   onJobSelectNavigation: () => void;
 }
 
+const MIN_QUANTITY_VALUE = 1;
+
 export const ProductQuantity: React.FC<Props> = observer(
   ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
@@ -27,7 +29,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const buttonLabel = product.isRecoverable ? 'Next' : 'Done';
 
-    const onChange = (quantity: number) => {
+    const onChange = (quantity?: number) => {
       store.updateQuantity(quantity);
     };
 
@@ -43,6 +45,7 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
+          minValue={MIN_QUANTITY_VALUE}
           isEdit={isEdit}
           maxValue={product.onHand}
           currentValue={product?.reservedCount}
