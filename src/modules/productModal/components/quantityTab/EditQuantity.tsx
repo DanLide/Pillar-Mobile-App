@@ -40,7 +40,7 @@ export const EditQuantity = memo(
       onChange(Number(currentValue) - minValue);
     }, [currentValue, minValue, onChange]);
 
-    const onBlur = useCallback(() => {
+    const onFocusLost = useCallback(() => {
       if (typeof currentValue === 'undefined') {
         onChange(minValue);
       }
@@ -81,7 +81,7 @@ export const EditQuantity = memo(
           keyboardType="number-pad"
           onChangeText={onChangeInputText}
           returnKeyType="done"
-          onBlur={onBlur}
+          onBlur={onFocusLost}
         />
         {currentValue === maxValue || typeof currentValue === 'undefined' ? (
           <View style={styles.quantityButton} />
