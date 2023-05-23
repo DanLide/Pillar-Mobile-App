@@ -12,6 +12,7 @@ export const colors = {
   white2: '#F6EFFE',
   redDark: '#B20E18',
   red: '#E02E3A',
+  redSemiLight: '#C95100',
   redLight: '#FEEFF0',
   black: '#000000',
   blackWidthOpacity: 'rgba(0, 0, 0, 0.3)',
@@ -25,6 +26,10 @@ export const colors = {
   greenLight: '#D9FAE6',
   green2: '#00FD92',
   yellow: '#FFC156',
+  blue: '#1A51C2',
+  blueLight: '#E8F3FF',
+  pink: '#D130A1',
+  pinkLight: '#FFEDFB',
 };
 
 export const toastColors: Record<
