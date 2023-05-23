@@ -20,6 +20,20 @@
 		3788A4DEB8114AA59A07A1CA /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
 		44DAD8FE510E45D3AA64CAED /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
 		4E4D7B38216AFED6DA6FD002 /* libPods-RepairStackAbstract-RepairStack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */; };
+		72A9D1212A1C0EB800BEB4A6 /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		72A9D1222A1C0EB800BEB4A6 /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		72A9D1232A1C0EB800BEB4A6 /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		72A9D1242A1C0EB800BEB4A6 /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		72A9D1252A1C0EB800BEB4A6 /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		72A9D1262A1C0EB800BEB4A6 /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		72A9D1272A1C0EB800BEB4A6 /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		72A9D1282A1C0EB800BEB4A6 /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		72A9D1292A1C0EB800BEB4A6 /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		72A9D12A2A1C0EB800BEB4A6 /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		72A9D12B2A1C0EB800BEB4A6 /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		72A9D12C2A1C0EB800BEB4A6 /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		72A9D12D2A1C0EB800BEB4A6 /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		72A9D12E2A1C0EB800BEB4A6 /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
 		7939AD0364F048F0BB7D429B /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		953DF4BB29E3FDD900247A0B /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
@@ -373,6 +387,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72A9D1212A1C0EB800BEB4A6 /* 3MCircular-Bold.otf in Resources */,
+				72A9D1222A1C0EB800BEB4A6 /* 3MCircular-BoldItalic.otf in Resources */,
+				72A9D1232A1C0EB800BEB4A6 /* 3MCircular-Book.otf in Resources */,
+				72A9D1242A1C0EB800BEB4A6 /* 3MCircular-BookItalic.otf in Resources */,
+				72A9D1252A1C0EB800BEB4A6 /* 3MCircular-Light.otf in Resources */,
+				72A9D1262A1C0EB800BEB4A6 /* 3MCircular-LightItalic.otf in Resources */,
+				72A9D1272A1C0EB800BEB4A6 /* 3MCircularTT-Black.otf in Resources */,
+				72A9D1282A1C0EB800BEB4A6 /* 3MCircularTT-BlackItalic.otf in Resources */,
+				72A9D1292A1C0EB800BEB4A6 /* 3MCircularTT-Bold.otf in Resources */,
+				72A9D12A2A1C0EB800BEB4A6 /* 3MCircularTT-BoldItalic.otf in Resources */,
+				72A9D12B2A1C0EB800BEB4A6 /* 3MCircularTT-Italic.otf in Resources */,
+				72A9D12C2A1C0EB800BEB4A6 /* 3MCircularTT-Light.otf in Resources */,
+				72A9D12D2A1C0EB800BEB4A6 /* 3MCircularTT-LightItalic.otf in Resources */,
+				72A9D12E2A1C0EB800BEB4A6 /* 3MCircularTT-Regular.otf in Resources */,
 				953DF4C129E3FDD900247A0B /* LaunchScreen.storyboard in Resources */,
 				953DF4C229E3FDD900247A0B /* Images.xcassets in Resources */,
 			);

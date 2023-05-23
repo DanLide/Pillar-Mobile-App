@@ -39,6 +39,23 @@
 	<string>This app uses the camera to capture photos.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>3MCircular-Bold.otf</string>
+		<string>3MCircular-BoldItalic.otf</string>
+		<string>3MCircular-Book.otf</string>
+		<string>3MCircular-BookItalic.otf</string>
+		<string>3MCircular-Light.otf</string>
+		<string>3MCircular-LightItalic.otf</string>
+		<string>3MCircularTT-Black.otf</string>
+		<string>3MCircularTT-BlackItalic.otf</string>
+		<string>3MCircularTT-Bold.otf</string>
+		<string>3MCircularTT-BoldItalic.otf</string>
+		<string>3MCircularTT-Italic.otf</string>
+		<string>3MCircularTT-Light.otf</string>
+		<string>3MCircularTT-LightItalic.otf</string>
+		<string>3MCircularTT-Regular.otf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
