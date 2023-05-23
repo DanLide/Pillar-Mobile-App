@@ -35,7 +35,8 @@ export const EditQuantity = memo(
     }, [currentValue, maxValue, minValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
-      if (currentValue === 0) return;
+      if (typeof currentValue !== 'undefined' && currentValue < minValue)
+        return;
 
       onChange(Number(currentValue) - minValue);
     }, [currentValue, minValue, onChange]);
