@@ -31,24 +31,24 @@ export const EditQuantity = memo(
     const onIncreaseCount = useCallback(() => {
       if (Number(currentValue) >= maxValue) return;
 
-      onChange(Number(currentValue) + minValue);
-    }, [currentValue, maxValue, minValue, onChange]);
+      onChange(Number(currentValue) + 1);
+    }, [currentValue, maxValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
-      if (typeof currentValue !== 'undefined' && currentValue < minValue)
+      if (typeof currentValue !== 'undefined' && currentValue < 1)
         return;
 
-      onChange(Number(currentValue) - minValue);
-    }, [currentValue, minValue, onChange]);
+      onChange(Number(currentValue) - 1);
+    }, [currentValue, onChange]);
 
     const onFocusLost = useCallback(() => {
       if (typeof currentValue === 'undefined') {
-        onChange(minValue);
+        onChange(1);
       }
-    }, [currentValue, minValue, onChange]);
+    }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
-      if (Number(currentValue) > 1) {
+      if (Number(currentValue) > minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -71,7 +71,7 @@ export const EditQuantity = memo(
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, isEdit, onDecreaseCount, onRemove]);
+    }, [currentValue, isEdit, minValue, onDecreaseCount, onRemove]);
 
     return (
       <View style={styles.container}>
