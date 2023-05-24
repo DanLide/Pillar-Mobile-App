@@ -391,6 +391,17 @@ export const BarcodeSmallIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ProductIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M12 3 2 6.611v11.734l10 3.612 10-3.612V6.611L12 3ZM4.958 7.137 12 4.596l2.417.872L7.376 8.01l-2.418-.873Zm4.626 1.671 7.04-2.544 2.419.873L12 9.681l-2.416-.873Zm3.166 2.197 7.751-2.799v9.087L12.75 20.09v-9.085ZM3.5 17.293V8.206l7.75 2.799v9.085L3.5 17.293Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const AffirmativeIcon = memo(
   ({ primaryColor, secondaryColor, ...props }: SvgPropsWithColors) => (
     <Svg width={17} height={17} fill="none" {...props}>
@@ -489,6 +500,19 @@ export const BarcodeErrorIcon = memo(
   ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
     <View style={styles.iconRelative}>
       <BarcodeSmallIcon color={color} />
+      <ErrorIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
+
+export const ProductErrorIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <ProductIcon color={color} />
       <ErrorIcon
         primaryColor={primaryColor}
         secondaryColor={secondaryColor}

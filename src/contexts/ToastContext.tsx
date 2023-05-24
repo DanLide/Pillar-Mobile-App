@@ -11,6 +11,7 @@ export enum ToastType {
   Info = 'Info',
   Success = 'Success',
   ScanError = 'ScanError',
+  ProductQuantityError = 'ProductQuantityError',
 }
 
 type Props = PropsWithChildren<ToastProviderProps>;
@@ -57,6 +58,14 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.ProductQuantityError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ProductQuantityError}
+          actionType={ToastActionType.Close}
+          style={styles.productQuantityError}
+        />
+      ),
     }),
     [],
   );
@@ -81,4 +90,5 @@ export const ToastContextProvider: React.FC<Props> = ({
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  productQuantityError: { gap: 10 },
 });

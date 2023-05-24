@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
@@ -8,9 +8,12 @@ import { productModalStore } from '../../store';
 import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
+import { useToast } from 'react-native-toast-notifications';
+import { ToastType } from '../../../../contexts';
 
 interface Props {
   isEdit: boolean;
+  error?: string;
 
   onRemove?: () => void;
   onPressAddToList: () => void;
@@ -18,10 +21,16 @@ interface Props {
 }
 
 export const ProductQuantity: React.FC<Props> = observer(
-  ({ isEdit, onPressAddToList, onJobSelectNavigation, onRemove }) => {
+  ({ isEdit, error, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
     const jobNumber = product?.job?.jobNumber;
+
+    const toast = useToast();
+
+    useEffect(() => {
+      if (error) toast.show?.(error, { type: ToastType.ProductQuantityError });
+    }, [error, toast]);
 
     if (!product) return null;
 
