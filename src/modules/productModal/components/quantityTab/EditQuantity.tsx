@@ -4,41 +4,61 @@ import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { colors, fonts, SVGs } from '../../../../theme';
 
 interface Props {
-  currentValue: number;
+  currentValue?: number;
   maxValue: number;
+  minValue: number;
   disabled?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity: number) => void;
+  onChange: (quantity?: number) => void;
 }
 
 export const EditQuantity = memo(
-  ({ isEdit, currentValue, maxValue, disabled, onChange, onRemove }: Props) => {
+  ({
+    isEdit,
+    currentValue,
+    maxValue,
+    minValue,
+    disabled,
+    onChange,
+    onRemove,
+  }: Props) => {
     const onChangeInputText = (text: string) => {
-      if (!Number(text) || maxValue < +text) return;
-
-      if (text) {
-        onChange(+text);
+      if (maxValue < +text) {
+        onChange(maxValue);
+        return;
       }
+      if (text === '') {
+        onChange();
+        return;
+      }
+
+      onChange(Number(text));
     };
 
     const onIncreaseCount = useCallback(() => {
-      if (currentValue >= maxValue) return;
+      if (Number(currentValue) >= maxValue) return;
 
-      onChange(currentValue + 1);
+      onChange(Number(currentValue) + 1);
     }, [currentValue, maxValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
-      if (currentValue === 0) return;
+      if (typeof currentValue !== 'undefined' && currentValue < 1) return;
 
-      onChange(currentValue - 1);
+      onChange(Number(currentValue) - 1);
+    }, [currentValue, onChange]);
+
+    const onFocusLost = useCallback(() => {
+      if (typeof currentValue === 'undefined') {
+        onChange(1);
+      }
     }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
-      if (disabled) return;
+      if (disabled) return <View style={styles.quantityButton} />;
 
-      if (currentValue > 1) {
+      if (Number(currentValue) > minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -61,7 +81,7 @@ export const EditQuantity = memo(
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, disabled, isEdit, onDecreaseCount, onRemove]);
+    }, [currentValue, isEdit, minValue, disabled, onDecreaseCount, onRemove]);
 
     return (
       <View style={styles.container}>
@@ -69,12 +89,17 @@ export const EditQuantity = memo(
         <TextInput
           editable={!disabled}
           style={[styles.input, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : `${currentValue}`}
+          value={disabled ? '-' : currentValue ? `${currentValue}` : ''}
           keyboardType="number-pad"
           onChangeText={onChangeInputText}
           returnKeyType="done"
+          onBlur={onFocusLost}
         />
-        {!disabled && (
+        {disabled ||
+        currentValue === maxValue ||
+        typeof currentValue === 'undefined' ? (
+          <View style={styles.quantityButton} />
+        ) : (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
             onPress={onIncreaseCount}
@@ -91,7 +116,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginHorizontal: 58.5,
     marginTop: 8,
   },

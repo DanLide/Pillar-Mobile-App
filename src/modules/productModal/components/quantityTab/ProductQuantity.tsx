@@ -2,13 +2,13 @@ import React, { useRef, useEffect } from 'react';
 import { Text, StyleSheet, Pressable } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
+import { useToast } from 'react-native-toast-notifications';
+
 import { colors, fonts, SVGs } from '../../../../theme';
 import { productModalStore } from '../../store';
-
 import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
-import { useToast } from 'react-native-toast-notifications';
 import { ToastType } from '../../../../contexts';
 
 interface Props {
@@ -19,6 +19,8 @@ interface Props {
   onPressAddToList: () => void;
   onJobSelectNavigation: () => void;
 }
+
+const MIN_QUANTITY_VALUE = 1;
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({ isEdit, error, onPressAddToList, onJobSelectNavigation, onRemove }) => {
@@ -36,7 +38,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const buttonLabel = product.isRecoverable ? 'Next' : 'Done';
 
-    const onChange = (quantity: number) => {
+    const onChange = (quantity?: number) => {
       store.updateQuantity(quantity);
     };
 
@@ -52,6 +54,7 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
+          minValue={MIN_QUANTITY_VALUE}
           disabled={!!error}
           isEdit={isEdit}
           maxValue={product.onHand}

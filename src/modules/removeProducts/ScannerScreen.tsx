@@ -117,7 +117,7 @@ const ScannerScreen = () => {
       toast.show?.(
         <ToastMessage>
           <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-          {reservedCount > 1 ? 'units' : 'unit'} of{' '}
+          {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
           <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
           added to List
         </ToastMessage>,
