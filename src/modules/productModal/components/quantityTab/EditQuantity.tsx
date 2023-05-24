@@ -6,6 +6,7 @@ import { colors, fonts, SVGs } from '../../../../theme';
 interface Props {
   currentValue: number;
   maxValue: number;
+  disabled?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export const EditQuantity = memo(
-  ({ isEdit, currentValue, maxValue, onChange, onRemove }: Props) => {
+  ({ isEdit, currentValue, maxValue, disabled, onChange, onRemove }: Props) => {
     const onChangeInputText = (text: string) => {
       if (!Number(text) || maxValue < +text) return;
 
@@ -35,6 +36,8 @@ export const EditQuantity = memo(
     }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
+      if (disabled) return;
+
       if (currentValue > 1) {
         return (
           <TouchableOpacity
@@ -58,24 +61,27 @@ export const EditQuantity = memo(
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, isEdit, onDecreaseCount, onRemove]);
+    }, [currentValue, disabled, isEdit, onDecreaseCount, onRemove]);
 
     return (
       <View style={styles.container}>
         {DecreaseButton}
         <TextInput
-          style={styles.input}
-          value={`${currentValue}`}
+          editable={!disabled}
+          style={[styles.input, disabled && styles.inputDisabled]}
+          value={disabled ? '-' : `${currentValue}`}
           keyboardType="number-pad"
           onChangeText={onChangeInputText}
           returnKeyType="done"
         />
-        <TouchableOpacity
-          style={[styles.quantityButton, styles.border]}
-          onPress={onIncreaseCount}
-        >
-          <SVGs.PlusIcon color={colors.black} />
-        </TouchableOpacity>
+        {!disabled && (
+          <TouchableOpacity
+            style={[styles.quantityButton, styles.border]}
+            onPress={onIncreaseCount}
+          >
+            <SVGs.PlusIcon color={colors.black} />
+          </TouchableOpacity>
+        )}
       </View>
     );
   },
@@ -85,7 +91,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     marginHorizontal: 58.5,
     marginTop: 8,
   },
@@ -98,6 +104,11 @@ const styles = StyleSheet.create({
     fontSize: 78,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
+  },
+  inputDisabled: {
+    color: colors.blackSemiLight,
+    backgroundColor: colors.gray,
+    width: 184,
   },
   quantityButton: {
     width: 48,

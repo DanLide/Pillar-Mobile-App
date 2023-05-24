@@ -52,6 +52,7 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
+          disabled={!!error}
           isEdit={isEdit}
           maxValue={product.onHand}
           currentValue={product?.reservedCount}
@@ -60,14 +61,20 @@ export const ProductQuantity: React.FC<Props> = observer(
         />
         <FooterDescription product={product} />
 
-        <Pressable onPress={onJobSelectNavigation} style={styles.jobContainer}>
-          <SVGs.JobIcon color={colors.purple} />
-          <Text style={styles.jobText}>
-            {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
-          </Text>
-        </Pressable>
+        {!error && (
+          <Pressable
+            onPress={onJobSelectNavigation}
+            style={styles.jobContainer}
+          >
+            <SVGs.JobIcon color={colors.purple} />
+            <Text style={styles.jobText}>
+              {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
+            </Text>
+          </Pressable>
+        )}
 
         <Button
+          disabled={!!error}
           type={ButtonType.primary}
           buttonStyle={styles.continueButton}
           title={buttonLabel}
