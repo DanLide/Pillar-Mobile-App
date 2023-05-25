@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     borderColor: colors.grayDark,
-    fontSize: 72,
+    fontSize: 78,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
   },
