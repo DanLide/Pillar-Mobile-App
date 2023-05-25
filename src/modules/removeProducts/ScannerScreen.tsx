@@ -26,9 +26,15 @@ import {
 } from '../../contexts';
 import { Utils } from '../../data/helpers/utils';
 import { getReservedCountById } from './helpers';
+import { getProductMinQty } from '../../data/helpers';
 
 const hapticOptions = {
   enableVibrateFallback: true,
+};
+
+const INIT_MODAL_PARAMS: ProductModalParams = {
+  product: undefined,
+  type: undefined,
 };
 
 const ScannerScreen = () => {
@@ -38,10 +44,8 @@ const ScannerScreen = () => {
   const toast = useToast();
 
   const [isScannerActive, setIsScannerActive] = useState(true);
-  const [modalParams, setModalParams] = useState<ProductModalParams>({
-    product: undefined,
-    type: undefined,
-  });
+  const [modalParams, setModalParams] =
+    useState<ProductModalParams>(INIT_MODAL_PARAMS);
 
   const showProductNotFoundError = useCallback(
     () =>
@@ -70,8 +74,10 @@ const ScannerScreen = () => {
         product.productId,
       );
 
+      const minQty = getProductMinQty(product.inventoryUseTypeId);
+
       const error =
-        removedProductCount >= product.onHand
+        removedProductCount >= product.onHand || product.onHand < minQty
           ? "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section"
           : undefined;
 
@@ -101,10 +107,7 @@ const ScannerScreen = () => {
 
   const onCloseModal = () => {
     scannerStore.clear();
-    setModalParams({
-      type: undefined,
-      product: undefined,
-    });
+    setModalParams(INIT_MODAL_PARAMS);
     setIsScannerActive(true);
   };
 

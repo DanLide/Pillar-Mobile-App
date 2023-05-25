@@ -1,4 +1,4 @@
-import { Task, TaskExecutor } from './helpers';
+import { getProductMinQty, Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
 import {
@@ -64,13 +64,13 @@ class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    const { manufactureCode, partNo, size } = product;
+    const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
 
     return {
       ...product,
       isRecoverable: product.isRecoverable === 'Yes',
       nameDetails: [manufactureCode, partNo, size].join(' '),
-      reservedCount: 1,
+      reservedCount: String(getProductMinQty(inventoryUseTypeId)),
     };
   }
 }

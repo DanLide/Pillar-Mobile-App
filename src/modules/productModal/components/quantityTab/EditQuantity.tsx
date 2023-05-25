@@ -1,17 +1,24 @@
 import React, { useCallback, memo, useMemo } from 'react';
-import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+} from 'react-native';
+import { isEmpty } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 
-interface Props {
-  currentValue?: number;
+interface Props extends Pick<TextInputProps, 'keyboardType'> {
+  currentValue: string;
   maxValue: number;
   minValue: number;
   disabled?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity?: number) => void;
+  onChange: (quantity: string) => void;
 }
 
 export const EditQuantity = memo(
@@ -21,44 +28,47 @@ export const EditQuantity = memo(
     maxValue,
     minValue,
     disabled,
+    keyboardType,
     onChange,
     onRemove,
   }: Props) => {
     const onChangeInputText = (text: string) => {
       if (maxValue < +text) {
-        onChange(maxValue);
-        return;
-      }
-      if (text === '') {
-        onChange();
-        return;
+        return onChange(String(maxValue));
       }
 
-      onChange(Number(text));
+      onChange(text.replace(',', '.'));
     };
 
-    const onIncreaseCount = useCallback(() => {
-      if (Number(currentValue) >= maxValue) return;
+    const roundValue = useCallback(
+      (value: number) => String(Math.round(value / minValue) * minValue),
+      [minValue],
+    );
 
-      onChange(Number(currentValue) + 1);
-    }, [currentValue, maxValue, onChange]);
+    const onIncreaseCount = useCallback(() => {
+      if (+currentValue >= maxValue) return;
+
+      onChange(roundValue(+currentValue + minValue));
+    }, [currentValue, maxValue, minValue, onChange, roundValue]);
 
     const onDecreaseCount = useCallback(() => {
-      if (typeof currentValue !== 'undefined' && currentValue < 1) return;
+      if (+currentValue < minValue) return;
 
-      onChange(Number(currentValue) - 1);
-    }, [currentValue, onChange]);
+      onChange(roundValue(+currentValue - minValue));
+    }, [currentValue, minValue, onChange, roundValue]);
 
     const onFocusLost = useCallback(() => {
-      if (typeof currentValue === 'undefined') {
-        onChange(1);
+      if (isNaN(+currentValue) || +currentValue < minValue) {
+        return onChange(String(minValue));
       }
-    }, [currentValue, onChange]);
+
+      onChange(roundValue(+currentValue));
+    }, [currentValue, minValue, onChange, roundValue]);
 
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
 
-      if (Number(currentValue) > minValue) {
+      if (+currentValue > minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -89,15 +99,16 @@ export const EditQuantity = memo(
         <TextInput
           editable={!disabled}
           style={[styles.input, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : currentValue ? `${currentValue}` : ''}
-          keyboardType="number-pad"
+          value={disabled ? '-' : currentValue}
+          keyboardType={keyboardType}
           onChangeText={onChangeInputText}
           returnKeyType="done"
           onBlur={onFocusLost}
         />
         {disabled ||
-        currentValue === maxValue ||
-        typeof currentValue === 'undefined' ? (
+        +currentValue === maxValue ||
+        isEmpty(currentValue) ||
+        isNaN(+currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
@@ -117,23 +128,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 58.5,
+    marginHorizontal: 36.5,
     marginTop: 8,
   },
   input: {
     height: 103,
-    width: 140,
+    width: 184,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: colors.grayDark,
-    fontSize: 78,
+    fontSize: 72,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
   },
   inputDisabled: {
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
-    width: 184,
   },
   quantityButton: {
     width: 48,

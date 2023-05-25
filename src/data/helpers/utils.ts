@@ -17,6 +17,10 @@ export class Utils {
     return pipe(filter(Utils.notNullOrEmpty), map(BigInt))(collection);
   }
 
+  static stringsToNumbers(collection: Array<string | undefined>) {
+    return pipe(filter(Utils.notNullOrEmpty), map(Number))(collection);
+  }
+
   static truncateString(str: string, maxLen = 35): string {
     if (str.length <= maxLen) {
       return str;

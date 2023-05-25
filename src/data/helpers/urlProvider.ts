@@ -109,7 +109,7 @@ export class URLProvider {
     );
   }
 
-  removeProduct(productId: number, quantity: number, jobId: number | null) {
+  removeProduct(productId: number, quantity: string, jobId: number | null) {
     const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
 
     return new URL(

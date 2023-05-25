@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { Text, StyleSheet, Pressable } from 'react-native';
+import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -10,6 +10,8 @@ import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
 import { ToastType } from '../../../../contexts';
+import { getProductMinQty } from '../../../../data/helpers';
+import { InventoryUseType } from '../../../../constants/common.enum';
 
 interface Props {
   isEdit: boolean;
@@ -20,13 +22,10 @@ interface Props {
   onJobSelectNavigation: () => void;
 }
 
-const MIN_QUANTITY_VALUE = 1;
-
 export const ProductQuantity: React.FC<Props> = observer(
   ({ isEdit, error, onPressAddToList, onJobSelectNavigation, onRemove }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
-    const jobNumber = product?.job?.jobNumber;
 
     const toast = useToast();
 
@@ -36,14 +35,24 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     if (!product) return null;
 
-    const buttonLabel = product.isRecoverable ? 'Next' : 'Done';
+    const { job, isRecoverable, inventoryUseTypeId, onHand, reservedCount } =
+      product;
 
-    const onChange = (quantity?: number) => {
+    const jobNumber = job?.jobNumber;
+    const minQty = getProductMinQty(inventoryUseTypeId);
+
+    const buttonLabel = isRecoverable ? 'Next' : 'Done';
+    const keyboardType: KeyboardTypeOptions =
+      inventoryUseTypeId === InventoryUseType.Percent
+        ? 'decimal-pad'
+        : 'number-pad';
+
+    const onChange = (quantity: string) => {
       store.updateQuantity(quantity);
     };
 
     const onPressButton = () => {
-      if (product.isRecoverable) {
+      if (isRecoverable) {
         onJobSelectNavigation();
       } else {
         onPressAddToList();
@@ -54,11 +63,12 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
-          minValue={MIN_QUANTITY_VALUE}
+          minValue={minQty}
           disabled={!!error}
           isEdit={isEdit}
-          maxValue={product.onHand}
-          currentValue={product?.reservedCount}
+          maxValue={onHand}
+          currentValue={reservedCount}
+          keyboardType={keyboardType}
           onChange={onChange}
           onRemove={onRemove}
         />

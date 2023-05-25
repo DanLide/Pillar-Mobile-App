@@ -21,7 +21,7 @@ export class ProductModalStore implements ProductModal {
     this.product = product;
   }
 
-  @action updateQuantity(quantity?: number) {
+  @action updateQuantity(quantity: string) {
     this.product!.reservedCount = quantity;
   }
 
