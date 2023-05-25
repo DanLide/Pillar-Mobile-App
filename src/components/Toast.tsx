@@ -34,6 +34,7 @@ const icons: Record<
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
+  [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
 };
 
 const Toast: React.FC<Props> = ({
@@ -41,6 +42,7 @@ const Toast: React.FC<Props> = ({
   type = ToastType.Info,
   message,
   actionType,
+  style,
   onHide,
   onPress,
 }) => {
@@ -80,8 +82,8 @@ const Toast: React.FC<Props> = ({
   }, [actionType, action]);
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.container, { backgroundColor: secondary }],
-    [secondary],
+    () => [styles.container, { backgroundColor: secondary }, style],
+    [secondary, style],
   );
 
   const handleRightButtonPress = useCallback(() => {
@@ -116,8 +118,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     gap: 16,
-    height: 46,
+    minHeight: 46,
     marginVertical: 4,
+    paddingVertical: 5,
     paddingHorizontal: 16,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },

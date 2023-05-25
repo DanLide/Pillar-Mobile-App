@@ -25,13 +25,15 @@ import {
   ToastType,
 } from '../../contexts';
 import { Utils } from '../../data/helpers/utils';
+import { getReservedCountById } from './helpers';
 
 const hapticOptions = {
   enableVibrateFallback: true,
 };
 
 const ScannerScreen = () => {
-  const store = useRef(scanningProductStore).current;
+  const scannerStore = useRef(scanningProductStore).current;
+  const removeStore = useRef(removeProductsStore).current;
 
   const toast = useToast();
 
@@ -51,11 +53,12 @@ const ScannerScreen = () => {
 
   const fetchProductByCode = useCallback(
     async (code: string) => {
-      const error = await fetchProduct(scanningProductStore, btoa(code));
+      const networkError = await fetchProduct(scanningProductStore, btoa(code));
 
-      if (error) return showProductNotFoundError();
+      // TODO: Handle Network errors
+      if (networkError) return showProductNotFoundError();
 
-      const product = store.getCurrentProduct;
+      const product = scannerStore.getCurrentProduct;
 
       if (!product)
         return toast.show(
@@ -63,12 +66,24 @@ const ScannerScreen = () => {
           { type: ToastType.ScanError },
         );
 
-      setModalParams({
-        type: ProductModalType.Add,
-        product: store.getCurrentProduct,
-      });
+      const removedProductCount = getReservedCountById(
+        removeStore.getProducts,
+        product.productId,
+      );
+
+      const error =
+        removedProductCount >= product.onHand
+          ? "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section"
+          : undefined;
+
+      setModalParams({ type: ProductModalType.Add, product, error });
     },
-    [showProductNotFoundError, store.getCurrentProduct, toast],
+    [
+      showProductNotFoundError,
+      scannerStore.getCurrentProduct,
+      toast,
+      removeStore.getProducts,
+    ],
   );
 
   const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
@@ -86,7 +101,7 @@ const ScannerScreen = () => {
   );
 
   const onCloseModal = () => {
-    store.clear();
+    scannerStore.clear();
     setModalParams({
       type: undefined,
       product: undefined,
@@ -98,7 +113,8 @@ const ScannerScreen = () => {
     (product: ScanningProductModel | RemoveProductModel) => {
       const { reservedCount, nameDetails } = product;
 
-      removeProductsStore.addProduct(product);
+      removeStore.addProduct(product);
+
       toast.show?.(
         <ToastMessage>
           <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
@@ -109,15 +125,14 @@ const ScannerScreen = () => {
         { type: ToastType.Info },
       );
     },
-    [toast],
+    [removeStore, toast],
   );
 
   return (
     <View style={styles.container}>
       <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
       <ProductModal
-        type={modalParams.type}
-        product={modalParams.product}
+        {...modalParams}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
       />

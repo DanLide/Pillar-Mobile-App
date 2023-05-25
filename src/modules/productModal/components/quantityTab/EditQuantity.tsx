@@ -6,15 +6,24 @@ import { colors, fonts, SVGs } from '../../../../theme';
 interface Props {
   currentValue?: number;
   maxValue: number;
-  isEdit?: boolean;
   minValue: number;
+  disabled?: boolean;
+  isEdit?: boolean;
 
   onRemove?: () => void;
   onChange: (quantity?: number) => void;
 }
 
 export const EditQuantity = memo(
-  ({ isEdit, currentValue, maxValue, minValue, onChange, onRemove }: Props) => {
+  ({
+    isEdit,
+    currentValue,
+    maxValue,
+    minValue,
+    disabled,
+    onChange,
+    onRemove,
+  }: Props) => {
     const onChangeInputText = (text: string) => {
       if (maxValue < +text) {
         onChange(maxValue);
@@ -35,8 +44,7 @@ export const EditQuantity = memo(
     }, [currentValue, maxValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
-      if (typeof currentValue !== 'undefined' && currentValue < 1)
-        return;
+      if (typeof currentValue !== 'undefined' && currentValue < 1) return;
 
       onChange(Number(currentValue) - 1);
     }, [currentValue, onChange]);
@@ -48,6 +56,8 @@ export const EditQuantity = memo(
     }, [currentValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
+      if (disabled) return <View style={styles.quantityButton} />;
+
       if (Number(currentValue) > minValue) {
         return (
           <TouchableOpacity
@@ -71,20 +81,23 @@ export const EditQuantity = memo(
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, isEdit, minValue, onDecreaseCount, onRemove]);
+    }, [currentValue, isEdit, minValue, disabled, onDecreaseCount, onRemove]);
 
     return (
       <View style={styles.container}>
         {DecreaseButton}
         <TextInput
-          style={styles.input}
-          value={currentValue ? `${currentValue}` : ''}
+          editable={!disabled}
+          style={[styles.input, disabled && styles.inputDisabled]}
+          value={disabled ? '-' : currentValue ? `${currentValue}` : ''}
           keyboardType="number-pad"
           onChangeText={onChangeInputText}
           returnKeyType="done"
           onBlur={onFocusLost}
         />
-        {currentValue === maxValue || typeof currentValue === 'undefined' ? (
+        {disabled ||
+        currentValue === maxValue ||
+        typeof currentValue === 'undefined' ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
@@ -116,6 +129,11 @@ const styles = StyleSheet.create({
     fontSize: 78,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
+  },
+  inputDisabled: {
+    color: colors.blackSemiLight,
+    backgroundColor: colors.gray,
+    width: 184,
   },
   quantityButton: {
     width: 48,

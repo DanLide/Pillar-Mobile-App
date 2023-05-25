@@ -21,6 +21,10 @@ import { removeProductsStore } from '../removeProducts/stores';
 import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import { isRemoveProductModel } from '../removeProducts/helpers';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from '../../contexts';
 
 export enum ProductModalType {
   Add,
@@ -30,6 +34,7 @@ export enum ProductModalType {
 export interface ProductModalParams {
   type?: ProductModalType;
   product?: RemoveProductModel | ScanningProductModel;
+  error?: string;
 }
 
 interface Props extends ProductModalParams {
@@ -47,8 +52,11 @@ export enum Tabs {
 
 const tabs = [Tabs.EditQuantity, Tabs.LinkJob];
 
+const NAVIGATION_HEADER_HEIGHT = 64;
+const MODAL_HEADER_HEIGHT = 55;
+
 export const ProductModal: React.FC<Props> = observer(
-  ({ type, product, onClose, onSubmit, onRemove }) => {
+  ({ type, product, error, onClose, onSubmit, onRemove }) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const store = useRef(productModalStore).current;
 
@@ -62,10 +70,10 @@ export const ProductModal: React.FC<Props> = observer(
       }
     }, [product, store]);
 
-    const onJobSelectNavigation = () => {
+    const onJobSelectNavigation = useCallback(() => {
       setSelectedTab(Tabs.LinkJob);
       carouselRef.current?.next();
-    };
+    }, []);
 
     const onPressBack = () => {
       setSelectedTab(Tabs.EditQuantity);
@@ -116,6 +124,7 @@ export const ProductModal: React.FC<Props> = observer(
             return (
               <ProductQuantity
                 isEdit={type === ProductModalType.Edit}
+                error={error}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
@@ -138,12 +147,14 @@ export const ProductModal: React.FC<Props> = observer(
         }
       },
       [
-        clearProductModalStoreOnClose,
-        onSubmit,
-        onRemoveAlert,
         productFromStore,
-        selectedTab,
+        onSubmit,
+        clearProductModalStoreOnClose,
         type,
+        error,
+        onJobSelectNavigation,
+        onRemoveAlert,
+        selectedTab,
       ],
     );
 
@@ -167,17 +178,22 @@ export const ProductModal: React.FC<Props> = observer(
         topOffset={64}
         semiTitle={title}
       >
-        <Carousel
-          ref={carouselRef}
-          loop={false}
-          width={width}
-          height={height - 64 - 55}
-          autoPlay={false}
-          enabled={false}
-          data={tabs}
-          scrollAnimationDuration={500}
-          renderItem={renderItem}
-        />
+        <ToastContextProvider
+          duration={0}
+          offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}
+        >
+          <Carousel
+            ref={carouselRef}
+            loop={false}
+            width={width}
+            height={height - NAVIGATION_HEADER_HEIGHT - MODAL_HEADER_HEIGHT}
+            autoPlay={false}
+            enabled={false}
+            data={tabs}
+            scrollAnimationDuration={500}
+            renderItem={renderItem}
+          />
+        </ToastContextProvider>
       </Modal>
     );
   },
