@@ -40,30 +40,35 @@ export const EditQuantity = memo(
       onChange(text.replace(',', '.'));
     };
 
-    const roundValue = useCallback(
-      (value: number) => String(Math.round(value / minValue) * minValue),
-      [minValue],
-    );
-
     const onIncreaseCount = useCallback(() => {
       if (+currentValue >= maxValue) return;
 
-      onChange(roundValue(+currentValue + minValue));
-    }, [currentValue, maxValue, minValue, onChange, roundValue]);
+      const updatedCount =
+        +currentValue % minValue
+          ? Math.ceil(+currentValue / minValue) * minValue
+          : +currentValue + minValue;
+
+      onChange(String(updatedCount));
+    }, [currentValue, maxValue, minValue, onChange]);
 
     const onDecreaseCount = useCallback(() => {
       if (+currentValue < minValue) return;
 
-      onChange(roundValue(+currentValue - minValue));
-    }, [currentValue, minValue, onChange, roundValue]);
+      const updatedCount =
+        +currentValue % minValue
+          ? Math.floor(+currentValue / minValue) * minValue
+          : +currentValue - minValue;
+
+      onChange(String(updatedCount));
+    }, [currentValue, minValue, onChange]);
 
     const onFocusLost = useCallback(() => {
       if (isNaN(+currentValue) || +currentValue < minValue) {
         return onChange(String(minValue));
       }
 
-      onChange(roundValue(+currentValue));
-    }, [currentValue, minValue, onChange, roundValue]);
+      onChange(String(Math.round(+currentValue / minValue) * minValue));
+    }, [currentValue, minValue, onChange]);
 
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
