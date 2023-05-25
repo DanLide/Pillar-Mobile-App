@@ -53,9 +53,10 @@ const ScannerScreen = () => {
 
   const fetchProductByCode = useCallback(
     async (code: string) => {
-      const fetchError = await fetchProduct(scanningProductStore, btoa(code));
+      const networkError = await fetchProduct(scanningProductStore, btoa(code));
 
-      if (fetchError) return showProductNotFoundError();
+      // TODO: Handle Network errors
+      if (networkError) return showProductNotFoundError();
 
       const product = scannerStore.getCurrentProduct;
 
