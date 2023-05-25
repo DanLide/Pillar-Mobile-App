@@ -52,6 +52,9 @@ export enum Tabs {
 
 const tabs = [Tabs.EditQuantity, Tabs.LinkJob];
 
+const NAVIGATION_HEADER_HEIGHT = 64;
+const MODAL_HEADER_HEIGHT = 55;
+
 export const ProductModal: React.FC<Props> = observer(
   ({ type, product, error, onClose, onSubmit, onRemove }) => {
     const carouselRef = useRef<ICarouselInstance>(null);
@@ -183,7 +186,7 @@ export const ProductModal: React.FC<Props> = observer(
             ref={carouselRef}
             loop={false}
             width={width}
-            height={height - 64 - 55}
+            height={height - NAVIGATION_HEADER_HEIGHT - MODAL_HEADER_HEIGHT}
             autoPlay={false}
             enabled={false}
             data={tabs}
