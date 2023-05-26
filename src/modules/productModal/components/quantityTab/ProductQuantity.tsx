@@ -14,6 +14,7 @@ import { ToastType } from '../../../../contexts';
 interface Props {
   isEdit: boolean;
   error?: string;
+  maxValue: number;
 
   onRemove?: () => void;
   onPressAddToList: () => void;
@@ -23,7 +24,14 @@ interface Props {
 const MIN_QUANTITY_VALUE = 1;
 
 export const ProductQuantity: React.FC<Props> = observer(
-  ({ isEdit, error, onPressAddToList, onJobSelectNavigation, onRemove }) => {
+  ({
+    isEdit,
+    error,
+    maxValue,
+    onPressAddToList,
+    onJobSelectNavigation,
+    onRemove,
+  }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
     const jobNumber = product?.job?.jobNumber;
@@ -57,12 +65,12 @@ export const ProductQuantity: React.FC<Props> = observer(
           minValue={MIN_QUANTITY_VALUE}
           disabled={!!error}
           isEdit={isEdit}
-          maxValue={product.onHand}
+          maxValue={maxValue}
           currentValue={product?.reservedCount}
           onChange={onChange}
           onRemove={onRemove}
         />
-        <FooterDescription product={product} />
+        <FooterDescription maxValue={maxValue} />
 
         {!error && (
           <Pressable

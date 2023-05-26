@@ -7,30 +7,30 @@ import {
 } from '../modules/removeProducts/stores/ScanningProductStore';
 import { ProductResponse } from './api/productsAPI';
 
-interface FetchProductContext {
+interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
 }
 
-export const fetchProduct = async (
+export const fetchProductByScannedCode = async (
   scanningProductStore: ScanningProductStore,
   scanCode: string,
 ) => {
-  const productContext: FetchProductContext = {
+  const productContext: FetchProductByScannedCodeContext = {
     product: undefined,
   };
   const result = await new TaskExecutor([
-    new FetchProductTask(productContext, scanCode),
+    new FetchProductByScannedCodeTask(productContext, scanCode),
     new SaveProductToStoreTask(productContext, scanningProductStore),
   ]).execute();
 
   return result;
 };
 
-class FetchProductTask extends Task {
-  productContext: FetchProductContext;
+class FetchProductByScannedCodeTask extends Task {
+  productContext: FetchProductByScannedCodeContext;
   scanCode: string;
 
-  constructor(productContext: FetchProductContext, scanCode: string) {
+  constructor(productContext: FetchProductByScannedCodeContext, scanCode: string) {
     super();
     this.productContext = productContext;
     this.scanCode = scanCode;
@@ -43,11 +43,11 @@ class FetchProductTask extends Task {
 }
 
 class SaveProductToStoreTask extends Task {
-  productContext: FetchProductContext;
+  productContext: FetchProductByScannedCodeContext;
   scanningProductStore: ScanningProductStore;
 
   constructor(
-    productContext: FetchProductContext,
+    productContext: FetchProductByScannedCodeContext,
     scanningProductStore: ScanningProductStore,
   ) {
     super();
