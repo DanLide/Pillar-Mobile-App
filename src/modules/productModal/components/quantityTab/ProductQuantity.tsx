@@ -47,7 +47,7 @@ export const ProductQuantity: React.FC<Props> = observer(
         ? 'decimal-pad'
         : 'number-pad';
 
-    const onChange = (quantity: string) => {
+    const onChange = (quantity: number) => {
       store.updateQuantity(quantity);
     };
 
@@ -63,11 +63,12 @@ export const ProductQuantity: React.FC<Props> = observer(
       <>
         <Description product={product} />
         <EditQuantity
-          minValue={minQty}
-          disabled={!!error}
           isEdit={isEdit}
-          maxValue={onHand}
           currentValue={reservedCount}
+          maxValue={onHand}
+          minValue={minQty}
+          stepValue={minQty}
+          disabled={!!error}
           keyboardType={keyboardType}
           onChange={onChange}
           onRemove={onRemove}

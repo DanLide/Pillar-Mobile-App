@@ -1,4 +1,4 @@
-import React, { useCallback, memo, useMemo } from 'react';
+import React, { useCallback, memo, useMemo, useState } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,19 +6,20 @@ import {
   StyleSheet,
   TextInputProps,
 } from 'react-native';
-import { isEmpty } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
+import { Utils } from '../../../../data/helpers/utils';
 
 interface Props extends Pick<TextInputProps, 'keyboardType'> {
-  currentValue: string;
+  currentValue: number;
   maxValue: number;
   minValue: number;
+  stepValue: number;
   disabled?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity: string) => void;
+  onChange: (quantity: number) => void;
 }
 
 export const EditQuantity = memo(
@@ -27,53 +28,58 @@ export const EditQuantity = memo(
     currentValue,
     maxValue,
     minValue,
+    stepValue,
     disabled,
     keyboardType,
     onChange,
     onRemove,
   }: Props) => {
+    const [displayValue, setDisplayValue] = useState(String(currentValue));
+
+    const setNewValue = useCallback(
+      (value: string | number) => {
+        setDisplayValue(String(value));
+        onChange(+value);
+      },
+      [onChange],
+    );
+
     const onChangeInputText = (text: string) => {
       if (maxValue < +text) {
-        return onChange(String(maxValue));
+        return setNewValue(maxValue);
       }
 
-      onChange(text.replace(',', '.'));
+      setNewValue(Utils.parseFloatFromString(text));
     };
 
     const onIncreaseCount = useCallback(() => {
-      if (+currentValue >= maxValue) return;
-
       const updatedCount =
-        +currentValue % minValue
-          ? Math.ceil(+currentValue / minValue) * minValue
-          : +currentValue + minValue;
+        Math.floor(currentValue / stepValue) * stepValue + stepValue;
 
-      onChange(String(updatedCount));
-    }, [currentValue, maxValue, minValue, onChange]);
+      setNewValue(updatedCount);
+    }, [currentValue, stepValue, setNewValue]);
 
     const onDecreaseCount = useCallback(() => {
-      if (+currentValue < minValue) return;
-
       const updatedCount =
-        +currentValue % minValue
-          ? Math.floor(+currentValue / minValue) * minValue
-          : +currentValue - minValue;
+        Math.ceil(currentValue / stepValue) * stepValue - stepValue;
 
-      onChange(String(updatedCount));
-    }, [currentValue, minValue, onChange]);
+      setNewValue(updatedCount);
+    }, [currentValue, stepValue, setNewValue]);
 
     const onFocusLost = useCallback(() => {
-      if (isNaN(+currentValue) || +currentValue < minValue) {
-        return onChange(String(minValue));
+      if (isNaN(currentValue) || currentValue < minValue) {
+        return setNewValue(minValue);
       }
 
-      onChange(String(Math.round(+currentValue / minValue) * minValue));
-    }, [currentValue, minValue, onChange]);
+      const updatedCount = Math.ceil(currentValue / stepValue) * stepValue;
+
+      setNewValue(updatedCount);
+    }, [currentValue, minValue, stepValue, setNewValue]);
 
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
 
-      if (+currentValue > minValue) {
+      if (currentValue > minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -104,16 +110,13 @@ export const EditQuantity = memo(
         <TextInput
           editable={!disabled}
           style={[styles.input, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : currentValue}
+          value={disabled ? '-' : displayValue}
           keyboardType={keyboardType}
           onChangeText={onChangeInputText}
           returnKeyType="done"
           onBlur={onFocusLost}
         />
-        {disabled ||
-        +currentValue === maxValue ||
-        isEmpty(currentValue) ||
-        isNaN(+currentValue) ? (
+        {disabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity

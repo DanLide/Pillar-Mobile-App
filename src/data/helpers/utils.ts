@@ -17,10 +17,6 @@ export class Utils {
     return pipe(filter(Utils.notNullOrEmpty), map(BigInt))(collection);
   }
 
-  static stringsToNumbers(collection: Array<string | undefined>) {
-    return pipe(filter(Utils.notNullOrEmpty), map(Number))(collection);
-  }
-
   static truncateString(str: string, maxLen = 35): string {
     if (str.length <= maxLen) {
       return str;
@@ -43,5 +39,17 @@ export class Utils {
       nextSpaceIndex !== -1 ? secondHalf.substring(nextSpaceIndex) : secondHalf;
 
     return `${truncatedFirstHalf}...${truncatedSecondHalf}`;
+  }
+
+  static replaceCommasWithDots(value: string) {
+    return value.replace(',', '.');
+  }
+
+  static removeExtraDots(value: string) {
+    return value.replace(/(?<=\..*)\./g, '');
+  }
+
+  static parseFloatFromString(value: string) {
+    return pipe(Utils.replaceCommasWithDots, Utils.removeExtraDots)(value);
   }
 }

@@ -2,7 +2,6 @@ import { action, makeObservable, observable, computed } from 'mobx';
 import { InventoryUseType } from '../../../constants/common.enum';
 
 import { JobModel } from '../../jobsList/stores/JobsStore';
-import { getProductMinQty } from '../../../data/helpers';
 
 export interface ScanningProductModel {
   productId: number;
@@ -10,7 +9,7 @@ export interface ScanningProductModel {
   nameDetails: string;
   isRecoverable: boolean;
   onHand: number;
-  reservedCount: string;
+  reservedCount: number;
   job?: JobModel;
   inventoryUseTypeId: InventoryUseType;
   size: string;
@@ -32,13 +31,10 @@ export class ScanningProductStore {
   }
 
   @action setCurrentProduct(product: ScanningProductModel) {
-    product.reservedCount = String(
-      getProductMinQty(product.inventoryUseTypeId),
-    );
     this.currentProduct = product;
   }
 
-  @action setProductReservedCount(count: string) {
+  @action setProductReservedCount(count: number) {
     this.currentProduct!.reservedCount = count;
   }
 

@@ -70,7 +70,7 @@ class SaveProductToStoreTask extends Task {
       ...product,
       isRecoverable: product.isRecoverable === 'Yes',
       nameDetails: [manufactureCode, partNo, size].join(' '),
-      reservedCount: String(getProductMinQty(inventoryUseTypeId)),
+      reservedCount: getProductMinQty(inventoryUseTypeId),
     };
   }
 }
