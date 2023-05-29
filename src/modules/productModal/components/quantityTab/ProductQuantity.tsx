@@ -16,6 +16,7 @@ import { InventoryUseType } from '../../../../constants/common.enum';
 interface Props {
   isEdit: boolean;
   error?: string;
+  maxValue: number;
 
   onRemove?: () => void;
   onPressAddToList: () => void;
@@ -23,7 +24,14 @@ interface Props {
 }
 
 export const ProductQuantity: React.FC<Props> = observer(
-  ({ isEdit, error, onPressAddToList, onJobSelectNavigation, onRemove }) => {
+  ({
+    isEdit,
+    error,
+    maxValue,
+    onPressAddToList,
+    onJobSelectNavigation,
+    onRemove,
+  }) => {
     const store = useRef(productModalStore).current;
     const product = store.getProduct;
 
@@ -35,8 +43,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     if (!product) return null;
 
-    const { job, isRecoverable, inventoryUseTypeId, onHand, reservedCount } =
-      product;
+    const { job, isRecoverable, inventoryUseTypeId, reservedCount } = product;
 
     const jobNumber = job?.jobNumber;
     const minQty = getProductMinQty(inventoryUseTypeId);
@@ -65,7 +72,7 @@ export const ProductQuantity: React.FC<Props> = observer(
         <EditQuantity
           isEdit={isEdit}
           currentValue={reservedCount}
-          maxValue={onHand}
+          maxValue={maxValue}
           minValue={minQty}
           stepValue={minQty}
           disabled={!!error}
@@ -73,7 +80,7 @@ export const ProductQuantity: React.FC<Props> = observer(
           onChange={onChange}
           onRemove={onRemove}
         />
-        <FooterDescription product={product} />
+        <FooterDescription maxValue={maxValue} />
 
         {!error && (
           <Pressable

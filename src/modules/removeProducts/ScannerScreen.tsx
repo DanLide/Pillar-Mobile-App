@@ -11,7 +11,7 @@ import {
 } from '../productModal';
 import { ScanProduct, ScanProductProps, ToastMessage } from '../../components';
 
-import { fetchProduct } from '../../data/fetchProduct';
+import { fetchProductByScannedCode } from '../../data/fetchProductByScannedCode';
 
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { ScanningProductModel } from './stores/ScanningProductStore';
@@ -57,7 +57,7 @@ const ScannerScreen = () => {
 
   const fetchProductByCode = useCallback(
     async (code: string) => {
-      const networkError = await fetchProduct(scanningProductStore, btoa(code));
+      const networkError = await fetchProductByScannedCode(scanningProductStore, btoa(code));
 
       // TODO: Handle Network errors
       if (networkError) return showProductNotFoundError();
@@ -82,7 +82,12 @@ const ScannerScreen = () => {
           ? "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section"
           : undefined;
 
-      setModalParams({ type: ProductModalType.Add, product, error });
+      setModalParams({
+        type: ProductModalType.Add,
+        product,
+        error,
+        selectedProductsReservedCount: removedProductCount,
+      });
     },
     [
       showProductNotFoundError,
