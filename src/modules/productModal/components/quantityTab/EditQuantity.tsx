@@ -108,6 +108,7 @@ export const EditQuantity = memo(
       <View style={styles.container}>
         {DecreaseButton}
         <TextInput
+          contextMenuHidden
           editable={!disabled}
           style={[styles.input, disabled && styles.inputDisabled]}
           value={disabled ? '-' : displayValue}
