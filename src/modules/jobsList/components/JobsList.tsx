@@ -81,7 +81,7 @@ export const JobsList: React.FC<Props> = observer(
           <View style={styles.image}>
             <SVGs.JobListErrorIcon />
             <Text style={styles.text}>
-              Sorry, the list of jobs are unavailable at the moment
+              Sorry, there was an issue loading a list of open jobs.
             </Text>
           </View>
           <Button
