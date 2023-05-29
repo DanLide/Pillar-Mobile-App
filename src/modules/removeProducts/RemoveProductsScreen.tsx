@@ -18,7 +18,7 @@ import { onRemoveProducts } from '../../data/removeProducts';
 import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
-import { isRemoveProductModel } from './helpers';
+import { getReservedCountById, isRemoveProductModel } from './helpers';
 
 const { width, height } = Dimensions.get('window');
 
@@ -67,9 +67,14 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   };
 
   const onEditProduct = (product: RemoveProductModel) => {
+    const removedProductCount = getReservedCountById(
+      removeProductsStore.getProducts,
+      product.productId,
+    );
     setModalParams({
       type: ProductModalType.Edit,
       product: clone(product),
+      selectedProductsReservedCount: removedProductCount,
     });
   };
 
@@ -113,8 +118,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
         </View>
       </>
       <ProductModal
-        type={modalParams.type}
-        product={modalParams.product}
+        {...modalParams}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
         onRemove={onRemoveProduct}

@@ -35,6 +35,7 @@ export interface ProductModalParams {
   type?: ProductModalType;
   product?: RemoveProductModel | ScanningProductModel;
   error?: string;
+  selectedProductsReservedCount?: number;
 }
 
 interface Props extends ProductModalParams {
@@ -56,9 +57,30 @@ const NAVIGATION_HEADER_HEIGHT = 64;
 const MODAL_HEADER_HEIGHT = 55;
 
 export const ProductModal: React.FC<Props> = observer(
-  ({ type, product, error, onClose, onSubmit, onRemove }) => {
+  ({
+    type,
+    product,
+    error,
+    selectedProductsReservedCount,
+    onClose,
+    onSubmit,
+    onRemove,
+  }) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const store = useRef(productModalStore).current;
+    console.log(selectedProductsReservedCount, 'selectedProductsReservedCount');
+    console.log(product, 'product');
+    const balanceOfProducts =
+      typeof selectedProductsReservedCount === 'number' && product
+        ? product.onHand - selectedProductsReservedCount
+        : 0;
+
+    const maxValue =
+      balanceOfProducts < 0
+        ? 0
+        : type === ProductModalType.Edit
+        ? balanceOfProducts + (product?.reservedCount || 0)
+        : balanceOfProducts;
 
     const [selectedTab, setSelectedTab] = useState<number>(0);
 
@@ -68,7 +90,7 @@ export const ProductModal: React.FC<Props> = observer(
       if (product) {
         store.setProduct(product);
       }
-    }, [product, store]);
+    }, [product, selectedProductsReservedCount, store, type]);
 
     const onJobSelectNavigation = useCallback(() => {
       setSelectedTab(Tabs.LinkJob);
@@ -125,6 +147,7 @@ export const ProductModal: React.FC<Props> = observer(
               <ProductQuantity
                 isEdit={type === ProductModalType.Edit}
                 error={error}
+                maxValue={maxValue}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}

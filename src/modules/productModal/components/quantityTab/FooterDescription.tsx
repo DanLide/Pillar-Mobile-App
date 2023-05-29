@@ -1,7 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { ScanningProductModel } from '../../../removeProducts/stores/ScanningProductStore';
 import { colors, fonts } from '../../../../theme';
 import { productModalStore } from '../../store';
 import { InventoryUseType } from '../../../../constants/common.enum';
@@ -16,12 +15,12 @@ const InventoryTypeName = {
 };
 
 interface Props {
-  product: ScanningProductModel;
+  maxValue: number;
 }
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
-export const FooterDescription: React.FC<Props> = ({ product }) => {
+export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
   const store = useRef(productModalStore).current;
 
   const InventoryTypeNameString = store.getProduct?.inventoryUseTypeId
@@ -50,9 +49,9 @@ export const FooterDescription: React.FC<Props> = ({ product }) => {
       <View style={[styles.itemContainer, { marginRight: 16 }]}>
         <Text style={styles.title}>In Stock</Text>
         <Text style={styles.subtitleInStock}>
-          {product.onHand > 99
+          {maxValue > 99
             ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY
-            : product.onHand}
+            : maxValue}
         </Text>
       </View>
 
