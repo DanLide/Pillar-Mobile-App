@@ -43,14 +43,14 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     if (!product) return null;
 
-    const { job, isRecoverable, inventoryUseTypeId, reservedCount } = product;
+    const { job, isRecoverable, inventoryUseType, reservedCount } = product;
 
     const jobNumber = job?.jobNumber;
-    const minQty = getProductMinQty(inventoryUseTypeId);
+    const minQty = getProductMinQty(inventoryUseType);
 
     const buttonLabel = isRecoverable ? 'Next' : 'Done';
     const keyboardType: KeyboardTypeOptions =
-      inventoryUseTypeId === InventoryUseType.Percent
+      inventoryUseType === InventoryUseType.Percent
         ? 'decimal-pad'
         : 'number-pad';
 

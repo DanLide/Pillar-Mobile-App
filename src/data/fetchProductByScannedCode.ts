@@ -30,7 +30,10 @@ class FetchProductByScannedCodeTask extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
 
-  constructor(productContext: FetchProductByScannedCodeContext, scanCode: string) {
+  constructor(
+    productContext: FetchProductByScannedCodeContext,
+    scanCode: string,
+  ) {
     super();
     this.productContext = productContext;
     this.scanCode = scanCode;
@@ -64,13 +67,19 @@ class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
+    const {
+      manufactureCode,
+      partNo,
+      size,
+      inventoryUseTypeId: inventoryUseType,
+    } = product;
 
     return {
       ...product,
       isRecoverable: product.isRecoverable === 'Yes',
       nameDetails: [manufactureCode, partNo, size].join(' '),
-      reservedCount: getProductMinQty(inventoryUseTypeId),
+      reservedCount: getProductMinQty(inventoryUseType),
+      inventoryUseType,
     };
   }
 }

@@ -57,7 +57,10 @@ const ScannerScreen = () => {
 
   const fetchProductByCode = useCallback(
     async (code: string) => {
-      const networkError = await fetchProductByScannedCode(scanningProductStore, btoa(code));
+      const networkError = await fetchProductByScannedCode(
+        scanningProductStore,
+        btoa(code),
+      );
 
       // TODO: Handle Network errors
       if (networkError) return showProductNotFoundError();
@@ -75,7 +78,7 @@ const ScannerScreen = () => {
         product.productId,
       );
 
-      const minQty = getProductMinQty(product.inventoryUseTypeId);
+      const minQty = getProductMinQty(product.inventoryUseType);
 
       const error =
         removedProductCount >= product.onHand || product.onHand < minQty

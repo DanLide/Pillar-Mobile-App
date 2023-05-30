@@ -23,12 +23,12 @@ const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
   const store = useRef(productModalStore).current;
 
-  const InventoryTypeNameString = store.getProduct?.inventoryUseTypeId
-    ? InventoryTypeName[store.getProduct.inventoryUseTypeId]
+  const InventoryTypeNameString = store.getProduct?.inventoryUseType
+    ? InventoryTypeName[store.getProduct.inventoryUseType]
     : undefined;
 
   const getInventoryUseTypeLabelTheme = useCallback(() => {
-    switch (store.getProduct?.inventoryUseTypeId) {
+    switch (store.getProduct?.inventoryUseType) {
       case InventoryUseType.Container:
         return { backgroundColor: colors.blueLight, color: colors.blue };
       case InventoryUseType.Each:
@@ -40,7 +40,7 @@ export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
       default:
         return undefined;
     }
-  }, [store.getProduct?.inventoryUseTypeId]);
+  }, [store.getProduct?.inventoryUseType]);
 
   const inventoryUseTypeLabelTheme = getInventoryUseTypeLabelTheme();
 

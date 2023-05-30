@@ -11,7 +11,7 @@ export interface ScanningProductModel {
   onHand: number;
   reservedCount: number;
   job?: JobModel;
-  inventoryUseTypeId: InventoryUseType;
+  inventoryUseType: InventoryUseType;
   size: string;
   partNo: string;
   manufactureCode: string;
