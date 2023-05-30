@@ -75,10 +75,9 @@ export const ProductModal: React.FC<Props> = observer(
         ? product.onHand - selectedProductsReservedCount
         : 0;
 
+    // We can add extra number of balanceOfProducts count to the current editable count
     const maxValue =
-      balanceOfProducts < 0
-        ? 0
-        : type === ProductModalType.Edit
+      type === ProductModalType.Edit
         ? balanceOfProducts + (product?.reservedCount || 0)
         : balanceOfProducts;
 
