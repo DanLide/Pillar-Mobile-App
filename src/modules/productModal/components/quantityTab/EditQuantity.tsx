@@ -6,9 +6,9 @@ import {
   StyleSheet,
   TextInputProps,
 } from 'react-native';
+import { pipe, replace } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
-import { Utils } from '../../../../data/helpers/utils';
 
 interface Props extends Pick<TextInputProps, 'keyboardType'> {
   currentValue: number;
@@ -21,6 +21,9 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   onRemove?: () => void;
   onChange: (quantity: number) => void;
 }
+
+const replaceCommasWithDots = replace(',', '.');
+const removeExtraDots = replace(/(?<=\..*)\./g, '');
 
 export const EditQuantity = memo(
   ({
@@ -45,11 +48,13 @@ export const EditQuantity = memo(
     );
 
     const onChangeInputText = (text: string) => {
-      if (maxValue < +text) {
+      const normalizedText = pipe(replaceCommasWithDots, removeExtraDots)(text);
+
+      if (maxValue < +normalizedText) {
         return setNewValue(maxValue);
       }
 
-      setNewValue(Utils.parseFloatFromString(text));
+      setNewValue(normalizedText);
     };
 
     const onIncreaseCount = useCallback(() => {

@@ -40,16 +40,4 @@ export class Utils {
 
     return `${truncatedFirstHalf}...${truncatedSecondHalf}`;
   }
-
-  static replaceCommasWithDots(value: string) {
-    return value.replace(',', '.');
-  }
-
-  static removeExtraDots(value: string) {
-    return value.replace(/(?<=\..*)\./g, '');
-  }
-
-  static parseFloatFromString(value: string) {
-    return pipe(Utils.replaceCommasWithDots, Utils.removeExtraDots)(value);
-  }
 }
