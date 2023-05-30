@@ -1,4 +1,4 @@
-import { Task, TaskExecutor } from './helpers';
+import { getProductMinQty, Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
 import {
@@ -30,7 +30,10 @@ class FetchProductByScannedCodeTask extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
 
-  constructor(productContext: FetchProductByScannedCodeContext, scanCode: string) {
+  constructor(
+    productContext: FetchProductByScannedCodeContext,
+    scanCode: string,
+  ) {
     super();
     this.productContext = productContext;
     this.scanCode = scanCode;
@@ -64,13 +67,19 @@ class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    const { manufactureCode, partNo, size } = product;
+    const {
+      manufactureCode,
+      partNo,
+      size,
+      inventoryUseTypeId: inventoryUseType,
+    } = product;
 
     return {
       ...product,
       isRecoverable: product.isRecoverable === 'Yes',
       nameDetails: [manufactureCode, partNo, size].join(' '),
-      reservedCount: 1,
+      reservedCount: getProductMinQty(inventoryUseType),
+      inventoryUseType,
     };
   }
 }

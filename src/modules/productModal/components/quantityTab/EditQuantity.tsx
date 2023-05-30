@@ -1,18 +1,29 @@
-import React, { useCallback, memo, useMemo } from 'react';
-import { View, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
+import React, { useCallback, memo, useMemo, useState } from 'react';
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  TextInputProps,
+} from 'react-native';
+import { pipe, replace } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 
-interface Props {
-  currentValue?: number;
+interface Props extends Pick<TextInputProps, 'keyboardType'> {
+  currentValue: number;
   maxValue: number;
   minValue: number;
+  stepValue: number;
   disabled?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity?: number) => void;
+  onChange: (quantity: number) => void;
 }
+
+const replaceCommasWithDots = replace(',', '.');
+const removeExtraDots = replace(/(?<=\..*)\./g, '');
 
 export const EditQuantity = memo(
   ({
@@ -20,45 +31,60 @@ export const EditQuantity = memo(
     currentValue,
     maxValue,
     minValue,
+    stepValue,
     disabled,
+    keyboardType,
     onChange,
     onRemove,
   }: Props) => {
+    const [displayValue, setDisplayValue] = useState(String(currentValue));
+
+    const setNewValue = useCallback(
+      (value: string | number) => {
+        setDisplayValue(String(value));
+        onChange(+value);
+      },
+      [onChange],
+    );
+
     const onChangeInputText = (text: string) => {
-      if (maxValue < +text) {
-        onChange(maxValue);
-        return;
-      }
-      if (text === '') {
-        onChange();
-        return;
+      const normalizedText = pipe(replaceCommasWithDots, removeExtraDots)(text);
+
+      if (maxValue < +normalizedText) {
+        return setNewValue(maxValue);
       }
 
-      onChange(Number(text));
+      setNewValue(normalizedText);
     };
 
     const onIncreaseCount = useCallback(() => {
-      if (Number(currentValue) >= maxValue) return;
+      const updatedCount =
+        Math.floor(currentValue / stepValue) * stepValue + stepValue;
 
-      onChange(Number(currentValue) + 1);
-    }, [currentValue, maxValue, onChange]);
+      setNewValue(updatedCount);
+    }, [currentValue, stepValue, setNewValue]);
 
     const onDecreaseCount = useCallback(() => {
-      if (typeof currentValue !== 'undefined' && currentValue < 1) return;
+      const updatedCount =
+        Math.ceil(currentValue / stepValue) * stepValue - stepValue;
 
-      onChange(Number(currentValue) - 1);
-    }, [currentValue, onChange]);
+      setNewValue(updatedCount);
+    }, [currentValue, stepValue, setNewValue]);
 
     const onFocusLost = useCallback(() => {
-      if (typeof currentValue === 'undefined') {
-        onChange(1);
+      if (isNaN(currentValue) || currentValue < minValue) {
+        return setNewValue(minValue);
       }
-    }, [currentValue, onChange]);
+
+      const updatedCount = Math.ceil(currentValue / stepValue) * stepValue;
+
+      setNewValue(updatedCount);
+    }, [currentValue, minValue, stepValue, setNewValue]);
 
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
 
-      if (Number(currentValue) > minValue) {
+      if (currentValue > minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
@@ -87,17 +113,16 @@ export const EditQuantity = memo(
       <View style={styles.container}>
         {DecreaseButton}
         <TextInput
+          contextMenuHidden
           editable={!disabled}
           style={[styles.input, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : currentValue ? `${currentValue}` : ''}
-          keyboardType="number-pad"
+          value={disabled ? '-' : displayValue}
+          keyboardType={keyboardType}
           onChangeText={onChangeInputText}
           returnKeyType="done"
           onBlur={onFocusLost}
         />
-        {disabled ||
-        currentValue === maxValue ||
-        typeof currentValue === 'undefined' ? (
+        {disabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
@@ -117,12 +142,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 58.5,
+    marginHorizontal: 36.5,
     marginTop: 8,
   },
   input: {
     height: 103,
-    width: 140,
+    width: 184,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: colors.grayDark,
@@ -133,7 +158,6 @@ const styles = StyleSheet.create({
   inputDisabled: {
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
-    width: 184,
   },
   quantityButton: {
     width: 48,

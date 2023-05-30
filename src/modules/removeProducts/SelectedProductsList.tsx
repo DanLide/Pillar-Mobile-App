@@ -23,6 +23,8 @@ interface Props {
   onEditProduct: (item: RemoveProductModel) => void;
 }
 
+const keyExtractor = (item: RemoveProductModel): string => item.uuid;
+
 export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
   const sectionListData = groupProductsByJobId(
     removeProductsStore.getNotSyncedProducts,
@@ -78,7 +80,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
         <View style={styles.borderLine} />
       </TouchableOpacity>
     ),
-    [],
+    [onEditProduct],
   );
 
   return (
@@ -87,6 +89,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
       sections={sectionListData}
       renderSectionHeader={renderSectionHeader}
       renderItem={renderItem}
+      keyExtractor={keyExtractor}
       ListEmptyComponent={renderEmptyList}
     />
   );

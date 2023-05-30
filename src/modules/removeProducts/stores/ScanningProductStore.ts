@@ -9,9 +9,9 @@ export interface ScanningProductModel {
   nameDetails: string;
   isRecoverable: boolean;
   onHand: number;
-  reservedCount?: number;
+  reservedCount: number;
   job?: JobModel;
-  inventoryUseTypeId: InventoryUseType;
+  inventoryUseType: InventoryUseType;
   size: string;
   partNo: string;
   manufactureCode: string;
@@ -31,12 +31,11 @@ export class ScanningProductStore {
   }
 
   @action setCurrentProduct(product: ScanningProductModel) {
-    product.reservedCount = 1;
     this.currentProduct = product;
   }
 
-  @action setProductReservedCount(count: string | number) {
-    this.currentProduct!.reservedCount = +count;
+  @action setProductReservedCount(count: number) {
+    this.currentProduct!.reservedCount = count;
   }
 
   @action setProductJob(job: JobModel) {
