@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, View, Dimensions, ActivityIndicator } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { autorun } from 'mobx';
 
 import { removeProductsStore } from './stores';
 import { Button, ButtonType } from '../../components';
@@ -19,6 +20,7 @@ import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { getReservedCountById, isRemoveProductModel } from './helpers';
+import  AlertWrapper from '../../contexts/AlertWrapper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -26,12 +28,34 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+const alertMessage = 'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?'
+
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [modalParams, setModalParams] = useState<ProductModalParams>({
     product: undefined,
     type: undefined,
   });
+  const [alertVisible, setAlertVisible] = useState(false)
+  const isNeedNavigateBack = useRef(false)
+
+  useEffect(
+    () => {
+      autorun(() => {
+        navigation.addListener('beforeRemove', (e) => {
+          if(!removeProductsStore.products.length) {
+            return
+          }
+          if (isNeedNavigateBack.current) {
+            setAlertVisible(false)
+            return;
+          }
+          e.preventDefault();
+          setAlertVisible(true)
+        }
+        )
+      })
+    }, [navigation, alertVisible]);
 
   const onPressScan = async () => {
     const result = await check(PERMISSIONS.IOS.CAMERA);
@@ -82,7 +106,23 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     removeProductsStore.removeProduct(product);
   };
 
-  return (
+const onPressPrimary = () => {
+  isNeedNavigateBack.current = true
+  navigation.goBack()
+}
+
+const onPressSecondary = () => {
+  setAlertVisible(false)
+}
+
+return (
+  <AlertWrapper
+    visible={alertVisible}
+    message={alertMessage}
+    title='Change Stock Location'
+    onPressPrimary={onPressPrimary}
+    onPressSecondary={onPressSecondary}
+  >
     <View style={styles.container}>
       <>
         {isLoading ? (
@@ -124,7 +164,8 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
         onRemove={onRemoveProduct}
       />
     </View>
-  );
+  </AlertWrapper>
+);
 });
 
 const styles = StyleSheet.create({
