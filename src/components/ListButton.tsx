@@ -15,6 +15,8 @@ interface Props extends Omit<TouchableOpacityProps, 'children'> {
   containerStyle?: StyleProp<ViewStyle>;
 }
 
+const COUNTER_SIZE = 20;
+
 const ListButton: React.FC<Props> = ({
   count,
   containerStyle,
@@ -53,10 +55,10 @@ const styles = StyleSheet.create({
   countContainer: {
     alignItems: 'center',
     backgroundColor: colors.purple,
-    borderRadius: 999,
+    borderRadius: COUNTER_SIZE,
     justifyContent: 'center',
-    minHeight: 20,
-    minWidth: 20,
+    minHeight: COUNTER_SIZE,
+    minWidth: COUNTER_SIZE,
     position: 'absolute',
     right: -6,
     top: -10,
