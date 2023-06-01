@@ -1,9 +1,7 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 import { v1 as uuid } from 'uuid';
-
 import { StockModel } from '../../stocksList/stores/StocksStore';
 import { ScanningProductModel } from './ScanningProductStore';
-import { addProductToList } from '../helpers';
 
 export interface RemoveProductModel extends ScanningProductModel {
   uuid: string;
@@ -58,7 +56,7 @@ export class RemoveProductsStore {
 
   @action addProduct(product: ScanningProductModel) {
     const removedProduct = { ...product, isRemoved: false, uuid: uuid() };
-    this.products = addProductToList(removedProduct, this.products);
+    this.products = [...this.products, removedProduct];
   }
 
   @action setProducts(products: RemoveProductModel[]) {
