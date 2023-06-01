@@ -364,8 +364,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     [isTorchOn],
   );
 
-  const goBack = useCallback(() => navigation.goBack(), [navigation]);
-
   return (
     <View style={styles.container}>
       {renderToolTip()}
@@ -406,7 +404,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       <ListButton
         containerStyle={styles.listButtonContainer}
         count={scannedProductCount}
-        onPress={goBack}
       />
     </View>
   );

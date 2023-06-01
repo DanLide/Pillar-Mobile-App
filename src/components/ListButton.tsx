@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { colors, fonts, SVGs } from '../theme';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props extends Omit<TouchableOpacityProps, 'children'> {
   count?: number;
@@ -23,14 +24,18 @@ const ListButton: React.FC<Props> = ({
   style,
   ...props
 }) => {
+  const navigation = useNavigation();
+
   const buttonStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.button, style],
     [style],
   );
 
+  const goBack = useCallback(() => navigation.goBack(), [navigation]);
+
   return (
     <View style={containerStyle}>
-      <TouchableOpacity style={buttonStyle} {...props}>
+      <TouchableOpacity style={buttonStyle} onPress={goBack} {...props}>
         <SVGs.ListViewIcon color={colors.purpleDark} />
       </TouchableOpacity>
       {count ? (
