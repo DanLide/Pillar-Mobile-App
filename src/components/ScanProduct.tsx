@@ -24,7 +24,7 @@ import { Frame } from 'react-native-vision-camera';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
-import ListButton from './ListButton';
+import ProductListButton from './ProductListButton';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
 import { AppNavigator } from '../navigation';
 
@@ -401,7 +401,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
         {renderTorchIcon}
       </Pressable>
-      <ListButton
+      <ProductListButton
         containerStyle={styles.listButtonContainer}
         count={scannedProductCount}
       />

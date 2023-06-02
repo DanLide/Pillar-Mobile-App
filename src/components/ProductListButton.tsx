@@ -18,7 +18,7 @@ interface Props extends Omit<TouchableOpacityProps, 'children'> {
 
 const COUNTER_SIZE = 20;
 
-const ListButton: React.FC<Props> = ({
+const ProductListButton: React.FC<Props> = ({
   count,
   containerStyle,
   style,
@@ -76,4 +76,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default memo(ListButton);
+export default memo(ProductListButton);
