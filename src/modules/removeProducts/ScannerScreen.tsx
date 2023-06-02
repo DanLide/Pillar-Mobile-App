@@ -51,6 +51,7 @@ const ScannerScreen = () => {
     () =>
       toast.show('This product cannot be found in our product database', {
         type: ToastType.ScanError,
+        duration: 0,
       }),
     [toast],
   );
@@ -70,7 +71,7 @@ const ScannerScreen = () => {
       if (!product)
         return toast.show(
           'This product is not assigned to a this stock location',
-          { type: ToastType.ScanError },
+          { type: ToastType.ScanError, duration: 0 },
         );
 
       const removedProductCount = getReservedCountById(
