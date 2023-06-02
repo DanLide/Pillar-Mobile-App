@@ -12,7 +12,7 @@ import {
 
 import { RemoveProductModel } from '../stores/RemoveProductsStore';
 
-export const addProductToList = (
+export const addProductByJob = (
   product: RemoveProductModel,
   list: RemoveProductModel[],
 ) => {
