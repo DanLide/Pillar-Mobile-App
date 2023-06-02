@@ -380,7 +380,7 @@ export const ListIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
-export const ListViewIcon = memo((props: SvgProps) => (
+export const ProductListIcon = memo((props: SvgProps) => (
   <Svg width={32} height={32} fill="none" {...props}>
     <Path
       fill={props.color}

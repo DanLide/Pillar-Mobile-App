@@ -36,7 +36,7 @@ const ProductListButton: React.FC<Props> = ({
   return (
     <View style={containerStyle}>
       <TouchableOpacity style={buttonStyle} onPress={goBack} {...props}>
-        <SVGs.ListViewIcon color={colors.purpleDark} />
+        <SVGs.ProductListIcon color={colors.purpleDark} />
       </TouchableOpacity>
       {count ? (
         <View style={styles.countContainer}>
