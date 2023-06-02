@@ -47,6 +47,8 @@ const ScannerScreen = () => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(INIT_MODAL_PARAMS);
 
+  const scannedProducts = removeStore.getProducts;
+
   const showProductNotFoundError = useCallback(
     () =>
       toast.show('This product cannot be found in our product database', {
@@ -75,7 +77,7 @@ const ScannerScreen = () => {
         );
 
       const removedProductCount = getReservedCountById(
-        removeStore.getProducts,
+        scannedProducts,
         product.productId,
       );
 
@@ -97,7 +99,7 @@ const ScannerScreen = () => {
       showProductNotFoundError,
       scannerStore.getCurrentProduct,
       toast,
-      removeStore.getProducts,
+      scannedProducts,
     ],
   );
 
@@ -142,7 +144,11 @@ const ScannerScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScanProduct onPressScan={onScanProduct} isActive={isScannerActive} />
+      <ScanProduct
+        onPressScan={onScanProduct}
+        isActive={isScannerActive}
+        scannedProductCount={scannedProducts.length}
+      />
       <ProductModal
         {...modalParams}
         onSubmit={onSubmitProduct}

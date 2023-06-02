@@ -372,9 +372,20 @@ export const TorchIcon = memo((props: SvgProps & { state: TorchIconState }) => {
 export const ListIcon = memo((props: SvgProps) => (
   <Svg width={24} height={24} fill="none" {...props}>
     <Path
-      fill="#202024"
+      fill={props.color}
       fillRule="evenodd"
       d="M2 7h2V5H2v2Zm4.001-.249H22v-1.5H6.001v1.5Zm15.999 12H6.001v-1.5H22v1.5Zm-20 .25h2v-2H2v2Zm20-6.251H6.001v-1.499H22v1.499Zm-20 .251h2v-2H2v2Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
+export const ProductListIcon = memo((props: SvgProps) => (
+  <Svg width={32} height={32} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M2.666 9.333h2.667V6.666H2.666v2.667Zm5.335-.332h21.332v-2H8.001v2Zm21.332 16H8.001v-2h21.332v2Zm-26.667.333h2.667v-2.666H2.666v2.666ZM29.333 17H8.001V15h21.332V17Zm-26.667.334h2.667v-2.666H2.666v2.666Z"
       clipRule="evenodd"
     />
   </Svg>

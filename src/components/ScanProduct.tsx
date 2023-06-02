@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useMemo, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   StyleSheet,
   LayoutChangeEvent,
@@ -14,19 +14,18 @@ import Animated, {
   useAnimatedStyle,
   SharedValue,
 } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   NavigationProp,
   ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
+import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
+import { Frame } from 'react-native-vision-camera';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
+import ProductListButton from './ProductListButton';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
-
-import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
-import { Frame } from 'react-native-vision-camera';
 import { AppNavigator } from '../navigation';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
@@ -35,6 +34,7 @@ const WINDOW_WIDTH = Dimensions.get('window').width;
 export type ScanProductProps = {
   onPressScan: (code: Barcode['content']['data']) => void;
   isActive?: boolean;
+  scannedProductCount?: number;
 };
 
 const SCAN_PER_SECOND = 15;
@@ -144,7 +144,11 @@ const getToolTipText = (barcodesOnScanLine, isSeletedBarcode) => {
   return '';
 };
 
-const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
+const ScanProduct: React.FC<ScanProductProps> = ({
+  onPressScan,
+  isActive,
+  scannedProductCount,
+}) => {
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
   const scanLineLayoutRef = useRef<LayoutRectangle | null>(null);
@@ -397,6 +401,10 @@ const ScanProduct: React.FC<ScanProductProps> = ({ onPressScan, isActive }) => {
       <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
         {renderTorchIcon}
       </Pressable>
+      <ProductListButton
+        containerStyle={styles.listButtonContainer}
+        count={scannedProductCount}
+      />
     </View>
   );
 };
@@ -468,6 +476,11 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 8,
     zIndex: 100,
+  },
+  listButtonContainer: {
+    position: 'absolute',
+    bottom: 23,
+    right: 16,
   },
   iconWrapper: {
     width: 19,
