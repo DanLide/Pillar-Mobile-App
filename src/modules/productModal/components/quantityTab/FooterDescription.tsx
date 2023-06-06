@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { colors, fonts } from '../../../../theme';
 import { productModalStore } from '../../store';
 import { InventoryUseType } from '../../../../constants/common.enum';
+import { ColoredTooltip } from '../../../../components';
 
 const InventoryTypeName = {
   [InventoryUseType.Stock]: 'Stock',
@@ -58,9 +59,10 @@ export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
       <View style={styles.itemContainer}>
         <Text style={styles.title}>Remove by</Text>
         {InventoryTypeNameString ? (
-          <Text style={[styles.subtitleRemoveBy, inventoryUseTypeLabelTheme]}>
-            {InventoryTypeNameString}
-          </Text>
+          <ColoredTooltip
+            title={InventoryTypeNameString}
+            textStyles={inventoryUseTypeLabelTheme}
+          />
         ) : null}
       </View>
     </View>
@@ -81,17 +83,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     fontSize: 10,
     marginBottom: 4,
-  },
-  subtitleRemoveBy: {
-    fontSize: 13,
-    lineHeight: 18,
-    textAlign: 'center',
-    color: colors.green,
-    backgroundColor: colors.greenLight,
-    borderRadius: 12,
-    overflow: 'hidden',
-    paddingVertical: 1,
-    paddingHorizontal: 13,
   },
   subtitleInStock: {
     color: colors.blackLight,

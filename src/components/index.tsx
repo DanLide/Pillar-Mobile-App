@@ -9,6 +9,7 @@ import ToastMessage from './ToastMessage';
 import { Checkbox } from './Checkbox';
 import InfoTitleBar from './InfoTitleBar';
 import { Modal } from './Modal';
+import { ColoredTooltip } from './ColoredTooltip';
 
 export {
   Scanner,
@@ -24,6 +25,7 @@ export {
   InfoTitleBar,
   ButtonType,
   Modal,
+  ColoredTooltip,
 };
 
 export type { ScanProductProps };

@@ -1,5 +1,11 @@
 import React, { useRef, useEffect } from 'react';
-import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Pressable,
+  KeyboardTypeOptions,
+  View,
+} from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -9,6 +15,7 @@ import { productModalStore } from '../../store';
 import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
+import { ColoredTooltip } from '../../../../components';
 import { ToastType } from '../../../../contexts';
 import { getProductMinQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
@@ -87,12 +94,22 @@ export const ProductQuantity: React.FC<Props> = observer(
             onPress={onJobSelectNavigation}
             style={styles.jobContainer}
           >
-            <SVGs.JobIcon color={colors.purple} />
+            <SVGs.RefundIcon color={colors.purple} />
             <Text style={styles.jobText}>
               {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
             </Text>
           </Pressable>
         )}
+
+        {product.isRecoverable ? (
+          <ColoredTooltip
+            title="Recommended"
+            textStyles={[
+              styles.tooltip,
+              { color: colors.purpleDark, backgroundColor: colors.white2 },
+            ]}
+          />
+        ) : null}
 
         <Button
           disabled={!!error}
@@ -126,5 +143,9 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: colors.purpleDark,
     paddingLeft: 8,
+  },
+  tooltip: {
+    alignSelf: 'center',
+    marginTop: 8,
   },
 });

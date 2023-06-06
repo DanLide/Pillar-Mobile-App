@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import { ScanningProductModel } from '../../../removeProducts/stores/ScanningProductStore';
 
-import { SVGs, colors, fonts } from '../../../../theme';
+import { colors, fonts } from '../../../../theme';
 
 interface Props {
   product: ScanningProductModel;
@@ -11,13 +11,7 @@ interface Props {
 
 export const Description = memo(({ product }: Props) => (
   <View style={styles.container}>
-    <View
-      style={[
-        styles.partNumberContainer,
-        product.isRecoverable ? styles.refundIconPadding : null,
-      ]}
-    >
-      {product.isRecoverable ? <SVGs.RefundIcon color={colors.purple} /> : null}
+    <View style={styles.partNumberContainer}>
       <View>
         <Text style={styles.partNo} numberOfLines={1} ellipsizeMode="middle">
           {product.manufactureCode} {product.partNo}
