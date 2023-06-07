@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   SectionList,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     paddingRight: 35,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   emptyText: {
     fontSize: 20,
