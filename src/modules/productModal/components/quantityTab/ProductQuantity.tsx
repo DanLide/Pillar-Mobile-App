@@ -1,11 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import {
-  Text,
-  StyleSheet,
-  Pressable,
-  KeyboardTypeOptions,
-  View,
-} from 'react-native';
+import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -102,13 +96,7 @@ export const ProductQuantity: React.FC<Props> = observer(
         )}
 
         {product.isRecoverable ? (
-          <ColoredTooltip
-            title="Recommended"
-            textStyles={[
-              styles.tooltip,
-              { color: colors.purpleDark, backgroundColor: colors.white2 },
-            ]}
-          />
+          <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
         ) : null}
 
         <Button
@@ -147,5 +135,7 @@ const styles = StyleSheet.create({
   tooltip: {
     alignSelf: 'center',
     marginTop: 8,
+    color: colors.purpleDark,
+    backgroundColor: colors.white2,
   },
 });
