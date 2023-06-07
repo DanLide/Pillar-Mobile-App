@@ -1,41 +1,87 @@
 import React, { memo, useMemo } from 'react';
-import { StyleSheet, Text, View, ViewStyle, StyleProp } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 import { colors, fonts } from '../theme';
 
-interface Props {
-  title?: string;
-  containerStyle?: StyleProp<ViewStyle>;
+export enum InfoTitleBarType {
+  Primary,
+  Secondary,
 }
 
-const InfoTitleBar: React.FC<Props> = ({ title, containerStyle }) => {
-  const mergedStyle = useMemo(
-    () => [styles.container, containerStyle],
-    [containerStyle],
-  );
+interface Props {
+  type?: InfoTitleBarType;
+  title?: string;
+  containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
+}
 
-  return title ? (
-    <View style={mergedStyle}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  ) : null;
-};
+export const InfoTitleBar = memo(
+  ({ type, title, containerStyle, textStyle }: Props) => {
+    const getContainerStyleByType = useMemo(() => {
+      switch (type) {
+        case InfoTitleBarType.Primary:
+          return [styles.primaryContainer, containerStyle];
+        case InfoTitleBarType.Secondary:
+          return [styles.secondaryContainer, containerStyle];
+        default:
+          return null;
+      }
+    }, [containerStyle, type]);
+
+    const getTextStyleByType = useMemo(() => {
+      switch (type) {
+        case InfoTitleBarType.Primary:
+          return [styles.primaryText, textStyle];
+        case InfoTitleBarType.Secondary:
+          return [styles.secondaryText, textStyle];
+        default:
+          return null;
+      }
+    }, [textStyle, type]);
+
+    return title ? (
+      <View style={getContainerStyleByType}>
+        <Text style={getTextStyleByType}>{title}</Text>
+      </View>
+    ) : null;
+  },
+);
 
 const styles = StyleSheet.create({
-  container: {
+  primaryContainer: {
+    backgroundColor: colors.purpleLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderBottomColor: colors.gray,
+    borderBottomWidth: 1,
+    padding: 2,
+  },
+  secondaryContainer: {
     backgroundColor: colors.grayLight,
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomColor: colors.gray,
     borderBottomWidth: 1,
-    padding: 9.5,
+    padding: 8,
   },
-  title: {
-    fontSize: 18,
-    lineHeight: 23.5,
+  primaryText: {
+    fontSize: 15,
+    lineHeight: 20,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackLight,
+    alignSelf: 'center',
+  },
+  secondaryText: {
+    fontSize: 15,
+    lineHeight: 20,
     fontFamily: fonts.TT_Regular,
     color: colors.blackLight,
     alignSelf: 'center',
   },
 });
-
-export default memo(InfoTitleBar);

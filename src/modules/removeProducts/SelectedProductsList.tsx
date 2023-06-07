@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import {
   View,
   SectionList,
@@ -32,9 +32,6 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
 
   const renderEmptyList = () => (
     <View style={styles.container}>
-      <View style={styles.tooltip}>
-        <Text>Scan to add products to list</Text>
-      </View>
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>Nothing here</Text>
         <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />

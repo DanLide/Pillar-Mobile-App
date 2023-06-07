@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { colors, fonts, SVGs } from '../theme';
 
-import InfoTitleBar from './InfoTitleBar';
+import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 
 interface Props {
   isVisible: boolean;
@@ -44,7 +44,11 @@ export const Modal = memo(
             { marginTop: topOffset ?? DEFAULT_TOP_OFFSET },
           ]}
         >
-          <InfoTitleBar title={title} containerStyle={titleContainerStyle} />
+          <InfoTitleBar
+            type={InfoTitleBarType.Secondary}
+            title={title}
+            containerStyle={titleContainerStyle}
+          />
           <View style={styles.containerHeader}>
             <View style={styles.icon}>
               <Pressable onPress={onClose}>

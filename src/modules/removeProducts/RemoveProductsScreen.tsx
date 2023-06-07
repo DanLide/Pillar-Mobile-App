@@ -6,7 +6,13 @@ import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { autorun } from 'mobx';
 
 import { removeProductsStore } from './stores';
-import { Button, ButtonType } from '../../components';
+import {
+  Button,
+  ButtonType,
+  InfoTitleBar,
+  InfoTitleBarType,
+  TooltipBar,
+} from '../../components';
 import {
   ProductModal,
   ProductModalParams,
@@ -20,7 +26,7 @@ import { SVGs, colors } from '../../theme';
 import { clone } from 'ramda';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { getReservedCountById, isRemoveProductModel } from './helpers';
-import  AlertWrapper from '../../contexts/AlertWrapper';
+import AlertWrapper from '../../contexts/AlertWrapper';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,7 +34,8 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-const alertMessage = 'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?'
+const alertMessage =
+  'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
 
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,26 +43,24 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     product: undefined,
     type: undefined,
   });
-  const [alertVisible, setAlertVisible] = useState(false)
-  const isNeedNavigateBack = useRef(false)
+  const [alertVisible, setAlertVisible] = useState(false);
+  const isNeedNavigateBack = useRef(false);
 
-  useEffect(
-    () => {
-      autorun(() => {
-        navigation.addListener('beforeRemove', (e) => {
-          if(!removeProductsStore.products.length) {
-            return
-          }
-          if (isNeedNavigateBack.current) {
-            setAlertVisible(false)
-            return;
-          }
-          e.preventDefault();
-          setAlertVisible(true)
+  useEffect(() => {
+    autorun(() => {
+      navigation.addListener('beforeRemove', e => {
+        if (!removeProductsStore.products.length) {
+          return;
         }
-        )
-      })
-    }, [navigation, alertVisible]);
+        if (isNeedNavigateBack.current) {
+          setAlertVisible(false);
+          return;
+        }
+        e.preventDefault();
+        setAlertVisible(true);
+      });
+    });
+  }, [navigation, alertVisible]);
 
   const onPressScan = async () => {
     const result = await check(PERMISSIONS.IOS.CAMERA);
@@ -106,66 +111,76 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     removeProductsStore.removeProduct(product);
   };
 
-const onPressPrimary = () => {
-  isNeedNavigateBack.current = true
-  navigation.goBack()
-}
+  const onPressPrimary = () => {
+    isNeedNavigateBack.current = true;
+    navigation.goBack();
+  };
 
-const onPressSecondary = () => {
-  setAlertVisible(false)
-}
+  const onPressSecondary = () => {
+    setAlertVisible(false);
+  };
 
-return (
-  <AlertWrapper
-    visible={alertVisible}
-    message={alertMessage}
-    title='Change Stock Location'
-    onPressPrimary={onPressPrimary}
-    onPressSecondary={onPressSecondary}
-  >
-    <View style={styles.container}>
-      <>
-        {isLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator
-              size="large"
-              color="white"
-              style={styles.activityIndicator}
+  return (
+    <AlertWrapper
+      visible={alertVisible}
+      message={alertMessage}
+      title="Change Stock Location"
+      onPressPrimary={onPressPrimary}
+      onPressSecondary={onPressSecondary}
+    >
+      <View style={styles.container}>
+        <InfoTitleBar
+          type={InfoTitleBarType.Primary}
+          title={removeProductsStore.currentStock?.organizationName}
+        />
+        <TooltipBar title="Scan to add products to list" />
+
+        <>
+          {isLoading ? (
+            <View style={styles.loader}>
+              <ActivityIndicator
+                size="large"
+                color="white"
+                style={styles.activityIndicator}
+              />
+            </View>
+          ) : null}
+          <SelectedProductsList onEditProduct={onEditProduct} />
+
+          <View style={styles.buttons}>
+            <Button
+              type={ButtonType.secondary}
+              icon={
+                <SVGs.CodeIcon
+                  color={colors.purple}
+                  width={32}
+                  height={23.33}
+                />
+              }
+              textStyle={styles.scanText}
+              buttonStyle={styles.buttonContainer}
+              title="Scan"
+              onPress={onPressScan}
+            />
+
+            <Button
+              type={ButtonType.primary}
+              disabled={!Object.keys(removeProductsStore.getProducts).length}
+              buttonStyle={styles.buttonContainer}
+              title="Complete"
+              onPress={onCompleteRemove}
             />
           </View>
-        ) : null}
-        <SelectedProductsList onEditProduct={onEditProduct} />
-
-        <View style={styles.buttons}>
-          <Button
-            type={ButtonType.secondary}
-            icon={
-              <SVGs.CodeIcon color={colors.purple} width={32} height={23.33} />
-            }
-            textStyle={styles.scanText}
-            buttonStyle={styles.buttonContainer}
-            title="Scan"
-            onPress={onPressScan}
-          />
-
-          <Button
-            type={ButtonType.primary}
-            disabled={!Object.keys(removeProductsStore.getProducts).length}
-            buttonStyle={styles.buttonContainer}
-            title="Complete"
-            onPress={onCompleteRemove}
-          />
-        </View>
-      </>
-      <ProductModal
-        {...modalParams}
-        onSubmit={onSubmitProduct}
-        onClose={onCloseModal}
-        onRemove={onRemoveProduct}
-      />
-    </View>
-  </AlertWrapper>
-);
+        </>
+        <ProductModal
+          {...modalParams}
+          onSubmit={onSubmitProduct}
+          onClose={onCloseModal}
+          onRemove={onRemoveProduct}
+        />
+      </View>
+    </AlertWrapper>
+  );
 });
 
 const styles = StyleSheet.create({

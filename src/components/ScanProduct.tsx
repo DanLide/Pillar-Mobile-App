@@ -27,6 +27,7 @@ import Scanner from './Scanner';
 import ProductListButton from './ProductListButton';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
 import { AppNavigator } from '../navigation';
+import { TooltipBar } from './TooltipBar';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
@@ -344,14 +345,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       );
     });
 
-  const renderToolTip = () => {
-    return (
-      <View style={styles.tooltipContainer}>
-        <Text>{getToolTipText(barcodesOnScanLine, selectedBarcode)}</Text>
-      </View>
-    );
-  };
-
   const renderTorchIcon = useCallback(
     ({ pressed }) => {
       const state = pressed
@@ -366,7 +359,10 @@ const ScanProduct: React.FC<ScanProductProps> = ({
 
   return (
     <View style={styles.container}>
-      {renderToolTip()}
+      <TooltipBar
+        title={getToolTipText(barcodesOnScanLine, selectedBarcode)}
+        containerStyle={styles.tooltipContainer}
+      />
       <View style={[styles.scanner]}>
         <Scanner
           torch={isTorchOn ? 'on' : 'off'}
@@ -427,17 +423,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'hidden',
-  },
-  tooltipContainer: {
-    backgroundColor: colors.white2,
-    borderRadius: 5,
-    paddingVertical: 5,
-    top: 4,
-    position: 'absolute',
-    zIndex: 10,
-    alignSelf: 'center',
-    width: '98%',
-    alignItems: 'center',
   },
   shadow: {
     height: '30%',
@@ -506,5 +491,11 @@ const styles = StyleSheet.create({
     zIndex: 100,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  tooltipContainer: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    margin: 0,
   },
 });
