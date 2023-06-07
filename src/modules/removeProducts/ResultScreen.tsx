@@ -10,15 +10,13 @@ import {
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { Button } from '../../components';
+import { Button, ButtonType } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { removeProductsStore } from './stores';
 import { authStore } from '../../stores';
 
 import { AppNavigator } from '../../navigation';
-
-import { ButtonType } from '../../components/Button';
 
 import { groupProductsByJobId } from './helpers';
 import { RemoveProductModel } from './stores/RemoveProductsStore';
@@ -311,7 +309,7 @@ const styles = StyleSheet.create({
 });
 
 export default (props: Props) => (
-  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+  <ToastContextProvider duration={0} offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
     <ResultScreen {...props} />
   </ToastContextProvider>
 );
