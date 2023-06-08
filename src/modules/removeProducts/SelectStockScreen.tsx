@@ -7,6 +7,7 @@ import { StocksList } from '../stocksList/components/StocksList';
 import { AppNavigator } from '../../navigation';
 import { removeProductsStore, scanningProductStore } from './stores';
 import { StockModel } from '../stocksList/stores/StocksStore';
+import { InfoTitleBar, InfoTitleBarType } from '../../components';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -29,6 +30,10 @@ export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <InfoTitleBar
+        type={InfoTitleBarType.Secondary}
+        title="Select a Stock Location"
+      />
       <StocksList onPressItem={onItemPress} />
     </SafeAreaView>
   );

@@ -9,7 +9,13 @@ import {
   ProductModalType,
   ProductModalParams,
 } from '../productModal';
-import { ScanProduct, ScanProductProps, ToastMessage } from '../../components';
+import {
+  InfoTitleBar,
+  ScanProduct,
+  ScanProductProps,
+  ToastMessage,
+  InfoTitleBarType,
+} from '../../components';
 
 import { fetchProductByScannedCode } from '../../data/fetchProductByScannedCode';
 
@@ -144,6 +150,10 @@ const ScannerScreen = () => {
 
   return (
     <View style={styles.container}>
+      <InfoTitleBar
+        type={InfoTitleBarType.Primary}
+        title={removeProductsStore.currentStock?.organizationName}
+      />
       <ScanProduct
         onPressScan={onScanProduct}
         isActive={isScannerActive}

@@ -6,7 +6,13 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { AppNavigator } from '../../navigation';
 import { authStore, ssoStore } from '../../stores';
 import { SelectSSOStore } from './stores/SelectSSOStore';
-import { Button, Input, InfoTitleBar, ButtonType } from '../../components';
+import {
+  Button,
+  Input,
+  InfoTitleBar,
+  ButtonType,
+  InfoTitleBarType,
+} from '../../components';
 import { colors, SVGs } from '../../theme';
 import { SSOList, SSOListProps } from './components';
 
@@ -42,7 +48,10 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <InfoTitleBar title={authStore.getName} />
+      <InfoTitleBar
+        type={InfoTitleBarType.Secondary}
+        title={authStore.getName}
+      />
       <Input
         containerStyle={styles.input}
         placeholder="Select a Shop Location"
