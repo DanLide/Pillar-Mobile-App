@@ -2,23 +2,56 @@ import { action, makeObservable, observable, computed } from 'mobx';
 import { v1 as uuid } from 'uuid';
 
 import { StockModel } from '../../stocksList/stores/StocksStore';
-import { ScanningProductModel } from './ScanningProductStore';
-import { addProductByJob } from '../helpers';
 
-export interface RemoveProductModel extends ScanningProductModel {
-  uuid: string;
-  isRemoved: boolean;
-}
+import {
+  CurrentProductStoreType,
+  ScannerModalStoreType,
+  StockProductStoreType,
+  SyncedProductStoreType,
+  ClearStoreType,
+  ProductModel,
+} from '../../../stores/types';
+import { getReservedCountById, addProductByJob } from '../helpers';
 
-export class RemoveProductsStore {
+type RemoveProductsStoreType = SyncedProductStoreType &
+  StockProductStoreType &
+  ScannerModalStoreType &
+  CurrentProductStoreType &
+  ClearStoreType;
+
+export class RemoveProductsStore implements RemoveProductsStoreType {
   @observable currentStock?: StockModel;
-  @observable products: RemoveProductModel[];
+  @observable products: ProductModel[];
+  @observable currentProduct?: ProductModel;
 
   constructor() {
     this.currentStock = undefined;
+    this.currentProduct = undefined;
     this.products = [];
 
     makeObservable(this);
+  }
+
+  @computed get getCurrentProduct() {
+    return this.currentProduct;
+  }
+
+  @computed get getScannedProductsCountByProductId() {
+    return (productId: number) =>
+      getReservedCountById(this.getProducts, productId);
+  }
+
+  @computed get getMaxValue() {
+    return (product: ProductModel) =>
+      product.onHand -
+      getReservedCountById(this.getProducts, product.productId);
+  }
+
+  @computed get getEditableMaxValue() {
+    return (product: ProductModel) =>
+      product.onHand -
+      getReservedCountById(this.getProducts, product.productId) +
+      product.reservedCount;
   }
 
   @computed get stockName() {
@@ -40,13 +73,26 @@ export class RemoveProductsStore {
     return this.products.filter(product => !product.isRemoved);
   }
 
-  @action updateProduct(product: RemoveProductModel) {
+  @action removeCurrentProduct() {
+    this.currentProduct = undefined;
+  }
+
+  @action setCurrentProduct(product: ProductModel) {
+    this.currentProduct = product;
+  }
+
+  @action setEditableProductQuantity(reservedCount: number) {
+    if (this.currentProduct)
+      this.currentProduct = { ...this.currentProduct, reservedCount };
+  }
+
+  @action updateProduct(product: ProductModel) {
     this.products = this.products.map(currentProduct =>
       currentProduct.uuid === product.uuid ? product : currentProduct,
     );
   }
 
-  @action removeProduct(product: RemoveProductModel) {
+  @action removeProduct(product: ProductModel) {
     this.products = this.products.filter(
       currentProduct => currentProduct.uuid !== product.uuid,
     );
@@ -56,17 +102,18 @@ export class RemoveProductsStore {
     this.currentStock = stock;
   }
 
-  @action addProduct(product: ScanningProductModel) {
+  @action addProduct(product: ProductModel) {
     const removedProduct = { ...product, isRemoved: false, uuid: uuid() };
     this.products = addProductByJob(removedProduct, this.products);
   }
 
-  @action setProducts(products: RemoveProductModel[]) {
+  @action setProducts(products: ProductModel[]) {
     this.products = products;
   }
 
   @action clear() {
     this.currentStock = undefined;
     this.products = [];
+    this.currentProduct = undefined;
   }
 }

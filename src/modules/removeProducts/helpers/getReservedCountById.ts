@@ -1,12 +1,11 @@
 import { filter, map, pipe, propEq, sum } from 'ramda';
-
-import { RemoveProductModel } from '../stores/RemoveProductsStore';
+import { ProductModel } from '../../../stores/types';
 
 export const getReservedCountById = (
-  products: RemoveProductModel[],
+  products: ProductModel[],
   productId: number,
 ): number =>
-  pipe<[RemoveProductModel[]], RemoveProductModel[], number[], number>(
+  pipe<[ProductModel[]], ProductModel[], number[], number>(
     filter(propEq('productId', productId)),
     map(product => product.reservedCount),
     sum,

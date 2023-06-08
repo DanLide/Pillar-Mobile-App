@@ -1,11 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
 import { Button, ButtonType } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
 
 import { colors, fonts, SVGs } from '../../../../theme';
-import { productModalStore } from '../../store';
 import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
@@ -13,12 +12,15 @@ import { ColoredTooltip } from '../../../../components';
 import { ToastType } from '../../../../contexts';
 import { getProductMinQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
+import { ProductModel } from '../../../../stores/types';
 
 interface Props {
   isEdit: boolean;
   error?: string;
   maxValue: number;
+  product?: ProductModel;
 
+  onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
   onPressAddToList: () => void;
   onJobSelectNavigation: () => void;
@@ -26,15 +28,16 @@ interface Props {
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({
+    product,
     isEdit,
     error,
     maxValue,
+    onChangeProductQuantity,
     onPressAddToList,
     onJobSelectNavigation,
     onRemove,
   }) => {
-    const store = useRef(productModalStore).current;
-    const product = store.getProduct;
+    const jobNumber = product?.job?.jobNumber;
 
     const toast = useToast();
 
@@ -44,19 +47,18 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     if (!product) return null;
 
-    const { job, isRecoverable, inventoryUseType, reservedCount } = product;
+    const { isRecoverable, inventoryUseTypeId, reservedCount } = product;
 
-    const jobNumber = job?.jobNumber;
-    const minQty = getProductMinQty(inventoryUseType);
+    const minQty = getProductMinQty(inventoryUseTypeId);
 
     const buttonLabel = isRecoverable ? 'Next' : 'Done';
     const keyboardType: KeyboardTypeOptions =
-      inventoryUseType === InventoryUseType.Percent
+      inventoryUseTypeId === InventoryUseType.Percent
         ? 'decimal-pad'
         : 'number-pad';
 
     const onChange = (quantity: number) => {
-      store.updateQuantity(quantity);
+      onChangeProductQuantity(quantity);
     };
 
     const onPressButton = () => {
@@ -81,7 +83,7 @@ export const ProductQuantity: React.FC<Props> = observer(
           onChange={onChange}
           onRemove={onRemove}
         />
-        <FooterDescription maxValue={maxValue} />
+        <FooterDescription product={product} maxValue={maxValue} />
 
         {!error && (
           <Pressable

@@ -1,18 +1,18 @@
-import { getProductMinQty, Task, TaskExecutor } from './helpers';
+import { v1 as uuid } from 'uuid';
+
+import { Task, TaskExecutor, getProductMinQty } from './helpers';
 import { getFetchProductAPI } from './api';
 
-import {
-  ScanningProductModel,
-  ScanningProductStore,
-} from '../modules/removeProducts/stores/ScanningProductStore';
 import { ProductResponse } from './api/productsAPI';
+
+import { CurrentProductStoreType, ProductModel } from '../stores/types';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
 }
 
 export const fetchProductByScannedCode = async (
-  scanningProductStore: ScanningProductStore,
+  currentProductStore: CurrentProductStoreType,
   scanCode: string,
 ) => {
   const productContext: FetchProductByScannedCodeContext = {
@@ -20,7 +20,7 @@ export const fetchProductByScannedCode = async (
   };
   const result = await new TaskExecutor([
     new FetchProductByScannedCodeTask(productContext, scanCode),
-    new SaveProductToStoreTask(productContext, scanningProductStore),
+    new SaveProductToStoreTask(productContext, currentProductStore),
   ]).execute();
 
   return result;
@@ -47,39 +47,35 @@ class FetchProductByScannedCodeTask extends Task {
 
 class SaveProductToStoreTask extends Task {
   productContext: FetchProductByScannedCodeContext;
-  scanningProductStore: ScanningProductStore;
+  currentProductStore: CurrentProductStoreType;
 
   constructor(
     productContext: FetchProductByScannedCodeContext,
-    scanningProductStore: ScanningProductStore,
+    currentProductStore: CurrentProductStoreType,
   ) {
     super();
     this.productContext = productContext;
-    this.scanningProductStore = scanningProductStore;
+    this.currentProductStore = currentProductStore;
   }
 
   async run(): Promise<void> {
     if (this.productContext.product) {
-      this.scanningProductStore.setCurrentProduct(
+      this.currentProductStore.setCurrentProduct(
         this.mapProductResponse(this.productContext.product),
       );
     }
   }
 
-  private mapProductResponse(product: ProductResponse): ScanningProductModel {
-    const {
-      manufactureCode,
-      partNo,
-      size,
-      inventoryUseTypeId: inventoryUseType,
-    } = product;
+  private mapProductResponse(product: ProductResponse): ProductModel {
+    const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
 
     return {
       ...product,
-      isRecoverable: product.isRecoverable === 'Yes',
+      isRemoved: false,
+      reservedCount: getProductMinQty(inventoryUseTypeId),
       nameDetails: [manufactureCode, partNo, size].join(' '),
-      reservedCount: getProductMinQty(inventoryUseType),
-      inventoryUseType,
+      uuid: uuid(),
+      isRecoverable: product.isRecoverable === 'Yes',
     };
   }
 }

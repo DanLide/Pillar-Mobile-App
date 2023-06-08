@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   View,
   SectionList,
@@ -15,20 +15,19 @@ import { removeProductsStore } from './stores';
 import { groupProductsByJobId } from './helpers';
 import { OTHER_JOB_ID } from './constants';
 import { SVGs, colors, fonts } from '../../theme';
-import { RemoveProductModel } from './stores/RemoveProductsStore';
+import { ProductModel, SyncedProductStoreType } from '../../stores/types';
 
 const { width } = Dimensions.get('window');
 
 interface Props {
-  onEditProduct: (item: RemoveProductModel) => void;
+  onEditProduct: (item: ProductModel) => void;
 }
 
-const keyExtractor = (item: RemoveProductModel): string => item.uuid;
+const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
-  const sectionListData = groupProductsByJobId(
-    removeProductsStore.getNotSyncedProducts,
-  );
+  const store = useRef<SyncedProductStoreType>(removeProductsStore).current;
+  const sectionListData = groupProductsByJobId(store.getNotSyncedProducts);
 
   const renderEmptyList = () => (
     <View style={styles.container}>
@@ -41,7 +40,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
   );
 
   const renderSectionHeader = useCallback(
-    (info: { section: SectionListData<RemoveProductModel> }) => (
+    (info: { section: SectionListData<ProductModel> }) => (
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
           {info.section.jobId === OTHER_JOB_ID
@@ -55,7 +54,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
   );
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<RemoveProductModel>) => (
+    ({ item }: ListRenderItemInfo<ProductModel>) => (
       <TouchableOpacity
         style={styles.sectionItemContainer}
         onPress={() => onEditProduct(item)}
