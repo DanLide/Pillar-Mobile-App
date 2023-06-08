@@ -38,11 +38,11 @@ export const EditQuantity = memo(
     onChange,
     onRemove,
   }: Props) => {
-    const normalizedCurrentValue = removeLeadingZero(currentValue);
-    const normalizedMaxValue = removeLeadingZero(maxValue);
-    const normalizedMinValue = removeLeadingZero(minValue);
+    const displayCurrentValue = removeLeadingZero(currentValue);
+    const displayMaxValue = removeLeadingZero(maxValue);
+    const displayMinValue = removeLeadingZero(minValue);
 
-    const [displayValue, setDisplayValue] = useState(normalizedCurrentValue);
+    const [displayValue, setDisplayValue] = useState(displayCurrentValue);
 
     const setNewValue = useCallback(
       (value: string) => {
@@ -56,7 +56,7 @@ export const EditQuantity = memo(
       const normalizedText = pipe(replaceCommasWithDots, removeExtraDots)(text);
 
       if (maxValue < +normalizedText) {
-        return setNewValue(normalizedMaxValue);
+        return setNewValue(displayMaxValue);
       }
 
       setNewValue(normalizedText);
@@ -66,30 +66,30 @@ export const EditQuantity = memo(
       const updatedCount =
         Math.floor(currentValue / stepValue) * stepValue + stepValue;
 
-      const normalizedText = removeLeadingZero(updatedCount);
+      const displayText = removeLeadingZero(updatedCount);
 
-      setNewValue(normalizedText);
+      setNewValue(displayText);
     }, [currentValue, stepValue, setNewValue]);
 
     const onDecreaseCount = useCallback(() => {
       const updatedCount =
         Math.ceil(currentValue / stepValue) * stepValue - stepValue;
 
-      const normalizedText = removeLeadingZero(updatedCount);
+      const displayText = removeLeadingZero(updatedCount);
 
-      setNewValue(normalizedText);
+      setNewValue(displayText);
     }, [currentValue, stepValue, setNewValue]);
 
     const onFocusLost = useCallback(() => {
       if (isNaN(currentValue) || currentValue < minValue) {
-        return setNewValue(normalizedMinValue);
+        return setNewValue(displayMinValue);
       }
 
       const updatedCount = Math.ceil(currentValue / stepValue) * stepValue;
-      const normalizedText = removeLeadingZero(updatedCount);
+      const displayText = removeLeadingZero(updatedCount);
 
-      setNewValue(normalizedText);
-    }, [currentValue, minValue, stepValue, setNewValue, normalizedMinValue]);
+      setNewValue(displayText);
+    }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
 
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
