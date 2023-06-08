@@ -1,30 +1,34 @@
-import React, { useEffect } from 'react';
-import { Text, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 
 import { StocksList } from '../stocksList/components/StocksList';
 import { AppNavigator } from '../../navigation';
-import { removeProductsStore, scanningProductStore } from './stores';
+import { removeProductsStore } from './stores';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { InfoTitleBar, InfoTitleBarType } from '../../components';
+
+import { StockProductStoreType, ClearStoreType } from '../../stores/types';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+type Store = StockProductStoreType & ClearStoreType;
+
 export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
+  const store = useRef<Store>(removeProductsStore).current;
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-      removeProductsStore.clear();
-      scanningProductStore.clear();
+      store.clear();
     }
-  }, [isFocused]);
+  }, [isFocused, store]);
 
   const onItemPress = (stock: StockModel) => {
-    removeProductsStore.setCurrentStocks(stock);
+    store.setCurrentStocks(stock);
     navigation.navigate(AppNavigator.RemoveProductsScreen);
   };
 

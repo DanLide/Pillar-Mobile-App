@@ -1,12 +1,11 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { ScanningProductModel } from '../../../removeProducts/stores/ScanningProductStore';
-
 import { colors, fonts } from '../../../../theme';
+import { ProductModel } from '../../../../stores/types';
 
 interface Props {
-  product: ScanningProductModel;
+  product: ProductModel;
 }
 
 export const Description = memo(({ product }: Props) => (

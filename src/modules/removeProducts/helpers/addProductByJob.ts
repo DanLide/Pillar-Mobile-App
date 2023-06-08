@@ -9,22 +9,17 @@ import {
   over,
   whereEq,
 } from 'ramda';
-
-import { RemoveProductModel } from '../stores/RemoveProductsStore';
+import { ProductModel } from '../../../stores/types';
 
 export const addProductByJob = (
-  product: RemoveProductModel,
-  list: RemoveProductModel[],
+  product: ProductModel,
+  list: ProductModel[],
 ) => {
   const { productId, job, reservedCount } = product;
 
   const productIndex = findIndex(whereEq({ productId, job }), list);
 
-  return ifElse<
-    [RemoveProductModel[]],
-    RemoveProductModel[],
-    RemoveProductModel[]
-  >(
+  return ifElse<[ProductModel[]], ProductModel[], ProductModel[]>(
     always(equals(productIndex, -1)),
     append(product),
     over(lensPath([productIndex, 'reservedCount']), add(reservedCount)),
