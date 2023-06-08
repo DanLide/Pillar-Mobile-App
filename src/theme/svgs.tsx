@@ -95,17 +95,6 @@ export const RefundIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
-export const JobIcon = memo((props: SvgProps) => (
-  <Svg width={20} height={14} viewBox="0 0 20 14" fill="none" {...props}>
-    <Path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M.834 13.875h18.333V.125H.834v13.75zm1.25-1.25h15.833V1.376H2.084v11.25zm1.25-8.75h13.333V2.628H3.334v1.249zm10 2.5h3.333v-1.25h-3.333v1.25zm-6.25 0h5v-1.25h-5v1.25zm-3.75 0h2.5v-1.25h-2.5v1.25zm10 2.5h3.333v-1.25h-3.333v1.25zm-6.25 0h5v-1.25h-5v1.25zm-3.75 0h2.5v-1.25h-2.5v1.25zm10 2.5h3.333v-1.25h-3.333v1.25zm-6.25 0h5v-1.25h-5v1.25zm-3.75 0h2.5v-1.249h-2.5v1.25z"
-      fill={props.color}
-    />
-  </Svg>
-));
-
 export const PlusIcon = memo((props: SvgProps) => (
   <Svg width={28} height={27} viewBox="0 0 28 27" fill="none" {...props}>
     <Path
