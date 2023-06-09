@@ -24,9 +24,7 @@ export const getScreenOptions = (params: GetScreenOptions) => ({
   headerLeft: () => (
     <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
   ),
-  headerRight: () => (
-    <RightBarButton rightBarButtonType={params.rightBarButtonType} />
-  ),
+  headerRight: () => <RightBarButton rightBarButtonType={params.rightBarButtonType} />,
   headerStyle: {
     backgroundColor: colors.purple,
   },
