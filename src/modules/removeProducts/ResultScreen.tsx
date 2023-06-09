@@ -17,8 +17,6 @@ import { colors, fonts, SVGs } from '../../theme';
 import { removeProductsStore } from './stores';
 import { authStore } from '../../stores';
 
-import { AppNavigator } from '../../navigation';
-
 import { OTHER_JOB_ID } from './constants';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -67,12 +65,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const onPressLogout = () => {
     authStore.logOut();
   };
-  const onReturnHome = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: AppNavigator.HomeScreen }],
-    });
-  };
+  const onReturnHome = () => navigation.goBack();
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<ProductModel>) => (

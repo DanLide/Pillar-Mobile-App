@@ -56,7 +56,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   useEffect(() => {
     autorun(() => {
       navigation.addListener('beforeRemove', e => {
-        if (!removeProductsStore.products.length) {
+        if (!removeProductsStore.getNotSyncedProducts.length) {
           return;
         }
         if (isNeedNavigateBack.current) {
@@ -85,7 +85,16 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
     await onRemoveProducts(removeProductsStore);
     setIsLoading(false);
 
-    navigation.navigate(AppNavigator.ResultScreen);
+    isNeedNavigateBack.current = true;
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: AppNavigator.ResultScreen,
+          state: { routes: [{ name: AppNavigator.HomeStack }] },
+        },
+      ],
+    });
   };
 
   const onCloseModal = () => {
