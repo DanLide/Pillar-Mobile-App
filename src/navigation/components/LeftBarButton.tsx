@@ -8,7 +8,6 @@ import {
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { LeftBarType } from '../helpers';
-import { AppNavigator } from '..';
 import { SVGs, colors } from '../../theme';
 
 interface LeftBarButtonProps {
@@ -22,19 +21,13 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
 
   const onIconPress = () => {
     switch (leftBarButtonType) {
-      case LeftBarType.Back: {
+      case LeftBarType.Back:
+      case LeftBarType.Close: {
         if (navigation.canGoBack()) {
           navigation.goBack();
         }
         break;
       }
-
-      case LeftBarType.Close:
-        navigation.reset({
-          index: 0,
-          routes: [{ name: AppNavigator.HomeScreen }],
-        });
-        break;
 
       default:
         break;
