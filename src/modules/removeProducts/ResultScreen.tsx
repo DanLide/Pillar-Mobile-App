@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { useToast } from 'react-native-toast-notifications';
 
 import { Button, ButtonType } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
@@ -16,22 +17,29 @@ import { colors, fonts, SVGs } from '../../theme';
 import { removeProductsStore } from './stores';
 import { authStore } from '../../stores';
 
-import { groupProductsByJobId } from './helpers';
-import { RemoveProductModel } from './stores/RemoveProductsStore';
 import { OTHER_JOB_ID } from './constants';
-import { useToast } from 'react-native-toast-notifications';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
   ToastType,
 } from '../../contexts';
 
+import { groupProductsByJobId } from './helpers';
+
+import {
+  StockProductStoreType,
+  ProductModel,
+  SyncedProductStoreType,
+} from '../../stores/types';
+
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+type StoreModel = SyncedProductStoreType & StockProductStoreType;
+
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
-  const store = useRef(removeProductsStore).current;
+  const store = useRef<StoreModel>(removeProductsStore).current;
   const toast = useToast();
 
   const stockName = store.currentStock?.organizationName || '';
@@ -60,7 +68,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const onReturnHome = () => navigation.goBack();
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<RemoveProductModel>) => (
+    ({ item }: ListRenderItemInfo<ProductModel>) => (
       <View style={styles.sectionItemContainer}>
         {item.isRemoved ? null : (
           <SVGs.ExclamationMarkIcon
@@ -82,7 +90,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   );
 
   const renderSectionHeader = useCallback(
-    (info: { section: SectionListData<RemoveProductModel> }) => (
+    (info: { section: SectionListData<ProductModel> }) => (
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
           {info.section.jobId === OTHER_JOB_ID

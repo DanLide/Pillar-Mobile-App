@@ -1,47 +1,39 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-} from 'react';
+import React, { useCallback, useRef, useState, useMemo } from 'react';
 import { StyleSheet, Dimensions, View, Alert } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { observer } from 'mobx-react';
-
-import { ScanningProductModel } from '../removeProducts/stores/ScanningProductStore';
 
 import { Modal } from '../../components';
 import { ProductQuantity } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { colors } from '../../theme';
-import { productModalStore } from './store';
 import { removeProductsStore } from '../removeProducts/stores';
-import { RemoveProductModel } from '../removeProducts/stores/RemoveProductsStore';
 import { JobModel } from '../jobsList/stores/JobsStore';
-import { isRemoveProductModel } from '../removeProducts/helpers';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from '../../contexts';
+import { ProductModel } from '../../stores/types';
 
 export enum ProductModalType {
   Add,
   Edit,
+  Hidden,
 }
-
 export interface ProductModalParams {
-  type?: ProductModalType;
-  product?: RemoveProductModel | ScanningProductModel;
+  type: ProductModalType;
   error?: string;
-  selectedProductsReservedCount?: number;
+  maxValue?: number;
 }
 
 interface Props extends ProductModalParams {
-  onRemove?: (product: RemoveProductModel) => void;
+  product?: ProductModel;
+
+  onChangeProductQuantity: (quantity: number) => void;
+  onRemove?: (product: ProductModel) => void;
   onClose: () => void;
-  onSubmit: (product: ScanningProductModel) => void;
+  onSubmit: (product: ProductModel) => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -61,35 +53,14 @@ export const ProductModal: React.FC<Props> = observer(
     type,
     product,
     error,
-    selectedProductsReservedCount,
+    maxValue = 0,
     onClose,
     onSubmit,
     onRemove,
+    onChangeProductQuantity,
   }) => {
     const carouselRef = useRef<ICarouselInstance>(null);
-    const store = useRef(productModalStore).current;
-    console.log(selectedProductsReservedCount, 'selectedProductsReservedCount');
-    console.log(product, 'product');
-    const balanceOfProducts =
-      typeof selectedProductsReservedCount === 'number' && product
-        ? product.onHand - selectedProductsReservedCount
-        : 0;
-
-    // We can add extra number of balanceOfProducts count to the current editable count
-    const maxValue =
-      type === ProductModalType.Edit
-        ? balanceOfProducts + (product?.reservedCount || 0)
-        : balanceOfProducts;
-
     const [selectedTab, setSelectedTab] = useState<number>(0);
-
-    const productFromStore = store.getProduct;
-
-    useEffect(() => {
-      if (product) {
-        store.setProduct(product);
-      }
-    }, [product, selectedProductsReservedCount, store, type]);
 
     const onJobSelectNavigation = useCallback(() => {
       setSelectedTab(Tabs.LinkJob);
@@ -116,34 +87,35 @@ export const ProductModal: React.FC<Props> = observer(
         {
           text: 'Remove',
           onPress: () => {
-            if (onRemove && isRemoveProductModel(productFromStore))
-              onRemove(productFromStore);
+            if (product) onRemove?.(product);
             clearProductModalStoreOnClose();
           },
         },
       ]);
-    }, [clearProductModalStoreOnClose, onRemove, productFromStore]);
+    }, [clearProductModalStoreOnClose, product, onRemove]);
 
     const renderItem = useCallback(
       ({ index }: { index: number }) => {
         const onPressAdd = (job?: JobModel) => {
-          if (productFromStore) {
-            onSubmit({ ...productFromStore, job });
-            clearProductModalStoreOnClose();
-          }
+          if (!product) return;
+
+          onSubmit({ ...product, job });
+          clearProductModalStoreOnClose();
         };
 
         const onPressSkip = () => {
-          if (productFromStore) {
-            onSubmit(productFromStore);
-            clearProductModalStoreOnClose();
-          }
+          if (!product) return;
+
+          onSubmit(product);
+          clearProductModalStoreOnClose();
         };
 
         switch (index) {
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
+                product={product}
+                onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={type === ProductModalType.Edit}
                 error={error}
                 maxValue={maxValue}
@@ -156,9 +128,9 @@ export const ProductModal: React.FC<Props> = observer(
             return (
               <SelectProductJob
                 isEdit={type === ProductModalType.Edit}
-                productJob={productFromStore?.job}
+                productJob={product?.job}
                 selectedTab={selectedTab}
-                isRecoverableProduct={productFromStore?.isRecoverable}
+                isRecoverableProduct={product?.isRecoverable}
                 onPressSkip={onPressSkip}
                 onPressBack={onPressBack}
                 onPressAdd={onPressAdd}
@@ -169,11 +141,13 @@ export const ProductModal: React.FC<Props> = observer(
         }
       },
       [
-        productFromStore,
+        product,
         onSubmit,
         clearProductModalStoreOnClose,
+        onChangeProductQuantity,
         type,
         error,
+        maxValue,
         onJobSelectNavigation,
         onRemoveAlert,
         selectedTab,
@@ -193,7 +167,7 @@ export const ProductModal: React.FC<Props> = observer(
 
     return (
       <Modal
-        isVisible={!!product}
+        isVisible={type !== ProductModalType.Hidden}
         onClose={clearProductModalStoreOnClose}
         title={removeProductsStore.stockName}
         titleContainerStyle={styles.titleContainer}

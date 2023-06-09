@@ -19,30 +19,37 @@ import {
   ProductModalType,
 } from '../productModal';
 import { SelectedProductsList } from './SelectedProductsList';
-import { ScanningProductModel } from './stores/ScanningProductStore';
 import { AppNavigator } from '../../navigation';
 import { onRemoveProducts } from '../../data/removeProducts';
 import { SVGs, colors } from '../../theme';
-import { clone } from 'ramda';
-import { RemoveProductModel } from './stores/RemoveProductsStore';
-import { getReservedCountById, isRemoveProductModel } from './helpers';
-import AlertWrapper from '../../contexts/AlertWrapper';
 
+import AlertWrapper from '../../contexts/AlertWrapper';
+import {
+  CurrentProductStoreType,
+  ScannerModalStoreType,
+  ProductModel,
+} from '../../stores/types';
 const { width, height } = Dimensions.get('window');
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
+type Store = ScannerModalStoreType & CurrentProductStoreType;
+
+const initModalParams: ProductModalParams = {
+  type: ProductModalType.Hidden,
+  maxValue: undefined,
+};
 
 const alertMessage =
   'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
 
 const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
+  const store = useRef<Store>(removeProductsStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [modalParams, setModalParams] = useState<ProductModalParams>({
-    product: undefined,
-    type: undefined,
-  });
+  const [modalParams, setModalParams] =
+    useState<ProductModalParams>(initModalParams);
+
   const [alertVisible, setAlertVisible] = useState(false);
   const isNeedNavigateBack = useRef(false);
 
@@ -91,33 +98,27 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
   };
 
   const onCloseModal = () => {
-    setModalParams({
-      type: undefined,
-      product: undefined,
-    });
+    setModalParams(initModalParams);
   };
 
-  const onSubmitProduct = (
-    product: ScanningProductModel | RemoveProductModel,
-  ) => {
-    if (isRemoveProductModel(product))
-      removeProductsStore.updateProduct(product);
+  const onSubmitProduct = (product: ProductModel) => {
+    store.updateProduct(product);
   };
 
-  const onEditProduct = (product: RemoveProductModel) => {
-    const removedProductCount = getReservedCountById(
-      removeProductsStore.getProducts,
-      product.productId,
-    );
+  const setEditableProductQuantity = (quantity: number) => {
+    store.setEditableProductQuantity(quantity);
+  };
+
+  const onEditProduct = (product: ProductModel) => {
+    store.setCurrentProduct(product);
     setModalParams({
       type: ProductModalType.Edit,
-      product: clone(product),
-      selectedProductsReservedCount: removedProductCount,
+      maxValue: store.getEditableMaxValue(product),
     });
   };
 
-  const onRemoveProduct = (product: RemoveProductModel) => {
-    removeProductsStore.removeProduct(product);
+  const onRemoveProduct = (product: ProductModel) => {
+    store.removeProduct(product);
   };
 
   const onPressPrimary = () => {
@@ -174,7 +175,7 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
 
             <Button
               type={ButtonType.primary}
-              disabled={!Object.keys(removeProductsStore.getProducts).length}
+              disabled={!Object.keys(store.getProducts).length}
               buttonStyle={styles.buttonContainer}
               title="Complete"
               onPress={onCompleteRemove}
@@ -183,9 +184,11 @@ const RemoveProductsScreen: React.FC<Props> = observer(({ navigation }) => {
         </>
         <ProductModal
           {...modalParams}
+          product={store.getCurrentProduct}
           onSubmit={onSubmitProduct}
           onClose={onCloseModal}
           onRemove={onRemoveProduct}
+          onChangeProductQuantity={setEditableProductQuantity}
         />
       </View>
     </AlertWrapper>

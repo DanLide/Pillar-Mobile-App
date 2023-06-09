@@ -1,5 +1,5 @@
 import { TransactionType } from '../../constants/common.enum';
-import { ScanningProductModel } from '../../modules/removeProducts/stores/ScanningProductStore';
+import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
 
 export interface ProductResponse {
@@ -25,7 +25,7 @@ export const getFetchProductAPI = (scanCode: string) => {
   return tryAuthFetch<ProductResponse>({ url, request: { method: 'GET' } });
 };
 
-export const removeProductAPI = (product: ScanningProductModel) => {
+export const removeProductAPI = (product: ProductModel) => {
   const url = new URLProvider().removeProduct(
     product.productId,
     product.reservedCount,

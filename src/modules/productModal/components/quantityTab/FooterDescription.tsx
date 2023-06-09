@@ -1,10 +1,10 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { colors, fonts } from '../../../../theme';
-import { productModalStore } from '../../store';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ColoredTooltip } from '../../../../components';
+import { ProductModel } from '../../../../stores/types';
 
 const InventoryTypeName = {
   [InventoryUseType.Stock]: 'Stock',
@@ -16,20 +16,19 @@ const InventoryTypeName = {
 };
 
 interface Props {
+  product: ProductModel;
   maxValue: number;
 }
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
-export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
-  const store = useRef(productModalStore).current;
-
-  const InventoryTypeNameString = store.getProduct?.inventoryUseType
-    ? InventoryTypeName[store.getProduct.inventoryUseType]
+export const FooterDescription: React.FC<Props> = ({ maxValue, product }) => {
+  const InventoryTypeNameString = product.inventoryUseTypeId
+    ? InventoryTypeName[product.inventoryUseTypeId]
     : undefined;
 
   const getInventoryUseTypeLabelTheme = useCallback(() => {
-    switch (store.getProduct?.inventoryUseType) {
+    switch (product.inventoryUseTypeId) {
       case InventoryUseType.Container:
         return { backgroundColor: colors.blueLight, color: colors.blue };
       case InventoryUseType.Each:
@@ -41,7 +40,7 @@ export const FooterDescription: React.FC<Props> = ({ maxValue }) => {
       default:
         return undefined;
     }
-  }, [store.getProduct?.inventoryUseType]);
+  }, [product.inventoryUseTypeId]);
 
   const inventoryUseTypeLabelTheme = getInventoryUseTypeLabelTheme();
 
