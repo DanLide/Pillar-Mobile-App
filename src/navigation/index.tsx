@@ -75,6 +75,7 @@ const RemoveStack = () => {
         options={getScreenOptions({
           title: 'Remove Products',
           leftBarButtonType: LeftBarType.Close,
+          gestureEnabled: false,
         })}
       />
       <Stack.Screen

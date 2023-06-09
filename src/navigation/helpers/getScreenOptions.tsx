@@ -1,4 +1,5 @@
 import React from 'react';
+import { StackNavigationOptions } from '@react-navigation/stack';
 
 import { LeftBarButton, TitleBar, RightBarButton } from '../components';
 
@@ -13,19 +14,22 @@ export enum RightBarType {
   Logout,
 }
 
-interface GetScreenOptions {
+interface GetScreenOptions
+  extends Pick<StackNavigationOptions, 'gestureEnabled'> {
   title: string;
   leftBarButtonType?: LeftBarType;
   rightBarButtonType?: RightBarType;
 }
 
-export const getScreenOptions = (params: GetScreenOptions) => ({
-  headerTitle: () => <TitleBar title={params.title} />,
-  headerLeft: () => (
-    <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
-  ),
-  headerRight: () => <RightBarButton rightBarButtonType={params.rightBarButtonType} />,
-  headerStyle: {
-    backgroundColor: colors.purple,
-  },
+export const getScreenOptions = ({
+  title,
+  leftBarButtonType,
+  rightBarButtonType,
+  gestureEnabled,
+}: GetScreenOptions): StackNavigationOptions => ({
+  headerTitle: () => <TitleBar title={title} />,
+  headerLeft: () => <LeftBarButton leftBarButtonType={leftBarButtonType} />,
+  headerRight: () => <RightBarButton rightBarButtonType={rightBarButtonType} />,
+  headerStyle: { backgroundColor: colors.purple },
+  gestureEnabled,
 });
