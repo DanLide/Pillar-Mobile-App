@@ -383,6 +383,14 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         <SVGs.QuestionMark color={colors.white} />
       </TouchableOpacity>
       {renderBarcodes()}
+      <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
+        {renderTorchIcon}
+      </Pressable>
+      <View style={styles.buttonsContainer}>
+      <ProductListButton
+        containerStyle={styles.listButtonContainer}
+        count={scannedProductCount}
+      />
       <TouchableOpacity
         onPress={onPressScanButton}
         disabled={isScanButtonDisabled}
@@ -394,13 +402,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         <SVGs.CaptureIcon />
         <Text style={styles.captureText}>Capture</Text>
       </TouchableOpacity>
-      <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
-        {renderTorchIcon}
-      </Pressable>
-      <ProductListButton
-        containerStyle={styles.listButtonContainer}
-        count={scannedProductCount}
-      />
+      </View>
     </View>
   );
 };
@@ -434,8 +436,8 @@ const styles = StyleSheet.create({
   },
   torch: {
     position: 'absolute',
-    left: 10,
-    top: 43,
+    left:'5%',
+    top: '6%',
     padding: 4,
     zIndex: 100,
     width: 42,
@@ -446,26 +448,31 @@ const styles = StyleSheet.create({
   },
   questionMark: {
     position: 'absolute',
-    bottom: 23,
-    left: 16,
+    top: '6%',
+    right: '5%',
+    zIndex: 100,
   },
   scanButton: {
-    bottom: 16,
-    position: 'absolute',
-    alignSelf: 'center',
-    width: '64.8%',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.purple,
     flexDirection: 'row',
     height: 56,
     borderRadius: 8,
+    flex: 1,
+    marginLeft: 4,
+  },
+  buttonsContainer: {
+    bottom: 16,
+    position: 'absolute',
+    alignSelf: 'center',
+    flexDirection: 'row',
     zIndex: 100,
+    marginHorizontal: '5%',
   },
   listButtonContainer: {
-    position: 'absolute',
-    bottom: 23,
-    right: 16,
+    flex: 1,
+    marginRight: 4,
   },
   iconWrapper: {
     width: 19,

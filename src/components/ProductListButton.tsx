@@ -37,6 +37,7 @@ const ProductListButton: React.FC<Props> = ({
     <View style={containerStyle}>
       <TouchableOpacity style={buttonStyle} onPress={goBack} {...props}>
         <SVGs.ProductListIcon color={colors.purpleDark} />
+        <Text style={styles.titleText}>List</Text>
       </TouchableOpacity>
       {count ? (
         <View style={styles.countContainer}>
@@ -56,6 +57,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.15,
     shadowRadius: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  titleText: {
+    color: colors.purple,
+    fontSize: 20,
+    fontFamily: fonts.TT_Regular,
+    marginLeft: 8,
+    fontWeight: 'bold',
   },
   countContainer: {
     alignItems: 'center',
