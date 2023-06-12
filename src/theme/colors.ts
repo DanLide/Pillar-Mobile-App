@@ -21,6 +21,7 @@ export const colors = {
   grayDark: '#95959E',
   gray: '#E1E1E8',
   grayLight: '#F8F8FA',
+  grayDark2: '#58585F',
   transparent: 'transparent',
   green: '#0A672F',
   greenLight: '#D9FAE6',
