@@ -26,11 +26,12 @@ const errorText =
 
 export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   const onFetchStocks = useCallback(async () => {
     setIsLoading(true);
     const error = await fetchStocks(stocksStore);
+    setIsLoading(false);
     if (error) {
       setIsError(true);
     }
