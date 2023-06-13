@@ -4,6 +4,8 @@ import { stocksStore } from '../modules/stocksList/stores';
 import { Utils } from '../data/helpers/utils';
 import { Permissions } from '../data/helpers';
 import { GetAuthToken } from '../data/helpers/getAuthToken';
+import { removeProductsStore } from '../modules/removeProducts/stores';
+import { ssoStore } from '.';
 
 export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @observable isLoggedIn?: boolean;
@@ -64,6 +66,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.logOut();
   }
 
+  onAutoLogout() {
+    this.logOut();
+  }
+
   @action setToken(token: string) {
     this.token = token;
   }
@@ -115,5 +121,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.permissionSet = undefined;
     this.isLoggedIn = false;
     stocksStore.clear();
+    removeProductsStore.clear()
+    ssoStore.clear();
   }
 }
