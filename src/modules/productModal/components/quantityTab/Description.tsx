@@ -29,6 +29,7 @@ export const Description = memo(({ product }: Props) => (
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    paddingTop: 0,
     alignItems: 'center',
   },
   partNumberContainer: {
