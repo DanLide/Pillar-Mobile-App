@@ -12,6 +12,7 @@ export class AuthError extends Error {}
 
 export interface LogoutListener {
   onServerLogout: () => void;
+  onAutoLogout: () => void;
 }
 
 export type RequestError = BadRequestError | AuthError | Error;
