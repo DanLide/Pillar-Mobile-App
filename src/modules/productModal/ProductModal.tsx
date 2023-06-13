@@ -46,7 +46,7 @@ export enum Tabs {
 const tabs = [Tabs.EditQuantity, Tabs.LinkJob];
 
 const NAVIGATION_HEADER_HEIGHT = 64;
-const MODAL_HEADER_HEIGHT = 71;
+const MODAL_HEADER_HEIGHT = 70;
 
 export const ProductModal: React.FC<Props> = observer(
   ({

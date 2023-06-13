@@ -49,9 +49,11 @@ export const Modal: React.FC<Props> = ({
             containerStyle={titleContainerStyle}
           />
           <View style={styles.containerHeader}>
-            <Pressable hitSlop={32} onPress={onClose}>
-              <SVGs.CloseIcon color={colors.purpleDark} />
-            </Pressable>
+            <View style={styles.icon}>
+              <Pressable hitSlop={32} onPress={onClose}>
+                <SVGs.CloseIcon color={colors.purpleDark} />
+              </Pressable>
+            </View>
             <Text style={styles.title}>{semiTitle}</Text>
             <View style={styles.icon} />
           </View>
