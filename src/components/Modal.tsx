@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Modal as RNModal,
   StyleSheet,
@@ -24,26 +24,25 @@ interface Props {
 }
 
 export const DEFAULT_TOP_OFFSET = 169;
-export const DEFAULT_HEADER_HIGHT = 31;
 
-export const Modal = memo(
-  ({
-    isVisible,
-    title,
-    children,
-    topOffset,
-    titleContainerStyle,
-    semiTitle,
-    onClose,
-  }: Props) => (
+export const Modal: React.FC<Props> = ({
+  isVisible,
+  title,
+  children,
+  topOffset,
+  titleContainerStyle,
+  semiTitle,
+  onClose,
+}) => {
+  const backgroundStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.background, { marginTop: topOffset ?? DEFAULT_TOP_OFFSET }],
+    [topOffset],
+  );
+
+  return (
     <RNModal visible={isVisible} transparent={true} animationType="slide">
       <View style={styles.container}>
-        <View
-          style={[
-            styles.background,
-            { marginTop: topOffset ?? DEFAULT_TOP_OFFSET },
-          ]}
-        >
+        <View style={backgroundStyle}>
           <InfoTitleBar
             type={InfoTitleBarType.Secondary}
             title={title}
@@ -51,7 +50,7 @@ export const Modal = memo(
           />
           <View style={styles.containerHeader}>
             <View style={styles.icon}>
-              <Pressable onPress={onClose}>
+              <Pressable hitSlop={32} onPress={onClose}>
                 <SVGs.CloseIcon color={colors.purpleDark} />
               </Pressable>
             </View>
@@ -62,8 +61,8 @@ export const Modal = memo(
         </View>
       </View>
     </RNModal>
-  ),
-);
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -80,6 +79,7 @@ const styles = StyleSheet.create({
   },
   containerHeader: {
     paddingTop: 11,
+    paddingBottom: 16,
     marginHorizontal: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
