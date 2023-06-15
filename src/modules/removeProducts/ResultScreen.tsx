@@ -1,4 +1,10 @@
-import React, { useRef, useCallback, useMemo, useEffect } from 'react';
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+  useEffect,
+  useState,
+} from 'react';
 import {
   View,
   Text,
@@ -31,6 +37,7 @@ import {
   ProductModel,
   SyncedProductStoreType,
 } from '../../stores/types';
+import Tooltip from '../../components/Tooltip';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -38,7 +45,12 @@ interface Props {
 
 type StoreModel = SyncedProductStoreType & StockProductStoreType;
 
+const TOOLTIP_MESSAGE =
+  'If the products are associated with a job, you will get an email to download an invoice. You can also retrieve the invoice in RepairStack. These products will also be sent to the associated job in your management software.';
+
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
   const store = useRef<StoreModel>(removeProductsStore).current;
   const toast = useToast();
 
@@ -123,12 +135,16 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
             renderItem={renderItem}
           />
 
-          <Text style={styles.contextFooter}>
-            If the products are associated with a job, you will get an email to
-            download an invoice. You can also retrieve the invoice in
-            RepairStack. These products will also be sent to the associated job
-            in CCC.
-          </Text>
+          <Tooltip
+            message={TOOLTIP_MESSAGE}
+            visible={isTooltipVisible}
+            onClose={() => setIsTooltipVisible(false)}
+            onOpen={() => setIsTooltipVisible(true)}
+          >
+            <Text style={styles.contextFooter}>
+              What will be submitted as an invoice?
+            </Text>
+          </Tooltip>
 
           {notSyncedProductsSection.length > 0 ? (
             <>
