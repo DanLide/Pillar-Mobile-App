@@ -33,7 +33,7 @@ export const Modal: React.FC<Props> = ({
   topOffset,
   titleContainerStyle,
   semiTitle,
-  testID,
+  testID = 'modal',
   onClose,
 }) => {
   const backgroundStyle = useMemo<StyleProp<ViewStyle>>(

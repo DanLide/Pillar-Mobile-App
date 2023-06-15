@@ -1,5 +1,5 @@
 import { Utils } from '../../data/helpers/utils';
-import { AuthStore } from '../AuthStore';
+import { authStore } from '..';
 import { stocksStore } from '../../modules/stocksList/stores';
 
 jest.mock('../../modules/stocksList/stores');
@@ -17,7 +17,7 @@ const mockfFcilityID = 'mockfFcilityID';
 const mockName = 'mockName';
 
 describe('AuthStore', () => {
-  const store = new AuthStore();
+  const store = authStore;
 
   it('should update token on setToken and compute getToken', () => {
     store.setToken(mockToken);
@@ -90,6 +90,13 @@ describe('AuthStore', () => {
     const mockLogOut = jest.fn();
     store.logOut = mockLogOut;
     store.onServerLogout();
+    expect(mockLogOut).toHaveBeenCalled();
+  });
+
+  it('should call logOut on onAutoLogout', () => {
+    const mockLogOut = jest.fn();
+    store.logOut = mockLogOut;
+    store.onAutoLogout();
     expect(mockLogOut).toHaveBeenCalled();
   });
 });

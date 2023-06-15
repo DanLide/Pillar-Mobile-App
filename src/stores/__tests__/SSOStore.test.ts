@@ -1,4 +1,4 @@
-import { SSOStore } from '../SSOStore';
+import { ssoStore } from '..';
 
 const mockSSOList = [
   {
@@ -12,7 +12,8 @@ const mockSSOList = [
 ];
 
 describe('SSOStore', () => {
-  const store = new SSOStore();
+  const store = ssoStore;
+
   it('should update ssoList on setSSOList and get getSSOList', () => {
     store.setSSOList(mockSSOList);
     expect(store.getSSOList).toBe(mockSSOList);
