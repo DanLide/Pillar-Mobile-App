@@ -38,7 +38,6 @@ export type ScanProductProps = {
   scannedProductCount?: number;
 };
 
-const SCAN_PER_SECOND = 15;
 const MISSED_BARCODE_LIMIT = 5;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -370,7 +369,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           onRead={onRead}
           isActive={isActive}
           onLayout={onLayoutScanner}
-          frameProcessorFps={SCAN_PER_SECOND}
         />
       </View>
       <View style={styles.shadow} />
