@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ViewStyle,
-  View, 
-  ActivityIndicator, 
-  LayoutChangeEvent, 
+  View,
+  ActivityIndicator,
+  LayoutChangeEvent,
   LayoutRectangle,
 } from 'react-native';
 import { runOnJS } from 'react-native-reanimated';
@@ -18,6 +18,7 @@ import {
   Frame,
   Camera,
   CameraProps,
+  CameraDeviceFormat,
 } from 'react-native-vision-camera';
 
 export interface ScannerProps extends Partial<CameraProps> {
@@ -27,6 +28,7 @@ export interface ScannerProps extends Partial<CameraProps> {
 
 const CAMERA_ZOOM = 1.5;
 const VIDEO_WIDTH = 1920;
+const PIXEL_FORMAT = '420v'
 
 const Scanner: React.FC<ScannerProps> = ({
   isActive = true,
@@ -35,8 +37,10 @@ const Scanner: React.FC<ScannerProps> = ({
 }) => {
   const devices = useCameraDevices();
   const device = devices.back;
-  const cameraRef = useRef<Camera>(null);
-  const timerId = useRef<NodeJS.Timer | null>(null);
+  const cameraRef = useRef<Camera | null>(null);
+  const format = useRef<CameraDeviceFormat | null>(null)
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
+
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
 
@@ -52,22 +56,32 @@ const Scanner: React.FC<ScannerProps> = ({
 
   const [hasPermission, setHasPermission] = React.useState(false);
 
-  let neededFormat
-  let maxHeight = 0;
-
-  device?.formats.forEach((obj) => {
-    if (obj.videoWidth === VIDEO_WIDTH && obj.pixelFormat === "420v" && obj.videoHeight > maxHeight) {
-      neededFormat = obj;
-      maxHeight = obj.videoHeight;
+  !format.current && device?.formats.forEach((obj) => {
+    if (
+      obj.videoWidth === VIDEO_WIDTH &&
+      obj.pixelFormat === PIXEL_FORMAT &&
+      obj.videoHeight > (format.current?.videoHeight || 0)) {
+      format.current = obj;
     }
   })
 
   useEffect(() => {
     checkCameraPermission();
-    // clear timer on unRender
-    ()=> timerId.current && clearInterval(timerId.current);
   }, []);
 
+  useEffect(() => {
+    if (!layout) return
+
+    const point = {
+      x: layout.width / 2,
+      y: layout.height / 2
+    };
+    const timerId = setInterval(() => {
+      cameraRef.current?.focus(point)
+    }, 500);
+
+    return () => clearInterval(timerId);
+  }, [layout])
 
   const checkCameraPermission = async () => {
     const status = await Camera.getCameraPermissionStatus();
@@ -77,17 +91,12 @@ const Scanner: React.FC<ScannerProps> = ({
   if (!device) return <ActivityIndicator />;
 
   const handleLayout = (event: LayoutChangeEvent) => {
-    const { width, height } = event.nativeEvent.layout;
-    timerId.current = setInterval(() => {
-      cameraRef.current?.focus({
-        x: width / 2,
-        y: height / 2
-      })
-    }, 1000);
+    setLayout(event.nativeEvent.layout);
   };
 
+
   return (
-    <View onLayout={handleLayout} style={{flex:1}}>
+    <View onLayout={handleLayout} style={{ flex: 1 }}>
       <Camera
         ref={cameraRef}
         frameProcessor={frameProcessor}
@@ -96,8 +105,8 @@ const Scanner: React.FC<ScannerProps> = ({
         isActive={isActive}
         {...props}
         device={device}
-        format={neededFormat}
-        fps={20}
+        format={format.current || device?.formats[device?.formats.length - 1]}
+        fps={30}
         enableHighQualityPhotos
         enableDepthData
       />
