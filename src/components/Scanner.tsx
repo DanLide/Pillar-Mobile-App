@@ -1,5 +1,11 @@
-import React, { useEffect } from 'react';
-import { ViewStyle, ActivityIndicator } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  ViewStyle,
+  View, 
+  ActivityIndicator, 
+  LayoutChangeEvent, 
+  LayoutRectangle,
+} from 'react-native';
 import { runOnJS } from 'react-native-reanimated';
 import {
   scanBarcodes,
@@ -8,7 +14,6 @@ import {
 } from 'vision-camera-code-scanner';
 import {
   useCameraDevices,
-  useCameraFormat,
   useFrameProcessor,
   Frame,
   Camera,
@@ -21,7 +26,7 @@ export interface ScannerProps extends Partial<CameraProps> {
 }
 
 const CAMERA_ZOOM = 1.5;
-const VIDEO_HEIGHT = 720
+const VIDEO_WIDTH = 1920;
 
 const Scanner: React.FC<ScannerProps> = ({
   isActive = true,
@@ -30,7 +35,8 @@ const Scanner: React.FC<ScannerProps> = ({
 }) => {
   const devices = useCameraDevices();
   const device = devices.back;
-
+  const cameraRef = useRef<Camera>(null);
+  const timerId = useRef<NodeJS.Timer | null>(null);
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
 
@@ -46,12 +52,22 @@ const Scanner: React.FC<ScannerProps> = ({
 
   const [hasPermission, setHasPermission] = React.useState(false);
 
-  const formatsWidthNeedWidth = device?.formats.filter((item) => item.videoHeight === VIDEO_HEIGHT || item.videoWidth === VIDEO_HEIGHT)
-  const format = formatsWidthNeedWidth?.sort((a, b) => { return a.photoWidth - b.photoWidth })?.[0]
+  let neededFormat
+  let maxHeight = 0;
+
+  device?.formats.forEach((obj) => {
+    if (obj.videoWidth === VIDEO_WIDTH && obj.pixelFormat === "420v" && obj.videoHeight > maxHeight) {
+      neededFormat = obj;
+      maxHeight = obj.videoHeight;
+    }
+  })
 
   useEffect(() => {
     checkCameraPermission();
+    // clear timer on unRender
+    ()=> timerId.current && clearInterval(timerId.current);
   }, []);
+
 
   const checkCameraPermission = async () => {
     const status = await Camera.getCameraPermissionStatus();
@@ -60,19 +76,32 @@ const Scanner: React.FC<ScannerProps> = ({
 
   if (!device) return <ActivityIndicator />;
 
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    timerId.current = setInterval(() => {
+      cameraRef.current?.focus({
+        x: width / 2,
+        y: height / 2
+      })
+    }, 1000);
+  };
+
   return (
-    <Camera
-      frameProcessor={frameProcessor}
-      audio={false}
-      zoom={CAMERA_ZOOM}
-      isActive={isActive}
-      {...props}
-      device={device}
-      format={format}
-      fps={20}
-      enableHighQualityPhotos
-      enableDepthData
-    />
+    <View onLayout={handleLayout} style={{flex:1}}>
+      <Camera
+        ref={cameraRef}
+        frameProcessor={frameProcessor}
+        audio={false}
+        zoom={CAMERA_ZOOM}
+        isActive={isActive}
+        {...props}
+        device={device}
+        format={neededFormat}
+        fps={20}
+        enableHighQualityPhotos
+        enableDepthData
+      />
+    </View>
   );
 };
 
