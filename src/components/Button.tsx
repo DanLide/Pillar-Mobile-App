@@ -38,6 +38,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
   textStyle,
   disabled,
   icon,
+  testID = 'button',
   ...props
 }) => {
   const isDisabled = isLoading || disabled;
@@ -84,13 +85,23 @@ const Button: React.FC<ExtendedButtonProps> = ({
       {...props}
       disabled={isDisabled}
       style={buttonMergedStyle}
+      testID={`${testID}:container`}
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color="white" />
+        <ActivityIndicator
+          size="small"
+          color="white"
+          testID={`${testID}:loadingIndicator`}
+        />
       ) : (
-        <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer} testID={`${testID}:content`}>
           {icon}
-          <Text {...props} style={textMergedStyle} disabled>
+          <Text
+            {...props}
+            style={textMergedStyle}
+            disabled
+            testID={`${testID}:title`}
+          >
             {title}
           </Text>
         </View>

@@ -21,8 +21,8 @@ import { OTHER_JOB_ID } from './constants';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-  ToastType,
 } from '../../contexts';
+import { ToastType } from '../../contexts/types';
 
 import { groupProductsByJobId } from './helpers';
 

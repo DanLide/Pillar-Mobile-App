@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 interface Props extends Omit<TouchableOpacityProps, 'children'> {
   count?: number;
   containerStyle?: StyleProp<ViewStyle>;
+  testID?: string;
 }
 
 const COUNTER_SIZE = 20;
@@ -22,6 +23,7 @@ const ProductListButton: React.FC<Props> = ({
   count,
   containerStyle,
   style,
+  testID = 'productListButton',
   ...props
 }) => {
   const navigation = useNavigation();
@@ -34,14 +36,14 @@ const ProductListButton: React.FC<Props> = ({
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
 
   return (
-    <View style={containerStyle}>
-      <TouchableOpacity style={buttonStyle} onPress={goBack} {...props}>
+    <View style={containerStyle} testID={`${testID}:container`}>
+      <TouchableOpacity style={buttonStyle} onPress={goBack} {...props} testID={`${testID}:button`}>
         <SVGs.ProductListIcon color={colors.purpleDark} />
         <Text style={styles.titleText}>List</Text>
       </TouchableOpacity>
       {count ? (
         <View style={styles.countContainer}>
-          <Text style={styles.countText}>{count}</Text>
+          <Text style={styles.countText} testID={`${testID}:count`}>{count}</Text>
         </View>
       ) : null}
     </View>

@@ -7,15 +7,17 @@ import {
 } from '@react-navigation/native';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
-import { LeftBarType } from '../helpers';
+import { LeftBarType } from '../types';
 import { SVGs, colors } from '../../theme';
 
 interface LeftBarButtonProps {
   leftBarButtonType?: LeftBarType;
+  testID?: string;
 }
 
 export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   leftBarButtonType,
+  testID = 'leftBarButton',
 }) => {
   const navigation: NavigationProp<ParamListBase> = useNavigation();
 
@@ -54,7 +56,11 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   };
 
   return (
-    <TouchableOpacity style={styles.iconButton} onPress={onIconPress}>
+    <TouchableOpacity
+      testID={`${testID}:button`}
+      style={styles.iconButton}
+      onPress={onIconPress}
+    >
       {renderIcon()}
     </TouchableOpacity>
   );

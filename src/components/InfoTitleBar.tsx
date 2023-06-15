@@ -19,10 +19,17 @@ interface Props {
   title?: string;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  testID?: string;
 }
 
 export const InfoTitleBar = memo(
-  ({ type, title, containerStyle, textStyle }: Props) => {
+  ({
+    type,
+    title,
+    containerStyle,
+    textStyle,
+    testID = 'infoTitleBar',
+  }: Props) => {
     const getContainerStyleByType = useMemo(() => {
       switch (type) {
         case InfoTitleBarType.Primary:
@@ -46,7 +53,7 @@ export const InfoTitleBar = memo(
     }, [textStyle, type]);
 
     return title ? (
-      <View style={getContainerStyleByType}>
+      <View style={getContainerStyleByType} testID={`${testID}:container`}>
         <Text style={getTextStyleByType}>{title}</Text>
       </View>
     ) : null;

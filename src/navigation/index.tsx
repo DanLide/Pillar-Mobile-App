@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import { getNavigationOptions, getScreenOptions, LeftBarType } from './helpers';
+import { getNavigationOptions, getScreenOptions } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -16,9 +16,9 @@ import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
-import { RightBarType } from './helpers/getScreenOptions';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
+import { LeftBarType, RightBarType } from './types';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',

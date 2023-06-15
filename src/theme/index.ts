@@ -1,5 +1,6 @@
 import { fonts } from './fonts';
-import { colors, toastColors } from './colors';
+import { colors } from './colors';
+import { toastColors } from './toastColors';
 
 import * as SVGs from './svgs';
 import { TorchIconState } from './svgs';

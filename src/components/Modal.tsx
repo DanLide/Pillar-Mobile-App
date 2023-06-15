@@ -19,6 +19,7 @@ interface Props {
   semiTitle?: string;
   children?: React.ReactNode;
   topOffset?: number;
+  testID?: string;
 
   onClose: () => void;
 }
@@ -32,6 +33,7 @@ export const Modal: React.FC<Props> = ({
   topOffset,
   titleContainerStyle,
   semiTitle,
+  testID,
   onClose,
 }) => {
   const backgroundStyle = useMemo<StyleProp<ViewStyle>>(
@@ -40,9 +42,14 @@ export const Modal: React.FC<Props> = ({
   );
 
   return (
-    <RNModal visible={isVisible} transparent={true} animationType="slide">
+    <RNModal
+      visible={isVisible}
+      transparent={true}
+      animationType="slide"
+      testID={`${testID}:container`}
+    >
       <View style={styles.container}>
-        <View style={backgroundStyle}>
+        <View style={backgroundStyle} testID={`${testID}:content`}>
           <InfoTitleBar
             type={InfoTitleBarType.Secondary}
             title={title}
@@ -50,7 +57,11 @@ export const Modal: React.FC<Props> = ({
           />
           <View style={styles.containerHeader}>
             <View style={styles.icon}>
-              <Pressable hitSlop={32} onPress={onClose}>
+              <Pressable
+                hitSlop={32}
+                onPress={onClose}
+                testID={`${testID}:close`}
+              >
                 <SVGs.CloseIcon color={colors.purpleDark} />
               </Pressable>
             </View>

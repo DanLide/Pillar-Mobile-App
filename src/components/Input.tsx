@@ -14,12 +14,14 @@ import { SvgProps } from 'react-native-svg';
 interface Props extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
   rightIcon?: React.NamedExoticComponent<SvgProps> | React.FC<SvgProps>;
+  testID?: string;
 }
 
 const Input: React.FC<Props> = ({
   containerStyle,
   rightIcon: RightIcon,
   style,
+  testID = 'input',
   ...props
 }) => {
   const mergedContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -33,7 +35,7 @@ const Input: React.FC<Props> = ({
   );
 
   return (
-    <View style={mergedContainerStyle}>
+    <View style={mergedContainerStyle} testID={`${testID}:container`}>
       <TextInput
         style={inputStyle}
         placeholderTextColor={colors.grayDark}
