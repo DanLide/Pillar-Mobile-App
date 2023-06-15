@@ -67,8 +67,6 @@ const Scanner: React.FC<ScannerProps> = ({
 
   useEffect(() => {
     checkCameraPermission();
-    // clear timer on unRender
-    ()=> timerId.current && clearInterval(timerId.current);
   }, []);
 
   useEffect(() => {
