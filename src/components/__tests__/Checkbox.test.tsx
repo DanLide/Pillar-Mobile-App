@@ -2,6 +2,7 @@ import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
 import { Checkbox } from '..';
+import { testIds } from '../../helpers';
 
 const mockOnChange = jest.fn();
 
@@ -10,7 +11,7 @@ describe('Checkbox', () => {
     const { getByTestId } = render(
       <Checkbox isChecked onChange={mockOnChange} />,
     );
-    const container = getByTestId('checkbox:container');
+    const container = getByTestId(testIds.idContainer('checkbox'));
     expect(container.props.style).toEqual({
       alignItems: 'center',
       backgroundColor: '#9657D9',
@@ -30,7 +31,7 @@ describe('Checkbox', () => {
     const { getByTestId } = render(
       <Checkbox isChecked={false} onChange={mockOnChange} />,
     );
-    const container = getByTestId('checkbox:container');
+    const container = getByTestId(testIds.idContainer('checkbox'));
     expect(container.props.style).toEqual({
       alignItems: 'center',
       backgroundColor: 'transparent',
@@ -50,7 +51,7 @@ describe('Checkbox', () => {
     const { getByTestId } = render(
       <Checkbox isChecked={false} onChange={mockOnChange} />,
     );
-    const container = getByTestId('checkbox:container');
+    const container = getByTestId(testIds.idContainer('checkbox'));
     act(() => {
       container.props.onClick();
     });

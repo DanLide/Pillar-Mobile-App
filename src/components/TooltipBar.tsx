@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props {
   title: string;
@@ -26,7 +27,7 @@ export const TooltipBar = memo(
     return (
       <View
         style={[styles.container, containerStyle]}
-        testID={`${testID}:container`}
+        testID={testIds.idContainer(testID)}
       >
         <Text
           style={[styles.text, textStyle]}

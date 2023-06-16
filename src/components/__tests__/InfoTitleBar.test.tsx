@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 
 import { InfoTitleBar, InfoTitleBarType } from '..';
+import { testIds } from '../../helpers';
 
 const mockTitle = 'mockTitle';
 
@@ -14,7 +15,7 @@ describe('InfoTitleBar', () => {
 
   it('NOT render title', async () => {
     const { queryByTestId } = render(<InfoTitleBar />);
-    const container = queryByTestId('infoTitleBar:container');
+    const container = queryByTestId(testIds.idContainer('infoTitleBar'));
     expect(container).toBeNull();
   });
 
@@ -23,7 +24,7 @@ describe('InfoTitleBar', () => {
       <InfoTitleBar title={mockTitle} type={InfoTitleBarType.Primary} />,
     );
 
-    const container = getByTestId('infoTitleBar:container');
+    const container = getByTestId(testIds.idContainer('infoTitleBar'));
 
     expect(container.props.style).toEqual([
       {
@@ -42,7 +43,7 @@ describe('InfoTitleBar', () => {
     const { getByTestId } = render(
       <InfoTitleBar title={mockTitle} type={InfoTitleBarType.Secondary} />,
     );
-    const container = getByTestId('infoTitleBar:container');
+    const container = getByTestId(testIds.idContainer('infoTitleBar'));
     expect(container.props.style).toEqual([
       {
         alignItems: 'center',

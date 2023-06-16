@@ -1,7 +1,8 @@
 import React from 'react';
+import { render, act } from '@testing-library/react-native';
 
 import { Switch } from '..';
-import { render, act } from '@testing-library/react-native';
+import { testIds } from '../../helpers';
 
 const mockLabel = 'mockLabel';
 const mockContainerStyle = { width: 100 };
@@ -14,7 +15,9 @@ describe('Switch', () => {
   });
   it('render without label', () => {
     const { getByTestId } = render(<Switch />);
-    expect(getByTestId('switch:container').props.children[0][1]).toBeNull();
+    expect(
+      getByTestId(testIds.idContainer('switch')).props.children[0][1],
+    ).toBeNull();
   });
 
   it('render label', () => {
@@ -30,7 +33,7 @@ describe('Switch', () => {
         label={mockLabel}
       />,
     );
-    const container = getByTestId('switch:container');
+    const container = getByTestId(testIds.idContainer('switch'));
     expect(container.props.style[1]).toHaveProperty('width', 100);
     expect(getByText(mockLabel).props.style[1]).toHaveProperty(
       'backgroundColor',
@@ -40,7 +43,7 @@ describe('Switch', () => {
 
   it('call onPress for container', () => {
     const { getByTestId } = render(<Switch onPress={mockOnPress} />);
-    const container = getByTestId('switch:container');
+    const container = getByTestId(testIds.idContainer('switch'));
     act(() => {
       container.props.onClick();
     });
@@ -49,7 +52,7 @@ describe('Switch', () => {
 
   it('call onPress for Switch', () => {
     const { getByTestId } = render(<Switch onPress={mockOnPress} />);
-    const container = getByTestId('switch:container');
+    const container = getByTestId(testIds.idContainer('switch'));
     act(() => {
       container.props.children[0][0].props.onValueChange();
     });

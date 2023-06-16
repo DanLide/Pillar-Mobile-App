@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react-native';
 import { Text } from 'react-native';
 
 import AlertWrapper from '../AlertWrapper';
+import { testIds } from '../../helpers';
 
 const mockPrimaryTitle = 'mockPrimaryTitle';
 const mockSecondaryTitle = 'mockSecondaryTitle';
@@ -25,7 +26,6 @@ describe('AlertWrapper', () => {
         <Text>{mockChildrenText}</Text>
       </AlertWrapper>,
     );
-
     expect(getByText(mockTitle)).toBeDefined();
     expect(getByText(mockMessage)).toBeDefined();
     expect(getByText(mockChildrenText)).toBeDefined();
@@ -43,17 +43,16 @@ describe('AlertWrapper', () => {
         <Text>{mockChildrenText}</Text>
       </AlertWrapper>,
     );
-
-    const primaryButton = getByTestId('alertWrapper:primaryButton:container');
-    const secondaryButton = getByTestId(
-      'alertWrapper:secondaryButton:container',
+    const primaryButton = getByTestId(
+      testIds.idContainer(testIds.idPrimaryButton('alertWrapper')),
     );
-
+    const secondaryButton = getByTestId(
+      testIds.idContainer(testIds.idSecondaryButton('alertWrapper')),
+    );
     act(() => {
       primaryButton.props.onClick();
       secondaryButton.props.onClick();
     });
-
     expect(mockOnPressPrimary).toHaveBeenCalled();
     expect(mockOnPressSecondary).toHaveBeenCalled();
   });
@@ -72,7 +71,6 @@ describe('AlertWrapper', () => {
         <Text>{mockChildrenText}</Text>
       </AlertWrapper>,
     );
-
     expect(getByText(mockPrimaryTitle)).toBeDefined();
     expect(getByText(mockSecondaryTitle)).toBeDefined();
   });

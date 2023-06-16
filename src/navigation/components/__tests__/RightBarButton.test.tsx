@@ -5,6 +5,7 @@ import { authStore } from '../../../stores';
 import { RightBarButton } from '../RightBarButton';
 import { RightBarType } from '../../types';
 import { SVGs } from '../../../theme';
+import { testIds } from '../../../helpers';
 
 jest.mock('../../../stores');
 
@@ -15,7 +16,7 @@ describe('RightBarButton', () => {
 
   it('render undefined rightBarButtonType', () => {
     const { getByTestId } = render(<RightBarButton />);
-    const button = getByTestId('rightBarButton:button');
+    const button = getByTestId(testIds.idButton('rightBarButton'));
     expect(button.props.children[0]).toBeNull();
     act(() => {
       button.props.onClick();
@@ -27,7 +28,7 @@ describe('RightBarButton', () => {
     const { getByTestId } = render(
       <RightBarButton rightBarButtonType={RightBarType.Logout} />,
     );
-    const button = getByTestId('rightBarButton:button');
+    const button = getByTestId(testIds.idButton('rightBarButton'));
     expect(button.findByType(SVGs.LogoutIcon)).toBeDefined();
     act(() => {
       button.props.onClick();

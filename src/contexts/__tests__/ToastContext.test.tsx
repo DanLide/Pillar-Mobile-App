@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 
 import { ToastContextProvider } from '../ToastContext';
+import { testIds } from '../../helpers';
 
 const mockChildrenText = 'mockChildrenText';
 const mockOffset = 16;
@@ -15,7 +16,6 @@ describe('ToastContext', () => {
         <Text>{mockChildrenText}</Text>
       </ToastContextProvider>,
     );
-
     expect(getByText(mockChildrenText)).toBeDefined();
   });
 
@@ -25,9 +25,7 @@ describe('ToastContext', () => {
         <Text>{mockChildrenText}</Text>
       </ToastContextProvider>,
     );
-
-    const container = getByTestId('toastContext:container');
-
+    const container = getByTestId(testIds.idContainer('toastContext'));
     expect(container.findByType(ToastProvider).props.offset).toEqual(
       mockOffset + 16,
     );

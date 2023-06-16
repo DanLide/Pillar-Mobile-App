@@ -9,6 +9,8 @@ import {
   Switch as RNSwitch,
 } from 'react-native';
 
+import { testIds } from '../helpers';
+
 interface Props extends SwitchProps {
   label?: string;
   labelStyle?: StyleProp<TextStyle>;
@@ -35,7 +37,7 @@ const Switch: React.FC<Props> = ({
     <Pressable
       style={containerStyle}
       onPress={onPress}
-      testID={`${testID}:container`}
+      testID={testIds.idContainer(testID)}
     >
       <RNSwitch onValueChange={onPress} {...props} />
       {label ? <Text style={mergedLabelStyle}>{label}</Text> : null}

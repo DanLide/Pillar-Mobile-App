@@ -4,6 +4,7 @@ import { TextInput } from 'react-native';
 
 import { Input } from '..';
 import { Svg } from 'react-native-svg';
+import { testIds } from '../../helpers';
 
 const mockContainerStyle = { width: 12 };
 const mockInputStyle = { fontSize: 12 };
@@ -13,7 +14,7 @@ describe('Input', () => {
     const { getByTestId } = render(
       <Input containerStyle={mockContainerStyle} style={mockInputStyle} />,
     );
-    const container = getByTestId('input:container');
+    const container = getByTestId(testIds.idContainer('input'));
     expect(container.props.style).toEqual([
       {
         alignItems: 'center',
@@ -43,7 +44,7 @@ describe('Input', () => {
 
   it('render right icon', () => {
     const { getByTestId } = render(<Input rightIcon={() => <Svg />} />);
-    const container = getByTestId('input:container');
+    const container = getByTestId(testIds.idContainer('input'));
     expect(container.findByType(Svg)).toBeDefined();
   });
 });

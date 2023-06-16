@@ -13,6 +13,7 @@ import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toas
 import { colors, fonts, SVGs, toastColors } from '../theme';
 import { ToastMessage } from './ToastMessage';
 import { ToastType } from '../contexts/types';
+import {testIds} from '../helpers'
 
 const { width } = Dimensions.get('window');
 
@@ -76,12 +77,12 @@ export const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
         return (
-          <SVGs.CloseSmallIcon testID={`${testID}:closeIcon`} color={action} />
+          <SVGs.CloseSmallIcon testID={testIds.idCloseIcon(testID)} color={action} />
         );
       case ToastActionType.Undo:
         return (
           <Text
-            testID={`${testID}:undoText`}
+            testID={testIds.idUndoText(testID)}
             style={[styles.action, { color: action }]}
           >
             Undo
@@ -107,11 +108,11 @@ export const Toast: React.FC<Props> = ({
   }, [actionType, onHide, onPress, id]);
 
   return (
-    <View testID={`${testID}:container`} style={containerStyle}>
+    <View testID={testIds.idContainer(testID)} style={containerStyle}>
       {LeftIcon}
       {Message}
       <TouchableOpacity
-        testID={`${testID}:button`}
+        testID={testIds.idButton(testID)}
         hitSlop={27}
         onPress={handleRightButtonPress}
       >

@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 
 import { TooltipBar } from '..';
+import { testIds } from '../../helpers';
 
 const mockTitle = 'mockTitle';
 const mockContainerStyle = { width: 10 };
@@ -22,7 +23,7 @@ describe('TooltipBar', () => {
         textStyle={mockTextStyle}
       />,
     );
-    const container = getByTestId('tooltipBar:container');
+    const container = getByTestId(testIds.idContainer('tooltipBar'));
     expect(container.props.style).toEqual([
       {
         alignItems: 'center',

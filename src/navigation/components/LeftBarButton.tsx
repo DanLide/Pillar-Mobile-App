@@ -9,6 +9,7 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { LeftBarType } from '../types';
 import { SVGs, colors } from '../../theme';
+import { testIds } from '../../helpers';
 
 interface LeftBarButtonProps {
   leftBarButtonType?: LeftBarType;
@@ -57,7 +58,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
 
   return (
     <TouchableOpacity
-      testID={`${testID}:button`}
+      testID={testIds.idButton(testID)}
       style={styles.iconButton}
       onPress={onIconPress}
     >

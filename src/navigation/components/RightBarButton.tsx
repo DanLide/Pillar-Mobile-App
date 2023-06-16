@@ -3,8 +3,8 @@ import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { SVGs, colors } from '../../theme';
 import { authStore } from '../../stores';
-
 import { RightBarType } from '../types';
+import { testIds } from '../../helpers';
 
 interface Props {
   rightBarButtonType?: RightBarType;
@@ -35,7 +35,7 @@ export const RightBarButton: React.FC<Props> = ({
   };
   return (
     <TouchableOpacity
-      testID={`${testID}:button`}
+      testID={testIds.idButton(testID)}
       style={styles.iconButton}
       onPress={onIconPress}
     >

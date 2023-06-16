@@ -2,6 +2,7 @@ import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
 import { ProductListButton } from '..';
+import { testIds } from '../../helpers';
 
 const mockCount = 10;
 const mockStyle = { width: 100 };
@@ -25,18 +26,18 @@ describe('ProductListButton', () => {
         style={{ width: 100 }}
       />,
     );
-    expect(getByTestId('productListButton:container')).toBeDefined();
+    expect(getByTestId(testIds.idContainer('productListButton'))).toBeDefined();
   });
 
   it('render button styles', () => {
     const { getByTestId } = render(<ProductListButton style={mockStyle} />);
-    const button = getByTestId('productListButton:button');
+    const button = getByTestId(testIds.idButton('productListButton'));
     expect(button.props.style).toHaveProperty('width', 100);
   });
 
   it('call back navigation', () => {
     const { getByTestId } = render(<ProductListButton />);
-    const button = getByTestId('productListButton:button');
+    const button = getByTestId(testIds.idButton('productListButton'));
     act(() => {
       button.props.onClick();
     });
@@ -45,7 +46,7 @@ describe('ProductListButton', () => {
 
   it('render count', () => {
     const { getByTestId } = render(<ProductListButton count={mockCount} />);
-    const count = getByTestId('productListButton:count');
+    const count = getByTestId(testIds.idCount('productListButton'));
     expect(count.props.children).toEqual(mockCount);
   });
 });

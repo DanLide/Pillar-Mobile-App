@@ -6,19 +6,33 @@ import {
   TextProps,
   TextStyle,
 } from 'react-native';
+
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props extends TextProps {
   bold?: boolean;
+  testID?: string;
 }
 
-export const ToastMessage: React.FC<Props> = ({ bold, style, ...props }) => {
+export const ToastMessage: React.FC<Props> = ({
+  bold,
+  style,
+  testID = 'toastMessage',
+  ...props
+}) => {
   const textStyle = useMemo<StyleProp<TextStyle>>(
     () => [styles.text, bold && styles.textBold, style],
     [bold, style],
   );
 
-  return <Text style={textStyle} {...props} />;
+  return (
+    <Text
+      style={textStyle}
+      testID={testIds.idContainer('toastMessage')}
+      {...props}
+    />
+  );
 };
 
 const styles = StyleSheet.create({

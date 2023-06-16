@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { render, act } from '@testing-library/react-native';
 
 import { Modal } from '..';
+import { testIds } from '../../helpers';
 
 const mockSemiTitle = 'semiTitle';
 const mockTopOffset = 100;
@@ -11,7 +12,7 @@ const mockOnClose = jest.fn();
 describe('Modal', () => {
   it('render when isVisible true', () => {
     const { getByTestId } = render(<Modal isVisible onClose={mockOnClose} />);
-    const container = getByTestId('modal:container');
+    const container = getByTestId(testIds.idContainer('modal'));
     expect(container.props.visible).toBe(true);
   });
 
@@ -19,7 +20,7 @@ describe('Modal', () => {
     const { getByTestId } = render(
       <Modal isVisible onClose={mockOnClose} topOffset={mockTopOffset} />,
     );
-    const content = getByTestId('modal:content');
+    const content = getByTestId(testIds.idContent('modal'));
     expect(content.props.style[1]).toHaveProperty('marginTop', mockTopOffset);
   });
 
@@ -30,7 +31,7 @@ describe('Modal', () => {
         <MockChildComponent />
       </Modal>,
     );
-    const content = getByTestId('modal:content');
+    const content = getByTestId(testIds.idContent('modal'));
     expect(content.findByType(MockChildComponent)).toBeDefined();
   });
 
@@ -45,7 +46,7 @@ describe('Modal', () => {
     const { getByTestId } = render(
       <Modal isVisible onClose={mockOnClose} semiTitle={mockSemiTitle} />,
     );
-    const closeButton = getByTestId('modal:close');
+    const closeButton = getByTestId(testIds.idClose('modal'));
     act(() => {
       closeButton.props.onClick();
     });

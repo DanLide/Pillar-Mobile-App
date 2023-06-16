@@ -8,8 +8,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors, fonts } from '../theme';
 import { SvgProps } from 'react-native-svg';
+
+import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
@@ -35,7 +37,7 @@ const Input: React.FC<Props> = ({
   );
 
   return (
-    <View style={mergedContainerStyle} testID={`${testID}:container`}>
+    <View style={mergedContainerStyle} testID={testIds.idContainer(testID)}>
       <TextInput
         style={inputStyle}
         placeholderTextColor={colors.grayDark}

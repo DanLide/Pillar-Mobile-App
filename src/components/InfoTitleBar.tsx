@@ -7,7 +7,9 @@ import {
   StyleProp,
   TextStyle,
 } from 'react-native';
+
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 export enum InfoTitleBarType {
   Primary,
@@ -53,7 +55,10 @@ export const InfoTitleBar = memo(
     }, [textStyle, type]);
 
     return title ? (
-      <View style={getContainerStyleByType} testID={`${testID}:container`}>
+      <View
+        style={getContainerStyleByType}
+        testID={testIds.idContainer(testID)}
+      >
         <Text style={getTextStyleByType}>{title}</Text>
       </View>
     ) : null;

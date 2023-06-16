@@ -1,6 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
+
 import { SVGs, colors } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props {
   isChecked: boolean;
@@ -27,7 +29,7 @@ export const Checkbox: React.FC<Props> = ({
       ]}
       onPress={onChange}
       disabled={disabled}
-      testID={`${testID}:container`}
+      testID={testIds.idContainer(testID)}
     >
       {isChecked ? <SVGs.CheckMarkIcon color={colors.white} /> : null}
     </TouchableOpacity>

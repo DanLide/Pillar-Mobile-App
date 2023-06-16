@@ -5,9 +5,9 @@ import { Props as ToastProviderProps } from 'react-native-toast-notifications/li
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 
 import { Toast, ToastActionType } from '../components';
+import { testIds } from '../helpers';
 
 import { ToastType } from './types';
-
 
 type Props = PropsWithChildren<ToastProviderProps> & { testID?: string };
 
@@ -67,7 +67,7 @@ export const ToastContextProvider: React.FC<Props> = ({
   );
 
   return (
-    <SafeAreaView testID={`${testID}:container`} style={styles.container}>
+    <SafeAreaView testID={testIds.idContainer(testID)} style={styles.container}>
       <View style={styles.container}>
         <ToastProvider
           duration={TOAST_DURATION_MS}

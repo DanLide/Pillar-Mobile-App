@@ -3,6 +3,7 @@ import { render } from '@testing-library/react-native';
 import Svg from 'react-native-svg';
 
 import { Button, ButtonType } from '..';
+import { testIds } from '../../helpers';
 
 const mockTitle = 'mockTitle';
 const mockIcon = <Svg />;
@@ -18,19 +19,19 @@ describe('Button', () => {
     const { getByTestId } = render(
       <Button title={mockTitle} icon={mockIcon} />,
     );
-    const content = getByTestId('button:content').findByType(Svg);
+    const content = getByTestId(testIds.idContent('button')).findByType(Svg);
     expect(content).toBeDefined();
   });
 
   it('render loader when isLoading true', () => {
     const { getByTestId } = render(<Button title={mockTitle} isLoading />);
-    const loader = getByTestId('button:loadingIndicator');
+    const loader = getByTestId(testIds.idLoadingIndicator('button'));
     expect(loader).toBeDefined();
   });
 
   it('render Button with disable state when isLoading true', () => {
     const { getByTestId } = render(<Button title={mockTitle} isLoading />);
-    const container = getByTestId('button:container');
+    const container = getByTestId(testIds.idContainer('button'));
     expect(container.props.accessibilityState.disabled).toBe(true);
   });
 
@@ -38,7 +39,7 @@ describe('Button', () => {
     const { getByTestId, getByText } = render(
       <Button title={mockTitle} disabled />,
     );
-    const container = getByTestId('button:container');
+    const container = getByTestId(testIds.idContainer('button'));
     const title = getByText(mockTitle);
     expect(container.props.accessibilityState.disabled).toBe(true);
     expect(title.props.disabled).toBe(true);
@@ -48,7 +49,7 @@ describe('Button', () => {
     const { getByTestId } = render(
       <Button title={mockTitle} type={ButtonType.primary} />,
     );
-    const container = getByTestId('button:container');
+    const container = getByTestId(testIds.idContainer('button'));
     expect(container.props.style).toEqual({
       alignItems: 'center',
       backgroundColor: '#9657D9',
@@ -57,7 +58,7 @@ describe('Button', () => {
       justifyContent: 'center',
       opacity: 1,
     });
-    const title = getByTestId('button:title');
+    const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
       { color: 'white', fontSize: 17 },
       { color: '#FFFFFF', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
@@ -69,7 +70,7 @@ describe('Button', () => {
     const { getByTestId } = render(
       <Button title={mockTitle} type={ButtonType.secondary} />,
     );
-    const container = getByTestId('button:container');
+    const container = getByTestId(testIds.idContainer('button'));
     expect(container.props.style).toEqual({
       alignItems: 'center',
       backgroundColor: '#FFFFFF',
@@ -80,7 +81,7 @@ describe('Button', () => {
       justifyContent: 'center',
       opacity: 1,
     });
-    const title = getByTestId('button:title');
+    const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
       { color: 'white', fontSize: 17 },
       { color: '#7634BC', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
@@ -90,7 +91,7 @@ describe('Button', () => {
 
   it('render button opacity for disabled status', () => {
     const { getByTestId } = render(<Button title={mockTitle} disabled />);
-    const container = getByTestId('button:container');
+    const container = getByTestId(testIds.idContainer('button'));
     expect(container.props.style).toHaveProperty('opacity', 0.2);
   });
 });

@@ -2,10 +2,9 @@ import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
 import { LeftBarButton } from '../LeftBarButton';
-
 import { LeftBarType } from '../../types';
-
 import { SVGs } from '../../../theme';
+import { testIds } from '../../../helpers';
 
 const mockNavigation = jest.fn();
 
@@ -27,7 +26,7 @@ describe('LeftBarButton', () => {
 
   it('render with undefined', () => {
     const { getByTestId } = render(<LeftBarButton />);
-    const button = getByTestId('leftBarButton:button');
+    const button = getByTestId(testIds.idButton('leftBarButton'));
     expect(button.props.children[0]).toBeNull();
     act(() => {
       button.props.onClick();
@@ -39,7 +38,7 @@ describe('LeftBarButton', () => {
     const { getByTestId } = render(
       <LeftBarButton leftBarButtonType={LeftBarType.Back} />,
     );
-    const button = getByTestId('leftBarButton:button');
+    const button = getByTestId(testIds.idButton('leftBarButton'));
     expect(button.findByType(SVGs.ChevronIcon)).toBeDefined();
     act(() => {
       button.props.onClick();
@@ -51,7 +50,7 @@ describe('LeftBarButton', () => {
     const { getByTestId } = render(
       <LeftBarButton leftBarButtonType={LeftBarType.Close} />,
     );
-    const button = getByTestId('leftBarButton:button');
+    const button = getByTestId(testIds.idButton('leftBarButton'));
     expect(button.findByType(SVGs.CloseIcon)).toBeDefined();
     act(() => {
       button.props.onClick();

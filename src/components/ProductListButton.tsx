@@ -8,8 +8,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors, fonts, SVGs } from '../theme';
 import { useNavigation } from '@react-navigation/native';
+
+import { colors, fonts, SVGs } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props extends Omit<TouchableOpacityProps, 'children'> {
   count?: number;
@@ -36,14 +38,21 @@ const ProductListButton: React.FC<Props> = ({
   const goBack = useCallback(() => navigation.goBack(), [navigation]);
 
   return (
-    <View style={containerStyle} testID={`${testID}:container`}>
-      <TouchableOpacity style={buttonStyle} onPress={goBack} {...props} testID={`${testID}:button`}>
+    <View style={containerStyle} testID={testIds.idContainer(testID)}>
+      <TouchableOpacity
+        style={buttonStyle}
+        onPress={goBack}
+        {...props}
+        testID={testIds.idButton(testID)}
+      >
         <SVGs.ProductListIcon color={colors.purpleDark} />
         <Text style={styles.titleText}>List</Text>
       </TouchableOpacity>
       {count ? (
         <View style={styles.countContainer}>
-          <Text style={styles.countText} testID={`${testID}:count`}>{count}</Text>
+          <Text style={styles.countText} testID={testIds.idCount(testID)}>
+            {count}
+          </Text>
         </View>
       ) : null}
     </View>

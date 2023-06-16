@@ -5,6 +5,7 @@ import { Text } from 'react-native';
 import { Toast, ToastActionType } from '..';
 import { ToastType } from '../../contexts/types';
 import { toastColors, colors } from '../../theme';
+import { testIds } from '../../helpers';
 
 const mockMessage = 'mockMessage';
 const mockId = 'mockId';
@@ -31,7 +32,7 @@ describe('Toast', () => {
 
   it('render', () => {
     const { getByTestId } = createComponent();
-    const container = getByTestId('toast:container');
+    const container = getByTestId(testIds.idContainer('toast'));
     expect(container).toBeDefined();
   });
 
@@ -55,8 +56,8 @@ describe('Toast', () => {
         type,
         actionType: ToastActionType.Close,
       });
-      const closeIcon = getByTestId('toast:closeIcon');
-      const button = getByTestId('toast:button');
+      const closeIcon = getByTestId(testIds.idCloseIcon('toast'));
+      const button = getByTestId(testIds.idButton('toast'));
       act(() => {
         button.props.onClick();
       });
@@ -73,20 +74,23 @@ describe('Toast', () => {
         type,
         actionType: ToastActionType.Undo,
       });
-      const undoText = getByTestId('toast:undoText');
-      const button = getByTestId('toast:button');
+      const undoText = getByTestId(testIds.idUndoText('toast'));
+      const button = getByTestId(testIds.idButton('toast'));
       act(() => {
         button.props.onClick();
       });
       expect(mockOnPress).toHaveBeenCalledWith(mockId);
       expect(undoText).toBeDefined();
-      expect(undoText.props.style[1]).toHaveProperty('color', toastColors[type].action);
+      expect(undoText.props.style[1]).toHaveProperty(
+        'color',
+        toastColors[type].action,
+      );
     },
   );
 
   it('NOT render action type', () => {
     const { getByTestId } = createComponent();
-    const button = getByTestId('toast:button');
+    const button = getByTestId(testIds.idButton('toast'));
     expect(button.props.children[0]).toBeNull();
   });
 
@@ -94,7 +98,7 @@ describe('Toast', () => {
     'render type icon and container style',
     type => {
       const { getByTestId } = createComponent({ type });
-      const container = getByTestId('toast:container');
+      const container = getByTestId(testIds.idContainer('toast'));
       expect(container.props.children[0].props).toEqual({
         color: colors.blackSemiLight,
         primaryColor: toastColors[type].primary,

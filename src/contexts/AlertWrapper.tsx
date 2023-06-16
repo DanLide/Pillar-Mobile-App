@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
+
 import { Button, ButtonType } from '../components';
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 type AlertWrapper = {
   children: React.ReactNode;
@@ -29,21 +31,21 @@ const AlertWrapper: React.FC<AlertWrapper> = ({
   return (
     <>
       {children}
-      <Modal testID={`${testID}:modal`} transparent visible={visible}>
+      <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
         <View style={styles.container}>
           <View style={styles.alertContainer}>
             <Text style={styles.titleText}>{title}</Text>
             <Text style={styles.messageText}>{message}</Text>
             <View style={styles.buttonsContainer}>
               <Button
-                testID={`${testID}:secondaryButton`}
+                testID={testIds.idSecondaryButton(testID)}
                 type={ButtonType.secondary}
                 title={secondaryTitle}
                 buttonStyle={styles.buttonStyle}
                 onPress={onPressSecondary}
               />
               <Button
-                testID={`${testID}:primaryButton`}
+                testID={testIds.idPrimaryButton(testID)}
                 type={ButtonType.primary}
                 title={primaryTitle}
                 buttonStyle={styles.buttonStyle}
