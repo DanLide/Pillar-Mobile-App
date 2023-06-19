@@ -23,7 +23,7 @@ export const fetchJobs = async (jobsStore: JobsStore) => {
   }
 };
 
-class FetchJobsTask extends Task {
+export class FetchJobsTask extends Task {
   fetchJobsContext: FetchJobsContext;
 
   constructor(fetchJobsContext: FetchJobsContext) {
@@ -37,7 +37,7 @@ class FetchJobsTask extends Task {
   }
 }
 
-class SaveJobsToStoreTask extends Task {
+export class SaveJobsToStoreTask extends Task {
   fetchJobsContext: FetchJobsContext;
   jobsStore: JobsStore;
 

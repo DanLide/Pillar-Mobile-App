@@ -26,8 +26,8 @@ import { scanMelody } from '../../components/Sound';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-  ToastType,
 } from '../../contexts';
+import { ToastType } from '../../contexts/types';
 import { Utils } from '../../data/helpers/utils';
 import { getProductMinQty } from '../../data/helpers';
 import {

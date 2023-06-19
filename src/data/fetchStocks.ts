@@ -21,7 +21,7 @@ export const fetchStocks = async (stocksStore: StockStore) => {
   }
 };
 
-class FetchStocksTask extends Task {
+export class FetchStocksTask extends Task {
   fetchStocksContext: FetchStocksContext;
 
   constructor(fetchStocksContext: FetchStocksContext) {
@@ -35,7 +35,7 @@ class FetchStocksTask extends Task {
   }
 }
 
-class SaveStocksToStore extends Task {
+export class SaveStocksToStore extends Task {
   fetchStocksContext: FetchStocksContext;
   stocksStore: StockStore;
 

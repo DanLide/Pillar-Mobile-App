@@ -1,49 +1,51 @@
 import React from 'react';
 import { View, Text, Modal, StyleSheet } from 'react-native';
+
 import { Button, ButtonType } from '../components';
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 type AlertWrapper = {
-  children: React.ReactNode
-  visible: boolean
-  message: string
-  title: string
-  onPressPrimary: () => void
-  onPressSecondary: () => void
-  primaryTitle?: string
-  secondaryTitle?: string
-}
+  children: React.ReactNode;
+  visible: boolean;
+  message: string;
+  title: string;
+  onPressPrimary: () => void;
+  onPressSecondary: () => void;
+  primaryTitle?: string;
+  secondaryTitle?: string;
+  testID?: string;
+};
 
 const AlertWrapper: React.FC<AlertWrapper> = ({
   children,
-  visible = true,
-  message = '',
-  title = '',
+  visible,
+  message,
+  title,
   onPressPrimary,
   primaryTitle = 'Continue',
   secondaryTitle = 'Cancel',
   onPressSecondary,
+  testID = 'alertWrapper',
 }) => {
   return (
     <>
       {children}
-      <Modal transparent visible={visible}>
+      <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
         <View style={styles.container}>
           <View style={styles.alertContainer}>
-            <Text style={styles.titleText}>
-              {title}
-            </Text>
-            <Text style={styles.messageText}>
-              {message}
-            </Text>
+            <Text style={styles.titleText}>{title}</Text>
+            <Text style={styles.messageText}>{message}</Text>
             <View style={styles.buttonsContainer}>
               <Button
+                testID={testIds.idSecondaryButton(testID)}
                 type={ButtonType.secondary}
                 title={secondaryTitle}
                 buttonStyle={styles.buttonStyle}
                 onPress={onPressSecondary}
               />
               <Button
+                testID={testIds.idPrimaryButton(testID)}
                 type={ButtonType.primary}
                 title={primaryTitle}
                 buttonStyle={styles.buttonStyle}
@@ -91,6 +93,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
-})
+});
 
 export default AlertWrapper;
