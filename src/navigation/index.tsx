@@ -19,6 +19,7 @@ import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen
 import { RightBarType } from './helpers/getScreenOptions';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
+import ReturnStack, { ReturnStackParamList } from './ReturnStack';
 
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
@@ -38,6 +39,9 @@ export enum AppNavigator {
   HowToScanScreen = 'HowToScanScreen',
   CameraPermissionScreen = 'CameraPermissionScreen',
   RemoveProductScannerScreen = 'RemoveProductScannerScreen',
+
+  // ReturnProductsStack
+  ReturnProductsStack = 'ReturnProductsStack',
 }
 
 const Stack = createStackNavigator();
@@ -147,6 +151,11 @@ const HomeStack = () => {
         options={getNavigationOptions}
       />
       <Stack.Screen
+        name={AppNavigator.ReturnProductsStack}
+        component={ReturnStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
         component={SelectSSOScreen}
         options={ssoScreenOptions}
@@ -174,3 +183,5 @@ export const AppStack = observer(() => {
     </Stack.Navigator>
   );
 });
+
+export type { ReturnStackParamList };

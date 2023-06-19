@@ -14,6 +14,7 @@ interface Props {
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const canRemoveProduct = permissionProvider.canRemoveProduct();
+  const canReturnProduct = permissionProvider.canReturnProduct();
 
   const onGetRoleManagerPress = async () => {
     const error = await onGetRoleManager('token');
@@ -22,6 +23,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const onRemoveProducts = () => {
     navigation.navigate(AppNavigator.RemoveProductsStack);
   };
+
+  const onReturnProducts = () =>
+    navigation.navigate(AppNavigator.ReturnProductsStack);
 
   const onLogout = () => {
     authStore.logOut();
@@ -34,6 +38,13 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           buttonStyle={styles.button}
           title="Remove Products"
           onPress={onRemoveProducts}
+        />
+      )}
+      {canReturnProduct && (
+        <Button
+          buttonStyle={styles.button}
+          title="Return Products"
+          onPress={onReturnProducts}
         />
       )}
       <Button
