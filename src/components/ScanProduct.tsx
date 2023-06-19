@@ -26,7 +26,7 @@ import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
 import ProductListButton from './ProductListButton';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
-import { AppNavigator } from '../navigation';
+import { AppNavigator } from '../navigation/types';
 import { TooltipBar } from './TooltipBar';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
@@ -385,21 +385,21 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         {renderTorchIcon}
       </Pressable>
       <View style={styles.buttonsContainer}>
-      <ProductListButton
-        containerStyle={styles.listButtonContainer}
-        count={scannedProductCount}
-      />
-      <TouchableOpacity
-        onPress={onPressScanButton}
-        disabled={isScanButtonDisabled}
-        style={[
-          styles.scanButton,
-          isScanButtonDisabled && styles.disabledStyle,
-        ]}
-      >
-        <SVGs.CaptureIcon />
-        <Text style={styles.captureText}>Capture</Text>
-      </TouchableOpacity>
+        <ProductListButton
+          containerStyle={styles.listButtonContainer}
+          count={scannedProductCount}
+        />
+        <TouchableOpacity
+          onPress={onPressScanButton}
+          disabled={isScanButtonDisabled}
+          style={[
+            styles.scanButton,
+            isScanButtonDisabled && styles.disabledStyle,
+          ]}
+        >
+          <SVGs.CaptureIcon />
+          <Text style={styles.captureText}>Capture</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   },
   torch: {
     position: 'absolute',
-    left:'5%',
+    left: '5%',
     top: '6%',
     padding: 4,
     zIndex: 100,

@@ -18,31 +18,8 @@ import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
-import { LeftBarType, RightBarType } from './types';
-import ReturnStack, { ReturnStackParamList } from './ReturnStack';
-
-export enum AppNavigator {
-  LoginScreen = 'LoginScreen',
-
-  // HomeStack
-  HomeStack = 'HomeStack',
-  HomeScreen = 'HomeScreen',
-  TermsScreen = 'TermsScreen',
-  LanguageSelectScreen = 'LanguageSelectScreen',
-  SelectSSOScreen = 'SelectSSOScreen',
-
-  // RemoveProductsStack
-  RemoveProductsStack = 'RemoveProductsStack',
-  SelectStockScreen = 'SelectStockScreen',
-  RemoveProductsScreen = 'RemoveProductsScreen',
-  ResultScreen = 'ResultScreen',
-  HowToScanScreen = 'HowToScanScreen',
-  CameraPermissionScreen = 'CameraPermissionScreen',
-  RemoveProductScannerScreen = 'RemoveProductScannerScreen',
-
-  // ReturnProductsStack
-  ReturnProductsStack = 'ReturnProductsStack',
-}
+import { AppNavigator, LeftBarType, RightBarType } from './types';
+import ReturnStack from './ReturnStack';
 
 const Stack = createStackNavigator();
 
@@ -183,5 +160,3 @@ export const AppStack = observer(() => {
     </Stack.Navigator>
   );
 });
-
-export type { ReturnStackParamList };

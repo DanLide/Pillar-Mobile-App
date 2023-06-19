@@ -18,7 +18,7 @@ import {
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;

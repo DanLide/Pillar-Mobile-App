@@ -14,7 +14,7 @@ import {
 import { authStore, ssoStore } from '../../stores';
 import { onAcceptTerms } from '../../data/acceptTerms';
 import { useSwitchState } from '../../hooks';
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { colors, fonts } from '../../theme';

@@ -5,7 +5,7 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { Button } from '../../components';
 import { onGetRoleManager } from '../../data/getRoleManager';
 import { authStore } from '../../stores';
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
 
 interface Props {

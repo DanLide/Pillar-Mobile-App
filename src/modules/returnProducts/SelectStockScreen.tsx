@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 
-import { ReturnStackParamList, AppNavigator } from '../../navigation';
+import { AppNavigator, ReturnStackParamList } from "../../navigation/types";
 
 interface Props {
   navigation: NativeStackNavigationProp<

@@ -2,12 +2,8 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { SelectStockScreen } from '../modules/returnProducts/SelectStockScreen';
-import { getScreenOptions, LeftBarType } from './helpers';
-import { AppNavigator } from './index';
-
-export type ReturnStackParamList = {
-  [AppNavigator.SelectStockScreen]: undefined;
-};
+import { getScreenOptions } from './helpers';
+import { AppNavigator, LeftBarType, ReturnStackParamList } from "./types";
 
 const Stack = createStackNavigator<ReturnStackParamList>();
 
