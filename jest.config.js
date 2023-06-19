@@ -1,9 +1,3 @@
-const packagesToTransformWithBabel = ['@react-native-reanimated', 'mobx-react'];
-
-const transformIgnorePatterns = [
-  `<rootDir>/node_modules/(?!(${packagesToTransformWithBabel.join('|')}))`,
-];
-
 module.exports = {
   preset: 'react-native',
   resetMocks: false,
