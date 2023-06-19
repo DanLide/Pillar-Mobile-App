@@ -18,27 +18,8 @@ import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
-import { LeftBarType, RightBarType } from './types';
-
-export enum AppNavigator {
-  LoginScreen = 'LoginScreen',
-
-  // HomeStack
-  HomeStack = 'HomeStack',
-  HomeScreen = 'HomeScreen',
-  TermsScreen = 'TermsScreen',
-  LanguageSelectScreen = 'LanguageSelectScreen',
-  SelectSSOScreen = 'SelectSSOScreen',
-
-  // RemoveProductsStack
-  RemoveProductsStack = 'RemoveProductsStack',
-  SelectStockScreen = 'SelectStockScreen',
-  RemoveProductsScreen = 'RemoveProductsScreen',
-  ResultScreen = 'ResultScreen',
-  HowToScanScreen = 'HowToScanScreen',
-  CameraPermissionScreen = 'CameraPermissionScreen',
-  RemoveProductScannerScreen = 'RemoveProductScannerScreen',
-}
+import { AppNavigator, LeftBarType, RightBarType } from './types';
+import ReturnStack from './ReturnStack';
 
 const Stack = createStackNavigator();
 
@@ -144,6 +125,11 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.ReturnProductsStack}
+        component={ReturnStack}
         options={getNavigationOptions}
       />
       <Stack.Screen

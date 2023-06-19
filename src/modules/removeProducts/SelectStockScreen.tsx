@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
+import {
+  NavigationProp,
+  ParamListBase,
+  useIsFocused,
+} from '@react-navigation/native';
 
 import { StocksList } from '../stocksList/components/StocksList';
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 import { removeProductsStore } from './stores';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { InfoTitleBar, InfoTitleBarType } from '../../components';

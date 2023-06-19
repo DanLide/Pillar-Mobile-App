@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 
 import { Button } from '../../components';
 
