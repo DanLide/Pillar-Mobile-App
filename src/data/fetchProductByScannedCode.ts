@@ -26,7 +26,7 @@ export const fetchProductByScannedCode = async (
   return result;
 };
 
-class FetchProductByScannedCodeTask extends Task {
+export class FetchProductByScannedCodeTask extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
 
@@ -45,7 +45,7 @@ class FetchProductByScannedCodeTask extends Task {
   }
 }
 
-class SaveProductToStoreTask extends Task {
+export class SaveProductToStoreTask extends Task {
   productContext: FetchProductByScannedCodeContext;
   currentProductStore: CurrentProductStoreType;
 

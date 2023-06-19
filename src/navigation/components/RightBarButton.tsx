@@ -1,15 +1,20 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
-import { RightBarType } from '../helpers/getScreenOptions';
 import { SVGs, colors } from '../../theme';
 import { authStore } from '../../stores';
+import { RightBarType } from '../types';
+import { testIds } from '../../helpers';
 
 interface Props {
-    rightBarButtonType?: RightBarType;
+  rightBarButtonType?: RightBarType;
+  testID?: string;
 }
 
-export const RightBarButton: React.FC<Props> = ({ rightBarButtonType }) => {
+export const RightBarButton: React.FC<Props> = ({
+  rightBarButtonType,
+  testID = 'rightBarButton',
+}) => {
   const onIconPress = () => {
     switch (rightBarButtonType) {
       case RightBarType.Logout:
@@ -29,7 +34,11 @@ export const RightBarButton: React.FC<Props> = ({ rightBarButtonType }) => {
     }
   };
   return (
-    <TouchableOpacity style={styles.iconButton} onPress={onIconPress}>
+    <TouchableOpacity
+      testID={testIds.idButton(testID)}
+      style={styles.iconButton}
+      onPress={onIconPress}
+    >
       {renderIcon()}
     </TouchableOpacity>
   );

@@ -2,16 +2,9 @@ import React from 'react';
 
 import { LeftBarButton, TitleBar, RightBarButton } from '../components';
 
-import { colors } from '../../theme';
+import { colors } from '../../theme/colors';
 
-export enum LeftBarType {
-  Back,
-  Close,
-}
-
-export enum RightBarType {
-  Logout,
-}
+import { LeftBarType, RightBarType } from '../types';
 
 interface GetScreenOptions {
   title: string;
@@ -24,7 +17,9 @@ export const getScreenOptions = (params: GetScreenOptions) => ({
   headerLeft: () => (
     <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
   ),
-  headerRight: () => <RightBarButton rightBarButtonType={params.rightBarButtonType} />,
+  headerRight: () => (
+    <RightBarButton rightBarButtonType={params.rightBarButtonType} />
+  ),
   headerStyle: {
     backgroundColor: colors.purple,
   },

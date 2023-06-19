@@ -8,18 +8,22 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors, fonts } from '../theme';
 import { SvgProps } from 'react-native-svg';
+
+import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props extends TextInputProps {
   containerStyle?: StyleProp<ViewStyle>;
   rightIcon?: React.NamedExoticComponent<SvgProps> | React.FC<SvgProps>;
+  testID?: string;
 }
 
 const Input: React.FC<Props> = ({
   containerStyle,
   rightIcon: RightIcon,
   style,
+  testID = 'input',
   ...props
 }) => {
   const mergedContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -33,7 +37,7 @@ const Input: React.FC<Props> = ({
   );
 
   return (
-    <View style={mergedContainerStyle}>
+    <View style={mergedContainerStyle} testID={testIds.idContainer(testID)}>
       <TextInput
         style={inputStyle}
         placeholderTextColor={colors.grayDark}

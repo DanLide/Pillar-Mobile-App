@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import { testIds } from '../helpers';
 import Text from './Text';
 import { colors, fonts } from '../theme';
 
@@ -38,6 +39,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
   textStyle,
   disabled,
   icon,
+  testID = 'button',
   ...props
 }) => {
   const isDisabled = isLoading || disabled;
@@ -84,13 +86,23 @@ const Button: React.FC<ExtendedButtonProps> = ({
       {...props}
       disabled={isDisabled}
       style={buttonMergedStyle}
+      testID={testIds.idContainer(testID)}
     >
       {isLoading ? (
-        <ActivityIndicator size="small" color="white" />
+        <ActivityIndicator
+          size="small"
+          color="white"
+          testID={testIds.idLoadingIndicator(testID)}
+        />
       ) : (
-        <View style={styles.buttonContainer}>
+        <View style={styles.buttonContainer} testID={testIds.idContent(testID)}>
           {icon}
-          <Text {...props} style={textMergedStyle} disabled>
+          <Text
+            {...props}
+            style={textMergedStyle}
+            disabled
+            testID={testIds.idTitle(testID)}
+          >
             {title}
           </Text>
         </View>
