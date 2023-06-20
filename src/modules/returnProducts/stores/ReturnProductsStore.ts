@@ -1,3 +1,3 @@
-import { BaseProductsStore } from '../../../stores';
+import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 
 export class ReturnProductsStore extends BaseProductsStore {}
