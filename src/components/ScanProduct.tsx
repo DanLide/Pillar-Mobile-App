@@ -309,7 +309,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   const onPressScanButton = () => {
     const data = selectedBarcode
       ? selectedBarcode?.content?.data
-      : barcodesOnScanLine?.[0].content?.data;
+      : barcodesOnScanLine?.[0]?.content?.data;
     data && onPressScan(data);
   };
 
