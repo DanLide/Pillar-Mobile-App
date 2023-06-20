@@ -8,9 +8,11 @@ export enum AppNavigator {
   LanguageSelectScreen = 'LanguageSelectScreen',
   SelectSSOScreen = 'SelectSSOScreen',
 
+  // Shared screens
+  SelectStockScreen = 'SelectStockScreen',
+
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
-  SelectStockScreen = 'SelectStockScreen',
   RemoveProductsScreen = 'RemoveProductsScreen',
   ResultScreen = 'ResultScreen',
   HowToScanScreen = 'HowToScanScreen',
@@ -19,10 +21,12 @@ export enum AppNavigator {
 
   // ReturnProductsStack
   ReturnProductsStack = 'ReturnProductsStack',
+  ReturnProductsScreen = 'ReturnProductsScreen',
 }
 
 export type ReturnStackParamList = {
   [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.ReturnProductsScreen]: undefined;
 };
 
 export enum LeftBarType {
