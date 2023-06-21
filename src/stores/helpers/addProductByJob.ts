@@ -9,7 +9,8 @@ import {
   over,
   whereEq,
 } from 'ramda';
-import { ProductModel } from '../../../stores/types';
+
+import { ProductModel } from '../types';
 
 export const addProductByJob = (
   product: ProductModel,

@@ -1,3 +1,3 @@
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 
-export class RemoveProductsStore extends BaseProductsStore {}
+export class ReturnProductsStore extends BaseProductsStore {}
