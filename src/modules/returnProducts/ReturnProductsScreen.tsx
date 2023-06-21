@@ -18,6 +18,7 @@ import { AppNavigator, ReturnStackParamList } from '../../navigation/types';
 import { returnProductsStore } from './stores';
 import { colors, SVGs } from '../../theme';
 import { SelectedProductsList } from './components';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -34,8 +35,20 @@ const ScanIcon = (
   <SVGs.CodeIcon color={colors.purple} width={32} height={23.33} />
 );
 
-export const ReturnProductsScreen: React.FC<Props> = () => {
+export const ReturnProductsScreen: React.FC<Props> = ({ navigation }) => {
   const store = useRef<Store>(returnProductsStore).current;
+
+  const onPressScan = async () => {
+    const result = await check(PERMISSIONS.IOS.CAMERA);
+
+    if (result !== RESULTS.GRANTED) {
+      return navigation.navigate(AppNavigator.CameraPermissionScreen, {
+        nextRoute: AppNavigator.ReturnProductScannerScreen,
+      });
+    }
+
+    navigation.navigate(AppNavigator.ReturnProductScannerScreen);
+  };
 
   return (
     <View style={styles.container}>
@@ -54,6 +67,7 @@ export const ReturnProductsScreen: React.FC<Props> = () => {
           textStyle={styles.scanText}
           buttonStyle={styles.buttonContainer}
           title="Scan"
+          onPress={onPressScan}
         />
 
         <Button

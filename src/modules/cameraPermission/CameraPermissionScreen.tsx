@@ -8,31 +8,22 @@ import {
   request,
   openSettings,
 } from 'react-native-permissions';
-import {
-  NavigationProp,
-  ParamListBase,
-  RouteProp,
-  useRoute,
-  StackActions,
-} from '@react-navigation/native';
+import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { AppNavigator } from '../../navigation/types';
+import {
+  AppNavigator,
+  RemoveStackParamList,
+  ReturnStackParamList,
+} from '../../navigation/types';
 
-interface Props {
-  navigation: NavigationProp<ParamListBase>;
-}
+type Props = NativeStackScreenProps<
+  RemoveStackParamList & ReturnStackParamList,
+  AppNavigator.CameraPermissionScreen
+>;
 
-type ParamList = {
-  CameraPermissionScreen: {
-    nextRoute: AppNavigator;
-  };
-};
-
-export const CameraPermissionScreen = memo(({ navigation }: Props) => {
-  const route = useRoute<RouteProp<ParamList, 'CameraPermissionScreen'>>();
-
+export const CameraPermissionScreen = memo(({ navigation, route }: Props) => {
   const [cameraPermission, setCameraPermission] = useState<PermissionStatus>(
     RESULTS.DENIED,
   );
@@ -56,9 +47,7 @@ export const CameraPermissionScreen = memo(({ navigation }: Props) => {
     const result = await request(PERMISSIONS.IOS.CAMERA);
 
     if (result === RESULTS.GRANTED) {
-      navigation.dispatch(
-        StackActions.replace(AppNavigator.RemoveProductScannerScreen),
-      );
+      navigation.replace(route.params.nextRoute);
       return;
     }
 

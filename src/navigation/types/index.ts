@@ -10,23 +10,49 @@ export enum AppNavigator {
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
+  HowToScanScreen = 'HowToScanScreen',
+  CameraPermissionScreen = 'CameraPermissionScreen',
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
   RemoveProductsScreen = 'RemoveProductsScreen',
   ResultScreen = 'ResultScreen',
-  HowToScanScreen = 'HowToScanScreen',
-  CameraPermissionScreen = 'CameraPermissionScreen',
   RemoveProductScannerScreen = 'RemoveProductScannerScreen',
 
   // ReturnProductsStack
   ReturnProductsStack = 'ReturnProductsStack',
   ReturnProductsScreen = 'ReturnProductsScreen',
+  ReturnProductScannerScreen = 'ReturnProductScannerScreen',
 }
+
+type CameraPermissionScreenParams = {
+  nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
+};
+
+export type HomeStackParamList = {
+  [AppNavigator.HomeScreen]: undefined;
+  [AppNavigator.TermsScreen]: undefined;
+  [AppNavigator.LanguageSelectScreen]: undefined;
+  [AppNavigator.SelectSSOScreen]: undefined;
+  [AppNavigator.RemoveProductsStack]: undefined;
+  [AppNavigator.ReturnProductsStack]: undefined;
+};
+
+export type RemoveStackParamList = {
+  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.RemoveProductsScreen]: undefined;
+  [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.RemoveProductScannerScreen]: undefined;
+  [AppNavigator.ResultScreen]: undefined;
+};
 
 export type ReturnStackParamList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.ReturnProductsScreen]: undefined;
+  [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.ReturnProductScannerScreen]: undefined;
 };
 
 export enum LeftBarType {

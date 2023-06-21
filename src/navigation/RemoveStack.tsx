@@ -1,32 +1,33 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { SelectStockScreen } from '../modules/returnProducts/SelectStockScreen';
+import { AppNavigator, LeftBarType, RemoveStackParamList } from './types';
+import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
-import { AppNavigator, LeftBarType, ReturnStackParamList } from './types';
-import { ReturnProductsScreen } from '../modules/returnProducts/ReturnProductsScreen';
-import ReturnProductScannerScreen from '../modules/returnProducts/ScannerScreen';
+import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
+import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
+import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 
-const Stack = createStackNavigator<ReturnStackParamList>();
+const Stack = createStackNavigator<RemoveStackParamList>();
 
-export const ReturnStack: React.FC = () => {
+export const RemoveStack: React.FC = () => {
   return (
     <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
       <Stack.Screen
-        name={AppNavigator.ReturnProductsScreen}
-        component={ReturnProductsScreen}
+        name={AppNavigator.RemoveProductsScreen}
+        component={RemoveProductsScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -47,11 +48,19 @@ export const ReturnStack: React.FC = () => {
         })}
       />
       <Stack.Screen
-        name={AppNavigator.ReturnProductScannerScreen}
-        component={ReturnProductScannerScreen}
+        name={AppNavigator.RemoveProductScannerScreen}
+        component={RemoveProductScannerScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ResultScreen}
+        component={ResultScreen}
+        options={getScreenOptions({
+          title: 'Remove Products',
+          leftBarButtonType: LeftBarType.Close,
         })}
       />
     </Stack.Navigator>
