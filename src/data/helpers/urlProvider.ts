@@ -7,11 +7,16 @@ import {
   RemoveProductsStore,
   removeProductsStore,
 } from '../../modules/removeProducts/stores';
+import {
+  ReturnProductsStore,
+  returnProductsStore,
+} from '../../modules/returnProducts/stores';
 
 export class URLProvider {
   authStore: AuthStore;
   ssoStore: SSOStore;
   removeProductsStore: RemoveProductsStore;
+  returnProductsStore: ReturnProductsStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -29,10 +34,12 @@ export class URLProvider {
     auth_store = authStore,
     sso_store = ssoStore,
     remove_products_store = removeProductsStore,
+    return_products_store = returnProductsStore,
   ) {
     this.authStore = auth_store;
     this.ssoStore = sso_store;
     this.removeProductsStore = remove_products_store;
+    this.returnProductsStore = return_products_store;
     this.currentEnv = environment;
   }
 
@@ -93,7 +100,11 @@ export class URLProvider {
   }
 
   getFetchProductUrl(scanCode: string) {
-    const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
+    const currentStock =
+      this.removeProductsStore.currentStock ||
+      this.returnProductsStore.currentStock;
+
+    const partyRoleID = currentStock?.partyRoleId;
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
