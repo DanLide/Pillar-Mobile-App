@@ -1,5 +1,6 @@
 import { filter, map, pipe, propEq, sum } from 'ramda';
-import { ProductModel } from '../../../stores/types';
+
+import { ProductModel } from '../types';
 
 export const getReservedCountById = (
   products: ProductModel[],

@@ -26,7 +26,7 @@ import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
 import ProductListButton from './ProductListButton';
 import { SVGs, TorchIconState, colors, fonts } from '../theme';
-import { AppNavigator } from '../navigation';
+import { AppNavigator } from '../navigation/types';
 import { TooltipBar } from './TooltipBar';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
@@ -38,7 +38,6 @@ export type ScanProductProps = {
   scannedProductCount?: number;
 };
 
-const SCAN_PER_SECOND = 15;
 const MISSED_BARCODE_LIMIT = 5;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -310,7 +309,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   const onPressScanButton = () => {
     const data = selectedBarcode
       ? selectedBarcode?.content?.data
-      : barcodesOnScanLine?.[0].content?.data;
+      : barcodesOnScanLine?.[0]?.content?.data;
     data && onPressScan(data);
   };
 
@@ -370,7 +369,6 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           onRead={onRead}
           isActive={isActive}
           onLayout={onLayoutScanner}
-          frameProcessorFps={SCAN_PER_SECOND}
         />
       </View>
       <View style={styles.shadow} />
@@ -387,21 +385,21 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         {renderTorchIcon}
       </Pressable>
       <View style={styles.buttonsContainer}>
-      <ProductListButton
-        containerStyle={styles.listButtonContainer}
-        count={scannedProductCount}
-      />
-      <TouchableOpacity
-        onPress={onPressScanButton}
-        disabled={isScanButtonDisabled}
-        style={[
-          styles.scanButton,
-          isScanButtonDisabled && styles.disabledStyle,
-        ]}
-      >
-        <SVGs.CaptureIcon />
-        <Text style={styles.captureText}>Capture</Text>
-      </TouchableOpacity>
+        <ProductListButton
+          containerStyle={styles.listButtonContainer}
+          count={scannedProductCount}
+        />
+        <TouchableOpacity
+          onPress={onPressScanButton}
+          disabled={isScanButtonDisabled}
+          style={[
+            styles.scanButton,
+            isScanButtonDisabled && styles.disabledStyle,
+          ]}
+        >
+          <SVGs.CaptureIcon />
+          <Text style={styles.captureText}>Capture</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -436,7 +434,7 @@ const styles = StyleSheet.create({
   },
   torch: {
     position: 'absolute',
-    left:'5%',
+    left: '5%',
     top: '6%',
     padding: 4,
     zIndex: 100,

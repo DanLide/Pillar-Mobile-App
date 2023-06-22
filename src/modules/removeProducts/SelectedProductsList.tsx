@@ -14,8 +14,9 @@ import { observer } from 'mobx-react';
 import { removeProductsStore } from './stores';
 import { groupProductsByJobId } from './helpers';
 import { OTHER_JOB_ID } from './constants';
-import { SVGs, colors, fonts } from '../../theme';
+import { colors, fonts } from '../../theme';
 import { ProductModel, SyncedProductStoreType } from '../../stores/types';
+import { ProductEmptyList } from '../../components';
 
 const { width } = Dimensions.get('window');
 
@@ -28,16 +29,6 @@ const keyExtractor = (item: ProductModel): string => item.uuid;
 export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
   const store = useRef<SyncedProductStoreType>(removeProductsStore).current;
   const sectionListData = groupProductsByJobId(store.getNotSyncedProducts);
-
-  const renderEmptyList = () => (
-    <View style={styles.container}>
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Nothing here</Text>
-        <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />
-        <Text style={styles.emptyText}>Start Scanning</Text>
-      </View>
-    </View>
-  );
 
   const renderSectionHeader = useCallback(
     (info: { section: SectionListData<ProductModel> }) => (
@@ -86,7 +77,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
       renderSectionHeader={renderSectionHeader}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
-      ListEmptyComponent={renderEmptyList}
+      ListEmptyComponent={ProductEmptyList}
     />
   );
 });
@@ -117,21 +108,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-  },
-  emptyText: {
-    fontSize: 20,
-    fontFamily: fonts.TT_Bold,
-    lineHeight: 30,
-    color: colors.black,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.125,
-  },
-  emptyContainerIcon: {
-    marginVertical: 16,
   },
   sectionItemContainer: {
     flexDirection: 'row',
@@ -181,27 +157,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: colors.blackSemiLight,
     fontFamily: fonts.TT_Regular,
-  },
-  tooltip: {
-    position: 'absolute',
-    top: 4,
-    left: 4,
-    width: width - 8,
-    height: 25,
-    backgroundColor: colors.white2,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
-
-    shadowColor: colors.black,
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-  tooltipText: {
-    fontSize: 14,
-    fontFamily: fonts.TT_Regular,
-    lineHeight: 14,
-    color: colors.black,
   },
 });

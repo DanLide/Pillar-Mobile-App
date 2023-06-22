@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
-import { Button, ButtonType } from '../../../../components';
+import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
 
@@ -8,8 +8,7 @@ import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
 import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
-import { ColoredTooltip } from '../../../../components';
-import { ToastType } from '../../../../contexts';
+import { ToastType } from '../../../../contexts/types';
 import { getProductMinQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';

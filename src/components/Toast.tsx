@@ -11,8 +11,9 @@ import {
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 
 import { colors, fonts, SVGs, toastColors } from '../theme';
-import { ToastType } from '../contexts';
 import { ToastMessage } from './ToastMessage';
+import { ToastType } from '../contexts/types';
+import {testIds} from '../helpers'
 
 const { width } = Dimensions.get('window');
 
@@ -22,6 +23,7 @@ export enum ToastActionType {
 }
 
 interface Props extends ToastProps {
+  testID?: string;
   type: ToastType;
   actionType?: ToastActionType;
 }
@@ -37,7 +39,8 @@ const icons: Record<
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
 };
 
-const Toast: React.FC<Props> = ({
+export const Toast: React.FC<Props> = ({
+  testID = 'toast',
   id,
   type = ToastType.Info,
   message,
@@ -73,13 +76,22 @@ const Toast: React.FC<Props> = ({
   const ActionButtonContent = useMemo<JSX.Element | null>(() => {
     switch (actionType) {
       case ToastActionType.Close:
-        return <SVGs.CloseSmallIcon color={action} />;
+        return (
+          <SVGs.CloseSmallIcon testID={testIds.idCloseIcon(testID)} color={action} />
+        );
       case ToastActionType.Undo:
-        return <Text style={[styles.action, { color: action }]}>Undo</Text>;
+        return (
+          <Text
+            testID={testIds.idUndoText(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Undo
+          </Text>
+        );
       default:
         return null;
     }
-  }, [actionType, action]);
+  }, [actionType, testID, action]);
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, { backgroundColor: secondary }, style],
@@ -96,10 +108,14 @@ const Toast: React.FC<Props> = ({
   }, [actionType, onHide, onPress, id]);
 
   return (
-    <View style={containerStyle}>
+    <View testID={testIds.idContainer(testID)} style={containerStyle}>
       {LeftIcon}
       {Message}
-      <TouchableOpacity hitSlop={27} onPress={handleRightButtonPress}>
+      <TouchableOpacity
+        testID={testIds.idButton(testID)}
+        hitSlop={27}
+        onPress={handleRightButtonPress}
+      >
         {ActionButtonContent}
       </TouchableOpacity>
     </View>
@@ -129,5 +145,3 @@ const styles = StyleSheet.create({
     width: width - 16,
   },
 });
-
-export default Toast;

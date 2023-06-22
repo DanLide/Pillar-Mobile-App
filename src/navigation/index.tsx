@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
-import { getNavigationOptions, getScreenOptions, LeftBarType } from './helpers';
+import { getNavigationOptions, getScreenOptions } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
@@ -16,29 +16,10 @@ import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import ResultScreen from '../modules/removeProducts/ResultScreen';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
-import { RightBarType } from './helpers/getScreenOptions';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
-
-export enum AppNavigator {
-  LoginScreen = 'LoginScreen',
-
-  // HomeStack
-  HomeStack = 'HomeStack',
-  HomeScreen = 'HomeScreen',
-  TermsScreen = 'TermsScreen',
-  LanguageSelectScreen = 'LanguageSelectScreen',
-  SelectSSOScreen = 'SelectSSOScreen',
-
-  // RemoveProductsStack
-  RemoveProductsStack = 'RemoveProductsStack',
-  SelectStockScreen = 'SelectStockScreen',
-  RemoveProductsScreen = 'RemoveProductsScreen',
-  ResultScreen = 'ResultScreen',
-  HowToScanScreen = 'HowToScanScreen',
-  CameraPermissionScreen = 'CameraPermissionScreen',
-  RemoveProductScannerScreen = 'RemoveProductScannerScreen',
-}
+import { AppNavigator, LeftBarType, RightBarType } from './types';
+import ReturnStack from './ReturnStack';
 
 const Stack = createStackNavigator();
 
@@ -144,6 +125,11 @@ const HomeStack = () => {
       <Stack.Screen
         name={AppNavigator.RemoveProductsStack}
         component={RemoveStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.ReturnProductsStack}
+        component={ReturnStack}
         options={getNavigationOptions}
       />
       <Stack.Screen

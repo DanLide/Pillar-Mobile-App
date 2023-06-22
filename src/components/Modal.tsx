@@ -8,9 +8,10 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import { colors, fonts, SVGs } from '../theme';
 
+import { colors, fonts, SVGs } from '../theme';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
+import { testIds } from '../helpers';
 
 interface Props {
   isVisible: boolean;
@@ -19,6 +20,7 @@ interface Props {
   semiTitle?: string;
   children?: React.ReactNode;
   topOffset?: number;
+  testID?: string;
 
   onClose: () => void;
 }
@@ -32,6 +34,7 @@ export const Modal: React.FC<Props> = ({
   topOffset,
   titleContainerStyle,
   semiTitle,
+  testID = 'modal',
   onClose,
 }) => {
   const backgroundStyle = useMemo<StyleProp<ViewStyle>>(
@@ -40,9 +43,14 @@ export const Modal: React.FC<Props> = ({
   );
 
   return (
-    <RNModal visible={isVisible} transparent={true} animationType="slide">
+    <RNModal
+      visible={isVisible}
+      transparent={true}
+      animationType="slide"
+      testID={testIds.idContainer(testID)}
+    >
       <View style={styles.container}>
-        <View style={backgroundStyle}>
+        <View style={backgroundStyle} testID={testIds.idContent(testID)}>
           <InfoTitleBar
             type={InfoTitleBarType.Secondary}
             title={title}
@@ -50,7 +58,11 @@ export const Modal: React.FC<Props> = ({
           />
           <View style={styles.containerHeader}>
             <View style={styles.icon}>
-              <Pressable hitSlop={32} onPress={onClose}>
+              <Pressable
+                hitSlop={32}
+                onPress={onClose}
+                testID={testIds.idClose(testID)}
+              >
                 <SVGs.CloseIcon color={colors.purpleDark} />
               </Pressable>
             </View>

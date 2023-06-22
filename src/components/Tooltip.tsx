@@ -1,7 +1,8 @@
 import React, { PropsWithChildren } from 'react';
 import { Modal, Pressable, StyleProp, View, ViewStyle } from 'react-native';
-import Toast, { ToastActionType } from './Toast';
-import { ToastType } from '../contexts';
+
+import { Toast, ToastActionType } from './Toast';
+import { ToastType } from '../contexts/types';
 
 export interface TooltipProps extends PropsWithChildren {
   /** Component to be rendered as the display container. */
@@ -26,7 +27,7 @@ export interface TooltipProps extends PropsWithChildren {
   animationType?: 'fade' | 'none';
 }
 
-const Tooltip: React.FC<TooltipProps> = ({
+export const Tooltip: React.FC<TooltipProps> = ({
   animationType = 'fade',
   children,
   message,
@@ -57,5 +58,3 @@ const Tooltip: React.FC<TooltipProps> = ({
     </View>
   );
 };
-
-export default Tooltip;

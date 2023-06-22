@@ -109,11 +109,16 @@ export class URLProvider {
     );
   }
 
-  removeProduct(productId: number, quantity: number, jobId: number | null) {
+  removeProduct(productId: number, quantity: number, jobId?: number | null) {
     const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
 
+    if (typeof jobId === 'number') {
+      return new URL(
+        `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${jobId}/${quantity}`,
+      );
+    }
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${jobId}/${quantity}`,
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${quantity}`,
     );
   }
 }

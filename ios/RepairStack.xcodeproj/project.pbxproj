@@ -749,7 +749,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RepairStack/Info.plist;
@@ -788,7 +788,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = RepairStack/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -962,7 +962,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = i386;
@@ -1002,7 +1002,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				EXCLUDED_ARCHS = i386;
 				INFOPLIST_FILE = "RepairStackRelease-Info.plist";

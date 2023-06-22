@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 import { authStore, ssoStore } from '../../stores';
 import { SelectSSOStore } from './stores/SelectSSOStore';
 import {

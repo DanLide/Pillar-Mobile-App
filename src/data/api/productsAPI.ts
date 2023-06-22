@@ -29,7 +29,7 @@ export const removeProductAPI = (product: ProductModel) => {
   const url = new URLProvider().removeProduct(
     product.productId,
     product.reservedCount,
-    product.job?.jobId || 0,
+    product.job?.jobId,
   );
 
   const body = JSON.stringify([

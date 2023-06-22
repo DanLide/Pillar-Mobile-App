@@ -11,19 +11,24 @@ import {
 } from 'react-native';
 
 import { colors, fonts } from '../theme';
+import { testIds } from '../helpers';
 
 interface Props {
   title: string;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  testID?: string;
 }
 
 const { width } = Dimensions.get('window');
 
 export const TooltipBar = memo(
-  ({ title, containerStyle, textStyle }: Props) => {
+  ({ title, containerStyle, textStyle, testID = 'tooltipBar' }: Props) => {
     return (
-      <View style={[styles.container, containerStyle]}>
+      <View
+        style={[styles.container, containerStyle]}
+        testID={testIds.idContainer(testID)}
+      >
         <Text
           style={[styles.text, textStyle]}
           numberOfLines={1}

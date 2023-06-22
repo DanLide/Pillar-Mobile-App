@@ -19,7 +19,7 @@ import {
   ProductModalType,
 } from '../productModal';
 import { SelectedProductsList } from './SelectedProductsList';
-import { AppNavigator } from '../../navigation';
+import { AppNavigator } from '../../navigation/types';
 import { onRemoveProducts } from '../../data/removeProducts';
 import { SVGs, colors } from '../../theme';
 

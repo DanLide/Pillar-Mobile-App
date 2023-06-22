@@ -9,10 +9,13 @@ import {
   Switch as RNSwitch,
 } from 'react-native';
 
+import { testIds } from '../helpers';
+
 interface Props extends SwitchProps {
   label?: string;
   labelStyle?: StyleProp<TextStyle>;
   onPress?: () => void;
+  testID?: string;
 }
 
 const Switch: React.FC<Props> = ({
@@ -20,6 +23,7 @@ const Switch: React.FC<Props> = ({
   style,
   labelStyle,
   onPress,
+  testID = 'switch',
   ...props
 }) => {
   const containerStyle = useMemo(() => [styles.container, style], [style]);
@@ -30,7 +34,11 @@ const Switch: React.FC<Props> = ({
   );
 
   return (
-    <Pressable style={containerStyle} onPress={onPress}>
+    <Pressable
+      style={containerStyle}
+      onPress={onPress}
+      testID={testIds.idContainer(testID)}
+    >
       <RNSwitch onValueChange={onPress} {...props} />
       {label ? <Text style={mergedLabelStyle}>{label}</Text> : null}
     </Pressable>

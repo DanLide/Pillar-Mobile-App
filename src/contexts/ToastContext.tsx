@@ -5,16 +5,11 @@ import { Props as ToastProviderProps } from 'react-native-toast-notifications/li
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
 
 import { Toast, ToastActionType } from '../components';
+import { testIds } from '../helpers';
 
-export enum ToastType {
-  Error = 'Error',
-  Info = 'Info',
-  Success = 'Success',
-  ScanError = 'ScanError',
-  ProductQuantityError = 'ProductQuantityError',
-}
+import { ToastType } from './types';
 
-type Props = PropsWithChildren<ToastProviderProps>;
+type Props = PropsWithChildren<ToastProviderProps> & { testID?: string };
 
 const TOAST_DURATION_MS = 3000;
 const OFFSET_DEFAULT = 16;
@@ -24,6 +19,7 @@ export const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 export const ToastContextProvider: React.FC<Props> = ({
   children,
   offset = 0,
+  testID = 'toastContext',
   ...props
 }) => {
   const renderType = useMemo<
@@ -71,7 +67,7 @@ export const ToastContextProvider: React.FC<Props> = ({
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView testID={testIds.idContainer(testID)} style={styles.container}>
       <View style={styles.container}>
         <ToastProvider
           duration={TOAST_DURATION_MS}

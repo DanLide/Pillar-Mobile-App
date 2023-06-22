@@ -17,7 +17,7 @@ import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
 
-import { Button, ButtonType } from '../../components';
+import { Button, ButtonType, Tooltip } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { removeProductsStore } from './stores';
@@ -27,8 +27,8 @@ import { OTHER_JOB_ID } from './constants';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-  ToastType,
 } from '../../contexts';
+import { ToastType } from '../../contexts/types';
 
 import { groupProductsByJobId } from './helpers';
 
@@ -37,7 +37,6 @@ import {
   ProductModel,
   SyncedProductStoreType,
 } from '../../stores/types';
-import Tooltip from '../../components/Tooltip';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
