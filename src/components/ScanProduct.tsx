@@ -21,6 +21,7 @@ import {
 } from '@react-navigation/native';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
+import { encode as btoa } from 'base-64';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
@@ -70,6 +71,15 @@ type BarcodeStateItem = Barcode & {
   isItemShouldBeDeleted: boolean;
 };
 
+const getScannedCode = (rowValue: string, codeType: BarcodeFormat) => {
+  switch (codeType) {
+    case BarcodeFormat.QR_CODE:
+      return btoa(rowValue)
+    default:
+      return rowValue
+  }
+}
+
 const QRButton: React.FC<QRButtonProps> = ({
   index,
   cordinates,
@@ -113,12 +123,12 @@ const QRButton: React.FC<QRButtonProps> = ({
         animatedStyleButton,
         isSelected
           ? {
-              backgroundColor: colors.purpleWithOpacity,
-              borderColor: colors.purple,
-            }
+            backgroundColor: colors.purpleWithOpacity,
+            borderColor: colors.purple,
+          }
           : {
-              borderColor: isGreenBorder ? colors.green2 : colors.yellow,
-            },
+            borderColor: isGreenBorder ? colors.green2 : colors.yellow,
+          },
       ]}
       onPress={onPress}
       disabled={isDisabled}
@@ -219,8 +229,8 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       const prevBarcode = barcodesState[index];
       const updatedBarcodeIndex = barcodes.findIndex(_barcode => {
         return (
-          JSON.stringify(_barcode.content.data) ===
-          JSON.stringify(prevBarcode.content.data)
+          JSON.stringify(_barcode.rawValue) ===
+          JSON.stringify(prevBarcode.rawValue)
         );
       });
 
@@ -307,10 +317,8 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
   const onPressScanButton = () => {
-    const data = selectedBarcode
-      ? selectedBarcode?.content?.data
-      : barcodesOnScanLine?.[0]?.content?.data;
-    data && onPressScan(data);
+    const data = selectedBarcode || barcodesOnScanLine?.[0];
+    data?.rawValue && onPressScan(getScannedCode(data.rawValue, data.format));
   };
 
   const renderBarcodes = () =>
@@ -349,8 +357,8 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       const state = pressed
         ? TorchIconState.Pressed
         : isTorchOn
-        ? TorchIconState.Active
-        : TorchIconState.Passive;
+          ? TorchIconState.Active
+          : TorchIconState.Passive;
       return <SVGs.TorchIcon state={state} />;
     },
     [isTorchOn],
