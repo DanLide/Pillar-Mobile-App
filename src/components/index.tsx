@@ -12,7 +12,7 @@ import { ColoredTooltip } from './ColoredTooltip';
 import { InfoTitleBarType, InfoTitleBar } from './InfoTitleBar';
 import { TooltipBar } from './TooltipBar';
 import ProductListButton from './ProductListButton';
-import ProductEmptyList from './ProductEmptyList';
+import { ProductEmptyList } from './ProductEmptyList';
 
 export {
   Scanner,

@@ -10,14 +10,14 @@ import {
 
 import { colors, fonts, SVGs } from '../theme';
 
-const ProductEmptyList: React.FC<ViewProps> = ({ style, ...props }) => {
+export const ProductEmptyList = memo(({ style }: ViewProps) => {
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, style],
     [style],
   );
 
   return (
-    <View style={containerStyle} {...props}>
+    <View style={containerStyle}>
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>Nothing here</Text>
         <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />
@@ -25,7 +25,7 @@ const ProductEmptyList: React.FC<ViewProps> = ({ style, ...props }) => {
       </View>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -47,5 +47,3 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
 });
-
-export default memo(ProductEmptyList);
