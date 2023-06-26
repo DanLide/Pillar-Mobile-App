@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   LayoutChangeEvent,
   LayoutRectangle,
+  Dimensions,
 } from 'react-native';
 import { runOnJS } from 'react-native-reanimated';
 import {
@@ -26,8 +27,12 @@ export interface ScannerProps extends Partial<CameraProps> {
   onRead: (barcode: Barcode[], frame: Frame) => void;
 }
 
+const isIpod = Dimensions.get('screen').width <= 320 
+
 const CAMERA_ZOOM = 1.5;
-const VIDEO_WIDTH = 1920;
+const IPOD_WIDTH = 1920;
+const IPHONE_WIDTH = 2592
+const VIDEO_WIDTH = isIpod ? IPOD_WIDTH : IPHONE_WIDTH;
 const PIXEL_FORMAT = '420v'
 
 const Scanner: React.FC<ScannerProps> = ({
