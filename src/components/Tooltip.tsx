@@ -1,5 +1,13 @@
-import React, { PropsWithChildren } from 'react';
-import { Modal, Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import React, { PropsWithChildren, useCallback, useState } from 'react';
+import {
+  Modal,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from 'react-native';
 
 import { Toast, ToastActionType } from './Toast';
 import { ToastType } from '../contexts/types';
@@ -7,12 +15,6 @@ import { ToastType } from '../contexts/types';
 export interface TooltipProps extends PropsWithChildren {
   /** Component to be rendered as the display container. */
   message: string | JSX.Element;
-
-  /** Function which gets called on closing the tooltip. */
-  onClose(): void;
-
-  /** Function which gets called on opening the tooltip. */
-  onOpen(): void;
 
   /** To show the tooltip. */
   visible?: boolean;
@@ -31,30 +33,46 @@ export const Tooltip: React.FC<TooltipProps> = ({
   animationType = 'fade',
   children,
   message,
-  visible,
-  onClose,
-  onOpen,
 }) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const openTooltip = useCallback(() => setIsVisible(true), []);
+  const closeTooltip = useCallback(() => setIsVisible(false), []);
+
   return (
-    <View style={{ position: 'relative' }}>
-      <Pressable onPress={onOpen}>{children}</Pressable>
+    <View>
+      <Pressable onPress={openTooltip}>{children}</Pressable>
       <Modal
         transparent
-        visible={visible}
-        onShow={onOpen}
+        visible={isVisible}
+        onShow={openTooltip}
+        onRequestClose={closeTooltip}
         animationType={animationType}
-        style={{ position: 'absolute', top: 5, right: 10 }}
       >
-        <Toast
-          id="tooltip"
-          message={message}
-          onDestroy={console.log}
-          onHide={onClose}
-          open
-          type={ToastType.Info}
-          actionType={ToastActionType.Close}
-        />
+        <Pressable style={styles.modalOverlay} onPressIn={closeTooltip} />
+        <View style={styles.modalContent}>
+          <Toast
+            id="tooltip"
+            message={message}
+            onDestroy={console.log}
+            onHide={closeTooltip}
+            open
+            type={ToastType.Info}
+            actionType={ToastActionType.Close}
+          />
+        </View>
       </Modal>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  modalContent: {
+    position: 'absolute',
+    justifyContent: 'center',
+    bottom: 10,
+  },
+  modalOverlay: {
+    ...StyleSheet.absoluteFillObject,
+  },
+});

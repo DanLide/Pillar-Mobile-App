@@ -48,8 +48,6 @@ const TOOLTIP_MESSAGE =
   'If the products are associated with a job, you will get an email to download an invoice. You can also retrieve the invoice in RepairStack. These products will also be sent to the associated job in your management software.';
 
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
-  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
-
   const store = useRef<StoreModel>(removeProductsStore).current;
   const toast = useToast();
 
@@ -134,12 +132,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
             renderItem={renderItem}
           />
 
-          <Tooltip
-            message={TOOLTIP_MESSAGE}
-            visible={isTooltipVisible}
-            onClose={() => setIsTooltipVisible(false)}
-            onOpen={() => setIsTooltipVisible(true)}
-          >
+          <Tooltip message={TOOLTIP_MESSAGE}>
             <Text style={styles.contextFooter}>
               What will be submitted as an invoice?
             </Text>
