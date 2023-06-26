@@ -42,9 +42,10 @@ export const ReturnProductsScreen: React.FC<Props> = ({ navigation }) => {
     const result = await check(PERMISSIONS.IOS.CAMERA);
 
     if (result !== RESULTS.GRANTED) {
-      return navigation.navigate(AppNavigator.CameraPermissionScreen, {
+      navigation.navigate(AppNavigator.CameraPermissionScreen, {
         nextRoute: AppNavigator.ReturnProductScannerScreen,
       });
+      return;
     }
 
     navigation.navigate(AppNavigator.ReturnProductScannerScreen);
