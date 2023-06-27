@@ -402,6 +402,17 @@ export const ProductIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const InfoIcon = memo((props: SvgProps) => (
+  <Svg width={25} height={24} fill="none" {...props}>
+    <Path
+      fill="#7634BC"
+      fillRule="evenodd"
+      d="M11.75 15.5h1.5v-4h-1.5v4Zm.75-7c.561 0 1 .42 1 1 0 .58-.439 1-1 1-.561 0-1-.42-1-1 0-.58.439-1 1-1Zm0-2.5a6 6 0 0 0 0 12 6 6 0 0 0 0-12Zm0 1.5c2.481 0 4.5 2.019 4.5 4.5s-2.019 4.5-4.5 4.5A4.505 4.505 0 0 1 8 12c0-2.481 2.019-4.5 4.5-4.5Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const AffirmativeIcon = memo(
   ({ primaryColor, secondaryColor, ...props }: SvgPropsWithColors) => (
     <Svg width={17} height={17} fill="none" {...props}>

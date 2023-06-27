@@ -132,8 +132,11 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
             renderItem={renderItem}
           />
 
-          <Tooltip message={TOOLTIP_MESSAGE}>
-            <Text style={styles.contextFooter}>
+          <Tooltip
+            containerStyle={styles.contextFooter}
+            message={TOOLTIP_MESSAGE}
+          >
+            <Text style={styles.contextFooterText}>
               What will be submitted as an invoice?
             </Text>
           </Tooltip>
@@ -288,16 +291,15 @@ const styles = StyleSheet.create({
     paddingRight: 30,
   },
   contextFooter: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: 9,
-    lineHeight: 11,
-    color: colors.black,
-    paddingTop: 8,
-    paddingBottom: 16,
-    letterSpacing: 0.19,
-    fontFamily: fonts.TT_Regular,
+    paddingVertical: 16,
     paddingHorizontal: 24,
+  },
+  contextFooterText: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: colors.purpleDark,
+    letterSpacing: 0.16,
+    fontFamily: fonts.TT_Bold,
   },
   buttonsContainer: {
     flexDirection: 'row',

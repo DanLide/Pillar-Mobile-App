@@ -13,7 +13,7 @@ import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toas
 import { colors, fonts, SVGs, toastColors } from '../theme';
 import { ToastMessage } from './ToastMessage';
 import { ToastType } from '../contexts/types';
-import {testIds} from '../helpers'
+import { testIds } from '../helpers';
 
 const { width } = Dimensions.get('window');
 
@@ -22,7 +22,8 @@ export enum ToastActionType {
   Undo = 'Undo',
 }
 
-interface Props extends ToastProps {
+interface Props
+  extends Pick<ToastProps, 'id' | 'message' | 'style' | 'onHide' | 'onPress'> {
   testID?: string;
   type: ToastType;
   actionType?: ToastActionType;
@@ -77,7 +78,10 @@ export const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
         return (
-          <SVGs.CloseSmallIcon testID={testIds.idCloseIcon(testID)} color={action} />
+          <SVGs.CloseSmallIcon
+            testID={testIds.idCloseIcon(testID)}
+            color={action}
+          />
         );
       case ToastActionType.Undo:
         return (
