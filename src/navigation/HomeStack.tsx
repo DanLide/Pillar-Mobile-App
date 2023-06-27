@@ -36,6 +36,11 @@ const ssoScreenOptions = getScreenOptions({
   rightBarButtonType: RightBarType.Logout,
 });
 
+const homeScreenOptions = getScreenOptions({
+  title: 'Repair Stack',
+  rightBarButtonType: RightBarType.Logout,
+});
+
 export const HomeStack: React.FC = () => {
   const initialRoute = getInitialScreen(authStore, ssoStore);
 
@@ -44,7 +49,7 @@ export const HomeStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.HomeScreen}
         component={HomeScreen}
-        options={getNavigationOptions}
+        options={homeScreenOptions}
       />
       <Stack.Screen
         name={AppNavigator.TermsScreen}
