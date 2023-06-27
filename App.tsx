@@ -19,6 +19,7 @@ const App = (initialProps: InitialProps) => {
       contentContainerStyle={styles.container}
       keyboardShouldPersistTaps="never"
       bounces={false}
+      horizontal={true}
     >
       <View
         style={styles.container}
