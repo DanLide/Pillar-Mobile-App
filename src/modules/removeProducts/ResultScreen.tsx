@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
 
-import { Button, ButtonType } from '../../components';
+import { Button, ButtonType, Tooltip } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { removeProductsStore } from './stores';
@@ -51,6 +51,20 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const notSyncedProductsSection = useMemo(
     () => groupProductsByJobId(store.getNotSyncedProducts),
     [store.getNotSyncedProducts],
+  );
+
+  const tooltipMessage = useMemo(
+    () => (
+      <Text style={styles.tooltipMessage}>
+        If the products are associated with a job, you will get an email to
+        download an invoice. You can also retrieve the invoice in RepairStack.{' '}
+        <Text style={[styles.tooltipMessage, styles.textBold]}>
+          These products will also be sent to the associated job in your
+          management software.
+        </Text>
+      </Text>
+    ),
+    [],
   );
 
   useEffect(() => {
@@ -123,12 +137,11 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
             renderItem={renderItem}
           />
 
-          <Text style={styles.contextFooter}>
-            If the products are associated with a job, you will get an email to
-            download an invoice. You can also retrieve the invoice in
-            RepairStack. These products will also be sent to the associated job
-            in CCC.
-          </Text>
+          <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
+            <Text style={styles.contextFooterText}>
+              What will be submitted as an invoice?
+            </Text>
+          </Tooltip>
 
           {notSyncedProductsSection.length > 0 ? (
             <>
@@ -279,17 +292,26 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     paddingRight: 30,
   },
-  contextFooter: {
-    width: '100%',
-    textAlign: 'center',
-    fontSize: 9,
-    lineHeight: 11,
-    color: colors.black,
-    paddingTop: 8,
-    paddingBottom: 16,
-    letterSpacing: 0.19,
+  tooltipMessage: {
+    flex: 1,
     fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'left',
+  },
+  textBold: {
+    fontFamily: fonts.TT_Bold,
+  },
+  contextFooter: {
     paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  contextFooterText: {
+    color: colors.purpleDark,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'center',
   },
   buttonsContainer: {
     flexDirection: 'row',

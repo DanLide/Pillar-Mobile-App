@@ -10,6 +10,7 @@ import { Checkbox } from './Checkbox';
 import { Modal } from './Modal';
 import { ColoredTooltip } from './ColoredTooltip';
 import { InfoTitleBarType, InfoTitleBar } from './InfoTitleBar';
+import { Tooltip } from './Tooltip';
 import { TooltipBar } from './TooltipBar';
 import ProductListButton from './ProductListButton';
 import { ProductEmptyList } from './ProductEmptyList';
@@ -30,6 +31,7 @@ export {
   Modal,
   ColoredTooltip,
   InfoTitleBarType,
+  Tooltip,
   TooltipBar,
   ProductListButton,
   ProductEmptyList,

@@ -4,4 +4,5 @@ export enum ToastType {
   Success = 'Success',
   ScanError = 'ScanError',
   ProductQuantityError = 'ProductQuantityError',
+  TooltipInfo = 'TooltipInfo',
 }

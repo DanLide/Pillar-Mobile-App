@@ -13,7 +13,7 @@ import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toas
 import { colors, fonts, SVGs, toastColors } from '../theme';
 import { ToastMessage } from './ToastMessage';
 import { ToastType } from '../contexts/types';
-import {testIds} from '../helpers'
+import { testIds } from '../helpers';
 
 const { width } = Dimensions.get('window');
 
@@ -22,7 +22,8 @@ export enum ToastActionType {
   Undo = 'Undo',
 }
 
-interface Props extends ToastProps {
+interface Props
+  extends Pick<ToastProps, 'id' | 'message' | 'style' | 'onHide' | 'onPress'> {
   testID?: string;
   type: ToastType;
   actionType?: ToastActionType;
@@ -37,6 +38,7 @@ const icons: Record<
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
+  [ToastType.TooltipInfo]: SVGs.TooltipInfoIcon,
 };
 
 export const Toast: React.FC<Props> = ({
@@ -77,7 +79,10 @@ export const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
         return (
-          <SVGs.CloseSmallIcon testID={testIds.idCloseIcon(testID)} color={action} />
+          <SVGs.CloseSmallIcon
+            testID={testIds.idCloseIcon(testID)}
+            color={action}
+          />
         );
       case ToastActionType.Undo:
         return (
@@ -115,6 +120,7 @@ export const Toast: React.FC<Props> = ({
         testID={testIds.idButton(testID)}
         hitSlop={27}
         onPress={handleRightButtonPress}
+        style={styles.actionButton}
       >
         {ActionButtonContent}
       </TouchableOpacity>
@@ -129,6 +135,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.16,
     lineHeight: 16,
   },
+  actionButton: {
+    height: '100%',
+    justifyContent: 'center',
+  },
   container: {
     alignItems: 'center',
     borderRadius: 5,
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
     gap: 16,
     minHeight: 46,
     marginVertical: 4,
-    paddingVertical: 5,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
