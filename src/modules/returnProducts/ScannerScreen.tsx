@@ -1,7 +1,11 @@
 import React, { useRef, useCallback, memo, useState } from 'react';
 import { useToast } from 'react-native-toast-notifications';
 
-import { BaseScannerScreen, ScannerScreenError } from '../../components';
+import {
+  BaseScannerScreen,
+  scannerErrorMessages,
+  ScannerScreenError,
+} from '../../components';
 
 import {
   ScannerModalStoreType,
@@ -19,13 +23,6 @@ type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
   StockProductStoreType;
 
-const errorMessages: Record<ScannerScreenError, string> = {
-  [ScannerScreenError.ProductNotFound]:
-    'This product cannot be found in our product database',
-  [ScannerScreenError.ProductNotAssignedToStock]:
-    'This product is not assigned to a this stock location',
-};
-
 const ScannerScreen: React.FC = memo(() => {
   const [isScannerActive, setIsScannerActive] = useState(true);
 
@@ -38,7 +35,7 @@ const ScannerScreen: React.FC = memo(() => {
 
   const onScanError = useCallback(
     (error: ScannerScreenError) =>
-      toast.show(errorMessages[error], {
+      toast.show(scannerErrorMessages[error], {
         type: ToastType.ScanError,
         duration: 0,
       }),
