@@ -11,6 +11,7 @@ import {
   ReturnProductsStore,
   returnProductsStore,
 } from '../../modules/returnProducts/stores';
+import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
 export class URLProvider {
   authStore: AuthStore;
@@ -99,11 +100,7 @@ export class URLProvider {
     );
   }
 
-  getFetchProductUrl(scanCode: string) {
-    const currentStock =
-      this.removeProductsStore.currentStock ||
-      this.returnProductsStore.currentStock;
-
+  getFetchProductUrl(scanCode: string, currentStock?: StockModel) {
     const partyRoleID = currentStock?.partyRoleId;
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
