@@ -88,7 +88,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
               id="tooltip"
               message={message}
               onHide={closeTooltip}
-              type={ToastType.Info}
+              type={ToastType.TooltipInfo}
               actionType={ToastActionType.Close}
               style={messageStyle}
             />

@@ -533,6 +533,19 @@ export const ProductErrorIcon = memo(
   ),
 );
 
+export const TooltipInfoIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <ProductIcon color={color} />
+      <ErrorIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.tooltipAbsolute}
+      />
+    </View>
+  ),
+);
+
 export const StockLocationErrorIcon = memo((props: SvgProps) => (
   <Svg width="115" height="124" viewBox="0 0 115 124" fill="#76767E" {...props}>
     <G opacity="0.25">
@@ -582,4 +595,5 @@ export const StockLocationErrorIcon = memo((props: SvgProps) => (
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },
+  tooltipAbsolute: { position: 'absolute', top: -16, right: -8 },
 });

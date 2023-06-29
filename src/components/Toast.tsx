@@ -38,6 +38,7 @@ const icons: Record<
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
+  [ToastType.TooltipInfo]: SVGs.TooltipInfoIcon,
 };
 
 export const Toast: React.FC<Props> = ({

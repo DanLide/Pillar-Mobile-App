@@ -1,5 +1,3 @@
-
-
 export const colors = {
   purpleDark: '#7634BC',
   purple: '#9657D9',
@@ -7,6 +5,7 @@ export const colors = {
   purpleDisabled: '#C7A8E9',
   purpleWithOpacity: 'rgba(150,87,217,0.5)',
   magnolia: '#F6EFFE',
+  background: '#F2F2F5',
   white: '#FFFFFF',
   white2: '#F6EFFE',
   redDark: '#B20E18',

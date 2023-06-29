@@ -32,4 +32,9 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.TooltipInfo]: {
+    primary: colors.purple,
+    secondary: colors.background,
+    action: colors.purpleDark,
+  },
 };
