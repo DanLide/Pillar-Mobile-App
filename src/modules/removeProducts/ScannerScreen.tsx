@@ -124,6 +124,7 @@ const ScannerScreen: React.FC = observer(() => {
       <ProductModal
         {...modalParams}
         product={store.getCurrentProduct}
+        stockName={store.stockName}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
         onChangeProductQuantity={setEditableProductQuantity}

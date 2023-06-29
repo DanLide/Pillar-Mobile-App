@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { Text, StyleSheet, Pressable, KeyboardTypeOptions } from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  Pressable,
+  KeyboardTypeOptions,
+  View,
+} from 'react-native';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -15,6 +21,7 @@ import { ProductModel } from '../../../../stores/types';
 
 interface Props {
   isEdit: boolean;
+  jobSelectable?: boolean;
   error?: string;
   maxValue: number;
   product?: ProductModel;
@@ -29,6 +36,7 @@ export const ProductQuantity: React.FC<Props> = observer(
   ({
     product,
     isEdit,
+    jobSelectable,
     error,
     maxValue,
     onChangeProductQuantity,
@@ -50,7 +58,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const minQty = getProductMinQty(inventoryUseTypeId);
 
-    const buttonLabel = isRecoverable ? 'Next' : 'Done';
+    const buttonLabel = jobSelectable && isRecoverable ? 'Next' : 'Done';
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent
         ? 'decimal-pad'
@@ -61,7 +69,7 @@ export const ProductQuantity: React.FC<Props> = observer(
     };
 
     const onPressButton = () => {
-      if (isRecoverable) {
+      if (jobSelectable && isRecoverable) {
         onJobSelectNavigation();
       } else {
         onPressAddToList();
@@ -69,36 +77,42 @@ export const ProductQuantity: React.FC<Props> = observer(
     };
 
     return (
-      <>
+      <View style={styles.container}>
         <Description product={product} />
-        <EditQuantity
-          isEdit={isEdit}
-          currentValue={reservedCount}
-          maxValue={maxValue}
-          minValue={minQty}
-          stepValue={minQty}
-          disabled={!!error}
-          keyboardType={keyboardType}
-          onChange={onChange}
-          onRemove={onRemove}
-        />
-        <FooterDescription product={product} maxValue={maxValue} />
+        <View>
+          <EditQuantity
+            isEdit={isEdit}
+            currentValue={reservedCount}
+            maxValue={maxValue}
+            minValue={minQty}
+            stepValue={minQty}
+            disabled={!!error}
+            keyboardType={keyboardType}
+            onChange={onChange}
+            onRemove={onRemove}
+          />
+          <FooterDescription product={product} maxValue={maxValue} />
+        </View>
 
-        {!error && (
-          <Pressable
-            onPress={onJobSelectNavigation}
-            style={styles.jobContainer}
-          >
-            <SVGs.RefundIcon color={colors.purple} />
-            <Text style={styles.jobText}>
-              {isEdit && jobNumber ? `Job ${jobNumber}` : 'Link to Job Number'}
-            </Text>
-          </Pressable>
-        )}
+        <View>
+          {jobSelectable && !error && (
+            <Pressable
+              onPress={onJobSelectNavigation}
+              style={styles.jobContainer}
+            >
+              <SVGs.RefundIcon color={colors.purple} />
+              <Text style={styles.jobText}>
+                {isEdit && jobNumber
+                  ? `Job ${jobNumber}`
+                  : 'Link to Job Number'}
+              </Text>
+            </Pressable>
+          )}
 
-        {product.isRecoverable ? (
-          <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
-        ) : null}
+          {product.isRecoverable ? (
+            <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
+          ) : null}
+        </View>
 
         <Button
           disabled={!!error}
@@ -107,12 +121,18 @@ export const ProductQuantity: React.FC<Props> = observer(
           title={buttonLabel}
           onPress={onPressButton}
         />
-      </>
+      </View>
     );
   },
 );
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    gap: 24,
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+  },
   continueButton: {
     width: 135,
     height: 48,
@@ -124,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 34,
+    paddingVertical: 8,
   },
   jobText: {
     fontSize: 13,
@@ -135,7 +155,6 @@ const styles = StyleSheet.create({
   },
   tooltip: {
     alignSelf: 'center',
-    marginTop: 8,
     color: colors.purpleDark,
     backgroundColor: colors.white2,
   },

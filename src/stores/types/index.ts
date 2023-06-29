@@ -42,5 +42,6 @@ export interface SyncedProductStoreType<T extends ProductModel = ProductModel> {
 
 export interface StockProductStoreType {
   currentStock?: StockModel;
+  stockName?: string;
   setCurrentStocks: (stock: StockModel) => void;
 }
