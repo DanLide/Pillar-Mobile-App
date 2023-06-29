@@ -20,7 +20,7 @@ interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
-export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
+export const SelectSSOScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(new SelectSSOStore(ssoStore)).current;
 
   const selectedSSOId = store.preselectedSSO?.pisaId;
@@ -74,7 +74,7 @@ export const SelectSSOScreen: React.FC<Props> = ({ navigation }) => {
       />
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -94,5 +94,3 @@ const styles = StyleSheet.create({
     marginVertical: 28,
   },
 });
-
-export default observer(SelectSSOScreen);

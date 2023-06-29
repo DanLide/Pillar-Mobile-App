@@ -14,6 +14,11 @@ import { Tooltip } from './Tooltip';
 import { TooltipBar } from './TooltipBar';
 import ProductListButton from './ProductListButton';
 import { ProductEmptyList } from './ProductEmptyList';
+import {
+  BaseScannerScreen,
+  ScannerScreenError,
+  scannerErrorMessages,
+} from './BaseScannerScreen';
 
 export {
   Scanner,
@@ -22,6 +27,9 @@ export {
   Text,
   Switch,
   ScanProduct,
+  BaseScannerScreen,
+  ScannerScreenError,
+  scannerErrorMessages,
   Checkbox,
   Toast,
   ToastActionType,

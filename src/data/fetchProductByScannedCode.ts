@@ -1,26 +1,30 @@
 import { v1 as uuid } from 'uuid';
 
-import { Task, TaskExecutor, getProductMinQty } from './helpers';
+import { getProductMinQty, Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
 import { ProductResponse } from './api/productsAPI';
 
-import { CurrentProductStoreType, ProductModel } from '../stores/types';
+import {
+  CurrentProductStoreType,
+  ProductModel,
+  StockProductStoreType,
+} from '../stores/types';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
 }
 
 export const fetchProductByScannedCode = async (
-  currentProductStore: CurrentProductStoreType,
+  store: CurrentProductStoreType & StockProductStoreType,
   scanCode: string,
 ) => {
   const productContext: FetchProductByScannedCodeContext = {
     product: undefined,
   };
   const result = await new TaskExecutor([
-    new FetchProductByScannedCodeTask(productContext, scanCode),
-    new SaveProductToStoreTask(productContext, currentProductStore),
+    new FetchProductByScannedCodeTask(productContext, scanCode, store),
+    new SaveProductToStoreTask(productContext, store),
   ]).execute();
 
   return result;
@@ -29,19 +33,24 @@ export const fetchProductByScannedCode = async (
 export class FetchProductByScannedCodeTask extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
+  stockStore?: StockProductStoreType;
 
   constructor(
     productContext: FetchProductByScannedCodeContext,
     scanCode: string,
+    stockStore?: StockProductStoreType,
   ) {
     super();
     this.productContext = productContext;
+    this.stockStore = stockStore;
     this.scanCode = scanCode;
   }
 
   async run(): Promise<void> {
-    const response = await getFetchProductAPI(this.scanCode);
-    this.productContext.product = response;
+    this.productContext.product = await getFetchProductAPI(
+      this.scanCode,
+      this.stockStore?.currentStock,
+    );
   }
 }
 

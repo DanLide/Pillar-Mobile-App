@@ -1,6 +1,7 @@
 import { TransactionType } from '../../constants/common.enum';
 import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
+import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
 export interface ProductResponse {
   productId: number;
@@ -19,8 +20,11 @@ export interface RemoveProductResponse {
   jobDetailed: number;
 }
 
-export const getFetchProductAPI = (scanCode: string) => {
-  const url = new URLProvider().getFetchProductUrl(scanCode);
+export const getFetchProductAPI = (
+  scanCode: string,
+  currentStock?: StockModel,
+) => {
+  const url = new URLProvider().getFetchProductUrl(scanCode, currentStock);
 
   return tryAuthFetch<ProductResponse>({ url, request: { method: 'GET' } });
 };

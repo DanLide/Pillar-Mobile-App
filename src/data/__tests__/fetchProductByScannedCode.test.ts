@@ -5,11 +5,14 @@ import {
 } from '../fetchProductByScannedCode';
 
 import { getFetchProductAPI, ProductResponse } from '../api/productsAPI';
-import { CurrentProductStoreType } from '../../stores/types';
+import {
+  CurrentProductStoreType,
+  StockProductStoreType,
+} from '../../stores/types';
 
 jest.mock('../api/productsAPI');
 
-const mockScanCode = '10'
+const mockScanCode = '10';
 
 const mockProductResponse: ProductResponse = {
   productId: 1,
@@ -25,9 +28,10 @@ const mockProductResponse: ProductResponse = {
 
 const mockSetCurrentProduct = jest.fn();
 
-const mockCurrentProductStoreType: CurrentProductStoreType = {
+const mockStore: CurrentProductStoreType & StockProductStoreType = {
   setCurrentProduct: mockSetCurrentProduct,
   removeCurrentProduct: jest.fn(),
+  setCurrentStocks: jest.fn(),
 };
 
 describe('fetchProductByScannedCode', () => {
@@ -40,12 +44,16 @@ describe('fetchProductByScannedCode', () => {
     const fetchProductByScannedCodeTask = new FetchProductByScannedCodeTask(
       {},
       mockScanCode,
+      mockStore,
     );
     await expect(fetchProductByScannedCodeTask.run()).resolves.not.toThrow();
     expect(fetchProductByScannedCodeTask.productContext.product).toBe(
       mockProductResponse,
     );
-    expect(getFetchProductAPI).toHaveBeenCalledWith(mockScanCode);
+    expect(getFetchProductAPI).toHaveBeenCalledWith(
+      mockScanCode,
+      mockStore.currentStock,
+    );
   });
 
   it('should throw Error FetchProductByScannedCodeTask task', async () => {
@@ -57,13 +65,16 @@ describe('fetchProductByScannedCode', () => {
       mockScanCode,
     );
     await expect(fetchProductByScannedCodeTask.run()).rejects.toThrow();
-    expect(getFetchProductAPI).toHaveBeenCalledWith(mockScanCode);
+    expect(getFetchProductAPI).toHaveBeenCalledWith(
+      mockScanCode,
+      mockStore.currentStock,
+    );
   });
 
   it('should execute SaveProductToStoreTask task', async () => {
     const saveProductToStoreTask = new SaveProductToStoreTask(
       { product: mockProductResponse },
-      mockCurrentProductStoreType,
+      mockStore,
     );
     await expect(saveProductToStoreTask.run()).resolves.not.toThrow();
     expect(mockSetCurrentProduct).toHaveBeenCalledWith({
@@ -85,14 +96,17 @@ describe('fetchProductByScannedCode', () => {
   it('should execute SaveProductToStoreTask task with empty product', async () => {
     const saveProductToStoreTask = new SaveProductToStoreTask(
       { product: undefined },
-      mockCurrentProductStoreType,
+      mockStore,
     );
     await expect(saveProductToStoreTask.run()).resolves.not.toThrow();
     expect(mockSetCurrentProduct).not.toHaveBeenCalled();
   });
 
   it('should call fetchProductByScannedCode', async () => {
-    await fetchProductByScannedCode(mockCurrentProductStoreType, mockScanCode);
-    expect(getFetchProductAPI).toHaveBeenCalledWith(mockScanCode);
+    await fetchProductByScannedCode(mockStore, mockScanCode);
+    expect(getFetchProductAPI).toHaveBeenCalledWith(
+      mockScanCode,
+      mockStore.currentStock,
+    );
   });
 });
