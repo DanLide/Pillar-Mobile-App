@@ -21,14 +21,13 @@ import { colors } from '../theme';
 
 export interface TooltipProps extends PropsWithChildren {
   message: string | JSX.Element;
-  containerStyle?: StyleProp<ViewStyle>;
-  pointerStyle?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
 }
 
 export const Tooltip: React.FC<TooltipProps> = ({
   children,
   message,
-  containerStyle,
+  contentStyle,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -44,18 +43,15 @@ export const Tooltip: React.FC<TooltipProps> = ({
     [containerHeight],
   );
 
-  const mergedContainerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.container, containerStyle],
-    [containerStyle],
+  const mergedContentStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.content, contentStyle],
+    [contentStyle],
   );
 
   const pointerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       styles.pointer,
-      {
-        bottom: containerHeight - 16,
-        left: infoIconLayout.x + infoIconLayout.width,
-      },
+      { bottom: containerHeight - 16, left: infoIconLayout.x },
     ],
     [containerHeight, infoIconLayout],
   );
@@ -77,8 +73,8 @@ export const Tooltip: React.FC<TooltipProps> = ({
   return (
     <>
       {isVisible && <Pressable style={styles.overlay} onPress={closeTooltip} />}
-      <View style={mergedContainerStyle} onLayout={onContainerLayout}>
-        <Pressable onPress={openTooltip} style={styles.content}>
+      <View style={styles.container} onLayout={onContainerLayout}>
+        <Pressable onPress={openTooltip} style={mergedContentStyle}>
           <InfoIcon onLayout={onInfoIconLayout} />
           {children}
         </Pressable>
@@ -129,7 +125,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 12,
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
-    borderBottomColor: colors.magnolia,
+    borderBottomColor: colors.background,
     transform: [{ rotate: '180deg' }],
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: -8 },

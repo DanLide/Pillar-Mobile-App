@@ -120,6 +120,7 @@ export const Toast: React.FC<Props> = ({
         testID={testIds.idButton(testID)}
         hitSlop={27}
         onPress={handleRightButtonPress}
+        style={styles.actionButton}
       >
         {ActionButtonContent}
       </TouchableOpacity>
@@ -134,6 +135,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.16,
     lineHeight: 16,
   },
+  actionButton: {
+    height: '100%',
+    justifyContent: 'center',
+  },
   container: {
     alignItems: 'center',
     borderRadius: 5,
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
     gap: 16,
     minHeight: 46,
     marginVertical: 4,
-    paddingVertical: 5,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },

@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useCallback,
-  useMemo,
-  useEffect,
-  useState,
-} from 'react';
+import React, { useRef, useCallback, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -44,9 +38,6 @@ interface Props {
 
 type StoreModel = SyncedProductStoreType & StockProductStoreType;
 
-const TOOLTIP_MESSAGE =
-  'If the products are associated with a job, you will get an email to download an invoice. You can also retrieve the invoice in RepairStack. These products will also be sent to the associated job in your management software.';
-
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef<StoreModel>(removeProductsStore).current;
   const toast = useToast();
@@ -60,6 +51,20 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const notSyncedProductsSection = useMemo(
     () => groupProductsByJobId(store.getNotSyncedProducts),
     [store.getNotSyncedProducts],
+  );
+
+  const tooltipMessage = useMemo(
+    () => (
+      <Text style={styles.tooltipMessage}>
+        If the products are associated with a job, you will get an email to
+        download an invoice. You can also retrieve the invoice in RepairStack.{' '}
+        <Text style={[styles.tooltipMessage, styles.textBold]}>
+          These products will also be sent to the associated job in your
+          management software.
+        </Text>
+      </Text>
+    ),
+    [],
   );
 
   useEffect(() => {
@@ -132,10 +137,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
             renderItem={renderItem}
           />
 
-          <Tooltip
-            containerStyle={styles.contextFooter}
-            message={TOOLTIP_MESSAGE}
-          >
+          <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
             <Text style={styles.contextFooterText}>
               What will be submitted as an invoice?
             </Text>
@@ -290,16 +292,26 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     paddingRight: 30,
   },
+  tooltipMessage: {
+    flex: 1,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'left',
+  },
+  textBold: {
+    fontFamily: fonts.TT_Bold,
+  },
   contextFooter: {
-    paddingVertical: 16,
     paddingHorizontal: 24,
+    paddingVertical: 16,
   },
   contextFooterText: {
-    textAlign: 'center',
-    fontSize: 12,
     color: colors.purpleDark,
-    letterSpacing: 0.16,
     fontFamily: fonts.TT_Bold,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'center',
   },
   buttonsContainer: {
     flexDirection: 'row',
