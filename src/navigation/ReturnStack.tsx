@@ -5,7 +5,7 @@ import { SelectStockScreen } from '../modules/returnProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, ReturnStackParamList } from './types';
 import { ReturnProductsScreen } from '../modules/returnProducts/ReturnProductsScreen';
-import ReturnProductScannerScreen from '../modules/returnProducts/ScannerScreen';
+import { ScannerScreen } from '../modules/returnProducts/ScannerScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 
@@ -48,7 +48,7 @@ export const ReturnStack: React.FC = () => {
       />
       <Stack.Screen
         name={AppNavigator.ReturnProductScannerScreen}
-        component={ReturnProductScannerScreen}
+        component={ScannerScreen}
         options={getScreenOptions({
           title: 'Return Products',
           leftBarButtonType: LeftBarType.Back,

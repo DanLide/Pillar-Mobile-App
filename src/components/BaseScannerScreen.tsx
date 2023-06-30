@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { HapticOptions, trigger } from 'react-native-haptic-feedback';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
+import { useToast } from 'react-native-toast-notifications';
 
 import {
   CurrentProductStoreType,
@@ -10,10 +11,13 @@ import {
   ScannerModalStoreType,
   StockProductStoreType,
 } from '../stores/types';
+import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
+import { Utils } from '../data/helpers/utils';
 import { ProductModal, ProductModalParams } from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
+import { ToastMessage } from './ToastMessage';
 import { scanMelody } from './Sound';
 
 type StoreModel = ScannerModalStoreType &
@@ -29,8 +33,6 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
-  onScanError?: (error: ScannerScreenError) => void;
-  onProductSubmit?: (product: ProductModel) => void;
   onCloseModal?: () => void;
 }
 
@@ -46,17 +48,21 @@ const hapticOptions: HapticOptions = {
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
-  ({
-    store,
-    modalParams,
-    onProductScan,
-    onScanError,
-    onProductSubmit,
-    onCloseModal,
-  }) => {
+  ({ store, modalParams, onProductScan, onCloseModal }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
+    const toast = useToast();
+
     const scannedProducts = store.getProducts;
+
+    const onScanError = useCallback(
+      (error: ScannerScreenError) =>
+        toast.show(scannerErrorMessages[error], {
+          type: ToastType.ScanError,
+          duration: 0,
+        }),
+      [toast],
+    );
 
     const fetchProductByCode = useCallback(
       async (code: string) => {
@@ -90,11 +96,26 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [fetchProductByCode, onScanError],
     );
 
-    const handleCloseModal = useCallback(() => {
-      onCloseModal?.();
-      store.removeCurrentProduct();
-      setIsScannerActive(true);
-    }, [onCloseModal, store]);
+    const onProductSubmit = useCallback(
+      (product: ProductModel) => {
+        const { nameDetails, reservedCount } = product;
+
+        store.addProduct(product);
+
+        toast.show?.(
+          <ToastMessage>
+            <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+            {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
+            <ToastMessage bold>
+              {Utils.truncateString(nameDetails)}
+            </ToastMessage>{' '}
+            added to List
+          </ToastMessage>,
+          { type: ToastType.Info },
+        );
+      },
+      [store, toast],
+    );
 
     const setEditableProductQuantity = useCallback(
       (quantity: number) => {
@@ -103,14 +124,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [store],
     );
 
-    const handleProductSubmit = useCallback(
-      (product: ProductModel) => {
-        store.addProduct(product);
-
-        onProductSubmit?.(product);
-      },
-      [onProductSubmit, store],
-    );
+    const handleCloseModal = useCallback(() => {
+      onCloseModal?.();
+      store.removeCurrentProduct();
+      setIsScannerActive(true);
+    }, [onCloseModal, store]);
 
     return (
       <View style={styles.container}>
@@ -127,7 +145,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           {...modalParams}
           product={store.getCurrentProduct}
           stockName={store.stockName}
-          onSubmit={handleProductSubmit}
+          onSubmit={onProductSubmit}
           onClose={handleCloseModal}
           onChangeProductQuantity={setEditableProductQuantity}
         />
