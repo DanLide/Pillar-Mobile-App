@@ -120,7 +120,6 @@ export const Toast: React.FC<Props> = ({
         testID={testIds.idButton(testID)}
         hitSlop={27}
         onPress={handleRightButtonPress}
-        style={styles.actionButton}
       >
         {ActionButtonContent}
       </TouchableOpacity>
@@ -134,10 +133,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     letterSpacing: 0.16,
     lineHeight: 16,
-  },
-  actionButton: {
-    height: '100%',
-    justifyContent: 'center',
   },
   container: {
     alignItems: 'center',

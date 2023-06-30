@@ -1,3 +1,11 @@
+import { override } from 'mobx';
+
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 
-export class ReturnProductsStore extends BaseProductsStore {}
+const PRODUCT_MAX_COUNT = 999;
+
+export class ReturnProductsStore extends BaseProductsStore {
+  @override get getMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
+}

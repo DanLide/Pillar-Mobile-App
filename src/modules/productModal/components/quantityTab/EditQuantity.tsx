@@ -151,9 +151,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: 36.5,
-    marginTop: 8,
+    gap: 11,
+    justifyContent: 'center',
   },
   input: {
     height: 103,

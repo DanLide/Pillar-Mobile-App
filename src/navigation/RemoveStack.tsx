@@ -5,7 +5,7 @@ import { AppNavigator, LeftBarType, RemoveStackParamList } from './types';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
 import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
-import RemoveProductScannerScreen from '../modules/removeProducts/ScannerScreen';
+import { ScannerScreen } from '../modules/removeProducts/ScannerScreen';
 import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
@@ -49,7 +49,7 @@ export const RemoveStack: React.FC = () => {
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductScannerScreen}
-        component={RemoveProductScannerScreen}
+        component={ScannerScreen}
         options={getScreenOptions({
           title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,

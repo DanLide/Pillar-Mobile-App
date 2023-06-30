@@ -1,18 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { useToast } from 'react-native-toast-notifications';
 import { observer } from 'mobx-react';
 
-import {
-  ProductModal,
-  ProductModalType,
-  ProductModalParams,
-} from '../productModal';
-import {
-  ToastMessage,
-  BaseScannerScreen,
-  ScannerScreenError,
-  scannerErrorMessages,
-} from '../../components';
+import { ProductModalType, ProductModalParams } from '../productModal';
+import { BaseScannerScreen } from '../../components';
 
 import { removeProductsStore } from './stores';
 
@@ -20,8 +10,6 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from '../../contexts';
-import { ToastType } from '../../contexts/types';
-import { Utils } from '../../data/helpers/utils';
 import { getProductMinQty } from '../../data/helpers';
 import {
   ScannerModalStoreType,
@@ -35,20 +23,17 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-type StoreModel = ScannerModalStoreType &
+type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
   StockProductStoreType;
 
-const ScannerScreen: React.FC = observer(() => {
-  const [isScannerActive, setIsScannerActive] = useState(true);
+export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
-  const store = useRef<StoreModel>(removeProductsStore).current;
+  const store = useRef<BaseProductsStore>(removeProductsStore).current;
 
-  const toast = useToast();
-
-  const onProduct = useCallback<(product: ProductModel) => Promise<void>>(
+  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product => {
       const removedProductCount = store.getScannedProductsCountByProductId(
         product.productId,
@@ -70,70 +55,16 @@ const ScannerScreen: React.FC = observer(() => {
     [store],
   );
 
-  const onScanStart = useCallback(() => setIsScannerActive(false), []);
-  const onScanComplete = useCallback(() => setIsScannerActive(true), []);
-
-  const onScanError = useCallback(
-    (error: ScannerScreenError) =>
-      toast.show(scannerErrorMessages[error], {
-        type: ToastType.ScanError,
-        duration: 0,
-      }),
-    [toast],
-  );
-
-  const onCloseModal = () => {
-    setModalParams(initModalParams);
-    store.removeCurrentProduct();
-    setIsScannerActive(true);
-  };
-
-  const setEditableProductQuantity = (quantity: number) => {
-    store.setEditableProductQuantity(quantity);
-  };
-
-  const onSubmitProduct = useCallback(
-    (product: ProductModel) => {
-      const { reservedCount, nameDetails } = product;
-
-      store.addProduct(product);
-
-      toast.show?.(
-        <ToastMessage>
-          <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-          {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
-          <ToastMessage bold>{Utils.truncateString(nameDetails)}</ToastMessage>{' '}
-          added to List
-        </ToastMessage>,
-        { type: ToastType.Info },
-      );
-    },
-    [store, toast],
-  );
+  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
   return (
-    <>
+    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
       <BaseScannerScreen
         store={store}
-        isScannerActive={isScannerActive}
-        onScanStart={onScanStart}
-        onScanComplete={onScanComplete}
-        onProduct={onProduct}
-        onError={onScanError}
+        modalParams={modalParams}
+        onProductScan={onProductScan}
+        onCloseModal={onCloseModal}
       />
-      <ProductModal
-        {...modalParams}
-        product={store.getCurrentProduct}
-        onSubmit={onSubmitProduct}
-        onClose={onCloseModal}
-        onChangeProductQuantity={setEditableProductQuantity}
-      />
-    </>
+    </ToastContextProvider>
   );
 });
-
-export default () => (
-  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-    <ScannerScreen />
-  </ToastContextProvider>
-);

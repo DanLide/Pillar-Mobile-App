@@ -1,14 +1,12 @@
-import React, { useCallback, useRef, useState, useMemo } from 'react';
+import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
 import { StyleSheet, Dimensions, View, Alert } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { observer } from 'mobx-react';
 
 import { Modal } from '../../components';
 import { ProductQuantity } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { colors } from '../../theme';
-import { removeProductsStore } from '../removeProducts/stores';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -19,8 +17,10 @@ import { ProductModel } from '../../stores/types';
 export enum ProductModalType {
   Add,
   Edit,
+  Return,
   Hidden,
 }
+
 export interface ProductModalParams {
   type: ProductModalType;
   error?: string;
@@ -29,6 +29,7 @@ export interface ProductModalParams {
 
 interface Props extends ProductModalParams {
   product?: ProductModel;
+  stockName?: string;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
@@ -43,24 +44,34 @@ export enum Tabs {
   LinkJob,
 }
 
-const tabs = [Tabs.EditQuantity, Tabs.LinkJob];
+const getTabs = (type: ProductModalType): Tabs[] => {
+  switch (type) {
+    case ProductModalType.Return:
+      return [Tabs.EditQuantity];
+    default:
+      return [Tabs.EditQuantity, Tabs.LinkJob];
+  }
+};
 
 const NAVIGATION_HEADER_HEIGHT = 64;
 const MODAL_HEADER_HEIGHT = 70;
 
-export const ProductModal: React.FC<Props> = observer(
+export const ProductModal = memo(
   ({
     type,
     product,
+    stockName,
     error,
     maxValue = 0,
     onClose,
     onSubmit,
     onRemove,
     onChangeProductQuantity,
-  }) => {
+  }: Props) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(0);
+
+    const tabs = useMemo(() => getTabs(type), [type]);
 
     const onJobSelectNavigation = useCallback(() => {
       setSelectedTab(Tabs.LinkJob);
@@ -117,6 +128,7 @@ export const ProductModal: React.FC<Props> = observer(
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={type === ProductModalType.Edit}
+                jobSelectable={type !== ProductModalType.Return}
                 error={error}
                 maxValue={maxValue}
                 onPressAddToList={onPressSkip}
@@ -169,7 +181,7 @@ export const ProductModal: React.FC<Props> = observer(
       <Modal
         isVisible={type !== ProductModalType.Hidden}
         onClose={clearProductModalStoreOnClose}
-        title={removeProductsStore.stockName}
+        title={stockName}
         titleContainerStyle={styles.titleContainer}
         topOffset={64}
         semiTitle={title}

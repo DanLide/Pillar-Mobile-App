@@ -1,8 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { HapticOptions, trigger } from 'react-native-haptic-feedback';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
+import { useToast } from 'react-native-toast-notifications';
 
 import {
   CurrentProductStoreType,
@@ -10,9 +11,13 @@ import {
   ScannerModalStoreType,
   StockProductStoreType,
 } from '../stores/types';
+import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
+import { Utils } from '../data/helpers/utils';
+import { ProductModal, ProductModalParams } from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
+import { ToastMessage } from './ToastMessage';
 import { scanMelody } from './Sound';
 
 type StoreModel = ScannerModalStoreType &
@@ -26,11 +31,9 @@ export enum ScannerScreenError {
 
 interface Props {
   store: StoreModel;
-  isScannerActive?: boolean;
-  onScanStart?: () => void;
-  onScanComplete?: () => void;
-  onProduct?: (product: ProductModel) => void;
-  onError?: (error: ScannerScreenError) => void;
+  modalParams: ProductModalParams;
+  onProductScan?: (product: ProductModel) => void;
+  onCloseModal?: () => void;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -45,46 +48,87 @@ const hapticOptions: HapticOptions = {
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
-  ({
-    store,
-    isScannerActive,
-    onScanStart,
-    onScanComplete,
-    onProduct,
-    onError,
-  }) => {
+  ({ store, modalParams, onProductScan, onCloseModal }) => {
+    const [isScannerActive, setIsScannerActive] = useState(true);
+
+    const toast = useToast();
+
     const scannedProducts = store.getProducts;
+
+    const onScanError = useCallback(
+      (error: ScannerScreenError) =>
+        toast.show(scannerErrorMessages[error], {
+          type: ToastType.ScanError,
+          duration: 0,
+        }),
+      [toast],
+    );
 
     const fetchProductByCode = useCallback(
       async (code: string) => {
         const networkError = await fetchProductByScannedCode(store, btoa(code));
 
         // TODO: Handle Network errors
-        if (networkError) return onError?.(ScannerScreenError.ProductNotFound);
+        if (networkError)
+          return onScanError?.(ScannerScreenError.ProductNotFound);
 
         const product = store.getCurrentProduct;
 
         if (!product)
-          return onError?.(ScannerScreenError.ProductNotAssignedToStock);
+          return onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
 
-        onProduct?.(product);
+        onProductScan?.(product);
       },
-      [store, onError, onProduct],
+      [store, onScanError, onProductScan],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
-        onScanStart?.();
+        setIsScannerActive(false);
         trigger('selection', hapticOptions);
         scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
-        else onError?.(ScannerScreenError.ProductNotFound);
+        else onScanError?.(ScannerScreenError.ProductNotFound);
 
-        onScanComplete?.();
+        setIsScannerActive(true);
       },
-      [fetchProductByCode, onError, onScanComplete, onScanStart],
+      [fetchProductByCode, onScanError],
     );
+
+    const onProductSubmit = useCallback(
+      (product: ProductModel) => {
+        const { nameDetails, reservedCount } = product;
+
+        store.addProduct(product);
+
+        toast.show?.(
+          <ToastMessage>
+            <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
+            {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
+            <ToastMessage bold>
+              {Utils.truncateString(nameDetails)}
+            </ToastMessage>{' '}
+            added to List
+          </ToastMessage>,
+          { type: ToastType.Info },
+        );
+      },
+      [store, toast],
+    );
+
+    const setEditableProductQuantity = useCallback(
+      (quantity: number) => {
+        store.setEditableProductQuantity(quantity);
+      },
+      [store],
+    );
+
+    const handleCloseModal = useCallback(() => {
+      onCloseModal?.();
+      store.removeCurrentProduct();
+      setIsScannerActive(true);
+    }, [onCloseModal, store]);
 
     return (
       <View style={styles.container}>
@@ -96,6 +140,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onPressScan={onScanProduct}
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
+        />
+        <ProductModal
+          {...modalParams}
+          product={store.getCurrentProduct}
+          stockName={store.stockName}
+          onSubmit={onProductSubmit}
+          onClose={handleCloseModal}
+          onChangeProductQuantity={setEditableProductQuantity}
         />
       </View>
     );
