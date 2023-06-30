@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { HapticOptions, trigger } from 'react-native-haptic-feedback';
 import { encode as btoa } from 'base-64';
@@ -11,6 +11,7 @@ import {
   StockProductStoreType,
 } from '../stores/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
+import { ProductModal, ProductModalParams } from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { scanMelody } from './Sound';
@@ -26,11 +27,11 @@ export enum ScannerScreenError {
 
 interface Props {
   store: StoreModel;
-  isScannerActive?: boolean;
-  onScanStart?: () => void;
-  onScanComplete?: () => void;
-  onProduct?: (product: ProductModel) => void;
-  onError?: (error: ScannerScreenError) => void;
+  modalParams: ProductModalParams;
+  onProductScan?: (product: ProductModel) => void;
+  onScanError?: (error: ScannerScreenError) => void;
+  onProductSubmit?: (product: ProductModel) => void;
+  onCloseModal?: () => void;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -47,12 +48,14 @@ const hapticOptions: HapticOptions = {
 export const BaseScannerScreen: React.FC<Props> = observer(
   ({
     store,
-    isScannerActive,
-    onScanStart,
-    onScanComplete,
-    onProduct,
-    onError,
+    modalParams,
+    onProductScan,
+    onScanError,
+    onProductSubmit,
+    onCloseModal,
   }) => {
+    const [isScannerActive, setIsScannerActive] = useState(true);
+
     const scannedProducts = store.getProducts;
 
     const fetchProductByCode = useCallback(
@@ -60,30 +63,53 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         const networkError = await fetchProductByScannedCode(store, btoa(code));
 
         // TODO: Handle Network errors
-        if (networkError) return onError?.(ScannerScreenError.ProductNotFound);
+        if (networkError)
+          return onScanError?.(ScannerScreenError.ProductNotFound);
 
         const product = store.getCurrentProduct;
 
         if (!product)
-          return onError?.(ScannerScreenError.ProductNotAssignedToStock);
+          return onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
 
-        onProduct?.(product);
+        onProductScan?.(product);
       },
-      [store, onError, onProduct],
+      [store, onScanError, onProductScan],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
-        onScanStart?.();
+        setIsScannerActive(false);
         trigger('selection', hapticOptions);
         scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
-        else onError?.(ScannerScreenError.ProductNotFound);
+        else onScanError?.(ScannerScreenError.ProductNotFound);
 
-        onScanComplete?.();
+        setIsScannerActive(true);
       },
-      [fetchProductByCode, onError, onScanComplete, onScanStart],
+      [fetchProductByCode, onScanError],
+    );
+
+    const handleCloseModal = useCallback(() => {
+      onCloseModal?.();
+      store.removeCurrentProduct();
+      setIsScannerActive(true);
+    }, [onCloseModal, store]);
+
+    const setEditableProductQuantity = useCallback(
+      (quantity: number) => {
+        store.setEditableProductQuantity(quantity);
+      },
+      [store],
+    );
+
+    const handleProductSubmit = useCallback(
+      (product: ProductModel) => {
+        store.addProduct(product);
+
+        onProductSubmit?.(product);
+      },
+      [onProductSubmit, store],
     );
 
     return (
@@ -96,6 +122,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onPressScan={onScanProduct}
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
+        />
+        <ProductModal
+          {...modalParams}
+          product={store.getCurrentProduct}
+          stockName={store.stockName}
+          onSubmit={handleProductSubmit}
+          onClose={handleCloseModal}
+          onChangeProductQuantity={setEditableProductQuantity}
         />
       </View>
     );

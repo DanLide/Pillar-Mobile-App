@@ -1,7 +1,6 @@
-import React, { useCallback, useRef, useState, useMemo } from 'react';
+import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
 import { StyleSheet, Dimensions, View, Alert } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
-import { observer } from 'mobx-react';
 
 import { Modal } from '../../components';
 import { ProductQuantity } from './components/quantityTab';
@@ -57,7 +56,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
 const NAVIGATION_HEADER_HEIGHT = 64;
 const MODAL_HEADER_HEIGHT = 70;
 
-export const ProductModal: React.FC<Props> = observer(
+export const ProductModal = memo(
   ({
     type,
     product,
@@ -68,7 +67,7 @@ export const ProductModal: React.FC<Props> = observer(
     onSubmit,
     onRemove,
     onChangeProductQuantity,
-  }) => {
+  }: Props) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(0);
 

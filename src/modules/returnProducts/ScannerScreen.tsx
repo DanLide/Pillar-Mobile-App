@@ -20,11 +20,7 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from '../../contexts';
-import {
-  ProductModal,
-  ProductModalParams,
-  ProductModalType,
-} from '../productModal';
+import { ProductModalParams, ProductModalType } from '../productModal';
 import { Utils } from '../../data/helpers/utils';
 import { observer } from 'mobx-react';
 
@@ -38,7 +34,6 @@ const initModalParams: ProductModalParams = {
 };
 
 const ScannerScreen: React.FC = observer(() => {
-  const [isScannerActive, setIsScannerActive] = useState(true);
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
@@ -46,7 +41,7 @@ const ScannerScreen: React.FC = observer(() => {
 
   const toast = useToast();
 
-  const onProduct = useCallback<(product: ProductModel) => Promise<void>>(
+  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
       setModalParams({
         type: ProductModalType.Return,
@@ -54,9 +49,6 @@ const ScannerScreen: React.FC = observer(() => {
       }),
     [store],
   );
-
-  const onScanStart = useCallback(() => setIsScannerActive(false), []);
-  const onScanComplete = useCallback(() => setIsScannerActive(true), []);
 
   const onScanError = useCallback(
     (error: ScannerScreenError) =>
@@ -67,22 +59,8 @@ const ScannerScreen: React.FC = observer(() => {
     [toast],
   );
 
-  const onCloseModal = () => {
-    setModalParams(initModalParams);
-    store.removeCurrentProduct();
-    setIsScannerActive(true);
-  };
-
-  const setEditableProductQuantity = (quantity: number) => {
-    store.setEditableProductQuantity(quantity);
-  };
-
-  const onSubmitProduct = useCallback(
-    (product: ProductModel) => {
-      const { reservedCount, nameDetails } = product;
-
-      store.addProduct(product);
-
+  const onProductSubmit = useCallback(
+    ({ reservedCount, nameDetails }: ProductModel) =>
       toast.show?.(
         <ToastMessage>
           <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
@@ -91,30 +69,21 @@ const ScannerScreen: React.FC = observer(() => {
           added to List
         </ToastMessage>,
         { type: ToastType.Info },
-      );
-    },
-    [store, toast],
+      ),
+    [toast],
   );
 
+  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+
   return (
-    <>
-      <BaseScannerScreen
-        store={store}
-        isScannerActive={isScannerActive}
-        onScanStart={onScanStart}
-        onScanComplete={onScanComplete}
-        onProduct={onProduct}
-        onError={onScanError}
-      />
-      <ProductModal
-        {...modalParams}
-        product={store.getCurrentProduct}
-        stockName={store.stockName}
-        onSubmit={onSubmitProduct}
-        onClose={onCloseModal}
-        onChangeProductQuantity={setEditableProductQuantity}
-      />
-    </>
+    <BaseScannerScreen
+      store={store}
+      modalParams={modalParams}
+      onProductScan={onProductScan}
+      onScanError={onScanError}
+      onProductSubmit={onProductSubmit}
+      onCloseModal={onCloseModal}
+    />
   );
 });
 
