@@ -50,3 +50,22 @@ export const removeProductAPI = (product: ProductModel) => {
     request: { method: 'PUT', body },
   });
 };
+
+export const returnProductAPI = ({
+  productId,
+  reservedCount,
+}: ProductModel) => {
+  const url = new URLProvider().returnProduct(productId, reservedCount);
+
+  const body = JSON.stringify([
+    {
+      TransactionTypeID: TransactionType.JobScan,
+      Description: 'Product Return',
+    },
+  ]);
+
+  return tryAuthFetch<string>({
+    url,
+    request: { method: 'PUT', body },
+  });
+};
