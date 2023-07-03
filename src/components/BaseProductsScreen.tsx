@@ -124,6 +124,7 @@ export const BaseProductsScreen = observer(
         setModalParams({
           isEdit: true,
           maxValue: store.getEditableMaxValue(product),
+          onHand: store.getEditableOnHand(product),
           type: modalType,
         });
       },

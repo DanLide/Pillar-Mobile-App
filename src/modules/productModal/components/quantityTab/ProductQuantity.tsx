@@ -21,6 +21,7 @@ import { ProductModel } from '../../../../stores/types';
 
 interface Props {
   maxValue: number;
+  onHand: number;
   isEdit?: boolean;
   jobSelectable?: boolean;
   error?: string;
@@ -39,6 +40,7 @@ export const ProductQuantity: React.FC<Props> = observer(
     jobSelectable,
     error,
     maxValue,
+    onHand,
     onChangeProductQuantity,
     onPressAddToList,
     onJobSelectNavigation,
@@ -91,7 +93,7 @@ export const ProductQuantity: React.FC<Props> = observer(
             onChange={onChange}
             onRemove={onRemove}
           />
-          <FooterDescription product={product} maxValue={maxValue} />
+          <FooterDescription product={product} onHand={onHand} />
         </View>
 
         <View>

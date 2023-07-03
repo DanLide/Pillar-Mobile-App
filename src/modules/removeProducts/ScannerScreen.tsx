@@ -50,6 +50,7 @@ export const ScannerScreen: React.FC = observer(() => {
         type: ProductModalType.Remove,
         error,
         maxValue: store.getMaxValue(product),
+        onHand: store.getOnHand(product),
       });
     },
     [store],

@@ -54,6 +54,14 @@ export class BaseProductsStore implements BaseProductsStoreType {
       product.reservedCount;
   }
 
+  @computed get getOnHand() {
+    return this.getMaxValue;
+  }
+
+  @computed get getEditableOnHand() {
+    return this.getEditableMaxValue;
+  }
+
   @computed get stockName() {
     return this.currentStock?.organizationName;
   }

@@ -25,6 +25,7 @@ export interface ProductModalParams {
   error?: string;
   isEdit?: boolean;
   maxValue?: number;
+  onHand?: number;
 }
 
 interface Props extends ProductModalParams {
@@ -64,6 +65,7 @@ export const ProductModal = memo(
     error,
     isEdit,
     maxValue = 0,
+    onHand = 0,
     onClose,
     onSubmit,
     onRemove,
@@ -132,6 +134,7 @@ export const ProductModal = memo(
                 jobSelectable={type === ProductModalType.Remove}
                 error={error}
                 maxValue={maxValue}
+                onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
@@ -162,6 +165,7 @@ export const ProductModal = memo(
         type,
         error,
         maxValue,
+        onHand,
         onJobSelectNavigation,
         onRemoveAlert,
         selectedTab,

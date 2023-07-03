@@ -28,6 +28,8 @@ export interface ScannerModalStoreType<T extends ProductModel = ProductModel> {
   getScannedProductsCountByProductId: (productId: number) => number;
   getEditableMaxValue: (product: T) => number;
   getMaxValue: (product: T) => number;
+  getOnHand: (product: T) => number;
+  getEditableOnHand: (product: T) => number;
 
   setEditableProductQuantity: (quantity: number) => void;
   addProduct: (product: T) => void;
