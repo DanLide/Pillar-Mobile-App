@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { v1 as uuid } from 'uuid';
-import { pipe, prop, sortBy, toLower } from 'ramda';
+import { pipe, prop, sortBy, toLower, trim } from 'ramda';
 
 import {
   ClearStoreType,
@@ -72,7 +72,7 @@ export class BaseProductsStore implements BaseProductsStoreType {
   }
 
   @computed get getSortedProducts() {
-    return sortBy(pipe(prop('name'), toLower), this.products);
+    return sortBy(pipe(prop('name'), trim, toLower), this.products);
   }
 
   @computed
