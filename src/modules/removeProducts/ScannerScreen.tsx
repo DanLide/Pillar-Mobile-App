@@ -47,7 +47,7 @@ export const ScannerScreen: React.FC = observer(() => {
           : undefined;
 
       setModalParams({
-        type: ProductModalType.Add,
+        type: ProductModalType.Remove,
         error,
         maxValue: store.getMaxValue(product),
       });

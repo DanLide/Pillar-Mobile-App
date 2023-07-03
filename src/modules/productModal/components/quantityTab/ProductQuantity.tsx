@@ -20,10 +20,10 @@ import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
 
 interface Props {
-  isEdit: boolean;
+  maxValue: number;
+  isEdit?: boolean;
   jobSelectable?: boolean;
   error?: string;
-  maxValue: number;
   product?: ProductModel;
 
   onChangeProductQuantity: (quantity: number) => void;
