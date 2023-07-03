@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { AppNavigator, LeftBarType, RemoveStackParamList } from './types';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
-import RemoveProductsScreen from '../modules/removeProducts/RemoveProductsScreen';
+import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
 import { ScannerScreen } from '../modules/removeProducts/ScannerScreen';
 import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
@@ -48,7 +48,7 @@ export const RemoveStack: React.FC = () => {
         })}
       />
       <Stack.Screen
-        name={AppNavigator.RemoveProductScannerScreen}
+        name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
           title: 'Remove Products',

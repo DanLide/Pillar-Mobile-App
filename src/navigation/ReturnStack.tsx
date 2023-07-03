@@ -47,7 +47,7 @@ export const ReturnStack: React.FC = () => {
         })}
       />
       <Stack.Screen
-        name={AppNavigator.ReturnProductScannerScreen}
+        name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
           title: 'Return Products',

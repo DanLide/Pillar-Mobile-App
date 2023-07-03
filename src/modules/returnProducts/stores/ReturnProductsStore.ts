@@ -8,4 +8,8 @@ export class ReturnProductsStore extends BaseProductsStore {
   @override get getMaxValue() {
     return () => PRODUCT_MAX_COUNT;
   }
+
+  @override get getEditableMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
 }
