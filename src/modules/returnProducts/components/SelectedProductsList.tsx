@@ -1,32 +1,42 @@
 import React, { useCallback, useRef } from 'react';
-import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
+import { StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { observer } from 'mobx-react';
 
 import { ProductModel, SyncedProductStoreType } from '../../../stores/types';
 import { returnProductsStore } from '../stores';
-import { ProductEmptyList } from '../../../components';
+import {
+  ProductEmptyList,
+  SelectedProductsListItem,
+} from '../../../components';
+
+interface Props {
+  onEditProduct: (item: ProductModel) => void;
+}
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
-export const SelectedProductsList = observer(() => {
-  const store = useRef<SyncedProductStoreType>(returnProductsStore).current;
+export const SelectedProductsList: React.FC<Props> = observer(
+  ({ onEditProduct }) => {
+    const store = useRef<SyncedProductStoreType>(returnProductsStore).current;
 
-  // TODO: implement renderItem
-  const renderItem = useCallback<ListRenderItem<ProductModel>>(
-    ({ item }) => <></>,
-    [],
-  );
+    const renderItem = useCallback(
+      ({ item }: ListRenderItemInfo<ProductModel>) => (
+        <SelectedProductsListItem item={item} onPress={onEditProduct} />
+      ),
+      [onEditProduct],
+    );
 
-  return (
-    <FlatList
-      contentContainerStyle={styles.container}
-      data={store.getNotSyncedProducts}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={ProductEmptyList}
-    />
-  );
-});
+    return (
+      <FlatList
+        contentContainerStyle={styles.container}
+        data={store.getNotSyncedProducts}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={ProductEmptyList}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1 },

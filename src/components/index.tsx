@@ -19,6 +19,8 @@ import {
   ScannerScreenError,
   scannerErrorMessages,
 } from './BaseScannerScreen';
+import { SelectedProductsListItem } from './SelectedProductsListItem';
+import { BaseProductsScreen } from './BaseProductsScreen';
 
 export {
   Scanner,
@@ -43,6 +45,8 @@ export {
   TooltipBar,
   ProductListButton,
   ProductEmptyList,
+  SelectedProductsListItem,
+  BaseProductsScreen,
 };
 
 export type { ScanProductProps };
