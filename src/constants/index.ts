@@ -1,4 +1,6 @@
 import { PartySettingsType } from './common.enum';
 import { Permission } from './permission.enum';
 
-export { PartySettingsType, Permission };
+const OTHER_JOB_ID = '-1';
+
+export { PartySettingsType, Permission, OTHER_JOB_ID };

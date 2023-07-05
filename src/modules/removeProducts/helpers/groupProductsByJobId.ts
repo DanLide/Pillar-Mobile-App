@@ -1,8 +1,7 @@
 import { pipe, groupBy, mapObjIndexed, pathOr, values } from 'ramda';
 
 import { ProductModel } from '../../../stores/types';
-
-import { OTHER_JOB_ID } from '../constants';
+import { OTHER_JOB_ID } from '../../../constants';
 
 export const groupProductsByJobId = (data: ProductModel[]) =>
   pipe(
