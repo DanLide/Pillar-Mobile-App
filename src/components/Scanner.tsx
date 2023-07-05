@@ -54,7 +54,7 @@ const Scanner: React.FC<ScannerProps> = ({
     });
 
     const filtered = barcodes.filter((value, index, self) => {
-      return self.findIndex((el) => JSON.stringify(el.content.data) === JSON.stringify(value.content.data)) === index
+      return self.findIndex((el) => JSON.stringify(el.rawValue) === JSON.stringify(value.rawValue)) === index
     });
     onRead && runOnJS(onRead)(filtered, frame);
   }, [onRead]);
