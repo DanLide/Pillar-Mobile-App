@@ -6,8 +6,6 @@ import {
   StyleSheet,
   SectionListData,
   ListRenderItemInfo,
-  TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
@@ -16,9 +14,7 @@ import { groupProductsByJobId } from './helpers';
 import { OTHER_JOB_ID } from './constants';
 import { colors, fonts } from '../../theme';
 import { ProductModel, SyncedProductStoreType } from '../../stores/types';
-import { ProductEmptyList } from '../../components';
-
-const { width } = Dimensions.get('window');
+import { ProductEmptyList, SelectedProductsListItem } from '../../components';
 
 interface Props {
   onEditProduct: (item: ProductModel) => void;
@@ -46,26 +42,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<ProductModel>) => (
-      <TouchableOpacity
-        style={styles.sectionItemContainer}
-        onPress={() => onEditProduct(item)}
-      >
-        <View style={styles.sectionItemLeft}>
-          <Text numberOfLines={1} style={styles.itemTitle}>
-            {item.name}
-          </Text>
-          <Text numberOfLines={1} style={styles.itemDescription}>
-            {item.manufactureCode} {item.partNo} {item.size}
-          </Text>
-        </View>
-        <View style={styles.sectionItemRight}>
-          <Text style={styles.reservedCount}>
-            {item.reservedCount}
-            <Text style={styles.onHand}>/{item.onHand}</Text>
-          </Text>
-        </View>
-        <View style={styles.borderLine} />
-      </TouchableOpacity>
+      <SelectedProductsListItem item={item} onPress={onEditProduct} />
     ),
     [onEditProduct],
   );
@@ -108,54 +85,5 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-  },
-  sectionItemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingLeft: 19,
-    paddingVertical: 9.5,
-    backgroundColor: colors.white,
-  },
-  borderLine: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: width - 16,
-    height: 1,
-    backgroundColor: colors.gray,
-  },
-  sectionItemLeft: {
-    flex: 3,
-  },
-  itemTitle: {
-    color: colors.purpleDark,
-    fontSize: 15,
-    lineHeight: 30,
-    fontFamily: fonts.TT_Bold,
-  },
-  itemDescription: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontFamily: fonts.TT_Regular,
-    color: colors.blackLight,
-  },
-  sectionItemRight: {
-    flex: 1,
-    alignSelf: 'center',
-    color: colors.blackSemiLight,
-    paddingRight: 35,
-  },
-  reservedCount: {
-    fontSize: 17,
-    lineHeight: 22,
-    fontFamily: fonts.TT_Bold,
-    textAlign: 'right',
-    color: colors.purpleDark,
-  },
-  onHand: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: colors.blackSemiLight,
-    fontFamily: fonts.TT_Regular,
   },
 });

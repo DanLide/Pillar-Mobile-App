@@ -129,4 +129,12 @@ export class URLProvider {
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${quantity}`,
     );
   }
+
+  returnProduct(productId: number, quantity: number) {
+    const partyRoleID = this.returnProductsStore.currentStock?.partyRoleId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
+    );
+  }
 }

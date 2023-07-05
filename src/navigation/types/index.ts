@@ -1,3 +1,6 @@
+import { StackNavigationProp } from '@react-navigation/stack';
+import { CompositeNavigationProp } from '@react-navigation/native';
+
 export enum AppNavigator {
   LoginScreen = 'LoginScreen',
 
@@ -12,17 +15,16 @@ export enum AppNavigator {
   SelectStockScreen = 'SelectStockScreen',
   HowToScanScreen = 'HowToScanScreen',
   CameraPermissionScreen = 'CameraPermissionScreen',
+  ScannerScreen = 'ScannerScreen',
+  ResultScreen = 'ResultScreen',
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
   RemoveProductsScreen = 'RemoveProductsScreen',
-  ResultScreen = 'ResultScreen',
-  RemoveProductScannerScreen = 'RemoveProductScannerScreen',
 
   // ReturnProductsStack
   ReturnProductsStack = 'ReturnProductsStack',
   ReturnProductsScreen = 'ReturnProductsScreen',
-  ReturnProductScannerScreen = 'ReturnProductScannerScreen',
 }
 
 type CameraPermissionScreenParams = {
@@ -43,7 +45,7 @@ export type RemoveStackParamList = {
   [AppNavigator.RemoveProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
-  [AppNavigator.RemoveProductScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
 };
 
@@ -52,7 +54,8 @@ export type ReturnStackParamList = {
   [AppNavigator.ReturnProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
-  [AppNavigator.ReturnProductScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ResultScreen]: undefined;
 };
 
 export enum LeftBarType {
@@ -63,3 +66,11 @@ export enum LeftBarType {
 export enum RightBarType {
   Logout,
 }
+
+export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
+  StackNavigationProp<
+    ReturnStackParamList & RemoveStackParamList,
+    AppNavigator.RemoveProductsScreen | AppNavigator.ReturnProductsScreen
+  >,
+  StackNavigationProp<HomeStackParamList>
+>;

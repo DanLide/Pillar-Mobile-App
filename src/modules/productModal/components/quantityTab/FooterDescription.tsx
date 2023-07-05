@@ -17,12 +17,12 @@ const InventoryTypeName = {
 
 interface Props {
   product: ProductModel;
-  maxValue: number;
+  onHand: number;
 }
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
-export const FooterDescription: React.FC<Props> = ({ maxValue, product }) => {
+export const FooterDescription: React.FC<Props> = ({ product, onHand }) => {
   const InventoryTypeNameString = product.inventoryUseTypeId
     ? InventoryTypeName[product.inventoryUseTypeId]
     : undefined;
@@ -49,9 +49,7 @@ export const FooterDescription: React.FC<Props> = ({ maxValue, product }) => {
       <View style={[styles.itemContainer, { marginRight: 16 }]}>
         <Text style={styles.title}>In Stock</Text>
         <Text style={styles.subtitleInStock}>
-          {maxValue > 99
-            ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY
-            : maxValue}
+          {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
         </Text>
       </View>
 

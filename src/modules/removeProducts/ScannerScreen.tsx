@@ -47,9 +47,10 @@ export const ScannerScreen: React.FC = observer(() => {
           : undefined;
 
       setModalParams({
-        type: ProductModalType.Add,
+        type: ProductModalType.Remove,
         error,
         maxValue: store.getMaxValue(product),
+        onHand: store.getOnHand(product),
       });
     },
     [store],

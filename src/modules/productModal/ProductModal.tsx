@@ -15,8 +15,7 @@ import {
 import { ProductModel } from '../../stores/types';
 
 export enum ProductModalType {
-  Add,
-  Edit,
+  Remove,
   Return,
   Hidden,
 }
@@ -24,7 +23,9 @@ export enum ProductModalType {
 export interface ProductModalParams {
   type: ProductModalType;
   error?: string;
+  isEdit?: boolean;
   maxValue?: number;
+  onHand?: number;
 }
 
 interface Props extends ProductModalParams {
@@ -62,7 +63,9 @@ export const ProductModal = memo(
     product,
     stockName,
     error,
+    isEdit,
     maxValue = 0,
+    onHand = 0,
     onClose,
     onSubmit,
     onRemove,
@@ -127,10 +130,11 @@ export const ProductModal = memo(
               <ProductQuantity
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
-                isEdit={type === ProductModalType.Edit}
-                jobSelectable={type !== ProductModalType.Return}
+                isEdit={isEdit}
+                jobSelectable={type === ProductModalType.Remove}
                 error={error}
                 maxValue={maxValue}
+                onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
@@ -139,7 +143,7 @@ export const ProductModal = memo(
           case Tabs.LinkJob:
             return (
               <SelectProductJob
-                isEdit={type === ProductModalType.Edit}
+                isEdit={isEdit}
                 productJob={product?.job}
                 selectedTab={selectedTab}
                 isRecoverableProduct={product?.isRecoverable}
@@ -157,9 +161,11 @@ export const ProductModal = memo(
         onSubmit,
         clearProductModalStoreOnClose,
         onChangeProductQuantity,
+        isEdit,
         type,
         error,
         maxValue,
+        onHand,
         onJobSelectNavigation,
         onRemoveAlert,
         selectedTab,

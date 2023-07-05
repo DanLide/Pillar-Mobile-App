@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { v1 as uuid } from 'uuid';
+import { pipe, prop, sortBy, toLower, trim } from 'ramda';
 
 import {
   ClearStoreType,
@@ -53,6 +54,14 @@ export class BaseProductsStore implements BaseProductsStoreType {
       product.reservedCount;
   }
 
+  @computed get getOnHand() {
+    return this.getMaxValue;
+  }
+
+  @computed get getEditableOnHand() {
+    return this.getEditableMaxValue;
+  }
+
   @computed get stockName() {
     return this.currentStock?.organizationName;
   }
@@ -62,14 +71,18 @@ export class BaseProductsStore implements BaseProductsStoreType {
     return this.products;
   }
 
+  @computed get getSortedProducts() {
+    return sortBy(pipe(prop('name'), trim, toLower), this.products);
+  }
+
   @computed
   get getSyncedProducts() {
-    return this.products.filter(product => product.isRemoved);
+    return this.getSortedProducts.filter(product => product.isRemoved);
   }
 
   @computed
   get getNotSyncedProducts() {
-    return this.products.filter(product => !product.isRemoved);
+    return this.getSortedProducts.filter(product => !product.isRemoved);
   }
 
   @action removeCurrentProduct() {

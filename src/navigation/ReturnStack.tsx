@@ -8,6 +8,7 @@ import { ReturnProductsScreen } from '../modules/returnProducts/ReturnProductsSc
 import { ScannerScreen } from '../modules/returnProducts/ScannerScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
+import { ResultScreen } from '../modules/returnProducts/ResultScreen';
 
 const Stack = createStackNavigator<ReturnStackParamList>();
 
@@ -47,11 +48,19 @@ export const ReturnStack: React.FC = () => {
         })}
       />
       <Stack.Screen
-        name={AppNavigator.ReturnProductScannerScreen}
+        name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
           title: 'Return Products',
           leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ResultScreen}
+        component={ResultScreen}
+        options={getScreenOptions({
+          title: 'Return Products',
+          leftBarButtonType: LeftBarType.Close,
         })}
       />
     </Stack.Navigator>
