@@ -11,10 +11,10 @@ import { observer } from 'mobx-react';
 
 import { removeProductsStore } from './stores';
 import { groupProductsByJobId } from './helpers';
-import { OTHER_JOB_ID } from './constants';
 import { colors, fonts } from '../../theme';
 import { ProductModel, SyncedProductStoreType } from '../../stores/types';
 import { ProductEmptyList, SelectedProductsListItem } from '../../components';
+import { OTHER_JOB_ID } from '../../constants';
 
 interface Props {
   onEditProduct: (item: ProductModel) => void;

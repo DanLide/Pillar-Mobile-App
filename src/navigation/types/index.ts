@@ -74,3 +74,8 @@ export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
   >,
   StackNavigationProp<HomeStackParamList>
 >;
+
+export type BaseResultScreenNavigationProp = StackNavigationProp<
+  ReturnStackParamList & RemoveStackParamList,
+  AppNavigator.ResultScreen
+>;

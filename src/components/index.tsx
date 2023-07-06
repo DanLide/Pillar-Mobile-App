@@ -21,6 +21,8 @@ import {
 } from './BaseScannerScreen';
 import { SelectedProductsListItem } from './SelectedProductsListItem';
 import { BaseProductsScreen } from './BaseProductsScreen';
+import { ResultProductsListItem } from './ResultProductsListItem';
+import BaseResultScreen from './BaseResultScreen';
 
 export {
   Scanner,
@@ -47,6 +49,8 @@ export {
   ProductEmptyList,
   SelectedProductsListItem,
   BaseProductsScreen,
+  ResultProductsListItem,
+  BaseResultScreen,
 };
 
 export type { ScanProductProps };
