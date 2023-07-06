@@ -1,10 +1,21 @@
-import React, { useCallback, memo, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  memo,
+  useMemo,
+  useState,
+  useRef,
+} from 'react';
 import {
   View,
   TouchableOpacity,
   TextInput,
   StyleSheet,
   TextInputProps,
+  LayoutChangeEvent,
+  LayoutRectangle,
+  NativeSyntheticEvent,
+  TextInputContentSizeChangeEventData,
+  PixelRatio,
 } from 'react-native';
 import { pipe, replace } from 'ramda';
 
@@ -25,6 +36,7 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
 const removeLeadingZero = pipe(String, replace(/^0+/, ''));
+const INITIAL_FONT_SIZE = 78
 
 export const EditQuantity = memo(
   ({
@@ -41,8 +53,13 @@ export const EditQuantity = memo(
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
     const displayMinValue = removeLeadingZero(minValue);
-
+    const layoutInputRef = useRef<null | LayoutRectangle>(null);
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
+    const [fontSize, setFontSize] = useState(INITIAL_FONT_SIZE);
+
+    const style = {
+      fontSize: fontSize,
+    };
 
     const setNewValue = useCallback(
       (value: string) => {
@@ -119,18 +136,43 @@ export const EditQuantity = memo(
       return <View style={styles.quantityButton} />;
     }, [currentValue, isEdit, minValue, disabled, onDecreaseCount, onRemove]);
 
+    const onLayout = ({ nativeEvent }: LayoutChangeEvent) => {
+      layoutInputRef.current = nativeEvent.layout;
+    };
+
+    const onContentSizeChange = ({ nativeEvent: { contentSize: { width } } }:
+      NativeSyntheticEvent<TextInputContentSizeChangeEventData>
+    ) => {
+      if (!layoutInputRef.current?.width || !width) {
+        return
+      }
+      if (layoutInputRef.current?.width < width) {
+        return setFontSize(PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width));
+      }
+      if (fontSize === INITIAL_FONT_SIZE) {
+        return
+      }
+      const increasedFontSize = PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width);
+      const increasedWidth = width * increasedFontSize / fontSize;
+      if (layoutInputRef.current?.width >= increasedWidth) {
+        setFontSize(increasedFontSize > INITIAL_FONT_SIZE ? INITIAL_FONT_SIZE : increasedFontSize);
+      }
+    }
+
     return (
       <View style={styles.container}>
         {DecreaseButton}
         <TextInput
           contextMenuHidden
           editable={!disabled}
-          style={[styles.input, disabled && styles.inputDisabled]}
+          style={[styles.input, style, disabled && styles.inputDisabled]}
           value={disabled ? '-' : displayValue}
           keyboardType={keyboardType}
           onChangeText={onChangeInputText}
           returnKeyType="done"
           onBlur={onFocusLost}
+          onLayout={onLayout}
+          onContentSizeChange={onContentSizeChange}
         />
         {disabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
