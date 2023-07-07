@@ -25,11 +25,19 @@ export enum AppNavigator {
   // ReturnProductsStack
   ReturnProductsStack = 'ReturnProductsStack',
   ReturnProductsScreen = 'ReturnProductsScreen',
+
+  // ManageProductsStack
+  ManageProductsStack = 'ManageProductsStack',
 }
 
 type CameraPermissionScreenParams = {
   nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
 };
+
+export type AppStackParamList = {
+  [AppNavigator.LoginScreen]: undefined;
+  [AppNavigator.HomeStack]: undefined;
+}
 
 export type HomeStackParamList = {
   [AppNavigator.HomeScreen]: undefined;
