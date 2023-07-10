@@ -147,7 +147,7 @@ export const EditQuantity = memo(
         return
       }
       if (layoutInputRef.current?.width < width) {
-        return setFontSize(PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width));
+        return setFontSize(PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width) * 0.9);
       }
       if (fontSize === INITIAL_FONT_SIZE) {
         return
@@ -155,7 +155,7 @@ export const EditQuantity = memo(
       const increasedFontSize = PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width);
       const increasedWidth = width * increasedFontSize / fontSize;
       if (layoutInputRef.current?.width >= increasedWidth) {
-        setFontSize(increasedFontSize > INITIAL_FONT_SIZE ? INITIAL_FONT_SIZE : increasedFontSize);
+        setFontSize(increasedFontSize > INITIAL_FONT_SIZE ? INITIAL_FONT_SIZE : increasedFontSize * 0.9);
       }
     }
 
