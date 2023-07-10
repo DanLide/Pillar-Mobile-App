@@ -5,7 +5,7 @@ name: build-ios
 
 on:
   pull_request:
-    branches: [ 'dev' ]
+    types: [ opened, reopened ]
 
 jobs:
   build:
@@ -32,18 +32,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install Node dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
-
-      - name: Setup Ruby (bundle)
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.7.6'
-
-      - name: Install Ruby dependencies
-        run: bundle install
-
       - name: Cache Pods
         uses: actions/cache@v3
         id: podcache
@@ -52,24 +40,33 @@ jobs:
             ios/Pods
             ios/.rugby/build
             ios/.rugby/cache.yml
-          key: pods-${{ hashFiles('**/Podfile.lock') }}
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
 
-      - name: Install Pods
-        run: bundle exec pod install
-        working-directory: ios
+      - name: Install Node dependencies
+        run: yarn install --frozen-lockfile
 
-      - name: Install Rugby
-        run: |
-          curl -LO https://github.com/swiftyfinch/Rugby/releases/download/1.22.0/rugby.zip
-          unzip rugby.zip
-          mkdir -p /usr/local/bin && cp rugby/bin/rugby /usr/local/bin
-
-      - name: Build Pods
-        run: rugby plans --plan ci
-        working-directory: ios
+      - name: Setup Ruby (bundle)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.6'
 
       - name: Run unit tests
         run: yarn test
+
+      - name: Install Ruby dependencies
+        run: bundle install
+
+      - name: Install Rugby
+        run: |
+          mkdir -p ~/.rugby/clt/downloads && cd ~/.rugby/clt/downloads
+          curl -LO https://github.com/swiftyfinch/Rugby/releases/download/2.0.0/x86_64.zip
+          unzip x86_64.zip
+
+      - name: Build Pods
+        run: rugby ci
+        working-directory: ios
 
       - name: Build app with Fastlane
         run: bundle exec fastlane build
