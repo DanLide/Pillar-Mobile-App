@@ -21,7 +21,7 @@ import {
 } from '@react-navigation/native';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
-import { encode as btoa } from 'base-64';
+import { encode as btoa, decode } from 'base-64';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
@@ -72,11 +72,12 @@ type BarcodeStateItem = Barcode & {
 };
 
 const getScannedCode = (rowValue: string, codeType: BarcodeFormat) => {
+  console.warn(rowValue, btoa(rowValue));
   switch (codeType) {
     case BarcodeFormat.QR_CODE:
       return btoa(rowValue);
     default:
-      return rowValue;
+      return btoa(rowValue);
   }
 };
 
@@ -318,7 +319,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
 
   const onPressScanButton = () => {
     const data = selectedBarcode || barcodesOnScanLine?.[0];
-    data?.rawValue && onPressScan(getScannedCode(data.rawValue, data.format));
+    data?.rawValue && onPressScan(data.rawValue);
   };
 
   const renderBarcodes = () =>
@@ -332,7 +333,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
 
         setBarcodesState([...barcodesState]);
         if (isOneBarcodeOnScanLine && barcodeData.rawValue) {
-          onPressScan(getScannedCode(barcodeData.rawValue, barcodeData.format));
+          onPressScan(barcodeData.rawValue);
         }
       };
 
