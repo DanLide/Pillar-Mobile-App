@@ -1,10 +1,6 @@
 import React from 'react';
 
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import { LeftBarType } from '../types';
@@ -20,7 +16,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   leftBarButtonType,
   testID = 'leftBarButton',
 }) => {
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
+  const navigation = useNavigation();
 
   const onIconPress = () => {
     switch (leftBarButtonType) {
@@ -31,7 +27,10 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
         }
         break;
       }
-
+      case LeftBarType.Drawer: {
+        navigation?.openDrawer()
+        break;
+      }
       default:
         break;
     }
@@ -50,7 +49,8 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
         );
       case LeftBarType.Close:
         return <SVGs.CloseIcon color={colors.white} />;
-
+      case LeftBarType.Drawer:
+        return <SVGs.DrawerIcon />;
       default:
         return null;
     }

@@ -27,6 +27,7 @@ export interface LoginFlowContext {
   msoID?: number;
   facilityID?: string;
   name?: string;
+  roleTypeDescription?: string;
 }
 
 export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
@@ -80,6 +81,7 @@ class GetRoleManagerTask extends Task {
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
     this.loginFlowContext.partyRoleId = response.partyRoleId;
+    this.loginFlowContext.roleTypeDescription = response.roleTypeDescription;
   }
 }
 
@@ -267,12 +269,14 @@ class SaveAuthDataTask extends Task {
       partyRoleId,
       permissionSet1,
       permissionSet2,
+      roleTypeDescription,
     } = this.loginFlowContext;
 
     if (this.isLoginContextValid()) {
       this.authStore.setToken(token);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguage(isLanguage);
+      this.authStore.setRoleTypeDescription(roleTypeDescription);
 
       this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);

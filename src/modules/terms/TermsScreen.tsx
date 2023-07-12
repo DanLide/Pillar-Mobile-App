@@ -47,7 +47,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
 
     navigation.reset({
       index: 0,
-      routes: [{ name: AppNavigator.HomeScreen }],
+      routes: [{ name: AppNavigator.Drawer }],
     });
   }, [navigation, store]);
 

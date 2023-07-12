@@ -1,9 +1,15 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
-import { AppNavigator, HomeStackParamList, RightBarType } from './types';
+import {
+  AppNavigator,
+  HomeStackParamList,
+  RightBarType,
+  LeftBarType,
+} from './types';
 import { getNavigationOptions, getScreenOptions } from './helpers';
 import { authStore, ssoStore } from '../stores';
 import { HomeScreen } from '../modules/home/HomeScreen';
@@ -13,6 +19,7 @@ import { SelectSSOScreen } from '../modules/sso/SelectSSOScreen';
 import { ReturnStack } from './ReturnStack';
 import { RemoveStack } from './RemoveStack';
 import { ManageProductsStack } from './ManageProductsStack';
+import { DrawerContent } from './components';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -40,7 +47,23 @@ const ssoScreenOptions = getScreenOptions({
 const homeScreenOptions = getScreenOptions({
   title: 'Repair Stack',
   rightBarButtonType: RightBarType.Logout,
+  leftBarButtonType: LeftBarType.Drawer,
 });
+
+const Drawer = createDrawerNavigator();
+
+const DrawerHome = () => (
+  <Drawer.Navigator
+    useLegacyImplementation
+    drawerContent={(props) => <DrawerContent {...props} />}
+  >
+    <Drawer.Screen
+      name={AppNavigator.HomeScreen}
+      component={HomeScreen}
+      options={homeScreenOptions}
+    />
+  </Drawer.Navigator>
+);
 
 export const HomeStack: React.FC = () => {
   const initialRoute = getInitialScreen(authStore, ssoStore);
@@ -48,9 +71,9 @@ export const HomeStack: React.FC = () => {
   return (
     <Stack.Navigator initialRouteName={initialRoute}>
       <Stack.Screen
-        name={AppNavigator.HomeScreen}
-        component={HomeScreen}
-        options={homeScreenOptions}
+        name={AppNavigator.Drawer}
+        component={DrawerHome}
+        options={getNavigationOptions}
       />
       <Stack.Screen
         name={AppNavigator.TermsScreen}

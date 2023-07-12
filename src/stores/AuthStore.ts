@@ -13,6 +13,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private isTnC?: boolean;
   private isLanguage?: boolean;
   private partyRoleId?: number;
+  private roleTypeDescription?: string;
   private username?: string;
   private name?: string;
   private companyNumber?: string;
@@ -25,7 +26,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isTnC = undefined;
     this.isLanguage = undefined;
     this.permissionSet = undefined;
-
+    this.roleTypeDescription = undefined;
     this.isLoggedIn = false;
     makeObservable(this);
   }
@@ -60,6 +61,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
 
   @computed public get getName() {
     return this.name;
+  }
+
+  @computed get userRole() {
+    return this.roleTypeDescription || '';
   }
 
   onServerLogout() {
@@ -113,6 +118,11 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @action setName(value?: string) {
     this.name = value;
   }
+
+  @action setRoleTypeDescription(value?: string) {
+    this.roleTypeDescription = value;
+  }
+
 
   @action logOut() {
     this.token = undefined;

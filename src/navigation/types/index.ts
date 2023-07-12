@@ -10,6 +10,7 @@ export enum AppNavigator {
   TermsScreen = 'TermsScreen',
   LanguageSelectScreen = 'LanguageSelectScreen',
   SelectSSOScreen = 'SelectSSOScreen',
+  Drawer = 'Drawer',
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
@@ -42,6 +43,7 @@ export type AppStackParamList = {
 
 export type HomeStackParamList = {
   [AppNavigator.HomeScreen]: undefined;
+  [AppNavigator.Drawer]: undefined;
   [AppNavigator.TermsScreen]: undefined;
   [AppNavigator.LanguageSelectScreen]: undefined;
   [AppNavigator.SelectSSOScreen]: undefined;
@@ -76,6 +78,7 @@ export type ManageProductsStackParamList = {
 export enum LeftBarType {
   Back,
   Close,
+  Drawer,
 }
 
 export enum RightBarType {
