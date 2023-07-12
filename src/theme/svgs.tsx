@@ -47,6 +47,13 @@ export const LogoutIcon = (props: SvgProps) => (
   </Svg>
 );
 
+
+export const InvoiceIcon =  memo((props: SvgProps) => (
+  <Svg width="24" height="25" viewBox="0 0 24 25" fill="none" {...props}>
+  <Path fill-rule="evenodd" clip-rule="evenodd" d="M13.5 2.41797H17V5.41797H6.99999V2.41797H10.5C10.5 1.58997 11.171 0.917969 12 0.917969C12.829 0.917969 13.5 1.58997 13.5 2.41797ZM18.4998 4.41737V2.91837H20.9998V24.9184H2.99979V2.91837H5.49979V4.41737H4.50079V23.4174H19.4998V4.41737H18.4998ZM10.25 10.168H17.25V8.66797H10.25V10.168ZM8.74999 10.418H6.74999V8.41797H8.74999V10.418ZM10.25 20.168H17.25V18.668H10.25V20.168ZM8.74999 20.418H6.74999V18.418H8.74999V20.418ZM10.25 15.168H17.25V13.668H10.25V15.168ZM8.74999 15.418H6.74999V13.418H8.74999V15.418Z" fill="#5A2099"/>
+  </Svg>
+));
+
 export const CheckMarkIcon = (props: SvgProps) => (
   <Svg width={13} height={10.5} viewBox="0 0 11 9" fill="none" {...props}>
     <Path
@@ -66,6 +73,12 @@ export const SearchIcon = memo((props: SvgProps) => (
       d="M3.5 10c0-3.584 2.916-6.5 6.5-6.5s6.5 2.916 6.5 6.5-2.916 6.5-6.5 6.5A6.508 6.508 0 0 1 3.5 10ZM22 20.817l-5.785-5.784A7.962 7.962 0 0 0 18 10a8 8 0 1 0-8 8c1.97 0 3.771-.715 5.166-1.896l5.773 5.774L22 20.817Z"
       clipRule="evenodd"
     />
+  </Svg>
+));
+
+export const ReturnProductIcon = memo((props: SvgProps) => (
+  <Svg width="24" height="33" viewBox="0 0 24 33" fill="none" {...props}>
+  <Path fill-rule="evenodd" clip-rule="evenodd" d="M8.098 6.91797V8.41697V14.841H7.415H3.794L6.354 17.401L10.93 21.979L11.988 23.036L13.048 21.981L17.642 17.417L20.199 14.875L16.594 14.852L15.881 14.848V8.41697V6.91797H8.098ZM7.415 16.341H9.598V8.41697H14.382V16.338L16.585 16.353L11.991 20.917L7.415 16.341ZM20.5 21.917V25.417H3.5V21.917H2V26.918H21.999V21.917H20.5Z" fill="#5A2099"/>
   </Svg>
 ));
 
