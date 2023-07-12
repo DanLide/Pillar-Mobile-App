@@ -17,6 +17,7 @@ import { ProductModel } from '../../stores/types';
 export enum ProductModalType {
   Remove,
   Return,
+  CreateInvoice,
   Hidden,
 }
 
@@ -48,6 +49,8 @@ export enum Tabs {
 const getTabs = (type: ProductModalType): Tabs[] => {
   switch (type) {
     case ProductModalType.Return:
+      return [Tabs.EditQuantity];
+    case ProductModalType.CreateInvoice:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -128,6 +131,7 @@ export const ProductModal = memo(
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
+                type={type}
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}

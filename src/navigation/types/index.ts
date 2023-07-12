@@ -30,6 +30,12 @@ export enum AppNavigator {
   // ManageProductsStack
   ManageProductsStack = 'ManageProductsStack',
   ManageProductsScreen = 'ManageProductsScreen',
+
+  // CreateInvoiceStack
+  CreateInvoiceStack = 'CreateInvoiceStack',
+  SelectProductJob = 'SelectProductJob',
+  ProductsScreen = 'ProductsScreen',
+  CreateInvoiceProductsScreen = 'CreateInvoiceProductsScreen',
 }
 
 type CameraPermissionScreenParams = {
@@ -50,6 +56,7 @@ export type HomeStackParamList = {
   [AppNavigator.RemoveProductsStack]: undefined;
   [AppNavigator.ReturnProductsStack]: undefined;
   [AppNavigator.ManageProductsStack]: undefined;
+  [AppNavigator.CreateInvoiceStack]: undefined;
 };
 
 export type RemoveStackParamList = {
@@ -73,6 +80,15 @@ export type ReturnStackParamList = {
 export type ManageProductsStackParamList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.ManageProductsScreen]: undefined;
+};
+
+export type CreateInvoiceParamList = {
+  [AppNavigator.SelectProductJob]: undefined;
+  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.CreateInvoiceProductsScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.HowToScanScreen]: undefined;
 };
 
 export enum LeftBarType {

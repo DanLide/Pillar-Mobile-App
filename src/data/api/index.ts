@@ -6,8 +6,10 @@ import {
   removeProductAPI,
   RemoveProductResponse,
   returnProductAPI,
+  getFetchProductByFacilityIdAPI
 } from './productsAPI';
 import { getFetchJobsAPI } from './jobsAPI';
+import { createInvoiceAPI } from './createInvoiceAPI';
 
 export {
   getRoleManagerAPI,
@@ -17,5 +19,7 @@ export {
   getFetchJobsAPI,
   removeProductAPI,
   returnProductAPI,
+  createInvoiceAPI,
+  getFetchProductByFacilityIdAPI,
 };
 export type { LoginAPIParams, RemoveProductResponse };

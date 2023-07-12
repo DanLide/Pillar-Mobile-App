@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { onGetRoleManager } from '../../data/getRoleManager';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { authStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
@@ -19,10 +19,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const canRemoveProduct = permissionProvider.canRemoveProduct();
   const canReturnProduct = permissionProvider.canReturnProduct();
 
-  const onGetRoleManagerPress = async () => {
-    const error = await onGetRoleManager('token');
-  };
-
   const onRemoveProducts = () => {
     navigation.navigate(AppNavigator.RemoveProductsStack);
   };
@@ -38,6 +34,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const ManageProductIcon = useMemo(() => <SVGs.ManageProductIcon />, []);
   const ManageOrderIcon = useMemo(() => <SVGs.ManageOrderIcon />, []);
   const InvoiceIcon = useMemo(() => <SVGs.InvoiceIcon />, []);
+
+  const onCreateInvoice = () =>
+    navigation.navigate(AppNavigator.CreateInvoiceStack);
 
   const renderBorderBetweenTheItems = canRemoveProduct && canReturnProduct;
   return (
@@ -72,9 +71,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <ListItem
           title="Create Invoice"
           subtitle="Add materials to a repair order"
-          disabled
           leftIcon={InvoiceIcon}
-          onPress={onRemoveProducts}
+          onPress={onCreateInvoice}
         />
       </View>
 
@@ -97,12 +95,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           onPress={onRemoveProducts}
         />
       </View>
-
-      {/* <Button
-        buttonStyle={styles.button}
-        title="Try broken getRoleManager"
-        onPress={onGetRoleManagerPress}
-      /> */}
     </View>
   );
 };

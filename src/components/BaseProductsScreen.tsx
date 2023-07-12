@@ -32,10 +32,12 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 interface SelectedProductsListProps {
+  store?: Store;
   onEditProduct: (item: ProductModel) => void;
 }
 
 interface Props {
+  infoTitle?: string;
   modalType: ProductModalType;
   navigation: BaseProductsScreenNavigationProp;
   store: Store;
@@ -54,7 +56,14 @@ const alertMessage =
   'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
 
 export const BaseProductsScreen = observer(
-  ({ modalType, navigation, store, ListComponent, onComplete }: Props) => {
+  ({
+    infoTitle,
+    modalType,
+    navigation,
+    store,
+    ListComponent,
+    onComplete,
+  }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modalParams, setModalParams] =
       useState<ProductModalParams>(initModalParams);
@@ -154,7 +163,7 @@ export const BaseProductsScreen = observer(
         <View style={styles.container}>
           <InfoTitleBar
             type={InfoTitleBarType.Primary}
-            title={store.currentStock?.organizationName}
+            title={infoTitle || store.currentStock?.organizationName}
           />
           <TooltipBar title="Scan to add products to list" />
 
@@ -168,7 +177,11 @@ export const BaseProductsScreen = observer(
             </View>
           ) : null}
 
-          <ListComponent onEditProduct={onEditProduct} />
+          <ListComponent
+            modalType={modalType}
+            store={store}
+            onEditProduct={onEditProduct}
+          />
 
           <View style={styles.buttons}>
             <Button

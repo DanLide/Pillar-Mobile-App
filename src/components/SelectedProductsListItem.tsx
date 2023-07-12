@@ -9,39 +9,45 @@ import {
 
 import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
+import { ProductModalType } from '../modules/productModal';
 
 interface Props {
+  modalType?: ProductModalType;
   item: ProductModel;
   onPress: (item: ProductModel) => void;
 }
 
 const { width } = Dimensions.get('window');
 
-export const SelectedProductsListItem = memo(({ item, onPress }: Props) => {
-  const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
+export const SelectedProductsListItem = memo(
+  ({ modalType, item, onPress }: Props) => {
+    const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
-  const handlePress = useCallback(() => onPress(item), [item, onPress]);
+    const handlePress = useCallback(() => onPress(item), [item, onPress]);
 
-  return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <View style={styles.leftContainer}>
-        <Text numberOfLines={1} style={styles.title}>
-          {name}
-        </Text>
-        <Text numberOfLines={1} style={styles.description}>
-          {manufactureCode} {partNo} {size}
-        </Text>
-      </View>
-      <View style={styles.rightContainer}>
-        <Text style={styles.reservedCount}>
-          {reservedCount}
-          <Text style={styles.onHand}>/{onHand}</Text>
-        </Text>
-      </View>
-      <View style={styles.borderLine} />
-    </TouchableOpacity>
-  );
-});
+    return (
+      <TouchableOpacity style={styles.container} onPress={handlePress}>
+        <View style={styles.leftContainer}>
+          <Text numberOfLines={1} style={styles.title}>
+            {name}
+          </Text>
+          <Text numberOfLines={1} style={styles.description}>
+            {manufactureCode} {partNo} {size}
+          </Text>
+        </View>
+        <View style={styles.rightContainer}>
+          <Text style={styles.reservedCount}>
+            {reservedCount}
+            {modalType !== ProductModalType.CreateInvoice ? (
+              <Text style={styles.onHand}>/{onHand}</Text>
+            ) : null}
+          </Text>
+        </View>
+        <View style={styles.borderLine} />
+      </TouchableOpacity>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   borderLine: {

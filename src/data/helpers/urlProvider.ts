@@ -109,11 +109,19 @@ export class URLProvider {
     );
   }
 
+  getFetchProductByFacilityId(scanCode: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Sync/${facilityId}/products/${scanCode}`,
+    );
+  }
+
   getFetchJobsBySso() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetAllJobs/${facilityId}`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetAllJobs/${facilityId}/OPEN`,
     );
   }
 
@@ -135,6 +143,12 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
+    );
+  }
+
+  createInvoice(jobId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/CreateInvoiceByJob/${jobId}`,
     );
   }
 }
