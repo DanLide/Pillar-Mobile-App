@@ -6,7 +6,6 @@ import {
   KeyboardTypeOptions,
   View,
 } from 'react-native';
-import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
 
@@ -18,6 +17,7 @@ import { ToastType } from '../../../../contexts/types';
 import { getProductMinQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
+import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 
 interface Props {
   maxValue: number;
@@ -96,8 +96,8 @@ export const ProductQuantity: React.FC<Props> = observer(
           <FooterDescription product={product} onHand={onHand} />
         </View>
 
-        <View>
-          {jobSelectable && !error && (
+        {jobSelectable && !error && (
+          <View>
             <Pressable
               onPress={onJobSelectNavigation}
               style={styles.jobContainer}
@@ -109,12 +109,11 @@ export const ProductQuantity: React.FC<Props> = observer(
                   : 'Link to Job Number'}
               </Text>
             </Pressable>
-          )}
-
-          {product.isRecoverable ? (
-            <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
-          ) : null}
-        </View>
+            {product.isRecoverable && (
+              <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
+            )}
+          </View>
+        )}
 
         <Button
           disabled={!!error}
