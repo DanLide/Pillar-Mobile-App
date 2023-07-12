@@ -5,10 +5,10 @@ import { observer } from 'mobx-react';
 import { getNavigationOptions } from './helpers';
 import { authStore } from '../stores';
 import { LoginScreen } from '../modules/login/components/LoginScreen';
-import { AppNavigator } from './types';
+import { AppNavigator, AppStackParamList } from './types';
 import { HomeStack } from './HomeStack';
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<AppStackParamList>();
 
 export const AppStack = observer(() => {
   return (

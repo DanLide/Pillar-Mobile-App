@@ -10,6 +10,7 @@ export enum AppNavigator {
   TermsScreen = 'TermsScreen',
   LanguageSelectScreen = 'LanguageSelectScreen',
   SelectSSOScreen = 'SelectSSOScreen',
+  Drawer = 'Drawer',
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
@@ -25,19 +26,30 @@ export enum AppNavigator {
   // ReturnProductsStack
   ReturnProductsStack = 'ReturnProductsStack',
   ReturnProductsScreen = 'ReturnProductsScreen',
+
+  // ManageProductsStack
+  ManageProductsStack = 'ManageProductsStack',
+  ManageProductsScreen = 'ManageProductsScreen',
 }
 
 type CameraPermissionScreenParams = {
   nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
 };
 
+export type AppStackParamList = {
+  [AppNavigator.LoginScreen]: undefined;
+  [AppNavigator.HomeStack]: undefined;
+};
+
 export type HomeStackParamList = {
   [AppNavigator.HomeScreen]: undefined;
+  [AppNavigator.Drawer]: undefined;
   [AppNavigator.TermsScreen]: undefined;
   [AppNavigator.LanguageSelectScreen]: undefined;
   [AppNavigator.SelectSSOScreen]: undefined;
   [AppNavigator.RemoveProductsStack]: undefined;
   [AppNavigator.ReturnProductsStack]: undefined;
+  [AppNavigator.ManageProductsStack]: undefined;
 };
 
 export type RemoveStackParamList = {
@@ -58,9 +70,15 @@ export type ReturnStackParamList = {
   [AppNavigator.ResultScreen]: undefined;
 };
 
+export type ManageProductsStackParamList = {
+  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.ManageProductsScreen]: undefined;
+};
+
 export enum LeftBarType {
   Back,
   Close,
+  Drawer,
 }
 
 export enum RightBarType {

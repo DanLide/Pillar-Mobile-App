@@ -66,7 +66,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
     const fetchProductByCode = useCallback(
       async (code: string) => {
-        const networkError = await fetchProductByScannedCode(store, code);
+        const networkError = await fetchProductByScannedCode(store, btoa(code));
 
         // TODO: Handle Network errors
         if (networkError)
