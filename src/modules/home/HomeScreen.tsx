@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
-
-import { Button } from '../../components';
 import { onGetRoleManager } from '../../data/getRoleManager';
 import { authStore, ssoStore } from '../../stores';
-import { AppNavigator } from '../../navigation/types';
+import { AppNavigator, HomeStackParamList } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
 import { colors, fonts, SVGs } from '../../theme';
 
 import ListItem from './components/ListItem';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {
-  navigation: NavigationProp<ParamListBase>;
+  navigation: StackNavigationProp<HomeStackParamList, AppNavigator.HomeScreen>;
 }
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
@@ -30,44 +28,41 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const onReturnProducts = () =>
     navigation.navigate(AppNavigator.ReturnProductsStack);
 
+  const onManageProducts = () =>
+    navigation.navigate(AppNavigator.ManageProductsStack);
+
   const ArrowTopIcon = useMemo(() => <SVGs.ArrowTopIcon />, []);
-  const ArrowBottomIcon = useMemo(() => <SVGs.ArrowTopIcon style={styles.arrowStyle} />, []);
+  const ArrowBottomIcon = useMemo(
+    () => <SVGs.ArrowTopIcon style={styles.arrowStyle} />,
+    [],
+  );
   const ManageProductIcon = useMemo(() => <SVGs.ManageProductIcon />, []);
   const ManageOrderIcon = useMemo(() => <SVGs.ManageOrderIcon />, []);
-
 
   const renderBorderBetweenTheItems = canRemoveProduct && canReturnProduct;
   return (
     <View style={styles.container}>
       <View style={styles.infoContainer}>
         <SVGs.CabinetIcon />
-        <Text style={styles.infoText}>
-          {ssoStore.getCurrentSSO?.name}
-        </Text>
+        <Text style={styles.infoText}>{ssoStore.getCurrentSSO?.name}</Text>
       </View>
       <View style={styles.infoContainer}>
         <SVGs.ProfileIcon />
-        <Text style={styles.infoText}>
-          {authStore.getName}
-        </Text>
+        <Text style={styles.infoText}>{authStore.getName}</Text>
       </View>
       <View style={styles.shadowWrapper}>
         {canRemoveProduct && (
           <ListItem
-            title='Remove Products'
-            subtitle='Check products out of inventory'
+            title="Remove Products"
+            subtitle="Check products out of inventory"
             leftIcon={ArrowTopIcon}
             onPress={onRemoveProducts}
           />
         )}
-        {
-          renderBorderBetweenTheItems && (
-            <View style={styles.separator} />
-          )
-        }
+        {renderBorderBetweenTheItems && <View style={styles.separator} />}
         <ListItem
-          title='Return Products'
-          subtitle='Check products back into inventory'
+          title="Return Products"
+          subtitle="Check products back into inventory"
           leftIcon={ArrowBottomIcon}
           onPress={onReturnProducts}
         />
@@ -75,18 +70,17 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
       <View style={styles.shadowWrapper}>
         <ListItem
-          title='Manage Products'
-          subtitle='View and edit product details'
-          disabled
+          title="Manage Products"
+          subtitle="View and edit product details"
           leftIcon={ManageProductIcon}
-          onPress={onRemoveProducts}
+          onPress={onManageProducts}
         />
       </View>
 
       <View style={styles.shadowWrapper}>
         <ListItem
-          title='Manage Orders'
-          subtitle='Create, edit and receive product orders '
+          title="Manage Orders"
+          subtitle="Create, edit and receive product orders "
           disabled
           leftIcon={ManageOrderIcon}
           onPress={onRemoveProducts}
@@ -149,5 +143,5 @@ const styles = StyleSheet.create({
     height: 0.5,
     width: '100%',
     backgroundColor: colors.gray,
-  }
+  },
 });

@@ -12,6 +12,7 @@ import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectSc
 import { SelectSSOScreen } from '../modules/sso/SelectSSOScreen';
 import { ReturnStack } from './ReturnStack';
 import { RemoveStack } from './RemoveStack';
+import { ManageProductsStack } from './ManageProductsStack';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -77,6 +78,11 @@ export const HomeStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.ReturnProductsStack}
         component={ReturnStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.ManageProductsStack}
+        component={ManageProductsStack}
         options={getNavigationOptions}
       />
     </Stack.Navigator>
