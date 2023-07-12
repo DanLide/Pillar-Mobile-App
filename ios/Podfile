@@ -23,6 +23,8 @@ abstract_target 'RepairStackAbstract' do
   config = use_native_modules!
   use_modular_headers!
 
+  pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec', :modular_headers => false
+
   # Flags change depending on the env values.
   flags = get_default_flags()
 
