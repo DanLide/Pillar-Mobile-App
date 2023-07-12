@@ -19,7 +19,7 @@ export const LanguageSelectScreen: React.FC<Props> = ({ navigation }) => {
       ? navigation.navigate(AppNavigator.TermsScreen)
       : navigation.reset({
           index: 0,
-          routes: [{ name: AppNavigator.HomeScreen }],
+          routes: [{ name: AppNavigator.Drawer }],
         });
   };
 

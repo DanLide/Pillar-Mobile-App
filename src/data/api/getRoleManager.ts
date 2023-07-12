@@ -2,7 +2,7 @@ import { URLProvider, tryFetch } from '../helpers';
 
 export interface GetRoleManagerAPIResponse {
   username: string;
-  roleTypeId: number;
+  roleTypeDescription: string;
   partyRoleId: number;
   isTermsAccepted?: boolean;
   isLanguageSelected?: boolean;

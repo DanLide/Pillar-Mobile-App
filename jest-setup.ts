@@ -17,6 +17,10 @@ jest.mock('react-native-sound', () => {
   return SoundMock;
 });
 
+jest.mock('react-native-device-info', () => ({
+  default: jest.fn(),
+}));
+
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
 RNNativeModules.RNGestureHandlerModule =

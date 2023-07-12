@@ -41,7 +41,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(({ navigation }) => {
       store.setCurrentSSO();
       navigation.reset({
         index: 0,
-        routes: [{ name: AppNavigator.HomeScreen }],
+        routes: [{ name: AppNavigator.Drawer }],
       });
     }
   };

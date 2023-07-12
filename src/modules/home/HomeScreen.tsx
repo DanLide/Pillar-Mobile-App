@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { onGetRoleManager } from '../../data/getRoleManager';
+
 import { authStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
@@ -8,6 +9,7 @@ import { colors, fonts, SVGs } from '../../theme';
 
 import ListItem from './components/ListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { Button } from '../../components';
 
 interface Props {
   navigation: StackNavigationProp<HomeStackParamList, AppNavigator.HomeScreen>;
@@ -32,12 +34,10 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate(AppNavigator.ManageProductsStack);
 
   const ArrowTopIcon = useMemo(() => <SVGs.ArrowTopIcon />, []);
-  const ArrowBottomIcon = useMemo(
-    () => <SVGs.ArrowTopIcon style={styles.arrowStyle} />,
-    [],
-  );
+  const ArrowBottomIcon = useMemo(() => <SVGs.ReturnProductIcon />, []);
   const ManageProductIcon = useMemo(() => <SVGs.ManageProductIcon />, []);
   const ManageOrderIcon = useMemo(() => <SVGs.ManageOrderIcon />, []);
+  const InvoiceIcon = useMemo(() => <SVGs.InvoiceIcon />, []);
 
   const renderBorderBetweenTheItems = canRemoveProduct && canReturnProduct;
   return (
@@ -70,8 +70,19 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
       <View style={styles.shadowWrapper}>
         <ListItem
+          title="Create Invoice"
+          subtitle="Add materials to a repair order"
+          disabled
+          leftIcon={InvoiceIcon}
+          onPress={onRemoveProducts}
+        />
+      </View>
+
+      <View style={styles.shadowWrapper}>
+        <ListItem
           title="Manage Products"
           subtitle="View and edit product details"
+          disabled
           leftIcon={ManageProductIcon}
           onPress={onManageProducts}
         />
@@ -135,9 +146,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     borderRadius: 8,
     marginTop: 16,
-  },
-  arrowStyle: {
-    transform: [{ rotate: '180deg' }],
   },
   separator: {
     height: 0.5,
