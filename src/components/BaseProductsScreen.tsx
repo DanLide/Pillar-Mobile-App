@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';
@@ -55,10 +61,6 @@ const initModalParams: ProductModalParams = {
 const alertMessage =
   'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
 
-const ScanIcon = (
-  <SVGs.CodeIcon color={colors.purple} width={32} height={23.33} />
-);
-
 export const BaseProductsScreen = observer(
   ({
     modalType,
@@ -75,6 +77,21 @@ export const BaseProductsScreen = observer(
 
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
+
+    const scanButtonType = hideCompleteButton
+      ? ButtonType.primary
+      : ButtonType.secondary;
+
+    const ScanIcon = useMemo(
+      () => (
+        <SVGs.CodeIcon
+          color={hideCompleteButton ? colors.white : colors.purple}
+          width={32}
+          height={23.33}
+        />
+      ),
+      [hideCompleteButton],
+    );
 
     useEffect(() => {
       autorun(() => {
@@ -186,7 +203,7 @@ export const BaseProductsScreen = observer(
 
           <View style={styles.buttons}>
             <Button
-              type={ButtonType.secondary}
+              type={scanButtonType}
               icon={ScanIcon}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
@@ -240,6 +257,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 16,
     padding: 16,
     backgroundColor: colors.white,
   },
@@ -247,7 +265,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   buttonContainer: {
-    width: 163.5,
+    flex: 1,
     height: 48,
   },
 });
