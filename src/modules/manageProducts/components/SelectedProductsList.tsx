@@ -21,7 +21,11 @@ export const SelectedProductsList: React.FC<Props> = observer(
 
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<ProductModel>) => (
-        <SelectedProductsListItem item={item} onPress={onEditProduct} />
+        <SelectedProductsListItem
+          hideOnHandCount
+          item={item}
+          onPress={onEditProduct}
+        />
       ),
       [onEditProduct],
     );
