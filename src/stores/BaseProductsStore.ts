@@ -89,7 +89,7 @@ export class BaseProductsStore implements BaseProductsStoreType {
     this.currentProduct = undefined;
   }
 
-  @action setCurrentProduct(product: ProductModel) {
+  @action setCurrentProduct(product?: ProductModel) {
     this.currentProduct = product;
   }
 
