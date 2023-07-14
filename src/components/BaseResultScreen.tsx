@@ -153,40 +153,35 @@ const BaseResultScreen: React.FC<Props> = observer(
       [groupByJob, notSyncedProducts, renderItem, renderSectionHeader],
     );
 
-    const _renderSyncedSectionFooter = () =>
-      useMemo(
-        () =>
-          SyncedSectionFooter ? (
-            SyncedSectionFooter
-          ) : groupByJob ? (
-            <Tooltip
-              contentStyle={styles.contextFooter}
-              message={tooltipMessage}
-            >
-              <Text style={styles.contextFooterText}>
-                What will be submitted as an invoice?
-              </Text>
-            </Tooltip>
-          ) : null,
-        [],
-      );
+    const _renderSyncedSectionFooter = useMemo<JSX.Element | null>(
+      () =>
+        SyncedSectionFooter ? (
+          SyncedSectionFooter
+        ) : groupByJob ? (
+          <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
+            <Text style={styles.contextFooterText}>
+              What will be submitted as an invoice?
+            </Text>
+          </Tooltip>
+        ) : null,
+      [SyncedSectionFooter, groupByJob, tooltipMessage],
+    );
 
-    const _renderHeader = () =>
-      useMemo(
-        () =>
-          Header ? (
-            Header
-          ) : (
-            <View style={styles.headerContainer}>
-              <Text style={styles.contextTitle}>{contextTitle}</Text>
-              <Text style={styles.contextBody}>
-                {contextBody}{' '}
-                <Text style={styles.contextBodyBold}>{stockName}</Text>
-              </Text>
-            </View>
-          ),
-        [],
-      );
+    const _renderHeader = useMemo<JSX.Element>(
+      () =>
+        Header ? (
+          Header
+        ) : (
+          <View style={styles.headerContainer}>
+            <Text style={styles.contextTitle}>{contextTitle}</Text>
+            <Text style={styles.contextBody}>
+              {contextBody}{' '}
+              <Text style={styles.contextBodyBold}>{stockName}</Text>
+            </Text>
+          </View>
+        ),
+      [Header, contextBody, contextTitle, stockName],
+    );
 
     return (
       <>
@@ -195,9 +190,9 @@ const BaseResultScreen: React.FC<Props> = observer(
         </View>
         <View style={styles.container}>
           <View style={styles.contentContainer}>
-            {_renderHeader()}
+            {_renderHeader}
             {SyncedProductsList}
-            {_renderSyncedSectionFooter()}
+            {_renderSyncedSectionFooter}
             {notSyncedProducts.length > 0 ? (
               <>
                 <Text style={styles.errorListTitle}>{errorListTitle}</Text>
