@@ -32,6 +32,7 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 interface SelectedProductsListProps {
+  modalType: ProductModalType;
   store?: Store;
   onEditProduct: (item: ProductModel) => void;
 }

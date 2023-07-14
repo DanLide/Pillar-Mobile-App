@@ -17,7 +17,7 @@ const InventoryTypeName = {
 };
 
 interface Props {
-  type?: ProductModalType;
+  hideOnHandCount?: boolean;
   product: ProductModel;
   onHand: number;
 }
@@ -25,7 +25,7 @@ interface Props {
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
 export const FooterDescription: React.FC<Props> = ({
-  type,
+  hideOnHandCount,
   product,
   onHand,
 }) => {
@@ -52,14 +52,14 @@ export const FooterDescription: React.FC<Props> = ({
 
   return (
     <View style={styles.container}>
-      {type !== ProductModalType.CreateInvoice ? (
+      {hideOnHandCount ? null : (
         <View style={[styles.itemContainer, { marginRight: 16 }]}>
           <Text style={styles.title}>In Stock</Text>
           <Text style={styles.subtitleInStock}>
             {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
           </Text>
         </View>
-      ) : null}
+      )}
 
       <View style={styles.itemContainer}>
         <Text style={styles.title}>Remove by</Text>

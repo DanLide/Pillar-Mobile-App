@@ -9,10 +9,9 @@ import {
 
 import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
-import { ProductModalType } from '../modules/productModal';
 
 interface Props {
-  modalType?: ProductModalType;
+  hideOnHandCount?: boolean;
   item: ProductModel;
   onPress: (item: ProductModel) => void;
 }
@@ -20,7 +19,7 @@ interface Props {
 const { width } = Dimensions.get('window');
 
 export const SelectedProductsListItem = memo(
-  ({ modalType, item, onPress }: Props) => {
+  ({ hideOnHandCount, item, onPress }: Props) => {
     const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
     const handlePress = useCallback(() => onPress(item), [item, onPress]);
@@ -38,9 +37,9 @@ export const SelectedProductsListItem = memo(
         <View style={styles.rightContainer}>
           <Text style={styles.reservedCount}>
             {reservedCount}
-            {modalType !== ProductModalType.CreateInvoice ? (
+            {hideOnHandCount ? null : (
               <Text style={styles.onHand}>/{onHand}</Text>
-            ) : null}
+            )}
           </Text>
         </View>
         <View style={styles.borderLine} />

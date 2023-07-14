@@ -33,7 +33,11 @@ export const BaseSelectedProductsList: React.FC<Props> = observer(
 
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<ProductModel>) => (
-        <SelectedProductsListItem modalType={modalType} item={item} onPress={onEditProduct} />
+        <SelectedProductsListItem
+          hideOnHandCount={modalType === ProductModalType.CreateInvoice}
+          item={item}
+          onPress={onEditProduct}
+        />
       ),
       [modalType, onEditProduct],
     );

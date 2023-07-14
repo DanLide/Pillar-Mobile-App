@@ -154,9 +154,11 @@ const BaseResultScreen: React.FC<Props> = observer(
     );
 
     const _renderSyncedSectionFooter = () =>
-      SyncedSectionFooter
-        ? SyncedSectionFooter
-        : groupByJob && (
+      useMemo(
+        () =>
+          SyncedSectionFooter ? (
+            SyncedSectionFooter
+          ) : groupByJob ? (
             <Tooltip
               contentStyle={styles.contextFooter}
               message={tooltipMessage}
@@ -165,19 +167,25 @@ const BaseResultScreen: React.FC<Props> = observer(
                 What will be submitted as an invoice?
               </Text>
             </Tooltip>
-          );
+          ) : null,
+        [],
+      );
 
     const _renderHeader = () =>
-      Header ? (
-        Header
-      ) : (
-        <View style={styles.headerContainer}>
-          <Text style={styles.contextTitle}>{contextTitle}</Text>
-          <Text style={styles.contextBody}>
-            {contextBody}{' '}
-            <Text style={styles.contextBodyBold}>{stockName}</Text>
-          </Text>
-        </View>
+      useMemo(
+        () =>
+          Header ? (
+            Header
+          ) : (
+            <View style={styles.headerContainer}>
+              <Text style={styles.contextTitle}>{contextTitle}</Text>
+              <Text style={styles.contextBody}>
+                {contextBody}{' '}
+                <Text style={styles.contextBodyBold}>{stockName}</Text>
+              </Text>
+            </View>
+          ),
+        [],
       );
 
     return (

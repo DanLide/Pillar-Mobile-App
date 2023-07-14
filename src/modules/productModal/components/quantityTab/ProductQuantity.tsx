@@ -100,7 +100,11 @@ export const ProductQuantity: React.FC<Props> = observer(
             onChange={onChange}
             onRemove={onRemove}
           />
-          <FooterDescription type={type} product={product} onHand={onHand} />
+          <FooterDescription
+            hideOnHandCount={type === ProductModalType.CreateInvoice}
+            product={product}
+            onHand={onHand}
+          />
         </View>
 
         {jobSelectable && !error && (

@@ -49,7 +49,6 @@ export enum Tabs {
 const getTabs = (type: ProductModalType): Tabs[] => {
   switch (type) {
     case ProductModalType.Return:
-      return [Tabs.EditQuantity];
     case ProductModalType.CreateInvoice:
       return [Tabs.EditQuantity];
     default:

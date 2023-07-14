@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 
 import {
   View,
@@ -24,11 +24,12 @@ const { width } = Dimensions.get('window');
 
 export const TooltipBar = memo(
   ({ title, containerStyle, textStyle, testID = 'tooltipBar' }: Props) => {
+    const containerStyles = useMemo(
+      () => [styles.container, containerStyle],
+      [containerStyle],
+    );
     return (
-      <View
-        style={[styles.container, containerStyle]}
-        testID={testIds.idContainer(testID)}
-      >
+      <View style={containerStyles} testID={testIds.idContainer(testID)}>
         <Text
           style={[styles.text, textStyle]}
           numberOfLines={1}

@@ -42,6 +42,11 @@ export const JobsList: React.FC<Props> = observer(
     const [isError, setIsError] = useState<boolean>(false);
     const [filterValue, setFilterValue] = useState<string>('');
 
+    const containerStyles = useMemo(
+      () => [styles.container, containerStyle],
+      [containerStyle],
+    );
+
     const filteredList = useMemo(
       () =>
         jobsStore.jobs.filter(job =>
@@ -109,11 +114,11 @@ export const JobsList: React.FC<Props> = observer(
           rightIcon={() => (
             <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
           )}
-          onChangeText={text => setFilterValue(text)}
+          onChangeText={setFilterValue}
           placeholderTextColor={colors.blackSemiLight}
         />
         <FlatList
-          style={[styles.container, containerStyle]}
+          style={containerStyles}
           keyExtractor={keyExtractor}
           data={filterValue ? filteredList : jobsStore.jobs}
           renderItem={renderJobListItem}
