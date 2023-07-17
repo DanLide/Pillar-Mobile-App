@@ -80,7 +80,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <ListItem
           title="Manage Products"
           subtitle="View and edit product details"
-          disabled
           leftIcon={ManageProductIcon}
           onPress={onManageProducts}
         />
