@@ -25,7 +25,7 @@ type Store = ScannerModalStoreType &
 export const ReturnProductsScreen = memo(({ navigation }: Props) => {
   const store = useRef<Store>(returnProductsStore).current;
 
-  const onCompleteRemove = useCallback(async () => {
+  const onCompleteReturn = useCallback(async () => {
     await onReturnProducts(returnProductsStore);
   }, []);
 
@@ -34,7 +34,8 @@ export const ReturnProductsScreen = memo(({ navigation }: Props) => {
       modalType={ProductModalType.Return}
       navigation={navigation}
       store={store}
-      onComplete={onCompleteRemove}
+      tooltipTitle="Scan to add products to list"
+      onComplete={onCompleteReturn}
       ListComponent={SelectedProductsList}
     />
   );

@@ -17,6 +17,7 @@ import { ProductModel } from '../../stores/types';
 export enum ProductModalType {
   Remove,
   Return,
+  ManageProduct,
   Hidden,
 }
 

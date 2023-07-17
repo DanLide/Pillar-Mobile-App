@@ -19,7 +19,7 @@ export interface CurrentProductStoreType<
   T extends ProductModel = ProductModel,
 > {
   getCurrentProduct?: T;
-  setCurrentProduct: (product: T) => void;
+  setCurrentProduct: (product?: T) => void;
   removeCurrentProduct: () => void;
 }
 

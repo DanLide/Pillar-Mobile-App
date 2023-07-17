@@ -68,11 +68,11 @@ export class SaveProductToStoreTask extends Task {
   }
 
   async run(): Promise<void> {
-    if (this.productContext.product) {
-      this.currentProductStore.setCurrentProduct(
-        this.mapProductResponse(this.productContext.product),
-      );
-    }
+    const { product } = this.productContext;
+
+    this.currentProductStore.setCurrentProduct(
+      product && this.mapProductResponse(product),
+    );
   }
 
   private mapProductResponse(product: ProductResponse): ProductModel {
