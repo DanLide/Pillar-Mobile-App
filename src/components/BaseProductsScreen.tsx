@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';
@@ -32,7 +38,7 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 interface SelectedProductsListProps {
-  modalType: ProductModalType;
+  modalType?: ProductModalType;
   store?: Store;
   onEditProduct: (item: ProductModel) => void;
 }
@@ -42,7 +48,9 @@ interface Props {
   modalType: ProductModalType;
   navigation: BaseProductsScreenNavigationProp;
   store: Store;
+  tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
+  hideCompleteButton?: boolean;
   onComplete?: () => Promise<void>;
 }
 
@@ -62,7 +70,9 @@ export const BaseProductsScreen = observer(
     modalType,
     navigation,
     store,
+    tooltipTitle,
     ListComponent,
+    hideCompleteButton,
     onComplete,
   }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -71,6 +81,21 @@ export const BaseProductsScreen = observer(
 
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
+
+    const scanButtonType = hideCompleteButton
+      ? ButtonType.primary
+      : ButtonType.secondary;
+
+    const ScanIcon = useMemo(
+      () => (
+        <SVGs.CodeIcon
+          color={hideCompleteButton ? colors.white : colors.purple}
+          width={32}
+          height={23.33}
+        />
+      ),
+      [hideCompleteButton],
+    );
 
     useEffect(() => {
       autorun(() => {
@@ -166,7 +191,7 @@ export const BaseProductsScreen = observer(
             type={InfoTitleBarType.Primary}
             title={infoTitle || store.currentStock?.organizationName}
           />
-          <TooltipBar title="Scan to add products to list" />
+          <TooltipBar title={tooltipTitle} />
 
           {isLoading ? (
             <View style={styles.loader}>
@@ -186,27 +211,23 @@ export const BaseProductsScreen = observer(
 
           <View style={styles.buttons}>
             <Button
-              type={ButtonType.secondary}
-              icon={
-                <SVGs.CodeIcon
-                  color={colors.purple}
-                  width={32}
-                  height={23.33}
-                />
-              }
+              type={scanButtonType}
+              icon={ScanIcon}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
               title="Scan"
               onPress={onPressScan}
             />
 
-            <Button
-              type={ButtonType.primary}
-              disabled={!Object.keys(store.getProducts).length}
-              buttonStyle={styles.buttonContainer}
-              title="Complete"
-              onPress={onCompleteRemove}
-            />
+            {!hideCompleteButton && (
+              <Button
+                type={ButtonType.primary}
+                disabled={!Object.keys(store.getProducts).length}
+                buttonStyle={styles.buttonContainer}
+                title="Complete"
+                onPress={onCompleteRemove}
+              />
+            )}
           </View>
 
           <ProductModal
@@ -244,6 +265,7 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 16,
     padding: 16,
     backgroundColor: colors.white,
   },
@@ -251,7 +273,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   buttonContainer: {
-    width: 163.5,
+    flex: 1,
     height: 48,
   },
 });

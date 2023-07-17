@@ -34,6 +34,7 @@ export const RemoveProductsScreen = memo(({ navigation }: Props) => {
       modalType={ProductModalType.Remove}
       navigation={navigation}
       store={store}
+      tooltipTitle="Scan to add products to list"
       onComplete={onCompleteRemove}
       ListComponent={SelectedProductsList}
     />

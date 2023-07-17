@@ -19,7 +19,7 @@ interface Props {
 const { width } = Dimensions.get('window');
 
 export const SelectedProductsListItem = memo(
-  ({ hideOnHandCount, item, onPress }: Props) => {
+  ({ item, onPress, hideOnHandCount }: Props) => {
     const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
     const handlePress = useCallback(() => onPress(item), [item, onPress]);
@@ -37,9 +37,7 @@ export const SelectedProductsListItem = memo(
         <View style={styles.rightContainer}>
           <Text style={styles.reservedCount}>
             {reservedCount}
-            {hideOnHandCount ? null : (
-              <Text style={styles.onHand}>/{onHand}</Text>
-            )}
+            {!hideOnHandCount && <Text style={styles.onHand}>/{onHand}</Text>}
           </Text>
         </View>
         <View style={styles.borderLine} />

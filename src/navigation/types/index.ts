@@ -80,6 +80,9 @@ export type ReturnStackParamList = {
 export type ManageProductsStackParamList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.ManageProductsScreen]: undefined;
+  [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.ScannerScreen]: undefined;
 };
 
 export type CreateInvoiceParamList = {
@@ -103,8 +106,10 @@ export enum RightBarType {
 
 export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<
-    ReturnStackParamList & RemoveStackParamList,
-    AppNavigator.RemoveProductsScreen | AppNavigator.ReturnProductsScreen
+    ReturnStackParamList & RemoveStackParamList & ManageProductsStackParamList,
+    | AppNavigator.RemoveProductsScreen
+    | AppNavigator.ReturnProductsScreen
+    | AppNavigator.ManageProductsScreen
   >,
   StackNavigationProp<HomeStackParamList>
 >;

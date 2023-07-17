@@ -18,6 +18,7 @@ export enum ProductModalType {
   Remove,
   Return,
   CreateInvoice,
+  ManageProduct,
   Hidden,
 }
 
