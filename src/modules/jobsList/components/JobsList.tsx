@@ -6,23 +6,25 @@ import {
   ListRenderItemInfo,
   StyleSheet,
   Text,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
 import { jobsStore } from '../stores';
 import { fetchJobs } from '../../../data/fetchJobs';
 
-import { JobListItem } from './JobsListItem';
+import { JobListItem, JobListItemType } from './JobsListItem';
 import { JobModel } from '../stores/JobsStore';
 import { SVGs, colors, fonts } from '../../../theme';
-import { Button, ButtonType } from '../../../components';
+import { Button, ButtonType, Input } from '../../../components';
 
 interface Props {
+  itemType?: JobListItemType;
   selectedId?: number;
-  filterValue: string;
-
   footerComponent?: JSX.Element | null;
-  headerComponent?: JSX.Element | null;
+  containerStyle?: StyleProp<ViewStyle>;
+  inputContainerStyle?: StyleProp<ViewStyle>;
 
   onPressItem: (job: JobModel) => void;
 }
@@ -31,12 +33,19 @@ export const JobsList: React.FC<Props> = observer(
   ({
     selectedId,
     footerComponent,
-    headerComponent,
-    filterValue = '',
+    itemType = JobListItemType.Toggle,
+    containerStyle,
+    inputContainerStyle,
     onPressItem,
   }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
+    const [filterValue, setFilterValue] = useState<string>('');
+
+    const containerStyles = useMemo(
+      () => [styles.container, containerStyle],
+      [containerStyle],
+    );
 
     const filteredList = useMemo(
       () =>
@@ -49,12 +58,13 @@ export const JobsList: React.FC<Props> = observer(
     const renderJobListItem = useCallback(
       ({ item }: ListRenderItemInfo<JobModel>) => (
         <JobListItem
+          type={itemType}
           item={item}
           selectedId={selectedId}
           onPressItem={onPressItem}
         />
       ),
-      [onPressItem, selectedId],
+      [itemType, onPressItem, selectedId],
     );
 
     const onFetchJobs = useCallback(async () => {
@@ -96,9 +106,19 @@ export const JobsList: React.FC<Props> = observer(
 
     return (
       <>
-        {headerComponent}
+        <Input
+          style={styles.input}
+          containerStyle={[styles.inputContainer, inputContainerStyle]}
+          value={filterValue}
+          placeholder="Search"
+          rightIcon={() => (
+            <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
+          )}
+          onChangeText={setFilterValue}
+          placeholderTextColor={colors.blackSemiLight}
+        />
         <FlatList
-          style={styles.container}
+          style={containerStyles}
           keyExtractor={keyExtractor}
           data={filterValue ? filteredList : jobsStore.jobs}
           renderItem={renderJobListItem}
@@ -122,6 +142,19 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     flex: 1,
+  },
+  input: {
+    height: 32,
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackSemiLight,
+  },
+  inputContainer: {
+    height: 32,
+    marginHorizontal: 16,
+    marginTop: 19,
+    borderColor: colors.gray,
   },
   image: {
     flex: 1,

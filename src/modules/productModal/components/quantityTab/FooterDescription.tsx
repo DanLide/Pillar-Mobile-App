@@ -5,6 +5,7 @@ import { colors, fonts } from '../../../../theme';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ColoredTooltip } from '../../../../components';
 import { ProductModel } from '../../../../stores/types';
+import { ProductModalType } from '../../ProductModal';
 
 const InventoryTypeName = {
   [InventoryUseType.Stock]: 'Stock',
@@ -16,13 +17,18 @@ const InventoryTypeName = {
 };
 
 interface Props {
+  hideOnHandCount?: boolean;
   product: ProductModel;
   onHand: number;
 }
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
-export const FooterDescription: React.FC<Props> = ({ product, onHand }) => {
+export const FooterDescription: React.FC<Props> = ({
+  hideOnHandCount,
+  product,
+  onHand,
+}) => {
   const InventoryTypeNameString = product.inventoryUseTypeId
     ? InventoryTypeName[product.inventoryUseTypeId]
     : undefined;
@@ -46,12 +52,14 @@ export const FooterDescription: React.FC<Props> = ({ product, onHand }) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.itemContainer, { marginRight: 16 }]}>
-        <Text style={styles.title}>In Stock</Text>
-        <Text style={styles.subtitleInStock}>
-          {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
-        </Text>
-      </View>
+      {hideOnHandCount ? null : (
+        <View style={[styles.itemContainer, { marginRight: 16 }]}>
+          <Text style={styles.title}>In Stock</Text>
+          <Text style={styles.subtitleInStock}>
+            {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
+          </Text>
+        </View>
+      )}
 
       <View style={styles.itemContainer}>
         <Text style={styles.title}>Remove by</Text>

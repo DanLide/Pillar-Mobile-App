@@ -11,9 +11,9 @@ import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
 
 interface Props {
+  hideOnHandCount?: boolean;
   item: ProductModel;
   onPress: (item: ProductModel) => void;
-  hideOnHandCount?: boolean;
 }
 
 const { width } = Dimensions.get('window');

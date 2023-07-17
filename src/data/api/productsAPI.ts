@@ -20,6 +20,36 @@ export interface RemoveProductResponse {
   jobDetailed: number;
 }
 
+export interface ProductByFacilityIdResponse {
+  pisaId: number;
+  pillarID: string;
+  supplierID: number;
+  partNumber: string;
+  manufacturer: string;
+  description: string;
+  invoiceUnit: string;
+  unit: string;
+  isRecoverable: boolean;
+  size: string;
+  dimension: number;
+  price: number;
+  primaryCategoryId: number;
+  secondaryCategoryId: number;
+  categories: [
+    {
+      primaryCategoryId: number;
+      secondaryCategoryId: number;
+    },
+  ];
+  itemMaster: {
+    partNumber: string;
+    manufacturer: string;
+  };
+  category: string;
+  removedBy: string;
+  repairFacilityID: number;
+}
+
 export const getFetchProductAPI = (
   scanCode: string,
   currentStock?: StockModel,
@@ -67,5 +97,14 @@ export const returnProductAPI = ({
   return tryAuthFetch<string>({
     url,
     request: { method: 'PUT', body },
+  });
+};
+
+export const getFetchProductByFacilityIdAPI = (scanCode: string) => {
+  const url = new URLProvider().getFetchProductByFacilityId(scanCode);
+
+  return tryAuthFetch<ProductByFacilityIdResponse[]>({
+    url,
+    request: { method: 'GET' },
   });
 };

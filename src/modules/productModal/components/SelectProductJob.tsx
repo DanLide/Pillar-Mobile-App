@@ -1,10 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
-import { Button, ButtonType, Input } from '../../../components';
+import { Button, ButtonType } from '../../../components';
 import { JobsList } from '../../jobsList/components';
 import { JobModel } from '../../jobsList/stores/JobsStore';
-import { SVGs, colors, fonts } from '../../../theme';
 import { Tabs } from '../ProductModal';
 
 interface Props {
@@ -30,7 +29,6 @@ export const SelectProductJob: React.FC<Props> = ({
   const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
     undefined,
   );
-  const [filterValue, setFilterValue] = useState<string>('');
 
   const onPressItem = (job: JobModel) => {
     setSelectedJob(selectedJob?.jobId === job.jobId ? undefined : job);
@@ -69,24 +67,14 @@ export const SelectProductJob: React.FC<Props> = ({
         />
       </View>
     ),
-    [isEdit, isRecoverableProduct, onPressAdd, onPressBack, onPressSkip, selectedJob],
-  );
-
-  const Header = useMemo(
-    () => (
-      <Input
-        style={styles.input}
-        containerStyle={styles.inputContainer}
-        value={filterValue}
-        placeholder="Search"
-        rightIcon={() => (
-          <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
-        )}
-        onChangeText={text => setFilterValue(text)}
-        placeholderTextColor={colors.blackSemiLight}
-      />
-    ),
-    [filterValue],
+    [
+      isEdit,
+      isRecoverableProduct,
+      onPressAdd,
+      onPressBack,
+      onPressSkip,
+      selectedJob,
+    ],
   );
 
   if (selectedTab === Tabs.LinkJob) {
@@ -94,9 +82,7 @@ export const SelectProductJob: React.FC<Props> = ({
       <JobsList
         selectedId={selectedJob?.jobId}
         onPressItem={onPressItem}
-        filterValue={filterValue}
         footerComponent={Footer}
-        headerComponent={Header}
       />
     );
   } else {
@@ -113,19 +99,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-  },
-  input: {
-    height: 32,
-    fontSize: 14,
-    lineHeight: 18,
-    fontFamily: fonts.TT_Regular,
-    color: colors.blackSemiLight,
-  },
-  inputContainer: {
-    height: 32,
-    marginHorizontal: 16,
-    marginTop: 19,
-    borderColor: colors.gray,
   },
   buttons: {
     flexDirection: 'row',
