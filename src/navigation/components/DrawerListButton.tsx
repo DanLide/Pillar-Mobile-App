@@ -12,6 +12,7 @@ type DrawerListButtonProps = {
   title: string;
   icon: React.ReactElement;
   disabled?: boolean;
+  subtitle?: string,
   onPress?: () => void;
 }
 
@@ -20,6 +21,7 @@ export const DrawerListButton: React.FC<DrawerListButtonProps> = ({
   icon,
   disabled = true,
   onPress,
+  subtitle,
 }) => {
   return (
     <TouchableOpacity
@@ -34,6 +36,10 @@ export const DrawerListButton: React.FC<DrawerListButtonProps> = ({
         <Text style={styles.infoText} numberOfLines={1}>
           {title}
         </Text>
+        {subtitle && <Text style={styles.subtitle}>
+          {subtitle}
+        </Text>
+        }
       </View>
     </TouchableOpacity>
   )
@@ -64,4 +70,8 @@ const styles = StyleSheet.create({
   iconWrapper: {
     paddingVertical: 13,
   },
+  subtitle: {
+    marginTop: 6,
+    color: colors.blackLight,
+  }
 });

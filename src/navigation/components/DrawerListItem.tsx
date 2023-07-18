@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   subtitleText: {
     marginTop: 6,
-    color: colors.blackLight
+    color: colors.blackLight,
   },
   separator: {
     height: 1,

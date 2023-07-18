@@ -64,6 +64,7 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigatio
         <DrawerListButton
           icon={<SVGs.SupportIcon color={colors.blue} />}
           title="Support"
+          subtitle='Contact Information'
         />
         <Text style={styles.subtitleText}>
           {version}
