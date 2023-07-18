@@ -1,5 +1,11 @@
 import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
-import { StyleSheet, Dimensions, View, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Dimensions,
+  View,
+  Alert,
+  NativeScrollEvent,
+} from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
 import { Modal } from '../../components';
@@ -13,6 +19,15 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModel } from '../../stores/types';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+// eslint-disable-next-line import/default
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+  withSpring,
+} from 'react-native-reanimated';
+import AnimatedScrollView from 'react-native-reanimated/lib/types/lib/reanimated2/component/ScrollView';
 
 export enum ProductModalType {
   Remove,
@@ -44,6 +59,12 @@ const { width, height } = Dimensions.get('window');
 export enum Tabs {
   EditQuantity,
   LinkJob,
+  ViewProduct,
+}
+
+enum ScrollDirection {
+  Down,
+  Up,
 }
 
 const getTabs = (type: ProductModalType): Tabs[] => {
@@ -74,6 +95,11 @@ export const ProductModal = memo(
   }: Props) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(0);
+
+    const headerHeight = useHeaderHeight();
+
+    const topOffset = useSharedValue(headerHeight);
+    const { top: statusBarHeight } = useSafeAreaInsets();
 
     const tabs = useMemo(() => getTabs(type), [type]);
 
@@ -153,6 +179,21 @@ export const ProductModal = memo(
                 onPressAdd={onPressAdd}
               />
             );
+          case Tabs.ViewProduct:
+            return (
+              <ProductQuantity
+                product={product}
+                onChangeProductQuantity={onChangeProductQuantity}
+                isEdit={isEdit}
+                jobSelectable={type === ProductModalType.Remove}
+                error={error}
+                maxValue={maxValue}
+                onHand={onHand}
+                onPressAddToList={onPressSkip}
+                onJobSelectNavigation={onJobSelectNavigation}
+                onRemove={onRemoveAlert}
+              />
+            );
           default:
             return <View />;
         }
@@ -184,30 +225,69 @@ export const ProductModal = memo(
       }
     }, [selectedTab]);
 
+    const getScrollDirection = useCallback((event: NativeScrollEvent) => {
+      'worklet';
+      return event.contentOffset.y > 0
+        ? ScrollDirection.Up
+        : ScrollDirection.Down;
+    }, []);
+
+    const scrollTo = useCallback(
+      (destination: number) => {
+        'worklet';
+        topOffset.value = withSpring(destination, { damping: 50 });
+      },
+      [topOffset],
+    );
+
+    const scrollHandler = useAnimatedScrollHandler({
+      onScroll: event => {
+        const scrollDirection = getScrollDirection(event);
+
+        switch (scrollDirection) {
+          case ScrollDirection.Up:
+            scrollTo(headerHeight - statusBarHeight);
+            break;
+          case ScrollDirection.Down:
+            scrollTo(headerHeight);
+            break;
+        }
+      },
+    });
+
     return (
       <Modal
         isVisible={type !== ProductModalType.Hidden}
         onClose={clearProductModalStoreOnClose}
         title={stockName}
         titleContainerStyle={styles.titleContainer}
-        topOffset={64}
+        topOffset={topOffset}
         semiTitle={title}
       >
         <ToastContextProvider
           duration={0}
           offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}
         >
-          <Carousel
-            ref={carouselRef}
-            loop={false}
-            width={width}
-            height={height - NAVIGATION_HEADER_HEIGHT - MODAL_HEADER_HEIGHT}
-            autoPlay={false}
-            enabled={false}
-            data={tabs}
-            scrollAnimationDuration={500}
-            renderItem={renderItem}
-          />
+          <Animated.ScrollView
+            onScroll={scrollHandler}
+            scrollEventThrottle={16}
+          >
+            {type === ProductModalType.ManageProduct ? (
+              renderItem({ index: ProductModalType.ManageProduct })
+            ) : (
+              <Carousel
+                ref={carouselRef}
+                loop={false}
+                width={width}
+                height={height - NAVIGATION_HEADER_HEIGHT - MODAL_HEADER_HEIGHT}
+                autoPlay={false}
+                enabled={false}
+                data={tabs}
+                scrollAnimationDuration={500}
+                renderItem={renderItem}
+              />
+            )}
+          </Animated.ScrollView>
         </ToastContextProvider>
       </Modal>
     );

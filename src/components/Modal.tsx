@@ -12,6 +12,10 @@ import {
 import { colors, fonts, SVGs } from '../theme';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { testIds } from '../helpers';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 interface Props {
   isVisible: boolean;
@@ -19,7 +23,7 @@ interface Props {
   titleContainerStyle?: StyleProp<ViewStyle>;
   semiTitle?: string;
   children?: React.ReactNode;
-  topOffset?: number;
+  topOffset?: SharedValue<number>;
   testID?: string;
 
   onClose: () => void;
@@ -37,10 +41,9 @@ export const Modal: React.FC<Props> = ({
   testID = 'modal',
   onClose,
 }) => {
-  const backgroundStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.background, { marginTop: topOffset ?? DEFAULT_TOP_OFFSET }],
-    [topOffset],
-  );
+  const animatedStyles = useAnimatedStyle<ViewStyle>(() => {
+    return { marginTop: topOffset?.value ?? DEFAULT_TOP_OFFSET };
+  });
 
   return (
     <RNModal
@@ -50,7 +53,10 @@ export const Modal: React.FC<Props> = ({
       testID={testIds.idContainer(testID)}
     >
       <View style={styles.container}>
-        <View style={backgroundStyle} testID={testIds.idContent(testID)}>
+        <Animated.View
+          style={[styles.background, animatedStyles]}
+          testID={testIds.idContent(testID)}
+        >
           <InfoTitleBar
             type={InfoTitleBarType.Secondary}
             title={title}
@@ -70,7 +76,7 @@ export const Modal: React.FC<Props> = ({
             <View style={styles.icon} />
           </View>
           {children}
-        </View>
+        </Animated.View>
       </View>
     </RNModal>
   );
