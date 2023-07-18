@@ -80,7 +80,6 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     return (
       <View style={styles.container}>
-        <Description product={product} />
         <View>
           <EditQuantity
             isEdit={isEdit}
@@ -133,6 +132,8 @@ const styles = StyleSheet.create({
     gap: 24,
     justifyContent: 'space-between',
     paddingHorizontal: 16,
+    paddingTop: 24,
+    height: 1000,
   },
   continueButton: {
     width: 135,
