@@ -20,6 +20,8 @@
 		3788A4DEB8114AA59A07A1CA /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
 		44DAD8FE510E45D3AA64CAED /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
 		4E4D7B38216AFED6DA6FD002 /* libPods-RepairStackAbstract-RepairStack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */; };
+		72A711572A576EB900870488 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		72A711582A576EB900870488 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		72A9D1212A1C0EB800BEB4A6 /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
 		72A9D1222A1C0EB800BEB4A6 /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
 		72A9D1232A1C0EB800BEB4A6 /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
@@ -83,6 +85,7 @@
 		643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-BlackItalic.otf"; path = "../assets/fonts/3MCircularTT-BlackItalic.otf"; sourceTree = "<group>"; };
 		6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-LightItalic.otf"; path = "../assets/fonts/3MCircularTT-LightItalic.otf"; sourceTree = "<group>"; };
 		6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Regular.otf"; path = "../assets/fonts/3MCircularTT-Regular.otf"; sourceTree = "<group>"; };
+		72A711562A576EB900870488 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7B88CC87B172967C9C7AAE3F /* Pods-RepairStack-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Book.otf"; path = "../assets/fonts/3MCircular-Book.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RepairStack/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -158,6 +161,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
+				72A711562A576EB900870488 /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
@@ -258,8 +262,8 @@
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				0978B03BF04C80AA47704B31 /* [CP] Embed Pods Frameworks */,
 				30E4BEF755856E1ACA9D867F /* [CP] Copy Pods Resources */,
+				8550DB9BF3B65133D6BFE767 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -281,8 +285,8 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				63571651E14B7A3CB4D79AB4 /* [CP] Embed Pods Frameworks */,
 				67646909599C648C1E807621 /* [CP] Copy Pods Resources */,
+				244AE2817BD6CB14779F15FB /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -303,8 +307,8 @@
 				953DF4BD29E3FDD900247A0B /* Frameworks */,
 				953DF4C029E3FDD900247A0B /* Resources */,
 				953DF4C329E3FDD900247A0B /* Bundle React Native code and images */,
-				F7D7578BC818C39C34346697 /* [CP] Embed Pods Frameworks */,
 				33F45EB203B06B39B5550B1F /* [CP] Copy Pods Resources */,
+				6194531622A98A28DEAB7B3F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -376,6 +380,7 @@
 				21C540EAEC6749578E72B719 /* 3MCircularTT-BlackItalic.otf in Resources */,
 				A9046BF2D8D54406BBB84C8D /* 3MCircularTT-Bold.otf in Resources */,
 				D51AB8225B784F57AD5EAE60 /* 3MCircularTT-BoldItalic.otf in Resources */,
+				72A711572A576EB900870488 /* GoogleService-Info.plist in Resources */,
 				985638F8FA7C43B080DD64AD /* 3MCircularTT-Italic.otf in Resources */,
 				3788A4DEB8114AA59A07A1CA /* 3MCircularTT-Light.otf in Resources */,
 				7939AD0364F048F0BB7D429B /* 3MCircularTT-LightItalic.otf in Resources */,
@@ -399,6 +404,7 @@
 				72A9D12A2A1C0EB800BEB4A6 /* 3MCircularTT-BoldItalic.otf in Resources */,
 				72A9D12B2A1C0EB800BEB4A6 /* 3MCircularTT-Italic.otf in Resources */,
 				72A9D12C2A1C0EB800BEB4A6 /* 3MCircularTT-Light.otf in Resources */,
+				72A711582A576EB900870488 /* GoogleService-Info.plist in Resources */,
 				72A9D12D2A1C0EB800BEB4A6 /* 3MCircularTT-LightItalic.otf in Resources */,
 				72A9D12E2A1C0EB800BEB4A6 /* 3MCircularTT-Regular.otf in Resources */,
 				953DF4C129E3FDD900247A0B /* LaunchScreen.storyboard in Resources */,
@@ -447,21 +453,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		0978B03BF04C80AA47704B31 /* [CP] Embed Pods Frameworks */ = {
+		244AE2817BD6CB14779F15FB /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		30E4BEF755856E1ACA9D867F /* [CP] Copy Pods Resources */ = {
@@ -520,21 +526,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		63571651E14B7A3CB4D79AB4 /* [CP] Embed Pods Frameworks */ = {
+		6194531622A98A28DEAB7B3F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		67646909599C648C1E807621 /* [CP] Copy Pods Resources */ = {
@@ -552,6 +558,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8550DB9BF3B65133D6BFE767 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		86DCB9070F4071B15536B4F2 /* [CP] Check Pods Manifest.lock */ = {
@@ -610,23 +633,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
-		};
-		F7D7578BC818C39C34346697 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
 			isa = PBXShellScriptBuildPhase;
