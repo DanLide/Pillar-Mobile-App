@@ -8,16 +8,62 @@ export interface ProductResponse {
   name: string;
   isRecoverable: 'Yes' | 'No';
   onHand: number;
+  onOrder: number;
   inventoryUseTypeId: number;
   size: string;
   partNo: string;
   manufactureCode: string;
   nameDetails: string;
+  unitPer: number;
+  upc: string;
+  supplier: string;
+  inventoryClassificationTypeId: string;
+}
+
+export interface CategoryResponse {
+  id: number;
+  description: string;
+}
+
+export interface ProductSettingsResponse {
+  max: number;
+  min: number;
+  orderMultiple: number;
 }
 
 export interface RemoveProductResponse {
   qty: number;
   jobDetailed: number;
+}
+
+export interface ProductByFacilityIdResponse {
+  pisaId: number;
+  pillarID: string;
+  supplierID: number;
+  partNumber: string;
+  manufacturer: string;
+  description: string;
+  invoiceUnit: string;
+  unit: string;
+  isRecoverable: boolean;
+  size: string;
+  dimension: number;
+  price: number;
+  primaryCategoryId: number;
+  secondaryCategoryId: number;
+  categories: [
+    {
+      primaryCategoryId: number;
+      secondaryCategoryId: number;
+    },
+  ];
+  itemMaster: {
+    partNumber: string;
+    manufacturer: string;
+  };
+  category: string;
+  removedBy: string;
+  repairFacilityID: number;
 }
 
 export const getFetchProductAPI = (
@@ -68,4 +114,28 @@ export const returnProductAPI = ({
     url,
     request: { method: 'PUT', body },
   });
+};
+
+export const getFetchProductByFacilityIdAPI = (scanCode: string) => {
+  const url = new URLProvider().getFetchProductByFacilityId(scanCode);
+
+  return tryAuthFetch<ProductByFacilityIdResponse[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getCategoriesByFacilityIdAPI = () => {
+  const url = new URLProvider().getCategoriesByFacilityId();
+
+  return tryAuthFetch<CategoryResponse[]>({ url, request: { method: 'GET' } });
+};
+
+export const getProductSettingsByIdAPI = (
+  productId: number,
+  currentStock?: StockModel,
+) => {
+  const url = new URLProvider().getProductSettingsById(productId, currentStock);
+
+  return tryAuthFetch<ProductResponse>({ url, request: { method: 'GET' } });
 };

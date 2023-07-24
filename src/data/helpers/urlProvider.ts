@@ -11,6 +11,10 @@ import {
   ReturnProductsStore,
   returnProductsStore,
 } from '../../modules/returnProducts/stores';
+import {
+  ManageProductsStore,
+  manageProductsStore,
+} from '../../modules/manageProducts/stores';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
 export class URLProvider {
@@ -18,6 +22,7 @@ export class URLProvider {
   ssoStore: SSOStore;
   removeProductsStore: RemoveProductsStore;
   returnProductsStore: ReturnProductsStore;
+  manageProductsStore: ManageProductsStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -36,11 +41,13 @@ export class URLProvider {
     sso_store = ssoStore,
     remove_products_store = removeProductsStore,
     return_products_store = returnProductsStore,
+    manage_products_store = manageProductsStore,
   ) {
     this.authStore = auth_store;
     this.ssoStore = sso_store;
     this.removeProductsStore = remove_products_store;
     this.returnProductsStore = return_products_store;
+    this.manageProductsStore = manage_products_store;
     this.currentEnv = environment;
   }
 
@@ -109,11 +116,35 @@ export class URLProvider {
     );
   }
 
+  getFetchProductByFacilityId(scanCode: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Sync/${facilityId}/products/${scanCode}`,
+    );
+  }
+
+  getCategoriesByFacilityId() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryClassificationType/InventoryClassification/${facilityId}`,
+    );
+  }
+
+  getProductSettingsById(productId: number, currentStock?: StockModel) {
+    const partyRoleID = currentStock?.partyRoleId;
+
+    return new URL(
+      `https://api.repairstack-qa.3m.com/im-product/api/Product/ProductAreaSettings/${productId}/${partyRoleID}`,
+    );
+  }
+
   getFetchJobsBySso() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetAllJobs/${facilityId}`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetAllJobs/${facilityId}/OPEN`,
     );
   }
 
@@ -135,6 +166,12 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
+    );
+  }
+
+  createInvoice(jobId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/CreateInvoiceByJob/${jobId}`,
     );
   }
 }

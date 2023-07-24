@@ -6,6 +6,7 @@ import {
   removeProductAPI,
   RemoveProductResponse,
   returnProductAPI,
+  getFetchProductByFacilityIdAPI
 } from './productsAPI';
 import { getFetchJobsAPI } from './jobsAPI';
 
@@ -17,5 +18,6 @@ export {
   getFetchJobsAPI,
   removeProductAPI,
   returnProductAPI,
+  getFetchProductByFacilityIdAPI,
 };
 export type { LoginAPIParams, RemoveProductResponse };
