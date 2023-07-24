@@ -35,11 +35,14 @@ type ProductsStore = SyncedProductStoreType & StockProductStoreType;
 interface Props {
   navigation: BaseResultScreenNavigationProp;
   store: ProductsStore;
-  contextTitle: string;
+  contextTitle?: string;
   contextBody: string;
   errorListTitle: string;
   errorToastMessage: string;
   groupByJob?: boolean;
+  SyncedSectionFooter?: JSX.Element;
+  title?: string;
+  Header?: JSX.Element;
 }
 
 const BaseResultScreen: React.FC<Props> = observer(
@@ -51,6 +54,9 @@ const BaseResultScreen: React.FC<Props> = observer(
     errorListTitle,
     errorToastMessage,
     groupByJob,
+    SyncedSectionFooter,
+    title,
+    Header,
   }) => {
     const toast = useToast();
 
@@ -147,32 +153,46 @@ const BaseResultScreen: React.FC<Props> = observer(
       [groupByJob, notSyncedProducts, renderItem, renderSectionHeader],
     );
 
-    return (
-      <>
-        <View style={styles.cabinetContainer}>
-          <Text style={styles.cabinetTitle}>{stockName}</Text>
-        </View>
-        <View style={styles.container}>
-          <View style={styles.contentContainer}>
+    const _renderSyncedSectionFooter = useMemo<JSX.Element | null>(
+      () =>
+        SyncedSectionFooter ? (
+          SyncedSectionFooter
+        ) : groupByJob ? (
+          <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
+            <Text style={styles.contextFooterText}>
+              What will be submitted as an invoice?
+            </Text>
+          </Tooltip>
+        ) : null,
+      [SyncedSectionFooter, groupByJob, tooltipMessage],
+    );
+
+    const _renderHeader = useMemo<JSX.Element>(
+      () =>
+        Header ? (
+          Header
+        ) : (
+          <View style={styles.headerContainer}>
             <Text style={styles.contextTitle}>{contextTitle}</Text>
             <Text style={styles.contextBody}>
               {contextBody}{' '}
               <Text style={styles.contextBodyBold}>{stockName}</Text>
             </Text>
+          </View>
+        ),
+      [Header, contextBody, contextTitle, stockName],
+    );
 
+    return (
+      <>
+        <View style={styles.cabinetContainer}>
+          <Text style={styles.cabinetTitle}>{title || stockName}</Text>
+        </View>
+        <View style={styles.container}>
+          <View style={styles.contentContainer}>
+            {_renderHeader}
             {SyncedProductsList}
-
-            {groupByJob && (
-              <Tooltip
-                contentStyle={styles.contextFooter}
-                message={tooltipMessage}
-              >
-                <Text style={styles.contextFooterText}>
-                  What will be submitted as an invoice?
-                </Text>
-              </Tooltip>
-            )}
-
+            {_renderSyncedSectionFooter}
             {notSyncedProducts.length > 0 ? (
               <>
                 <Text style={styles.errorListTitle}>{errorListTitle}</Text>
@@ -223,6 +243,10 @@ const styles = StyleSheet.create({
     color: colors.blackLight,
     alignSelf: 'center',
     paddingVertical: 5,
+  },
+  headerContainer: {
+    width: 360,
+    alignItems: 'center',
   },
   contentContainer: {
     flex: 1,

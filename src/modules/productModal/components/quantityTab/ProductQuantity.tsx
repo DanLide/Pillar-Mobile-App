@@ -18,8 +18,10 @@ import { getProductMinQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
+import { ProductModalType } from '../../ProductModal';
 
 interface Props {
+  type?: ProductModalType;
   maxValue: number;
   onHand: number;
   isEdit?: boolean;
@@ -35,6 +37,7 @@ interface Props {
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({
+    type,
     product,
     isEdit,
     jobSelectable,
@@ -60,7 +63,11 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const minQty = getProductMinQty(inventoryUseTypeId);
 
-    const buttonLabel = jobSelectable && isRecoverable ? 'Next' : 'Done';
+    const buttonLabel =
+      (jobSelectable && isRecoverable) ||
+      type === ProductModalType.CreateInvoice
+        ? 'Next'
+        : 'Done';
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent
         ? 'decimal-pad'
@@ -92,7 +99,11 @@ export const ProductQuantity: React.FC<Props> = observer(
             onChange={onChange}
             onRemove={onRemove}
           />
-          <FooterDescription product={product} onHand={onHand} />
+          <FooterDescription
+            hideOnHandCount={type === ProductModalType.CreateInvoice}
+            product={product}
+            onHand={onHand}
+          />
         </View>
 
         {jobSelectable && !error && (
@@ -108,9 +119,9 @@ export const ProductQuantity: React.FC<Props> = observer(
                   : 'Link to Job Number'}
               </Text>
             </Pressable>
-            {product.isRecoverable && (
+            {jobSelectable && product.isRecoverable ? (
               <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
-            )}
+            ) : null}
           </View>
         )}
 

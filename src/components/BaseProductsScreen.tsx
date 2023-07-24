@@ -38,10 +38,13 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 interface SelectedProductsListProps {
+  modalType?: ProductModalType;
+  store?: Store;
   onEditProduct: (item: ProductModel) => void;
 }
 
 interface Props {
+  infoTitle?: string;
   modalType: ProductModalType;
   navigation: BaseProductsScreenNavigationProp;
   store: Store;
@@ -63,6 +66,7 @@ const alertMessage =
 
 export const BaseProductsScreen = observer(
   ({
+    infoTitle,
     modalType,
     navigation,
     store,
@@ -185,7 +189,7 @@ export const BaseProductsScreen = observer(
         <View style={styles.container}>
           <InfoTitleBar
             type={InfoTitleBarType.Primary}
-            title={store.currentStock?.organizationName}
+            title={infoTitle || store.currentStock?.organizationName}
           />
           <TooltipBar title={tooltipTitle} />
 
@@ -199,7 +203,11 @@ export const BaseProductsScreen = observer(
             </View>
           ) : null}
 
-          <ListComponent onEditProduct={onEditProduct} />
+          <ListComponent
+            modalType={modalType}
+            store={store}
+            onEditProduct={onEditProduct}
+          />
 
           <View style={styles.buttons}>
             <Button

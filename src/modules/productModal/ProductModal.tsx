@@ -36,6 +36,7 @@ import { Description } from './components/quantityTab/Description';
 export enum ProductModalType {
   Remove,
   Return,
+  CreateInvoice,
   ManageProduct,
   Hidden,
 }
@@ -73,6 +74,7 @@ enum ScrollDirection {
 const getTabs = (type: ProductModalType): Tabs[] => {
   switch (type) {
     case ProductModalType.Return:
+    case ProductModalType.CreateInvoice:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -160,6 +162,7 @@ export const ProductModal = memo(
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
+                type={type}
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
