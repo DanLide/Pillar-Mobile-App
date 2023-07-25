@@ -20,6 +20,7 @@ import { ReturnStack } from './ReturnStack';
 import { RemoveStack } from './RemoveStack';
 import { ManageProductsStack } from './ManageProductsStack';
 import { DrawerContent } from './components';
+import { CreateInvoiceStack } from './CreateInvoiceStack';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -55,7 +56,7 @@ const Drawer = createDrawerNavigator();
 const DrawerHome = () => (
   <Drawer.Navigator
     useLegacyImplementation
-    drawerContent={(props) => <DrawerContent {...props} />}
+    drawerContent={props => <DrawerContent {...props} />}
   >
     <Drawer.Screen
       name={AppNavigator.HomeScreen}
@@ -106,6 +107,11 @@ export const HomeStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.ManageProductsStack}
         component={ManageProductsStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.CreateInvoiceStack}
+        component={CreateInvoiceStack}
         options={getNavigationOptions}
       />
     </Stack.Navigator>

@@ -99,7 +99,7 @@ describe('fetchProductByScannedCode', () => {
       mockStore,
     );
     await expect(saveProductToStoreTask.run()).resolves.not.toThrow();
-    expect(mockSetCurrentProduct).not.toHaveBeenCalled();
+    expect(mockSetCurrentProduct).toHaveBeenCalledWith(undefined);
   });
 
   it('should call fetchProductByScannedCode', async () => {

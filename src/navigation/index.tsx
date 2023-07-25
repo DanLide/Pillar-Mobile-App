@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 
 import { getNavigationOptions } from './helpers';
 import { authStore } from '../stores';
-import { LoginScreen } from '../modules/login/components/LoginScreen';
 import { AppNavigator, AppStackParamList } from './types';
 import { HomeStack } from './HomeStack';
+import { UnauthStack } from './UnauthStack';
 
 const Stack = createStackNavigator<AppStackParamList>();
 
@@ -21,8 +21,8 @@ export const AppStack = observer(() => {
         />
       ) : (
         <Stack.Screen
-          name={AppNavigator.LoginScreen}
-          component={LoginScreen}
+          name={AppNavigator.UnauthStack}
+          component={UnauthStack}
           options={getNavigationOptions}
         />
       )}

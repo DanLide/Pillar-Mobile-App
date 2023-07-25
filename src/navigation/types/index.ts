@@ -2,6 +2,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
 
 export enum AppNavigator {
+  // UnauthStack
+  UnauthStack = 'UnauthStack',
+  WelcomeScreen = 'WelcomeScreen',
   LoginScreen = 'LoginScreen',
 
   // HomeStack
@@ -30,6 +33,12 @@ export enum AppNavigator {
   // ManageProductsStack
   ManageProductsStack = 'ManageProductsStack',
   ManageProductsScreen = 'ManageProductsScreen',
+
+  // CreateInvoiceStack
+  CreateInvoiceStack = 'CreateInvoiceStack',
+  SelectProductJob = 'SelectProductJob',
+  ProductsScreen = 'ProductsScreen',
+  CreateInvoiceProductsScreen = 'CreateInvoiceProductsScreen',
 }
 
 type CameraPermissionScreenParams = {
@@ -37,8 +46,13 @@ type CameraPermissionScreenParams = {
 };
 
 export type AppStackParamList = {
-  [AppNavigator.LoginScreen]: undefined;
+  [AppNavigator.UnauthStack]: undefined;
   [AppNavigator.HomeStack]: undefined;
+};
+
+export type UnauthStackParamsList = {
+  [AppNavigator.WelcomeScreen]: undefined;
+  [AppNavigator.LoginScreen]: undefined;
 };
 
 export type HomeStackParamList = {
@@ -50,6 +64,7 @@ export type HomeStackParamList = {
   [AppNavigator.RemoveProductsStack]: undefined;
   [AppNavigator.ReturnProductsStack]: undefined;
   [AppNavigator.ManageProductsStack]: undefined;
+  [AppNavigator.CreateInvoiceStack]: undefined;
 };
 
 export type RemoveStackParamList = {
@@ -73,6 +88,18 @@ export type ReturnStackParamList = {
 export type ManageProductsStackParamList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.ManageProductsScreen]: undefined;
+  [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.ScannerScreen]: undefined;
+};
+
+export type CreateInvoiceParamList = {
+  [AppNavigator.SelectProductJob]: undefined;
+  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.CreateInvoiceProductsScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.HowToScanScreen]: undefined;
 };
 
 export enum LeftBarType {
@@ -87,8 +114,10 @@ export enum RightBarType {
 
 export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<
-    ReturnStackParamList & RemoveStackParamList,
-    AppNavigator.RemoveProductsScreen | AppNavigator.ReturnProductsScreen
+    ReturnStackParamList & RemoveStackParamList & ManageProductsStackParamList,
+    | AppNavigator.RemoveProductsScreen
+    | AppNavigator.ReturnProductsScreen
+    | AppNavigator.ManageProductsScreen
   >,
   StackNavigationProp<HomeStackParamList>
 >;

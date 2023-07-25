@@ -19,6 +19,7 @@ import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
 import { scanMelody } from './Sound';
+import { RequestError } from '../data/helpers/tryFetch';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -34,6 +35,7 @@ interface Props {
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
   onCloseModal?: () => void;
+  onFetchProduct?: (code: string) => Promise<void | RequestError>;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -48,7 +50,7 @@ const hapticOptions: HapticOptions = {
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
-  ({ store, modalParams, onProductScan, onCloseModal }) => {
+  ({ store, modalParams, onProductScan, onCloseModal, onFetchProduct }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const toast = useToast();
@@ -66,7 +68,9 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
     const fetchProductByCode = useCallback(
       async (code: string) => {
-        const networkError = await fetchProductByScannedCode(store, btoa(code));
+        const networkError = onFetchProduct
+          ? await onFetchProduct(code)
+          : await fetchProductByScannedCode(store, btoa(code));
 
         // TODO: Handle Network errors
         if (networkError)
@@ -79,7 +83,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         onProductScan?.(product);
       },
-      [store, onScanError, onProductScan],
+      [onFetchProduct, store, onScanError, onProductScan],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
