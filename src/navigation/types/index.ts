@@ -2,6 +2,9 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
 
 export enum AppNavigator {
+  // UnauthStack
+  UnauthStack = 'UnauthStack',
+  WelcomeScreen = 'WelcomeScreen',
   LoginScreen = 'LoginScreen',
 
   // HomeStack
@@ -43,8 +46,13 @@ type CameraPermissionScreenParams = {
 };
 
 export type AppStackParamList = {
-  [AppNavigator.LoginScreen]: undefined;
+  [AppNavigator.UnauthStack]: undefined;
   [AppNavigator.HomeStack]: undefined;
+};
+
+export type UnauthStackParamsList = {
+  [AppNavigator.WelcomeScreen]: undefined;
+  [AppNavigator.LoginScreen]: undefined;
 };
 
 export type HomeStackParamList = {
