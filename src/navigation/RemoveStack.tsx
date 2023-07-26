@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { AppNavigator, LeftBarType, RemoveStackParamList } from './types';
+import { AppNavigator, LeftBarType, RightBarType, RemoveStackParamList } from './types';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
 import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsScreen';
@@ -53,6 +53,7 @@ export const RemoveStack: React.FC = () => {
         options={getScreenOptions({
           title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.QuestionMark,
         })}
       />
       <Stack.Screen

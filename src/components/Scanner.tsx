@@ -27,66 +27,72 @@ export interface ScannerProps extends Partial<CameraProps> {
   onRead: (barcode: Barcode[], frame: Frame) => void;
 }
 
-const isIpod = Dimensions.get('screen').width <= 320 
+const isIpod = Dimensions.get('screen').width <= 320;
 
-const CAMERA_ZOOM = 1.5;
 const IPOD_WIDTH = 1920;
-const IPHONE_WIDTH = 2592
+const IPHONE_WIDTH = 2592;
 const VIDEO_WIDTH = isIpod ? IPOD_WIDTH : IPHONE_WIDTH;
-const PIXEL_FORMAT = '420v'
+const PIXEL_FORMAT = '420v';
 
-const Scanner: React.FC<ScannerProps> = ({
-  isActive = true,
-  onRead,
-  ...props
-}) => {
+const Scanner: React.FC<ScannerProps> = ({ onRead, ...props }) => {
   const devices = useCameraDevices();
   const device = devices.back;
   const cameraRef = useRef<Camera | null>(null);
-  const format = useRef<CameraDeviceFormat | null>(null)
+  const format = useRef<CameraDeviceFormat | null>(null);
   const [layout, setLayout] = useState<LayoutRectangle | null>(null);
 
-  const frameProcessor = useFrameProcessor(frame => {
-    'worklet';
+  // callback for analyze frame and filter code duplication
+  const frameProcessor = useFrameProcessor(
+    frame => {
+      'worklet';
 
-    const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
-      checkInverted: true,
-    });
+      const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
+        checkInverted: true,
+      });
 
-    const filtered = barcodes.filter((value, index, self) => {
-      return self.findIndex((el) => JSON.stringify(el.rawValue) === JSON.stringify(value.rawValue)) === index
-    });
-    onRead && runOnJS(onRead)(filtered, frame);
-  }, [onRead]);
+      const filtered = barcodes.filter((value, index, self) => {
+        return (
+          self.findIndex(
+            el =>
+              JSON.stringify(el.rawValue) === JSON.stringify(value.rawValue),
+          ) === index
+        );
+      });
+      onRead && runOnJS(onRead)(filtered, frame);
+    },
+    [onRead],
+  );
 
   const [hasPermission, setHasPermission] = React.useState(false);
 
-  !format.current && device?.formats.forEach((obj) => {
-    if (
-      obj.videoWidth === VIDEO_WIDTH &&
-      obj.pixelFormat === PIXEL_FORMAT &&
-      obj.videoHeight > (format.current?.videoHeight || 0)) {
-      format.current = obj;
-    }
-  })
+  !format.current &&
+    device?.formats.forEach(obj => {
+      if (
+        obj.videoWidth === VIDEO_WIDTH &&
+        obj.pixelFormat === PIXEL_FORMAT &&
+        obj.videoHeight > (format.current?.videoHeight || 0)
+      ) {
+        format.current = obj;
+      }
+    });
 
   useEffect(() => {
     checkCameraPermission();
   }, []);
 
   useEffect(() => {
-    if (!layout) return
+    if (!layout) return;
 
     const point = {
       x: layout.width / 2,
-      y: layout.height / 2
+      y: layout.height / 2,
     };
     const timerId = setInterval(() => {
-      cameraRef.current?.focus(point)
+      cameraRef.current?.focus(point);
     }, 500);
 
     return () => clearInterval(timerId);
-  }, [layout])
+  }, [layout]);
 
   const checkCameraPermission = async () => {
     const status = await Camera.getCameraPermissionStatus();
@@ -99,15 +105,12 @@ const Scanner: React.FC<ScannerProps> = ({
     setLayout(event.nativeEvent.layout);
   };
 
-
   return (
     <View onLayout={handleLayout} style={{ flex: 1 }}>
       <Camera
         ref={cameraRef}
         frameProcessor={frameProcessor}
         audio={false}
-        zoom={CAMERA_ZOOM}
-        isActive={isActive}
         {...props}
         device={device}
         format={format.current || device?.formats[device?.formats.length - 1]}
