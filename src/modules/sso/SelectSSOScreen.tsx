@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, FlatList, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
@@ -22,12 +22,16 @@ interface Props {
 
 export const SelectSSOScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef(new SelectSSOStore(ssoStore)).current;
-
+  const listRef = useRef<FlatList | null>(null)
   const selectedSSOId = store.preselectedSSO?.pisaId;
 
   const data = useMemo(() => store.searchedSSO || [], [store.searchedSSO]);
 
   const onChangeText = (value: string) => {
+    listRef.current?.scrollToOffset({
+      offset: 0,
+      animated: false,
+    });
     store.setSearchInSSOList(value);
   };
 
@@ -64,6 +68,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(({ navigation }) => {
         contentContainerStyle={styles.list}
         onPressItem={preselectSSO}
         selectedSSOId={selectedSSOId}
+        ref={listRef}
       />
       <Button
         disabled={!store.preselectedSSO}
