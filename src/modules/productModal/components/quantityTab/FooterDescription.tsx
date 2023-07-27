@@ -5,7 +5,6 @@ import { colors, fonts } from '../../../../theme';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ColoredTooltip } from '../../../../components';
 import { ProductModel } from '../../../../stores/types';
-import { ProductModalType } from '../../ProductModal';
 
 const InventoryTypeName = {
   [InventoryUseType.Stock]: 'Stock',
