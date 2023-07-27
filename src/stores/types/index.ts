@@ -1,14 +1,25 @@
-import { ProductResponse } from '../../data/api/productsAPI';
+import {
+  CategoryResponse,
+  ProductResponse,
+  ProductSettingsResponse,
+  SupplierResponse,
+} from '../../data/api/productsAPI';
 import { JobModel } from '../../modules/jobsList/stores/JobsStore';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
-export interface ProductModel extends Omit<ProductResponse, 'isRecoverable'> {
+export interface ProductModel
+  extends Omit<
+    ProductResponse,
+    'isRecoverable' | 'inventoryClassificationTypeId' | 'unitPer'
+  > {
   uuid: string;
   isRemoved: boolean;
   reservedCount: number;
   nameDetails: string;
-  job?: JobModel;
   isRecoverable: boolean;
+  categoryId?: number;
+  unitsPerContainer?: number;
+  job?: JobModel;
 }
 
 export interface ClearStoreType {
@@ -21,6 +32,15 @@ export interface CurrentProductStoreType<
   getCurrentProduct?: T;
   setCurrentProduct: (product?: T) => void;
   removeCurrentProduct: () => void;
+
+  getCategories: CategoryResponse[];
+  setCategories: (categories: CategoryResponse[]) => void;
+
+  getSuppliers: SupplierResponse[];
+  setSuppliers: (suppliers: SupplierResponse[]) => void;
+
+  getEnabledSuppliers: SupplierResponse[];
+  setEnabledSuppliers: (suppliers: SupplierResponse[]) => void;
 }
 
 export interface ScannerModalStoreType<T extends ProductModel = ProductModel> {

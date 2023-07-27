@@ -14,11 +14,14 @@ import {
 import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
 import { Utils } from '../data/helpers/utils';
-import { ProductModal, ProductModalParams } from '../modules/productModal';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalProps,
+} from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
-import { scanMelody } from './Sound';
 import { RequestError } from '../data/helpers/tryFetch';
 
 type StoreModel = ScannerModalStoreType &
@@ -33,9 +36,12 @@ export enum ScannerScreenError {
 interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
+  fetchProductDetails?: boolean;
   onProductScan?: (product: ProductModel) => void;
+  onSubmit?: () => void;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
+  ProductModalComponent?: React.FC<ProductModalProps>;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -50,7 +56,16 @@ const hapticOptions: HapticOptions = {
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
-  ({ store, modalParams, onProductScan, onCloseModal, onFetchProduct }) => {
+  ({
+    store,
+    modalParams,
+    fetchProductDetails,
+    onProductScan,
+    onSubmit,
+    onCloseModal,
+    onFetchProduct,
+    ProductModalComponent = ProductModal,
+  }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const toast = useToast();
@@ -70,7 +85,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       async (code: string) => {
         const networkError = onFetchProduct
           ? await onFetchProduct(code)
-          : await fetchProductByScannedCode(store, btoa(code));
+          : await fetchProductByScannedCode(
+              store,
+              btoa(code),
+              fetchProductDetails,
+            );
 
         // TODO: Handle Network errors
         if (networkError)
@@ -83,14 +102,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         onProductScan?.(product);
       },
-      [onFetchProduct, store, onScanError, onProductScan],
+      [onFetchProduct, store, fetchProductDetails, onScanError, onProductScan],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
         setIsScannerActive(false);
         trigger('selection', hapticOptions);
-        scanMelody.play();
+        // scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);
@@ -103,6 +122,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onProductSubmit = useCallback(
       (product: ProductModel) => {
         const { nameDetails, reservedCount } = product;
+
+        onSubmit?.();
 
         store.addProduct(product);
 
@@ -118,7 +139,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           { type: ToastType.Info },
         );
       },
-      [store, toast],
+      [onSubmit, store, toast],
     );
 
     const setEditableProductQuantity = useCallback(
@@ -145,8 +166,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
         />
-        <ProductModal
+        <ProductModalComponent
           {...modalParams}
+          categories={store.getCategories}
+          suppliers={store.getSuppliers}
+          enabledSuppliers={store.getEnabledSuppliers}
           product={store.getCurrentProduct}
           stockName={store.stockName}
           onSubmit={onProductSubmit}

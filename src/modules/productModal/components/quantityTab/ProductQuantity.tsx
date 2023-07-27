@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import {
-  Text,
-  StyleSheet,
-  Pressable,
   KeyboardTypeOptions,
+  Pressable,
+  StyleSheet,
+  Text,
   View,
+  ViewProps,
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
-import { Description } from './Description';
 import { FooterDescription } from './FooterDescription';
 import { ToastType } from '../../../../contexts/types';
 import { getProductMinQty } from '../../../../data/helpers';
@@ -19,8 +19,9 @@ import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
+import { Description } from './Description';
 
-interface Props {
+interface Props extends ViewProps {
   type?: ProductModalType;
   maxValue: number;
   onHand: number;
@@ -31,8 +32,8 @@ interface Props {
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
-  onPressAddToList: () => void;
-  onJobSelectNavigation: () => void;
+  onPressAddToList?: () => void;
+  onJobSelectNavigation?: () => void;
 }
 
 export const ProductQuantity: React.FC<Props> = observer(
@@ -44,6 +45,7 @@ export const ProductQuantity: React.FC<Props> = observer(
     error,
     maxValue,
     onHand,
+    style,
     onChangeProductQuantity,
     onPressAddToList,
     onJobSelectNavigation,
@@ -79,14 +81,17 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const onPressButton = () => {
       if (jobSelectable && isRecoverable) {
-        onJobSelectNavigation();
+        onJobSelectNavigation?.();
       } else {
-        onPressAddToList();
+        onPressAddToList?.();
       }
     };
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, style]}>
+        {type !== ProductModalType.ManageProduct && (
+          <Description product={product} />
+        )}
         <View>
           <EditQuantity
             isEdit={isEdit}
@@ -100,7 +105,10 @@ export const ProductQuantity: React.FC<Props> = observer(
             onRemove={onRemove}
           />
           <FooterDescription
-            hideOnHandCount={type === ProductModalType.CreateInvoice}
+            hideOnHandCount={
+              type === ProductModalType.CreateInvoice ||
+              type === ProductModalType.ManageProduct
+            }
             product={product}
             onHand={onHand}
           />
@@ -125,13 +133,15 @@ export const ProductQuantity: React.FC<Props> = observer(
           </View>
         )}
 
-        <Button
-          disabled={!!error}
-          type={ButtonType.primary}
-          buttonStyle={styles.continueButton}
-          title={buttonLabel}
-          onPress={onPressButton}
-        />
+        {type !== ProductModalType.ManageProduct && (
+          <Button
+            disabled={!!error}
+            type={ButtonType.primary}
+            buttonStyle={styles.continueButton}
+            title={buttonLabel}
+            onPress={onPressButton}
+          />
+        )}
       </View>
     );
   },
@@ -143,8 +153,6 @@ const styles = StyleSheet.create({
     gap: 24,
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    paddingTop: 24,
-    height: 1000,
   },
   continueButton: {
     width: 135,

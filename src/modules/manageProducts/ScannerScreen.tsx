@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 
 import { BaseScannerScreen } from '../../components';
@@ -7,6 +7,7 @@ import {
   ScannerModalStoreType,
   CurrentProductStoreType,
   StockProductStoreType,
+  ProductModel,
 } from '../../stores/types';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -14,6 +15,8 @@ import {
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
+import { ProductModal } from './ProductModal';
+import { onUpdateProduct } from '../../data/updateProduct';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -30,9 +33,34 @@ export const ScannerScreen: React.FC = observer(() => {
 
   const store = useRef<BaseProductsStore>(manageProductsStore).current;
 
+  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
+    async product =>
+      setModalParams({
+        type: ProductModalType.ManageProduct,
+        maxValue: store.getMaxValue(product),
+        onHand: store.getOnHand(product),
+      }),
+    [store],
+  );
+
+  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+
+  const updateProduct = useCallback(
+    () => onUpdateProduct(manageProductsStore),
+    [],
+  );
+
   return (
     <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen store={store} modalParams={modalParams} />
+      <BaseScannerScreen
+        fetchProductDetails
+        store={store}
+        modalParams={modalParams}
+        onProductScan={onProductScan}
+        onSubmit={updateProduct}
+        onCloseModal={onCloseModal}
+        ProductModalComponent={ProductModal}
+      />
     </ToastContextProvider>
   );
 });

@@ -12,6 +12,7 @@ import {
 import { colors, fonts, SVGs } from '../theme';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { testIds } from '../helpers';
+// eslint-disable-next-line import/default
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -96,8 +97,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   containerHeader: {
-    paddingTop: 11,
-    paddingBottom: 16,
+    paddingVertical: 11,
     marginHorizontal: 17,
     flexDirection: 'row',
     justifyContent: 'space-between',
