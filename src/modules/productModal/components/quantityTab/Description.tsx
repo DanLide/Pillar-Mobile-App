@@ -1,5 +1,13 @@
 import React, { memo } from 'react';
-import { StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewProps,
+  ViewStyle,
+} from 'react-native';
+// eslint-disable-next-line import/default
 import Animated, {
   Extrapolation,
   interpolate,
@@ -13,39 +21,66 @@ import { ProductModel } from '../../../../stores/types';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-interface Props {
+interface Props extends ViewProps {
   product?: ProductModel;
-  topOffset: SharedValue<number>;
+  topOffset?: SharedValue<number>;
 }
 
 const CONTAINER_SHADOW_OPACITY = 0.12;
-const SIZE_CONTAINER_HEIGHT = 24;
+const SIZE_CONTAINER_HEIGHT = 22;
 
 export const Description = memo(({ product, topOffset }: Props) => {
   const scrollCollapsed = useHeaderHeight();
   const { top: scrollExpanded } = useSafeAreaInsets();
 
-  const containerAnimatedStyle = useAnimatedStyle<ViewStyle>(() => ({
-    shadowOpacity: interpolate(
-      topOffset.value,
-      [scrollCollapsed, scrollExpanded],
-      [0, CONTAINER_SHADOW_OPACITY],
-    ),
-  }));
+  const scrollOffset = useDerivedValue(
+    () => topOffset?.value ?? scrollCollapsed,
+    [topOffset],
+  );
 
-  const sizeAnimatedStyle = useAnimatedStyle<TextStyle>(() => ({
-    height: interpolate(
-      topOffset.value,
-      [scrollCollapsed, scrollExpanded],
-      [SIZE_CONTAINER_HEIGHT, 0],
-      Extrapolation.CLAMP,
-    ),
-    opacity: interpolate(
-      topOffset.value,
-      [scrollCollapsed, scrollExpanded],
-      [1, 0],
-    ),
-  }));
+  const containerAnimatedStyle = useAnimatedStyle<ViewStyle>(
+    () => ({
+      shadowOpacity: interpolate(
+        scrollOffset.value,
+        [scrollCollapsed, scrollExpanded],
+        [0, CONTAINER_SHADOW_OPACITY],
+      ),
+    }),
+    [scrollOffset],
+  );
+
+  const sizeAnimatedStyle = useAnimatedStyle<TextStyle>(
+    () => ({
+      height: interpolate(
+        scrollOffset.value,
+        [scrollCollapsed, scrollExpanded],
+        [SIZE_CONTAINER_HEIGHT, 0],
+        { extrapolateRight: Extrapolation.CLAMP },
+      ),
+      opacity: interpolate(
+        scrollOffset.value,
+        [scrollCollapsed, scrollExpanded],
+        [1, 0],
+      ),
+    }),
+    [scrollOffset],
+  );
+
+  const nameAnimatedStyle = useAnimatedStyle<TextStyle>(
+    () => ({
+      fontSize: interpolate(
+        scrollOffset.value,
+        [scrollCollapsed, scrollExpanded],
+        [17, 15],
+      ),
+      lineHeight: interpolate(
+        scrollOffset.value,
+        [scrollCollapsed, scrollExpanded],
+        [25.5, 15],
+      ),
+    }),
+    [scrollOffset],
+  );
 
   return (
     <Animated.View style={[styles.container, containerAnimatedStyle]}>
@@ -56,16 +91,22 @@ export const Description = memo(({ product, topOffset }: Props) => {
           </Text>
         </View>
       </View>
-      <Text style={styles.name} numberOfLines={2} ellipsizeMode="middle">
-        {product?.name}
-      </Text>
       <Animated.Text
-        style={[styles.size, sizeAnimatedStyle]}
-        numberOfLines={1}
+        style={[styles.name, nameAnimatedStyle]}
+        numberOfLines={2}
         ellipsizeMode="middle"
       >
-        {product?.size}
+        {product?.name}
       </Animated.Text>
+      {product?.size ? (
+        <Animated.Text
+          style={[styles.size, sizeAnimatedStyle]}
+          numberOfLines={1}
+          ellipsizeMode="middle"
+        >
+          {product.size}”
+        </Animated.Text>
+      ) : null}
     </Animated.View>
   );
 });
@@ -83,29 +124,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     textAlign: 'center',
+    paddingTop: 16,
   },
   refundIconPadding: {
     paddingRight: 24,
   },
   partNo: {
     fontSize: 14,
-    lineHeight: 18,
+    lineHeight: 14,
     fontFamily: fonts.TT_Bold,
-    color: colors.blackLight,
+    color: colors.grayDark2,
     paddingHorizontal: 12,
   },
   name: {
-    fontSize: 17,
-    lineHeight: 25.5,
     fontFamily: fonts.TT_Bold,
     color: colors.black,
-    paddingTop: 5.75,
+    paddingVertical: 8,
   },
   size: {
     fontSize: 14,
     lineHeight: 21,
     fontFamily: fonts.TT_Regular,
     color: colors.black,
-    paddingTop: 8,
   },
 });
