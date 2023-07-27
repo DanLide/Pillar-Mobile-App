@@ -51,6 +51,7 @@ interface Props {
   tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
   hideCompleteButton?: boolean;
+  primaryButtonTitle?: string;
   onComplete?: () => Promise<void>;
 }
 
@@ -73,6 +74,7 @@ export const BaseProductsScreen = observer(
     tooltipTitle,
     ListComponent,
     hideCompleteButton,
+    primaryButtonTitle,
     onComplete,
   }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -224,7 +226,7 @@ export const BaseProductsScreen = observer(
                 type={ButtonType.primary}
                 disabled={!Object.keys(store.getProducts).length}
                 buttonStyle={styles.buttonContainer}
-                title="Complete"
+                title={primaryButtonTitle ?? 'Complete'}
                 onPress={onCompleteRemove}
               />
             )}
