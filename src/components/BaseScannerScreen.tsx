@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { HapticOptions, trigger } from 'react-native-haptic-feedback';
+import { View, StyleSheet, Vibration } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -45,10 +44,6 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
     'This product is not assigned to a this stock location',
 };
 
-const hapticOptions: HapticOptions = {
-  enableVibrateFallback: true,
-};
-
 export const BaseScannerScreen: React.FC<Props> = observer(
   ({ store, modalParams, onProductScan, onCloseModal, onFetchProduct }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
@@ -89,7 +84,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
         setIsScannerActive(false);
-        trigger('selection', hapticOptions);
+        Vibration.vibrate();
         scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
@@ -141,7 +136,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           title={store.currentStock?.organizationName}
         />
         <ScanProduct
-          onPressScan={onScanProduct}
+          onScan={onScanProduct}
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
         />

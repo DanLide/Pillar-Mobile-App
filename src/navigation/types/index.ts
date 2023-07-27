@@ -110,6 +110,7 @@ export enum LeftBarType {
 
 export enum RightBarType {
   Logout,
+  QuestionMark,
 }
 
 export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
