@@ -197,10 +197,10 @@ export enum TransactionType {
 //   French = 3,
 // }
 //
-// export enum InventoryAdjusmentType {
-//   Initial = 1,
-//   Normal = 2
-// }
+export enum InventoryAdjusmentType {
+  Initial = 1,
+  Normal = 2,
+}
 //
 // export enum DefaultInventoryUseTypeID {
 //   Container = 1,

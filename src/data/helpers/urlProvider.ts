@@ -11,10 +11,6 @@ import {
   ReturnProductsStore,
   returnProductsStore,
 } from '../../modules/returnProducts/stores';
-import {
-  ManageProductsStore,
-  manageProductsStore,
-} from '../../modules/manageProducts/stores';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
 export class URLProvider {
@@ -22,7 +18,6 @@ export class URLProvider {
   ssoStore: SSOStore;
   removeProductsStore: RemoveProductsStore;
   returnProductsStore: ReturnProductsStore;
-  manageProductsStore: ManageProductsStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -41,13 +36,11 @@ export class URLProvider {
     sso_store = ssoStore,
     remove_products_store = removeProductsStore,
     return_products_store = returnProductsStore,
-    manage_products_store = manageProductsStore,
   ) {
     this.authStore = auth_store;
     this.ssoStore = sso_store;
     this.removeProductsStore = remove_products_store;
     this.returnProductsStore = return_products_store;
-    this.manageProductsStore = manage_products_store;
     this.currentEnv = environment;
   }
 
@@ -136,7 +129,21 @@ export class URLProvider {
     const partyRoleID = currentStock?.partyRoleId;
 
     return new URL(
-      `https://api.repairstack-qa.3m.com/im-product/api/Product/ProductAreaSettings/${productId}/${partyRoleID}`,
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductAreaSettings/${productId}/${partyRoleID}`,
+    );
+  }
+
+  getSupplierListByFacilityId() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/${facilityId}`,
+    );
+  }
+
+  getEnabledSuppliersByProductId(productId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/GetSupplierListByProductID/${productId}/true`,
     );
   }
 
@@ -172,6 +179,12 @@ export class URLProvider {
   createInvoice(jobId: number) {
     return new URL(
       `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/CreateInvoiceByJob/${jobId}`,
+    );
+  }
+
+  updateProduct() {
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/InventoryTransaction`,
     );
   }
 }
