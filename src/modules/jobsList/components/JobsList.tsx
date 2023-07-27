@@ -137,7 +137,7 @@ export const JobsList: React.FC<Props> = observer(
           keyExtractor={keyExtractor}
           data={filterValue ? filteredList : jobsStore.jobs}
           renderItem={renderJobListItem}
-          ref={ref}
+          ref={listRef}
         />
         {footerComponent}
       </>
