@@ -1,4 +1,16 @@
 import { NativeModules as RNNativeModules } from 'react-native';
+import { setUpTests } from 'react-native-reanimated/lib/types/lib/reanimated2/jestUtils';
+
+const setUpReanimated =
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require('react-native-reanimated/lib/reanimated2/jestUtils')
+    .setUpTests as typeof setUpTests;
+
+setUpReanimated();
+
+jest.mock('react-native-reanimated', () =>
+  require('react-native-reanimated/mock'),
+);
 
 jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),

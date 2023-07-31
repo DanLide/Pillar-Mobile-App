@@ -1,12 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import { render, act } from '@testing-library/react-native';
+import { SharedValue } from 'react-native-reanimated';
 
 import { Modal } from '..';
 import { testIds } from '../../helpers';
 
 const mockSemiTitle = 'semiTitle';
-const mockTopOffset = 100;
+const mockTopOffset: SharedValue<number> = { value: 100 };
 const mockOnClose = jest.fn();
 
 describe('Modal', () => {
@@ -21,7 +22,7 @@ describe('Modal', () => {
       <Modal isVisible onClose={mockOnClose} topOffset={mockTopOffset} />,
     );
     const content = getByTestId(testIds.idContent('modal'));
-    expect(content.props.style[1]).toHaveProperty('marginTop', mockTopOffset);
+    expect(content).toHaveAnimatedStyle({ marginTop: mockTopOffset.value });
   });
 
   it('render child', () => {
