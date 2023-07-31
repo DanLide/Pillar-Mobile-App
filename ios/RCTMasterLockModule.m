@@ -18,22 +18,30 @@
 }
 
 RCT_EXPORT_MODULE(MasterLockModule);
-RCT_EXPORT_METHOD(configureWithLicense:(NSString *)license)
+RCT_EXPORT_METHOD(configureWithLicense:(NSString *)license
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   [[MLBluetoothSDK main] configureWithLicense:self.license delegate:self backgroundLocation:NO loggerConfiguration:LoggerConfigurationProduction];
+  resolve(@"success");
 }
 
-RCT_EXPORT_METHOD(initLock:(NSString *)deviceId accessProfile:(NSString *)accessProfile firmwareVersion:(NSInteger)firmwareVersion)
+RCT_EXPORT_METHOD(initLock:(NSString *)deviceId
+                  accessProfile:(NSString *)accessProfile
+                  firmwareVersion:(NSInteger)firmwareVersion
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   MLProduct *lock = [[MLProduct alloc] initWithDeviceId:deviceId accessProfile:accessProfile firmwareVersion:firmwareVersion region:MLRegionNa];
 
   lock.delegate = self;
   [self.locks setValue:lock forKey:deviceId];
+  resolve(@"success");
 }
 
 RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
-                  success:(RCTPromiseResolveBlock)successCompletion
-                  error:(RCTPromiseResolveBlock)errorCompletion)
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 {
   MLProduct *lock =[self.locks objectForKey:deviceId];
   if (lock) {
@@ -41,16 +49,16 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
     [lock unlockWithMechanism:MLUnlockOptionsPrimary completion:^(NSError * error)  {
       
       if (error) {
-        errorCompletion(error.description);
+        reject([@(error.code) stringValue], error.description, error);
       } else {
         [lock disconnectWithOption:MLDisconnectOptionsNone completion:^{
-          successCompletion(@"success");
+          resolve(@"success");
         }];
       }
     }];
     
   } else {
-    errorCompletion(@"Lock is not inited");
+    reject(@"-101", @"Lock is not inited", nil);
   }
 }
 
@@ -102,10 +110,7 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 - (void)didConnectTo:(MLProduct *)product {}
 - (void)didDisconnectFrom:(MLProduct *)product {}
 - (void)didFailToConnectTo:(MLProduct *)product error:(NSError *)error {}
-
 - (void)product:(MLProduct * _Nonnull)product didRead:(NSArray<MLAuditEntry *> * _Nonnull)auditEntries {}
-
-
 - (void)shouldUpdateProductDataWithProduct:(MLProduct * _Nonnull)product {}
 
 @end
