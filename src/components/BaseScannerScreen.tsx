@@ -22,6 +22,7 @@ import {
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
+import { scanMelody } from './Sound';
 import { RequestError } from '../data/helpers/tryFetch';
 
 type StoreModel = ScannerModalStoreType &
@@ -36,7 +37,6 @@ export enum ScannerScreenError {
 interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
-  fetchProductDetails?: boolean;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: () => void;
   onCloseModal?: () => void;
@@ -59,7 +59,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
   ({
     store,
     modalParams,
-    fetchProductDetails,
     onProductScan,
     onSubmit,
     onCloseModal,
@@ -85,11 +84,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       async (code: string) => {
         const networkError = onFetchProduct
           ? await onFetchProduct(code)
-          : await fetchProductByScannedCode(
-              store,
-              btoa(code),
-              fetchProductDetails,
-            );
+          : await fetchProductByScannedCode(store, btoa(code));
 
         // TODO: Handle Network errors
         if (networkError)
@@ -102,14 +97,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         onProductScan?.(product);
       },
-      [onFetchProduct, store, fetchProductDetails, onScanError, onProductScan],
+      [onFetchProduct, store, onScanError, onProductScan],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
         setIsScannerActive(false);
         trigger('selection', hapticOptions);
-        // scanMelody.play();
+        scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);

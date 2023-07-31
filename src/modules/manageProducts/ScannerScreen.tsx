@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
+import { encode as btoa } from 'base-64';
 
 import { BaseScannerScreen } from '../../components';
 
@@ -17,6 +18,7 @@ import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
 import { ProductModal } from './ProductModal';
 import { onUpdateProduct } from '../../data/updateProduct';
+import { fetchProductDetails } from '../../data/fetchProductDetails';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -45,6 +47,11 @@ export const ScannerScreen: React.FC = observer(() => {
 
   const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
+  const onFetchProduct = useCallback(
+    (code: string) => fetchProductDetails(store, btoa(code)),
+    [store],
+  );
+
   const updateProduct = useCallback(
     () => onUpdateProduct(manageProductsStore),
     [],
@@ -53,10 +60,10 @@ export const ScannerScreen: React.FC = observer(() => {
   return (
     <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
       <BaseScannerScreen
-        fetchProductDetails
         store={store}
         modalParams={modalParams}
         onProductScan={onProductScan}
+        onFetchProduct={onFetchProduct}
         onSubmit={updateProduct}
         onCloseModal={onCloseModal}
         ProductModalComponent={ProductModal}

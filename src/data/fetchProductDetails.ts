@@ -1,9 +1,17 @@
 import { v1 as uuid } from 'uuid';
 
-import { getProductMinQty, Task, TaskExecutor } from './helpers';
+import { Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
-import { ProductResponse } from './api/productsAPI';
+import {
+  CategoryResponse,
+  getCategoriesByFacilityIdAPI,
+  getEnabledSuppliersByProductIdAPI,
+  getProductSettingsByIdAPI,
+  getSupplierListByFacilityIdAPI,
+  ProductResponse,
+  SupplierResponse,
+} from './api/productsAPI';
 
 import {
   CurrentProductStoreType,
@@ -13,27 +21,36 @@ import {
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
+
+  categories: CategoryResponse[];
+  suppliers: SupplierResponse[];
+  enabledSuppliers: SupplierResponse[];
 }
 
-export const fetchProductByScannedCode = async (
+export const fetchProductDetails = async (
   store: CurrentProductStoreType & StockProductStoreType,
   scanCode: string,
 ) => {
   const productContext: FetchProductByScannedCodeContext = {
     product: undefined,
+
+    categories: [],
+    suppliers: [],
+    enabledSuppliers: [],
   };
   const result = await new TaskExecutor([
-    new FetchProductByScannedCodeTask(productContext, scanCode, store),
+    new FetchProductDetails(productContext, scanCode, store),
     new SaveProductToStoreTask(productContext, store),
   ]).execute();
 
   return result;
 };
 
-export class FetchProductByScannedCodeTask extends Task {
+export class FetchProductDetails extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
   stockStore?: StockProductStoreType;
+  fetchProductDetails?: boolean;
 
   constructor(
     productContext: FetchProductByScannedCodeContext,
@@ -47,10 +64,29 @@ export class FetchProductByScannedCodeTask extends Task {
   }
 
   async run(): Promise<void> {
-    this.productContext.product = await getFetchProductAPI(
+    const product = await getFetchProductAPI(
       this.scanCode,
       this.stockStore?.currentStock,
     );
+
+    this.productContext.categories = await getCategoriesByFacilityIdAPI();
+
+    const { max, min, orderMultiple } = await getProductSettingsByIdAPI(
+      product.productId,
+      this.stockStore?.currentStock,
+    );
+
+    this.productContext.suppliers = await getSupplierListByFacilityIdAPI();
+
+    this.productContext.enabledSuppliers =
+      await getEnabledSuppliersByProductIdAPI(product.productId);
+
+    this.productContext.product = {
+      ...product,
+      max,
+      min,
+      orderMultiple,
+    };
   }
 }
 
@@ -68,7 +104,12 @@ export class SaveProductToStoreTask extends Task {
   }
 
   async run(): Promise<void> {
-    const { product } = this.productContext;
+    const { product, categories, suppliers, enabledSuppliers } =
+      this.productContext;
+
+    this.currentProductStore.setCategories(categories);
+    this.currentProductStore.setSuppliers(suppliers);
+    this.currentProductStore.setEnabledSuppliers(enabledSuppliers);
 
     this.currentProductStore.setCurrentProduct(
       product && this.mapProductResponse(product),
@@ -76,15 +117,25 @@ export class SaveProductToStoreTask extends Task {
   }
 
   private mapProductResponse(product: ProductResponse): ProductModel {
-    const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
+    const {
+      onHand,
+      isRecoverable,
+      manufactureCode,
+      partNo,
+      size,
+      inventoryClassificationTypeId,
+      unitPer,
+    } = product;
 
     return {
       ...product,
       isRemoved: false,
-      reservedCount: getProductMinQty(inventoryUseTypeId),
+      reservedCount: onHand,
       nameDetails: [manufactureCode, partNo, size].join(' '),
       uuid: uuid(),
-      isRecoverable: product.isRecoverable === 'Yes',
+      isRecoverable: isRecoverable === 'Yes',
+      categoryId: Number(inventoryClassificationTypeId),
+      unitsPerContainer: unitPer,
     };
   }
 }
