@@ -1,0 +1,11 @@
+framework module MLBluetooth {
+  umbrella header "MLBluetooth.h"
+
+  export *
+  module * { export * }
+}
+
+module MLBluetooth.Swift {
+  header "MLBluetooth-Swift.h"
+  requires objc
+}
