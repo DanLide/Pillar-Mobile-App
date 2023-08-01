@@ -1,7 +1,7 @@
 #import <React/RCTBridgeModule.h>
 #import <MLBluetooth/MLBluetooth.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RCTMasterLockModule : NSObject <RCTBridgeModule, MLLockScannerDelegate, MLProductDelegate>
+@interface RCTMasterLockModule : RCTEventEmitter <RCTBridgeModule, MLLockScannerDelegate, MLProductDelegate>
 
 @end
-

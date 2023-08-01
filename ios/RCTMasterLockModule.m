@@ -2,6 +2,23 @@
 #import <React/RCTLog.h>
 #import <MLBluetooth/MLBluetooth-Swift.h>
 
+// Channels for updating statuses
+NSString *const visibilityStatusChannel = @"visibilityStatus";
+NSString *const lockStatusChannel = @"lockStatus";
+
+// States for visibility status
+NSString *const visibilityStatus_Visible = @"VISIBLE";
+NSString *const visibilityStatus_Unknown = @"UNKNOWN";
+
+// States for lock status
+NSString *const lockStatus_Unknown = @"UNKNOWN";
+NSString *const lockStatus_Locked = @"LOCKED";
+NSString *const lockStatus_Unlocked = @"UNLOCKED";
+NSString *const lockStatus_Open = @"OPEN";
+NSString *const lockStatus_OpenLocked = @"OPEN_LOCKED";
+NSString *const lockStatus_PendingUnlock = @"PENDING_UNLOCK";
+NSString *const lockStatus_PendingRelock = @"PENDING_RELOCK";
+
 @interface RCTMasterLockModule ()
 @property NSMutableDictionary *locks;
 
@@ -61,6 +78,10 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
   }
 }
 
+- (NSArray<NSString *> *)supportedEvents {
+  return @[visibilityStatusChannel, lockStatusChannel];
+}
+
 /// MLLockScannerDelegate
 - (BOOL)shouldConnectToDeviceWith:(NSString *)deviceId andRSSI:(NSNumber *)rssi {
   return [self.locks objectForKey:deviceId] != nil;
@@ -83,26 +104,32 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 - (void)product:(MLProduct *)product didChange:(LockState *)state {
   switch(state.visibility){
     case VisibilityVisible:
-      NSLog(@"VISIBLE !!!!");
+      [self sendEventWithName:visibilityStatusChannel body:visibilityStatus_Visible];
       break;
     default : /* Optional */
-      NSLog(@"Unknown visibility !!!!");
+      [self sendEventWithName:visibilityStatusChannel body:visibilityStatus_Unknown];
   }
-  
+
   if (state.primaryMechanism.getState == MechanismStateUnknown) {
-    NSLog(@"MechanismStateUnknown !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_Unknown];
+    
   } else if (state.primaryMechanism.getState == MechanismStateLocked) {
-    NSLog(@"MechanismStateLocked !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_Locked];
+    
   } else if (state.primaryMechanism.getState == MechanismStatePendingUnlock) {
-    NSLog(@"MechanismStatePendingUnlock !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_PendingUnlock];
+    
   } else if (state.primaryMechanism.getState == MechanismStatePendingRelock) {
-    NSLog(@"MechanismStatePendingRelock !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_PendingRelock];
+    
   } else if (state.primaryMechanism.getState == MechanismStateUnlocked) {
-    NSLog(@"MechanismStateUnlocked !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_Unlocked];
+    
   } else if (state.primaryMechanism.getState == MechanismStateOpen) {
-    NSLog(@"MechanismStateOpen !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_Open];
+    
   } else if (state.primaryMechanism.getState == MechanismStateOpenLocked) {
-    NSLog(@"MechanismStateOpenLocked !!!!");
+    [self sendEventWithName:lockStatusChannel body:lockStatus_OpenLocked];
   }
 }
 
