@@ -17,9 +17,141 @@
 		21C540EAEC6749578E72B719 /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
 		26A6F033398F4AC1B35C3405 /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
 		2E6B43C2429D46B6B23F5A2B /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		2E9942B8D2C4F4340D79FADE /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 86D340BD8F6E4CBCB5F40A10 /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a */; };
 		3788A4DEB8114AA59A07A1CA /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		42222E31BFC378023BB515B3 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B61B72E6337E8A747BBBE1B0 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a */; };
+		4495D1E214972CDE62C23389 /* libPods-RepairStackAbstract-RepairStackPROD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */; };
 		44DAD8FE510E45D3AA64CAED /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
 		4E4D7B38216AFED6DA6FD002 /* libPods-RepairStackAbstract-RepairStack.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */; };
+		726995542A79AA03008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		726995552A79AA03008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		726995562A79AA03008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		726995592A79AA03008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		7269955B2A79AA03008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		7269955C2A79AA03008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		7269955D2A79AA03008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		7269955E2A79AA03008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		7269955F2A79AA03008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726995602A79AA03008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726995612A79AA03008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		726995622A79AA03008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		726995632A79AA03008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		726995642A79AA03008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		726995652A79AA03008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		726995662A79AA03008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		726995672A79AA03008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		726995682A79AA03008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		726995692A79AA03008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		7269956A2A79AA03008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		7269956B2A79AA03008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726995702A79AA03008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7269957A2A79ABD1008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		7269957B2A79ABD1008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		7269957C2A79ABD1008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		7269957F2A79ABD1008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		726995812A79ABD1008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		726995822A79ABD1008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		726995832A79ABD1008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		726995842A79ABD1008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		726995852A79ABD1008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726995862A79ABD1008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726995872A79ABD1008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		726995882A79ABD1008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		726995892A79ABD1008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		7269958A2A79ABD1008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		7269958B2A79ABD1008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		7269958C2A79ABD1008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		7269958D2A79ABD1008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		7269958E2A79ABD1008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		7269958F2A79ABD1008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		726995902A79ABD1008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		726995912A79ABD1008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726995962A79ABD1008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		726995A02A79AC14008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		726995A12A79AC14008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		726995A22A79AC14008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		726995A52A79AC14008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		726995A72A79AC14008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		726995A82A79AC14008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		726995A92A79AC14008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		726995AA2A79AC14008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		726995AB2A79AC14008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726995AC2A79AC14008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726995AD2A79AC14008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		726995AE2A79AC14008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		726995AF2A79AC14008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		726995B02A79AC14008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		726995B12A79AC14008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		726995B22A79AC14008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		726995B32A79AC14008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		726995B42A79AC14008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		726995B52A79AC14008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		726995B62A79AC14008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		726995B72A79AC14008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726995BC2A79AC14008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		726995C62A79AC93008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		726995C72A79AC93008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		726995C82A79AC93008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		726995CB2A79AC93008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		726995CD2A79AC93008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		726995CE2A79AC93008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		726995CF2A79AC93008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726995D02A79AC93008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726995D12A79AC93008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		726995D22A79AC93008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		726995D32A79AC93008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		726995D42A79AC93008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		726995D52A79AC93008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		726995D62A79AC93008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		726995D72A79AC93008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		726995D82A79AC93008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		726995D92A79AC93008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		726995DA2A79AC93008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		726995DB2A79AC93008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726995DC2A79AC93008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		726995DD2A79AC93008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		726995EA2A79ACDD008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		726995EB2A79ACDD008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		726995EC2A79ACDD008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		726995EF2A79ACDD008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		726995F12A79ACDD008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		726995F22A79ACDD008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		726995F32A79ACDD008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726995F42A79ACDD008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726995F52A79ACDD008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		726995F62A79ACDD008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		726995F72A79ACDD008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		726995F82A79ACDD008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		726995F92A79ACDD008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		726995FA2A79ACDD008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		726995FB2A79ACDD008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		726995FC2A79ACDD008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		726995FD2A79ACDD008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		726995FE2A79ACDD008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		726995FF2A79ACDD008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726996002A79ACDD008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		726996012A79ACDD008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		7269960E2A79AD3C008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
+		7269960F2A79AD3C008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		726996102A79AD3C008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		726996132A79AD3C008C7ACB /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		726996152A79AD3C008C7ACB /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
+		726996162A79AD3C008C7ACB /* 3MCircular-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */; };
+		726996172A79AD3C008C7ACB /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
+		726996182A79AD3C008C7ACB /* 3MCircular-BookItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */; };
+		726996192A79AD3C008C7ACB /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
+		7269961A2A79AD3C008C7ACB /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		7269961B2A79AD3C008C7ACB /* 3MCircularTT-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */; };
+		7269961C2A79AD3C008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
+		7269961D2A79AD3C008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
+		7269961E2A79AD3C008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
+		7269961F2A79AD3C008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		726996202A79AD3C008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
+		726996212A79AD3C008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
+		726996222A79AD3C008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
+		726996232A79AD3C008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
+		726996242A79AD3C008C7ACB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		726996252A79AD3C008C7ACB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		72A711572A576EB900870488 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		72A711582A576EB900870488 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		72A9D1212A1C0EB800BEB4A6 /* 3MCircular-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */; };
@@ -50,11 +182,14 @@
 		95ACE4D32A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
 		95ACE4D42A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
 		985638F8FA7C43B080DD64AD /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
+		A3D7796A6881A29F2E5134E1 /* libPods-RepairStackAbstract-RepairStackQA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */; };
 		A9046BF2D8D54406BBB84C8D /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
 		AE8CB1D09E2F43838AF6265F /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
 		B561002AC29940EC9199674D /* 3MCircular-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */; };
 		D51AB8225B784F57AD5EAE60 /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
 		F02FA2819C7142229B60B956 /* 3MCircular-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */; };
+		F08D5D32A9E5AE537CBE08B5 /* libPods-RepairStackAbstract-RepairStackUAT.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */; };
+		F88F844F3C95D5B1FB7DB480 /* libPods-RepairStackAbstract-RepairStackReleasePROD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7652C9377B09497781B42A2F /* libPods-RepairStackAbstract-RepairStackReleasePROD.a */; };
 		FC62B30F57FA46E9B40315D4 /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +204,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		7269956F2A79AA03008C7ACB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				726995702A79AA03008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995952A79ABD1008C7ACB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				726995962A79ABD1008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995BB2A79AC14008C7ACB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				726995BC2A79AC14008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		95ACE4CD2A7804030059C020 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -87,6 +255,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RepairStackTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RepairStackTests.m; sourceTree = "<group>"; };
 		023A0B287E48B77598820B62 /* Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig"; sourceTree = "<group>"; };
+		037FE0AFC4D911EB7AC76D1D /* Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig"; sourceTree = "<group>"; };
 		0F76F3C673B3575309229ACC /* Pods-RepairStack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack.release.xcconfig"; path = "Target Support Files/Pods-RepairStack/Pods-RepairStack.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* RepairStack.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStack.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RepairStack/AppDelegate.h; sourceTree = "<group>"; };
@@ -96,39 +265,66 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RepairStack/main.m; sourceTree = "<group>"; };
 		1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-LightItalic.otf"; path = "../assets/fonts/3MCircular-LightItalic.otf"; sourceTree = "<group>"; };
 		29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
+		34DC0A54178E71DCB92E5C1A /* Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig"; sourceTree = "<group>"; };
 		35687FC0B2B6150FF4C5E22F /* Pods-RepairStack-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
 		368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-BoldItalic.otf"; path = "../assets/fonts/3MCircular-BoldItalic.otf"; sourceTree = "<group>"; };
 		3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Bold.otf"; path = "../assets/fonts/3MCircularTT-Bold.otf"; sourceTree = "<group>"; };
-		3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStack.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackUAT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45D21D02C990BF6286BD5B0F /* Pods-RepairStackAbstract-RepairStack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStack.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack.release.xcconfig"; sourceTree = "<group>"; };
 		51277A6746544009B75F28FC /* 3MCircular-BookItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-BookItalic.otf"; path = "../assets/fonts/3MCircular-BookItalic.otf"; sourceTree = "<group>"; };
 		5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5BCA6DFD28A123CD5A5F2CB0 /* Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig"; sourceTree = "<group>"; };
+		5C0853117BC0A10D34724A1F /* Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig"; sourceTree = "<group>"; };
 		643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-BlackItalic.otf"; path = "../assets/fonts/3MCircularTT-BlackItalic.otf"; sourceTree = "<group>"; };
 		6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-LightItalic.otf"; path = "../assets/fonts/3MCircularTT-LightItalic.otf"; sourceTree = "<group>"; };
 		6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Regular.otf"; path = "../assets/fonts/3MCircularTT-Regular.otf"; sourceTree = "<group>"; };
+		726995742A79AA03008C7ACB /* RepairStackQA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackQA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		726995752A79AA03008C7ACB /* RepairStack qa-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack qa-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack qa-Info.plist"; sourceTree = "<absolute>"; };
+		7269959A2A79ABD1008C7ACB /* RepairStackUAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackUAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7269959B2A79ABD1008C7ACB /* RepairStack uat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack uat-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack uat-Info.plist"; sourceTree = "<absolute>"; };
+		726995C02A79AC14008C7ACB /* RepairStackPROD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackPROD.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		726995C12A79AC14008C7ACB /* RepairStack prod-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack prod-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack prod-Info.plist"; sourceTree = "<absolute>"; };
+		726995E42A79AC93008C7ACB /* RepairStackReleaseQA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackReleaseQA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		726995E52A79AC93008C7ACB /* RepairStackRelease qa-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease qa-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStackRelease qa-Info.plist"; sourceTree = "<absolute>"; };
+		726996082A79ACDD008C7ACB /* RepairStackReleaseUAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackReleaseUAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		726996092A79ACDD008C7ACB /* RepairStackRelease uat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease uat-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStackRelease uat-Info.plist"; sourceTree = "<absolute>"; };
+		7269962C2A79AD3C008C7ACB /* RepairStackReleasePROD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackReleasePROD.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7269962D2A79AD3C008C7ACB /* RepairStackRelease prod-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease prod-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStackRelease prod-Info.plist"; sourceTree = "<absolute>"; };
 		72A711562A576EB900870488 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7652C9377B09497781B42A2F /* libPods-RepairStackAbstract-RepairStackReleasePROD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleasePROD.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B88CC87B172967C9C7AAE3F /* Pods-RepairStack-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Book.otf"; path = "../assets/fonts/3MCircular-Book.otf"; sourceTree = "<group>"; };
+		819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackQA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RepairStack/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		86D340BD8F6E4CBCB5F40A10 /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleaseUAT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Light.otf"; path = "../assets/fonts/3MCircularTT-Light.otf"; sourceTree = "<group>"; };
-		91E5E186411975104EE3F062 /* libPods-RepairStackAbstract-RepairStackRelease.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackRelease.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
+		9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
 		953DF4C929E3FDD900247A0B /* RepairStackRelease.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackRelease.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		953DF4CA29E3FDD900247A0B /* RepairStackRelease-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease-Info.plist"; path = "/Users/andriy/Documents/work/3m/Pillar-Mobile-App/ios/RepairStackRelease-Info.plist"; sourceTree = "<absolute>"; };
 		95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MLBluetooth.xcframework; path = RepairStack/frameworks/MLBluetooth.xcframework; sourceTree = "<group>"; };
 		95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTMasterLockModule.h; sourceTree = "<group>"; };
 		95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTMasterLockModule.m; sourceTree = "<group>"; };
 		95C46AC429D55D300021495A /* RepairStack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RepairStack.entitlements; path = RepairStack/RepairStack.entitlements; sourceTree = "<group>"; };
+		965426215994A02D118D0E60 /* Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig"; sourceTree = "<group>"; };
 		9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Black.otf"; path = "../assets/fonts/3MCircularTT-Black.otf"; sourceTree = "<group>"; };
 		9C8477C47B6C524BEED4C70D /* Pods-RepairStackAbstract-RepairStack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; sourceTree = "<group>"; };
 		9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Light.otf"; path = "../assets/fonts/3MCircular-Light.otf"; sourceTree = "<group>"; };
+		A10F68306F6708F2FF79350E /* Pods-RepairStackAbstract-RepairStackQA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackQA.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA.release.xcconfig"; sourceTree = "<group>"; };
 		A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Italic.otf"; path = "../assets/fonts/3MCircularTT-Italic.otf"; sourceTree = "<group>"; };
+		B61B72E6337E8A747BBBE1B0 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleaseQA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8366F508EEEE39860632760 /* Pods-RepairStack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack/Pods-RepairStack.debug.xcconfig"; sourceTree = "<group>"; };
+		BCC05D0E6E5AB3118AB6ED41 /* Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig"; sourceTree = "<group>"; };
 		BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Bold.otf"; path = "../assets/fonts/3MCircular-Bold.otf"; sourceTree = "<group>"; };
+		BF8378FC0054E545EE27BA55 /* Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig"; sourceTree = "<group>"; };
+		C0A1923211ED75E208C3EEAF /* Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig"; sourceTree = "<group>"; };
 		DC0C9B7EDD6C9EBF556D1B9D /* Pods-RepairStackAbstract-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
+		E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackPROD.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E4459A7535F1DA493A7BC1C4 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig"; sourceTree = "<group>"; };
+		E45C7BF323A90D17571A5F7A /* Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig"; sourceTree = "<group>"; };
 		E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-BoldItalic.otf"; path = "../assets/fonts/3MCircularTT-BoldItalic.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F337615BF3F1F1A16EA0C58A /* Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig"; sourceTree = "<group>"; };
+		F8FE93A79631C4113C29A546 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +343,60 @@
 			files = (
 				4E4D7B38216AFED6DA6FD002 /* libPods-RepairStackAbstract-RepairStack.a in Frameworks */,
 				95ACE4CB2A7804030059C020 /* MLBluetooth.xcframework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995572A79AA03008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995592A79AA03008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				A3D7796A6881A29F2E5134E1 /* libPods-RepairStackAbstract-RepairStackQA.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7269957D2A79ABD1008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7269957F2A79ABD1008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				F08D5D32A9E5AE537CBE08B5 /* libPods-RepairStackAbstract-RepairStackUAT.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995A32A79AC14008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995A52A79AC14008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				4495D1E214972CDE62C23389 /* libPods-RepairStackAbstract-RepairStackPROD.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995C92A79AC93008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995CB2A79AC93008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				42222E31BFC378023BB515B3 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995ED2A79ACDD008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995EF2A79ACDD008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				2E9942B8D2C4F4340D79FADE /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726996112A79AD3C008C7ACB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726996132A79AD3C008C7ACB /* MLBluetooth.xcframework in Frameworks */,
+				F88F844F3C95D5B1FB7DB480 /* libPods-RepairStackAbstract-RepairStackReleasePROD.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,7 +434,7 @@
 			children = (
 				95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */,
 				95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */,
-				9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */,
+				9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */,
 				95C46AC429D55D300021495A /* RepairStack.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -223,9 +473,13 @@
 			children = (
 				95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */,
-				91E5E186411975104EE3F062 /* libPods-RepairStackAbstract-RepairStackRelease.a */,
 				5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */,
+				E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */,
+				819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */,
+				7652C9377B09497781B42A2F /* libPods-RepairStackAbstract-RepairStackReleasePROD.a */,
+				B61B72E6337E8A747BBBE1B0 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a */,
+				86D340BD8F6E4CBCB5F40A10 /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a */,
+				437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -248,6 +502,12 @@
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
 				953DF4CA29E3FDD900247A0B /* RepairStackRelease-Info.plist */,
 				2294C092451D4986A2D918D0 /* Resources */,
+				726995752A79AA03008C7ACB /* RepairStack qa-Info.plist */,
+				7269959B2A79ABD1008C7ACB /* RepairStack uat-Info.plist */,
+				726995C12A79AC14008C7ACB /* RepairStack prod-Info.plist */,
+				726995E52A79AC93008C7ACB /* RepairStackRelease qa-Info.plist */,
+				726996092A79ACDD008C7ACB /* RepairStackRelease uat-Info.plist */,
+				7269962D2A79AD3C008C7ACB /* RepairStackRelease prod-Info.plist */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -260,6 +520,12 @@
 				13B07F961A680F5B00A75B9A /* RepairStack.app */,
 				00E356EE1AD99517003FC87E /* RepairStackTests.xctest */,
 				953DF4C929E3FDD900247A0B /* RepairStackRelease.app */,
+				726995742A79AA03008C7ACB /* RepairStackQA.app */,
+				7269959A2A79ABD1008C7ACB /* RepairStackUAT.app */,
+				726995C02A79AC14008C7ACB /* RepairStackPROD.app */,
+				726995E42A79AC93008C7ACB /* RepairStackReleaseQA.app */,
+				726996082A79ACDD008C7ACB /* RepairStackReleaseUAT.app */,
+				7269962C2A79AD3C008C7ACB /* RepairStackReleasePROD.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -277,6 +543,18 @@
 				023A0B287E48B77598820B62 /* Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig */,
 				29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */,
 				DC0C9B7EDD6C9EBF556D1B9D /* Pods-RepairStackAbstract-RepairStackTests.release.xcconfig */,
+				BF8378FC0054E545EE27BA55 /* Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig */,
+				E45C7BF323A90D17571A5F7A /* Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig */,
+				5BCA6DFD28A123CD5A5F2CB0 /* Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig */,
+				A10F68306F6708F2FF79350E /* Pods-RepairStackAbstract-RepairStackQA.release.xcconfig */,
+				34DC0A54178E71DCB92E5C1A /* Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig */,
+				BCC05D0E6E5AB3118AB6ED41 /* Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig */,
+				037FE0AFC4D911EB7AC76D1D /* Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig */,
+				965426215994A02D118D0E60 /* Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig */,
+				F8FE93A79631C4113C29A546 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig */,
+				E4459A7535F1DA493A7BC1C4 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig */,
+				C0A1923211ED75E208C3EEAF /* Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig */,
+				5C0853117BC0A10D34724A1F /* Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -326,6 +604,141 @@
 			name = RepairStack;
 			productName = RepairStack;
 			productReference = 13B07F961A680F5B00A75B9A /* RepairStack.app */;
+			productType = "com.apple.product-type.application";
+		};
+		726995502A79AA03008C7ACB /* RepairStackQA */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726995712A79AA03008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackQA" */;
+			buildPhases = (
+				726995512A79AA03008C7ACB /* [CP] Check Pods Manifest.lock */,
+				726995522A79AA03008C7ACB /* Start Packager */,
+				726995532A79AA03008C7ACB /* Sources */,
+				726995572A79AA03008C7ACB /* Frameworks */,
+				7269955A2A79AA03008C7ACB /* Resources */,
+				7269956C2A79AA03008C7ACB /* Bundle React Native code and images */,
+				7269956D2A79AA03008C7ACB /* [CP] Copy Pods Resources */,
+				7269956E2A79AA03008C7ACB /* [CP] Embed Pods Frameworks */,
+				7269956F2A79AA03008C7ACB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackQA;
+			productName = RepairStack;
+			productReference = 726995742A79AA03008C7ACB /* RepairStackQA.app */;
+			productType = "com.apple.product-type.application";
+		};
+		726995762A79ABD1008C7ACB /* RepairStackUAT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726995972A79ABD1008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackUAT" */;
+			buildPhases = (
+				726995772A79ABD1008C7ACB /* [CP] Check Pods Manifest.lock */,
+				726995782A79ABD1008C7ACB /* Start Packager */,
+				726995792A79ABD1008C7ACB /* Sources */,
+				7269957D2A79ABD1008C7ACB /* Frameworks */,
+				726995802A79ABD1008C7ACB /* Resources */,
+				726995922A79ABD1008C7ACB /* Bundle React Native code and images */,
+				726995932A79ABD1008C7ACB /* [CP] Copy Pods Resources */,
+				726995942A79ABD1008C7ACB /* [CP] Embed Pods Frameworks */,
+				726995952A79ABD1008C7ACB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackUAT;
+			productName = RepairStack;
+			productReference = 7269959A2A79ABD1008C7ACB /* RepairStackUAT.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7269959C2A79AC14008C7ACB /* RepairStackPROD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726995BD2A79AC14008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackPROD" */;
+			buildPhases = (
+				7269959D2A79AC14008C7ACB /* [CP] Check Pods Manifest.lock */,
+				7269959E2A79AC14008C7ACB /* Start Packager */,
+				7269959F2A79AC14008C7ACB /* Sources */,
+				726995A32A79AC14008C7ACB /* Frameworks */,
+				726995A62A79AC14008C7ACB /* Resources */,
+				726995B82A79AC14008C7ACB /* Bundle React Native code and images */,
+				726995B92A79AC14008C7ACB /* [CP] Copy Pods Resources */,
+				726995BA2A79AC14008C7ACB /* [CP] Embed Pods Frameworks */,
+				726995BB2A79AC14008C7ACB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackPROD;
+			productName = RepairStack;
+			productReference = 726995C02A79AC14008C7ACB /* RepairStackPROD.app */;
+			productType = "com.apple.product-type.application";
+		};
+		726995C22A79AC93008C7ACB /* RepairStackReleaseQA */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726995E12A79AC93008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleaseQA" */;
+			buildPhases = (
+				726995C32A79AC93008C7ACB /* [CP] Check Pods Manifest.lock */,
+				726995C42A79AC93008C7ACB /* Start Packager */,
+				726995C52A79AC93008C7ACB /* Sources */,
+				726995C92A79AC93008C7ACB /* Frameworks */,
+				726995CC2A79AC93008C7ACB /* Resources */,
+				726995DE2A79AC93008C7ACB /* Bundle React Native code and images */,
+				726995DF2A79AC93008C7ACB /* [CP] Copy Pods Resources */,
+				726995E02A79AC93008C7ACB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackReleaseQA;
+			productName = RepairStack;
+			productReference = 726995E42A79AC93008C7ACB /* RepairStackReleaseQA.app */;
+			productType = "com.apple.product-type.application";
+		};
+		726995E62A79ACDD008C7ACB /* RepairStackReleaseUAT */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726996052A79ACDD008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleaseUAT" */;
+			buildPhases = (
+				726995E72A79ACDD008C7ACB /* [CP] Check Pods Manifest.lock */,
+				726995E82A79ACDD008C7ACB /* Start Packager */,
+				726995E92A79ACDD008C7ACB /* Sources */,
+				726995ED2A79ACDD008C7ACB /* Frameworks */,
+				726995F02A79ACDD008C7ACB /* Resources */,
+				726996022A79ACDD008C7ACB /* Bundle React Native code and images */,
+				726996032A79ACDD008C7ACB /* [CP] Copy Pods Resources */,
+				726996042A79ACDD008C7ACB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackReleaseUAT;
+			productName = RepairStack;
+			productReference = 726996082A79ACDD008C7ACB /* RepairStackReleaseUAT.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7269960A2A79AD3C008C7ACB /* RepairStackReleasePROD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 726996292A79AD3C008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleasePROD" */;
+			buildPhases = (
+				7269960B2A79AD3C008C7ACB /* [CP] Check Pods Manifest.lock */,
+				7269960C2A79AD3C008C7ACB /* Start Packager */,
+				7269960D2A79AD3C008C7ACB /* Sources */,
+				726996112A79AD3C008C7ACB /* Frameworks */,
+				726996142A79AD3C008C7ACB /* Resources */,
+				726996262A79AD3C008C7ACB /* Bundle React Native code and images */,
+				726996272A79AD3C008C7ACB /* [CP] Copy Pods Resources */,
+				726996282A79AD3C008C7ACB /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RepairStackReleasePROD;
+			productName = RepairStack;
+			productReference = 7269962C2A79AD3C008C7ACB /* RepairStackReleasePROD.app */;
 			productType = "com.apple.product-type.application";
 		};
 		953DF4B729E3FDD900247A0B /* RepairStackRelease */ = {
@@ -383,6 +796,12 @@
 				13B07F861A680F5B00A75B9A /* RepairStack */,
 				00E356ED1AD99517003FC87E /* RepairStackTests */,
 				953DF4B729E3FDD900247A0B /* RepairStackRelease */,
+				726995502A79AA03008C7ACB /* RepairStackQA */,
+				726995762A79ABD1008C7ACB /* RepairStackUAT */,
+				7269959C2A79AC14008C7ACB /* RepairStackPROD */,
+				726995C22A79AC93008C7ACB /* RepairStackReleaseQA */,
+				726995E62A79ACDD008C7ACB /* RepairStackReleaseUAT */,
+				7269960A2A79AD3C008C7ACB /* RepairStackReleasePROD */,
 			);
 		};
 /* End PBXProject section */
@@ -416,6 +835,150 @@
 				3788A4DEB8114AA59A07A1CA /* 3MCircularTT-Light.otf in Resources */,
 				7939AD0364F048F0BB7D429B /* 3MCircularTT-LightItalic.otf in Resources */,
 				FC62B30F57FA46E9B40315D4 /* 3MCircularTT-Regular.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7269955A2A79AA03008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7269955B2A79AA03008C7ACB /* LaunchScreen.storyboard in Resources */,
+				7269955C2A79AA03008C7ACB /* Images.xcassets in Resources */,
+				7269955D2A79AA03008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				7269955E2A79AA03008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				7269955F2A79AA03008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726995602A79AA03008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726995612A79AA03008C7ACB /* 3MCircular-Light.otf in Resources */,
+				726995622A79AA03008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				726995632A79AA03008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				726995642A79AA03008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				726995652A79AA03008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				726995662A79AA03008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				726995672A79AA03008C7ACB /* GoogleService-Info.plist in Resources */,
+				726995682A79AA03008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				726995692A79AA03008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				7269956A2A79AA03008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				7269956B2A79AA03008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995802A79ABD1008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995812A79ABD1008C7ACB /* LaunchScreen.storyboard in Resources */,
+				726995822A79ABD1008C7ACB /* Images.xcassets in Resources */,
+				726995832A79ABD1008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				726995842A79ABD1008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				726995852A79ABD1008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726995862A79ABD1008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726995872A79ABD1008C7ACB /* 3MCircular-Light.otf in Resources */,
+				726995882A79ABD1008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				726995892A79ABD1008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				7269958A2A79ABD1008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				7269958B2A79ABD1008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				7269958C2A79ABD1008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				7269958D2A79ABD1008C7ACB /* GoogleService-Info.plist in Resources */,
+				7269958E2A79ABD1008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				7269958F2A79ABD1008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				726995902A79ABD1008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				726995912A79ABD1008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995A62A79AC14008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995A72A79AC14008C7ACB /* LaunchScreen.storyboard in Resources */,
+				726995A82A79AC14008C7ACB /* Images.xcassets in Resources */,
+				726995A92A79AC14008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				726995AA2A79AC14008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				726995AB2A79AC14008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726995AC2A79AC14008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726995AD2A79AC14008C7ACB /* 3MCircular-Light.otf in Resources */,
+				726995AE2A79AC14008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				726995AF2A79AC14008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				726995B02A79AC14008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				726995B12A79AC14008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				726995B22A79AC14008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				726995B32A79AC14008C7ACB /* GoogleService-Info.plist in Resources */,
+				726995B42A79AC14008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				726995B52A79AC14008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				726995B62A79AC14008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				726995B72A79AC14008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995CC2A79AC93008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995CD2A79AC93008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				726995CE2A79AC93008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				726995CF2A79AC93008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726995D02A79AC93008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726995D12A79AC93008C7ACB /* 3MCircular-Light.otf in Resources */,
+				726995D22A79AC93008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				726995D32A79AC93008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				726995D42A79AC93008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				726995D52A79AC93008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				726995D62A79AC93008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				726995D72A79AC93008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				726995D82A79AC93008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				726995D92A79AC93008C7ACB /* GoogleService-Info.plist in Resources */,
+				726995DA2A79AC93008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				726995DB2A79AC93008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+				726995DC2A79AC93008C7ACB /* LaunchScreen.storyboard in Resources */,
+				726995DD2A79AC93008C7ACB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995F02A79ACDD008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995F12A79ACDD008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				726995F22A79ACDD008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				726995F32A79ACDD008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726995F42A79ACDD008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726995F52A79ACDD008C7ACB /* 3MCircular-Light.otf in Resources */,
+				726995F62A79ACDD008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				726995F72A79ACDD008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				726995F82A79ACDD008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				726995F92A79ACDD008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				726995FA2A79ACDD008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				726995FB2A79ACDD008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				726995FC2A79ACDD008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				726995FD2A79ACDD008C7ACB /* GoogleService-Info.plist in Resources */,
+				726995FE2A79ACDD008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				726995FF2A79ACDD008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+				726996002A79ACDD008C7ACB /* LaunchScreen.storyboard in Resources */,
+				726996012A79ACDD008C7ACB /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726996142A79AD3C008C7ACB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726996152A79AD3C008C7ACB /* 3MCircular-Bold.otf in Resources */,
+				726996162A79AD3C008C7ACB /* 3MCircular-BoldItalic.otf in Resources */,
+				726996172A79AD3C008C7ACB /* 3MCircular-Book.otf in Resources */,
+				726996182A79AD3C008C7ACB /* 3MCircular-BookItalic.otf in Resources */,
+				726996192A79AD3C008C7ACB /* 3MCircular-Light.otf in Resources */,
+				7269961A2A79AD3C008C7ACB /* 3MCircular-LightItalic.otf in Resources */,
+				7269961B2A79AD3C008C7ACB /* 3MCircularTT-Black.otf in Resources */,
+				7269961C2A79AD3C008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
+				7269961D2A79AD3C008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
+				7269961E2A79AD3C008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
+				7269961F2A79AD3C008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
+				726996202A79AD3C008C7ACB /* 3MCircularTT-Light.otf in Resources */,
+				726996212A79AD3C008C7ACB /* GoogleService-Info.plist in Resources */,
+				726996222A79AD3C008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
+				726996232A79AD3C008C7ACB /* 3MCircularTT-Regular.otf in Resources */,
+				726996242A79AD3C008C7ACB /* LaunchScreen.storyboard in Resources */,
+				726996252A79AD3C008C7ACB /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,6 +1154,552 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		726995512A79AA03008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackQA-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995522A79AA03008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		7269956C2A79AA03008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		7269956D2A79AA03008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7269956E2A79AA03008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995772A79ABD1008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackUAT-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995782A79ABD1008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		726995922A79ABD1008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		726995932A79ABD1008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995942A79ABD1008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7269959D2A79AC14008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackPROD-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7269959E2A79AC14008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		726995B82A79AC14008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		726995B92A79AC14008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995BA2A79AC14008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995C32A79AC93008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackReleaseQA-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995C42A79AC93008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		726995DE2A79AC93008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		726995DF2A79AC93008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995E02A79AC93008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995E72A79ACDD008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackReleaseUAT-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726995E82A79ACDD008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		726996022A79ACDD008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		726996032A79ACDD008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726996042A79ACDD008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7269960B2A79AD3C008C7ACB /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RepairStackAbstract-RepairStackReleasePROD-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7269960C2A79AD3C008C7ACB /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		726996262A79AD3C008C7ACB /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/.xcode.env",
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+		};
+		726996272A79AD3C008C7ACB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		726996282A79AD3C008C7ACB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8550DB9BF3B65133D6BFE767 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -703,6 +1812,66 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				95ACE4D02A78041C0059C020 /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995532A79AA03008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995542A79AA03008C7ACB /* AppDelegate.mm in Sources */,
+				726995552A79AA03008C7ACB /* main.m in Sources */,
+				726995562A79AA03008C7ACB /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995792A79ABD1008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7269957A2A79ABD1008C7ACB /* AppDelegate.mm in Sources */,
+				7269957B2A79ABD1008C7ACB /* main.m in Sources */,
+				7269957C2A79ABD1008C7ACB /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7269959F2A79AC14008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995A02A79AC14008C7ACB /* AppDelegate.mm in Sources */,
+				726995A12A79AC14008C7ACB /* main.m in Sources */,
+				726995A22A79AC14008C7ACB /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995C52A79AC93008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995C62A79AC93008C7ACB /* AppDelegate.mm in Sources */,
+				726995C72A79AC93008C7ACB /* main.m in Sources */,
+				726995C82A79AC93008C7ACB /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		726995E92A79ACDD008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				726995EA2A79ACDD008C7ACB /* AppDelegate.mm in Sources */,
+				726995EB2A79ACDD008C7ACB /* main.m in Sources */,
+				726995EC2A79ACDD008C7ACB /* RCTMasterLockModule.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7269960D2A79AD3C008C7ACB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7269960E2A79AD3C008C7ACB /* AppDelegate.mm in Sources */,
+				7269960F2A79AD3C008C7ACB /* main.m in Sources */,
+				726996102A79AD3C008C7ACB /* RCTMasterLockModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -846,6 +2015,468 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
 				PRODUCT_NAME = RepairStack;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		726995722A79AA03008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BCA6DFD28A123CD5A5F2CB0 /* Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "RepairStack qa-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		726995732A79AA03008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A10F68306F6708F2FF79350E /* Pods-RepairStackAbstract-RepairStackQA.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				INFOPLIST_FILE = "RepairStack qa-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		726995982A79ABD1008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C0A1923211ED75E208C3EEAF /* Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "RepairStack uat-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		726995992A79ABD1008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C0853117BC0A10D34724A1F /* Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				INFOPLIST_FILE = "RepairStack uat-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		726995BE2A79AC14008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BF8378FC0054E545EE27BA55 /* Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				INFOPLIST_FILE = "RepairStack prod-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		726995BF2A79AC14008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E45C7BF323A90D17571A5F7A /* Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				INFOPLIST_FILE = "RepairStack prod-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		726995E22A79AC93008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 037FE0AFC4D911EB7AC76D1D /* Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease qa-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		726995E32A79AC93008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 965426215994A02D118D0E60 /* Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease qa-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		726996062A79ACDD008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F8FE93A79631C4113C29A546 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease uat-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		726996072A79ACDD008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E4459A7535F1DA493A7BC1C4 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease uat-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		7269962A2A79AD3C008C7ACB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34DC0A54178E71DCB92E5C1A /* Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				ENABLE_BITCODE = NO;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease prod-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.2;
+				TARGETED_DEVICE_FAMILY = 1;
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		7269962B2A79AD3C008C7ACB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BCC05D0E6E5AB3118AB6ED41 /* Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 23;
+				DEVELOPMENT_TEAM = 35PLJBU685;
+				EXCLUDED_ARCHS = i386;
+				INFOPLIST_FILE = "RepairStackRelease prod-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					.rugby/build,
+				);
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-lc++",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.globallogic.3m.repairstack.dev;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1088,6 +2719,60 @@
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
 				13B07F951A680F5B00A75B9A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726995712A79AA03008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackQA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				726995722A79AA03008C7ACB /* Debug */,
+				726995732A79AA03008C7ACB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726995972A79ABD1008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackUAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				726995982A79ABD1008C7ACB /* Debug */,
+				726995992A79ABD1008C7ACB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726995BD2A79AC14008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackPROD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				726995BE2A79AC14008C7ACB /* Debug */,
+				726995BF2A79AC14008C7ACB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726995E12A79AC93008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleaseQA" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				726995E22A79AC93008C7ACB /* Debug */,
+				726995E32A79AC93008C7ACB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726996052A79ACDD008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleaseUAT" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				726996062A79ACDD008C7ACB /* Debug */,
+				726996072A79ACDD008C7ACB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		726996292A79AD3C008C7ACB /* Build configuration list for PBXNativeTarget "RepairStackReleasePROD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7269962A2A79AD3C008C7ACB /* Debug */,
+				7269962B2A79AD3C008C7ACB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

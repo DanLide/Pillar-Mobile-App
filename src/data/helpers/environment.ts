@@ -1,30 +1,31 @@
+import {Config} from 'react-native-config'
+
 export const environment = {
   b2c: {
-    clientId: '198e2599-5fe6-45f5-9426-72ff46dbc80b',
-    authority:
-      'https://3maaddev.b2clogin.com/3maaddev.onmicrosoft.com/B2C_1A_ROPC_Auth',
+    clientId: `${Config.AUTH_CLIENT_ID}`,
+    authority: `${Config.AUTH_URL}`,
   },
   modules: {
     pisaUser: {
-      apiUri: 'https://api.repairstack-qa.3m.com/pisauser',
+      apiUri: `${Config.API_URL}/pisauser`,
     },
     common: {
-      apiUri: 'https://api.repairstack-qa.3m.com/common',
+      apiUri: `${Config.API_URL}/common`,
     },
     companies: {
-      apiUri: 'https://api.repairstack-qa.3m.com/repairfacility',
+      apiUri: `${Config.API_URL}/repairfacility`,
     },
     pisaCompanyLocation: {
-      apiUri: 'https://api.repairstack-qa.3m.com/companylocation',
+      apiUri: `${Config.API_URL}/companylocation`,
     },
     pisaEquipment: {
-      apiUri: 'https://api.repairstack-qa.3m.com/equipment',
+      apiUri: `${Config.API_URL}/equipment`,
     },
     pisaProduct: {
-      apiUri: 'https://api.repairstack-qa.3m.com/im-product',
+      apiUri: `${Config.API_URL}/im-product`,
     },
     pisaJob: {
-      apiUri: 'https://api.repairstack-qa.3m.com/job',
+      apiUri: `${Config.API_URL}/job`,
     },
   },
 };
