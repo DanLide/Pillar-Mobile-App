@@ -30,11 +30,11 @@ const CONTAINER_SHADOW_OPACITY = 0.12;
 const SIZE_CONTAINER_HEIGHT = 22;
 
 export const Description = memo(({ product, topOffset }: Props) => {
-  const scrollCollapsed = useHeaderHeight();
-  const { top: scrollExpanded } = useSafeAreaInsets();
+  const modalCollapsedOffset = useHeaderHeight();
+  const { top: modalExpandedOffset } = useSafeAreaInsets();
 
   const scrollOffset = useDerivedValue(
-    () => topOffset?.value ?? scrollCollapsed,
+    () => topOffset?.value ?? modalCollapsedOffset,
     [topOffset],
   );
 
@@ -42,7 +42,7 @@ export const Description = memo(({ product, topOffset }: Props) => {
     () => ({
       shadowOpacity: interpolate(
         scrollOffset.value,
-        [scrollCollapsed, scrollExpanded],
+        [modalCollapsedOffset, modalExpandedOffset],
         [0, CONTAINER_SHADOW_OPACITY],
       ),
     }),
@@ -53,13 +53,13 @@ export const Description = memo(({ product, topOffset }: Props) => {
     () => ({
       height: interpolate(
         scrollOffset.value,
-        [scrollCollapsed, scrollExpanded],
+        [modalCollapsedOffset, modalExpandedOffset],
         [SIZE_CONTAINER_HEIGHT, 0],
         { extrapolateRight: Extrapolation.CLAMP },
       ),
       opacity: interpolate(
         scrollOffset.value,
-        [scrollCollapsed, scrollExpanded],
+        [modalCollapsedOffset, modalExpandedOffset],
         [1, 0],
       ),
     }),
@@ -70,12 +70,12 @@ export const Description = memo(({ product, topOffset }: Props) => {
     () => ({
       fontSize: interpolate(
         scrollOffset.value,
-        [scrollCollapsed, scrollExpanded],
+        [modalCollapsedOffset, modalExpandedOffset],
         [17, 15],
       ),
       lineHeight: interpolate(
         scrollOffset.value,
-        [scrollCollapsed, scrollExpanded],
+        [modalCollapsedOffset, modalExpandedOffset],
         [25.5, 15],
       ),
     }),
