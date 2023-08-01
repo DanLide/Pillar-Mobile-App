@@ -18,11 +18,11 @@
 }
 
 RCT_EXPORT_MODULE(MasterLockModule);
-RCT_EXPORT_METHOD(configureWithLicense:(NSString *)license
+RCT_EXPORT_METHOD(configure:(NSString *)license
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-  [[MLBluetoothSDK main] configureWithLicense:self.license delegate:self backgroundLocation:NO loggerConfiguration:LoggerConfigurationProduction];
+  [[MLBluetoothSDK main] configureWithLicense:license delegate:self backgroundLocation:NO loggerConfiguration:LoggerConfigurationProduction];
   resolve(@"success");
 }
 
@@ -45,7 +45,6 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 {
   MLProduct *lock =[self.locks objectForKey:deviceId];
   if (lock) {
-    NSError *anyError;
     [lock unlockWithMechanism:MLUnlockOptionsPrimary completion:^(NSError * error)  {
       
       if (error) {
@@ -70,16 +69,17 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 - (MLProduct *)productForDeviceId:(NSString *)deviceId {
   return [self.locks objectForKey:deviceId];
 }
+
 - (void)bluetoothModuleDidUpdateWithState:(enum MLBluetoothState)state {
   if (state == MLBluetoothStatePoweredOn) {
     [[MLBluetoothSDK main] startScanning];
   }
 }
+
 - (void)didDiscoverDeviceWith:(NSString * _Nonnull)deviceId {}
 
 
 /// MLProductDelegate
-
 - (void)product:(MLProduct *)product didChange:(LockState *)state {
   switch(state.visibility){
     case VisibilityVisible:
@@ -109,7 +109,9 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 - (void)product:(MLProduct *)product didChangeState:(enum MLBroadcastState)state {}
 - (void)didConnectTo:(MLProduct *)product {}
 - (void)didDisconnectFrom:(MLProduct *)product {}
-- (void)didFailToConnectTo:(MLProduct *)product error:(NSError *)error {}
+- (void)didFailToConnectTo:(MLProduct *)product error:(NSError *)error {
+//  NSLog(@"!!! didFailToConnectTo %@ - %@", product.deviceId, error.description);
+}
 - (void)product:(MLProduct * _Nonnull)product didRead:(NSArray<MLAuditEntry *> * _Nonnull)auditEntries {}
 - (void)shouldUpdateProductDataWithProduct:(MLProduct * _Nonnull)product {}
 

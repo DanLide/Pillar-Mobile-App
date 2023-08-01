@@ -3,7 +3,5 @@
 
 @interface RCTMasterLockModule : NSObject <RCTBridgeModule, MLLockScannerDelegate, MLProductDelegate>
 
-@property (nonatomic, assign) NSString *license;
-
 @end
 

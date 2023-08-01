@@ -3,7 +3,7 @@ import { NativeModules } from "react-native";
 const {MasterLockModule} = NativeModules;
  
 interface MasterLockInterface {
-    configureWithLicense(license: string): Promise<string>;
+    configure(license: string): Promise<string>;
     initLock(deviceId: string, accessProfile: string, firmwareVersion: number): Promise<string>;
     unlock(deviceId: string): Promise<string>;
 }
