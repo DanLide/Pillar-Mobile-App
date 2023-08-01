@@ -3,7 +3,6 @@ import { observer } from 'mobx-react';
 import { encode as btoa } from 'base-64';
 
 import { BaseScannerScreen } from '../../components';
-import { ProductModal } from './components';
 
 import {
   ScannerModalStoreType,
@@ -17,6 +16,7 @@ import {
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
+import { ProductModal } from './ProductModal';
 import { onUpdateProduct } from '../../data/updateProduct';
 import { fetchProductDetails } from '../../data/fetchProductDetails';
 
