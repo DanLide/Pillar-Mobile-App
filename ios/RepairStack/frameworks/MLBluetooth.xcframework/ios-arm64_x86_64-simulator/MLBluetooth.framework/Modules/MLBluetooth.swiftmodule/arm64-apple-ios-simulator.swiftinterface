@@ -1,0 +1,779 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)
+// swift-module-flags: -target arm64-apple-ios10.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -module-name MLBluetooth
+// swift-module-flags-ignorable: -enable-bare-slash-regex
+import CommonCrypto
+import CoreBluetooth
+import CoreData
+import CoreLocation
+import Foundation
+@_exported import MLBluetooth
+import Security
+import Swift
+import SystemConfiguration
+import UIKit
+import _Concurrency
+import _StringProcessing
+import os
+@_hasMissingDesignatedInitializers @objc public class DemoModeEnabled : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class TimeStopped : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class BluetoothWakeButtonPressed : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@objc public enum MLBroadcastState : Swift.Int {
+  case awake
+  case asleep
+  case firmwareUpdate
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class OpenedPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date?
+  @objc deinit
+}
+@objc public enum MLBluetoothState : Swift.Int {
+  case poweredOff
+  case poweredOn
+  case resetting
+  case unauthorized
+  case unknown
+  case unsupported
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class MLFirmwareUpdateState : ObjectiveC.NSObject {
+  @objc public enum UpdateState : Swift.Int {
+    case downloading
+    case downloadComplete
+    case applying
+    case validating
+    case done
+    case error
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc public var updateState: MLBluetooth.MLFirmwareUpdateState.UpdateState
+  @objc public var percentage: Swift.Int
+  @objc public var error: Swift.Error?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class ThumbturnUnlocked : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@objc public enum MLInvalidPasscodeType : Swift.UInt8 {
+  case masterOrPrimaryOrSecondary = 0x00
+  case temporary = 0x01
+  case indeterminate = 0x02
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc public enum MLRegion : Swift.Int {
+  case na
+  case eu
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class ConfigurableTempPasscodeResetCompleted : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class InvalidPasscode : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var type: MLBluetooth.MLInvalidPasscodeType
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class MLBatteryLevel : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var batteryLevels: [Swift.Int]
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class LockResetInitiated : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class DemoModeDisabled : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@objc public enum Visibility : Swift.Int {
+  case visible
+  case unknown
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class LockState : ObjectiveC.NSObject {
+  @objc public var visibility: MLBluetooth.Visibility {
+    @objc get
+  }
+  @objc public var keypadActive: Swift.Bool {
+    @objc get
+  }
+  @objc public var isJammed: Swift.Bool {
+    @objc get
+  }
+  @objc public var isTampered: Swift.Bool {
+    @objc get
+  }
+  @objc public var primaryMechanism: MLBluetooth.Mechanism {
+    get
+  }
+  @objc public var secondaryMechanism: MLBluetooth.Mechanism {
+    get
+  }
+  public var primary: MLBluetooth.Mechanism.State {
+    get
+  }
+  public var secondary: MLBluetooth.Mechanism.State {
+    get
+  }
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc public class Mechanism : ObjectiveC.NSObject {
+  public enum State : Swift.Equatable {
+    case unknown
+    case locked
+    case pendingUnlock
+    case pendingRelock
+    case unlocked(countdown: Swift.Int)
+    case open
+    case openLocked
+    public static func == (a: MLBluetooth.Mechanism.State, b: MLBluetooth.Mechanism.State) -> Swift.Bool
+  }
+  public var mechanismState: MLBluetooth.Mechanism.State {
+    get
+  }
+  @objc public var countdown: Swift.Int {
+    get
+  }
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc extension MLBluetooth.Mechanism {
+  @objc public enum MechanismState : Swift.Int {
+    case unknown
+    case locked
+    case pendingUnlock
+    case pendingRelock
+    case unlocked
+    case open
+    case openLocked
+    public init?(rawValue: Swift.Int)
+    public typealias RawValue = Swift.Int
+    public var rawValue: Swift.Int {
+      get
+    }
+  }
+  @objc dynamic public func getState() -> MLBluetooth.Mechanism.MechanismState
+  @objc dynamic public func getCountdown() -> Swift.Int
+}
+@_hasMissingDesignatedInitializers @objc public class ConfigurableTempPasscodeResetInitiated : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc deinit
+}
+@available(iOS 13.0.0, watchOS 7.0.0, *)
+extension MLBluetooth.MLProduct {
+  #if compiler(>=5.3) && $AsyncAwait
+  public func disconnect(option: MLBluetooth.MLDisconnectOptions = .none) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func keepAlive() async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func writeAuthenticatedMemory(withPayload payload: Foundation.Data) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readFirmwareCounter() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readPublicConfigurationCounter() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readRelockTime() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func write(relockTime: Swift.Int) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func unlock(mechanism: MLBluetooth.MLUnlockOptions) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func unlock(mechanism: MLBluetooth.MLUnlockOptions, seconds: Swift.Int) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func relock() async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readState(withOption option: MLBluetooth.MLStateOptions) async throws -> MLBluetooth.MLState
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readBattery() async throws -> MLBluetooth.MLBatteryLevel
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readRSSI() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readPrimaryPasscodeCounter() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readPrimaryPasscode() async throws -> Swift.String
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func write(primaryPasscode passcode: Swift.String) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readSecondaryPasscodeCounter() async throws -> Swift.Int
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readSecondaryPasscode(index: Swift.Int) async throws -> Swift.String?
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func clearSecondaryPasscode(at index: Swift.Int) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  @objc dynamic public func clearAllSecondaryPasscodes() async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func write(secondaryPasscode passcode: Swift.String, index: Swift.Int) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func setDeadboltLeftHanded(_ isLeftHanded: Swift.Bool) async throws
+  #endif
+  #if compiler(>=5.3) && $AsyncAwait
+  public func readIsDeadboltLeftHanded() async throws -> Swift.Bool
+  #endif
+}
+@_hasMissingDesignatedInitializers @objc public class KeypadLocked : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class ClosedPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class WirelessUnlockPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  public var unlockTime: Swift.Int?
+  @objc public var _unlockTime: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc deinit
+}
+extension MLBluetooth.MLProduct {
+  @objc dynamic public func updateFirmware(firmwareVersion: Swift.Int)
+}
+@_hasMissingDesignatedInitializers @objc public class TemperatureStatus : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var temperatureEvent: MLBluetooth.TemperatureEvent
+  @objc public var temperatureDegreesCelcius: Swift.Int
+  @objc deinit
+}
+public enum LockResetError : Swift.Error {
+  case unknown
+  case offline
+  case downloadError
+  case acknowledgementError
+  case phoneBatteryLow
+  case lockBatteryLow
+  public static func == (a: MLBluetooth.LockResetError, b: MLBluetooth.LockResetError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class InvalidWirelessAccessAttempt : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var type: MLBluetooth.MLInvalidWirelessAccessAttemptType
+  public var userId: Swift.Int?
+  @objc public var _userId: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class AutomaticRelockPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date?
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class PasscodeUnlockSecondary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var passcode: MLBluetooth.MLPasscodeType
+  public var unlockTime: Swift.Int?
+  @objc public var _unlockTime: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc deinit
+}
+@objc public enum MLPasscodeType : Swift.UInt8 {
+  case master = 0x00
+  case primary = 0x01
+  case temporary = 0x02
+  case secondary = 0x04
+  case demo = 0x08
+  case configurableTemporary = 0x10
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+extension MLBluetooth.MLProduct {
+  @available(*, deprecated, message: "This function uses zero-based indexing to reference a secondary code. This conflicts with Android's implementation which uses one-based indexing. In order to ensure uniformity between platforms, this is being deprecated.\n\nPlease switch to:\nreadSecondaryPasscode(atOneBasedIndex:completion:)")
+  @objc dynamic public func readSecondaryPasscode(atIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.ReadSecondaryPasscode)
+  @available(*, deprecated, message: "This function uses zero-based indexing to reference a secondary code. This conflicts with Android's implementation which uses one-based indexing. In order to ensure uniformity between platforms, this is being deprecated.\n\nPlease switch to:\nwrite(secondaryPasscode:atOneBasedIndex:completion:)")
+  @objc dynamic public func writeSecondaryPasscode(passcode: [Swift.String], atIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+  @available(*, deprecated, message: "This function uses zero-based indexing to reference a secondary code. This conflicts with Android's implementation which uses one-based indexing. In order to ensure uniformity between platforms, this is being deprecated.\n\nPlease switch to:\nclearSecondaryPasscode(atOneBasedIndex:completion:)")
+  @objc dynamic public func clearSecondaryPasscode(withIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.ClearSecondaryPasscode)
+  @available(*, deprecated, message: "Please switch to: unlock(mechanism:completion:). This new function will enable state tracking via the MLProductDelegate's product(:didChange:) method. It also does not require that a separate disconnect be queued - this will occur automatically.")
+  @objc dynamic public func unlock(withOption option: MLBluetooth.MLUnlockOptions, completion: @escaping MLBluetooth.MLBluetoothResponse.Unlock)
+  @available(*, deprecated, message: "Please switch to: unlock(mechanism:seconds:completion:). This new function will enable state tracking via the MLProductDelegate's product(:didChange:) method. It also does not require that a separate disconnect be queued - this will occur automatically.")
+  @objc dynamic public func unlock(withOption option: MLBluetooth.MLUnlockOptions, seconds: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.Unlock)
+  @available(*, deprecated, message: "Please switch to write(relockTime:completion:)")
+  @objc dynamic public func writeRelockTime(relockTime: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+  @available(*, deprecated, message: "Please switch to write(primaryPasscode:completion:)")
+  @objc dynamic public func writePrimaryPasscode(passcode: [Swift.String], completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+}
+@objc public enum MLDisconnectOptions : Swift.Int {
+  case none
+  case preventAdvertising
+  case clearKeypadActivity
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public enum MLAuditTrailEventId : Swift.UInt8 {
+  case unknown = 0x00
+  case firmwareUpdateInitiated = 0x01
+  case firmwareUpdateCompleted = 0x02
+  case timeStopped = 0x03
+  case timeWritten = 0x04
+  case invalidWirelessAccessAttempt = 0x05
+  case invalidPasscode = 0x06
+  case wirelessUnlockPrimary = 0x07
+  case passcodeUnlockPrimary = 0x08
+  case openedPrimary = 0x09
+  case closedPrimary = 0x0A
+  case automaticRelockPrimary = 0x0B
+  case wirelessUnlockSecondary = 0x0C
+  case passcodeUnlockSecondary = 0x0D
+  case openedSecondary = 0x0E
+  case closedSecondary = 0x0F
+  case automaticRelockSecondary = 0x10
+  case demoModeEnabled = 0x11
+  case demoModeDisabled = 0x12
+  case lockout = 0x13
+  case wirelessLockPrimary = 0x14
+  case keypadLocked = 0x15
+  case thumbturnLocked = 0x16
+  case thumbturnUnlocked = 0x17
+  case tamperSensorActivated = 0x18
+  case tamperSensorCleared = 0x19
+  case bluetoothWakeButtonPressed = 0x1A
+  case temperatureStatus = 0x1B
+  case lockResetInitiated = 0x1C
+  case configurableTempPasscodeResetInitiated = 0x1D
+  case lockResetCompleted = 0x1E
+  case configurableTempPasscodeResetCompleted = 0x1F
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public enum MLError : Swift.Error, Swift.Equatable {
+  case invalidLicense
+  case functionNotIncludedInLicenseAgreement
+  case cannotDecrypt(description: Swift.String)
+  case invalidOperation
+  case invalidTime
+  case notPermitted
+  case dataNotAvailable
+  case unknownError
+  case invalidSettingForDevice
+  case invalidCommandForDevice
+  case invalidResponseDataType
+  case emptyArray
+  case invalidCode(character: Swift.String)
+  case invalidArrowCode(character: Swift.String)
+  case invalidNumericCode(character: Swift.String)
+  case invalidStartingArrowCode(character: Swift.String)
+  case invalidStartingNumericCode(character: Swift.String)
+  case invalidArrayLength(lower: Swift.Int, upper: Swift.Int)
+  case invalidValue(lower: Swift.Int, upper: Swift.Int)
+  case missingAccessProfile
+  case missingMemoryMap
+  case cannotOperateInRegion(region: MLBluetooth.MLRegion)
+  public static func == (a: MLBluetooth.MLError, b: MLBluetooth.MLError) -> Swift.Bool
+}
+extension MLBluetooth.MLError : Foundation.LocalizedError {
+  public var errorDescription: Swift.String? {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class MLBluetoothResponse {
+  public typealias Disconnect = (() -> ())
+  public typealias KeepAlive = ((_ error: Swift.Error?) -> ())
+  public typealias WriteAuthenticatedMemory = ((_ error: Swift.Error?) -> ())
+  public typealias ReadFirmwareCounter = ((_ firmwareCounter: Swift.Int, _ error: Swift.Error?) -> ())
+  public typealias ReadPublicConfigurationCounter = ((_ publicConfigurationCounter: Swift.Int, _ error: Swift.Error?) -> ())
+  public typealias ReadPrimaryPasscodeCounter = ((_ primaryPasscodeCounter: Swift.Int, _ error: Swift.Error?) -> ())
+  public typealias ReadSecondaryPasscodeCounter = ((_ secondaryPasscodeCounter: Swift.Int, _ error: Swift.Error?) -> ())
+  public typealias ReadPrimaryPasscode = ((_ primaryPasscode: [Swift.String]?, _ error: Swift.Error?) -> ())
+  public typealias ReadSecondaryPasscode = ((_ secondaryPasscode: [Swift.String]?, _ error: Swift.Error?) -> ())
+  public typealias ReadRelockTime = ((_ relockTime: Swift.Int, _ error: Swift.Error?) -> ())
+  public typealias WriteMemory = ((_ error: Swift.Error?) -> ())
+  public typealias ReadState = ((_ state: MLBluetooth.MLState?, _ error: Swift.Error?) -> ())
+  public typealias ReadBatteryLevel = ((_ batteryLevel: MLBluetooth.MLBatteryLevel?, _ error: Swift.Error?) -> ())
+  public typealias Unlock = ((_ error: Swift.Error?) -> ())
+  public typealias ClearSecondaryPasscode = ((_ error: Swift.Error?) -> ())
+  public typealias ClearAllSecondaryPasscode = ((_ error: Swift.Error?) -> ())
+  public typealias ReadRSSI = ((_ rssi: Foundation.NSNumber?, _ error: Swift.Error?) -> ())
+  public typealias Relock = ((_ error: Swift.Error?) -> ())
+  public typealias ReadIsLeftHanded = ((_ isLeftHanded: Swift.Bool, _ error: Swift.Error?) -> ())
+  public typealias SetLeftHanded = ((_ error: Swift.Error?) -> ())
+  @objc deinit
+}
+@objc public enum MLInvalidWirelessAccessAttemptType : Swift.UInt8 {
+  case unauthenticatedUser = 0x00
+  case invalidSessionTime = 0x01
+  case replay = 0x02
+  case unauthenticatedCommand = 0x03
+  case invalidAuthenticatedCommandTime = 0x04
+  case notPermitted = 0x05
+  case notScheduled = 0x06
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class TimeWritten : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc public var newTime: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class WirelessLockPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc deinit
+}
+@objc public enum MLUnlockOptions : Swift.Int {
+  case primary
+  case secondary
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class PasscodeUnlockPrimary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var passcode: MLBluetooth.MLPasscodeType
+  public var counterValue: Swift.Int?
+  public var unlockTime: Swift.Int?
+  public var secondaryPasscodeIndex: Swift.Int?
+  @objc public var _counterValue: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc public var _unlockTime: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc public var _secondaryPasscodeIndex: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc deinit
+}
+@objc public protocol MLLockScannerDelegate {
+  @objc func didDiscoverDevice(with deviceId: Swift.String)
+  @objc func shouldConnectToDevice(with deviceId: Swift.String, andRSSI rssi: Foundation.NSNumber) -> Swift.Bool
+  @objc func productFor(deviceId: Swift.String) -> MLBluetooth.MLProduct?
+  @objc func bluetoothModuleDidUpdate(state: MLBluetooth.MLBluetoothState)
+}
+@_hasMissingDesignatedInitializers @objc public class OpenedSecondary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date?
+  @objc deinit
+}
+@objc public enum LoggerConfiguration : Swift.Int {
+  case production
+  case debugging
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class FirmwareUpdateInitiated : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc public var firmwareVersion: Swift.Int
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class AutomaticRelockSecondary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date?
+  @objc deinit
+}
+@objc public protocol MLProductDelegate {
+  @objc func product(_ product: MLBluetooth.MLProduct, didChangeState state: MLBluetooth.MLBroadcastState)
+  @objc func didConnect(to product: MLBluetooth.MLProduct)
+  @objc func didDisconnect(from product: MLBluetooth.MLProduct)
+  @objc func didFailToConnect(to product: MLBluetooth.MLProduct, error: Swift.Error?)
+  @objc optional func firmwareUpdateDidChangeState(for product: MLBluetooth.MLProduct, state: MLBluetooth.MLFirmwareUpdateState)
+  @objc func shouldUpdateProductData(product: MLBluetooth.MLProduct)
+  @objc func product(_ product: MLBluetooth.MLProduct, didRead auditEntries: [MLBluetooth.MLAuditEntry])
+  @objc func product(_ product: MLBluetooth.MLProduct, didChange state: MLBluetooth.LockState)
+}
+extension MLBluetooth.MLProduct {
+  @objc dynamic public var hasPendingCommands: Swift.Bool {
+    @objc get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class ThumbturnLocked : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class LockResetCompleted : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc deinit
+}
+@objc extension MLBluetooth.MLProduct {
+  @objc dynamic public func disconnect(completion: @escaping MLBluetooth.MLBluetoothResponse.Disconnect)
+  @objc dynamic public func disconnect(withOption option: MLBluetooth.MLDisconnectOptions, completion: @escaping MLBluetooth.MLBluetoothResponse.Disconnect)
+  @objc dynamic public func keepAlive(completion: @escaping MLBluetooth.MLBluetoothResponse.KeepAlive)
+  @objc dynamic public func writeAuthenticatedMemory(withPayload payload: Foundation.Data, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteAuthenticatedMemory)
+  @objc dynamic public func readFirmwareCounter(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadFirmwareCounter)
+  @objc dynamic public func readPublicConfigurationCounter(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadPublicConfigurationCounter)
+  @objc dynamic public func readPrimaryPasscodeCounter(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadPrimaryPasscodeCounter)
+  @objc dynamic public func readSecondaryPasscodeCounter(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadSecondaryPasscodeCounter)
+  @objc dynamic public func readPrimaryPasscode(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadPrimaryPasscode)
+  @objc dynamic public func readSecondaryPasscode(atOneBasedIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.ReadSecondaryPasscode)
+  @objc dynamic public func readRelockTime(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadRelockTime)
+  @objc dynamic public func write(primaryPasscode passcode: Swift.String, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+  @objc dynamic public func write(secondaryPasscode passcode: Swift.String, atOneBasedIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+  @objc dynamic public func write(relockTime: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.WriteMemory)
+  @objc dynamic public func readState(withOption option: MLBluetooth.MLStateOptions, completion: @escaping MLBluetooth.MLBluetoothResponse.ReadState)
+  @objc dynamic public func readBattery(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadBatteryLevel)
+  @objc dynamic public func unlock(completion: @escaping MLBluetooth.MLBluetoothResponse.Unlock)
+  @objc dynamic public func unlock(mechanism: MLBluetooth.MLUnlockOptions, completion: @escaping MLBluetooth.MLBluetoothResponse.Unlock)
+  @objc dynamic public func unlock(mechanism: MLBluetooth.MLUnlockOptions, seconds: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.Unlock)
+  @objc dynamic public func clearSecondaryPasscode(atOneBasedIndex index: Swift.Int, completion: @escaping MLBluetooth.MLBluetoothResponse.ClearSecondaryPasscode)
+  @objc dynamic public func clearAllSecondaryPasscodes(completion: @escaping MLBluetooth.MLBluetoothResponse.ClearAllSecondaryPasscode)
+  @objc dynamic public func readRSSI(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadRSSI)
+  @objc dynamic public func relock(completion: @escaping MLBluetooth.MLBluetoothResponse.Relock)
+  @objc dynamic public func setDeadboltLeftHanded(_ isLeftHanded: Swift.Bool, completion: @escaping MLBluetooth.MLBluetoothResponse.SetLeftHanded)
+  @objc dynamic public func readIsDeadboltLeftHanded(completion: @escaping MLBluetooth.MLBluetoothResponse.ReadIsLeftHanded)
+}
+@objc open class MLProduct : ObjectiveC.NSObject {
+  @objc public var deviceId: Swift.String {
+    get
+  }
+  @objc public var firmwareVersion: Swift.Int {
+    get
+  }
+  @objc weak public var delegate: MLBluetooth.MLProductDelegate?
+  @objc public var requiresTrustedTime: Swift.Bool
+  @objc public var reachability: MLBluetooth.MLBroadcastState
+  @objc public init(deviceId: Swift.String, accessProfile: Swift.String, firmwareVersion: Swift.Int, region: MLBluetooth.MLRegion = .na)
+  @objc public func update(accessProfile: Swift.String, firmwareVersion: Swift.Int)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class MLAuditEntry : ObjectiveC.NSObject {
+  @objc final public let index: Swift.Int
+  @objc final public let firmwareCounter: Swift.Int
+  final public let data: MLBluetooth.MLAuditData
+  @objc final public let type: MLBluetooth.MLAuditTrailEventId
+  @objc final public let object: ObjectiveC.NSObject
+  @objc deinit
+}
+public enum MLAuditData {
+  case unknown
+  case firmwareUpdateInitiated(time: Foundation.Date, userId: Swift.Int, firmwareVersion: Swift.Int)
+  case firmwareUpdateCompleted(time: Foundation.Date, userId: Swift.Int, firmwareVersion: Swift.Int)
+  case timeStopped(time: Foundation.Date)
+  case timeWritten(time: Foundation.Date, newTime: Foundation.Date, userId: Swift.Int)
+  case invalidWirelessAccessAttempt(time: Foundation.Date, userId: Swift.Int?, type: MLBluetooth.MLInvalidWirelessAccessAttemptType)
+  case invalidPasscode(time: Foundation.Date, type: MLBluetooth.MLInvalidPasscodeType)
+  case wirelessUnlock(time: Foundation.Date, userId: Swift.Int, lock: MLBluetooth.MLLockMechanism, unlockTime: Swift.Int?)
+  case passcodeUnlock(time: Foundation.Date, lock: MLBluetooth.MLLockMechanism, type: MLBluetooth.MLPasscodeType, secondaryPasscodeIndex: Swift.Int?)
+  case opened(time: Foundation.Date?, lock: MLBluetooth.MLLockMechanism)
+  case closed(time: Foundation.Date, lock: MLBluetooth.MLLockMechanism)
+  case automaticRelock(time: Foundation.Date?, lock: MLBluetooth.MLLockMechanism)
+  case demoModeEnabled(time: Foundation.Date)
+  case demoModeDisabled(time: Foundation.Date)
+  case lockout(time: Foundation.Date)
+  case wirelessLock(time: Foundation.Date, userId: Swift.Int)
+  case keypadLocked(time: Foundation.Date)
+  case thumbturnLocked(time: Foundation.Date)
+  case thumbturnUnlocked(time: Foundation.Date)
+  case tamperSensorActivated(time: Foundation.Date)
+  case tamperSensorCleared(time: Foundation.Date)
+  case bluetoothWakeButtonPressed(time: Foundation.Date)
+  case temperatureStatus(time: Foundation.Date, temperatureEvent: MLBluetooth.TemperatureEvent, temperatureDegreesCelcius: Swift.Int)
+  case lockResetInitiated(time: Foundation.Date, userId: Swift.Int)
+  case configurableTempPasscodeResetInitiated(time: Foundation.Date, userId: Swift.Int)
+  case lockResetCompleted(time: Foundation.Date, userId: Swift.Int)
+  case configurableTempPasscodeResetCompleted(time: Foundation.Date, userId: Swift.Int)
+}
+@objc public enum MLLockMechanism : Swift.Int {
+  case primary
+  case secondary
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc extension MLBluetooth.MLProduct {
+  @objc dynamic public func lockReset(onComplete: @escaping () -> (), onError: @escaping (Swift.Error) -> ())
+}
+@_hasMissingDesignatedInitializers @objc public class TamperSensorCleared : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class ClosedSecondary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@objc public enum TemperatureEvent : Swift.UInt8 {
+  case low = 0x00
+  case normal = 0x01
+  case high = 0x02
+  public init?(rawValue: Swift.UInt8)
+  public typealias RawValue = Swift.UInt8
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class WirelessUnlockSecondary : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  public var unlockTime: Swift.Int?
+  @objc public var _unlockTime: Foundation.NSNumber? {
+    @objc get
+  }
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class LockOut : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class MLState : ObjectiveC.NSObject {
+  @objc public var isKeypadActive: Swift.Bool
+  @objc public var isOpen: Swift.Bool
+  @objc public var isUnlocked: Swift.Bool
+  @objc public var isJammed: Swift.Bool
+  @objc public var isTampered: Swift.Bool
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers @objc public class MLBluetoothSDK : ObjectiveC.NSObject {
+  @objc public static var main: MLBluetooth.MLBluetoothSDK
+  @objc public func configure(withLicense license: Swift.String, delegate: MLBluetooth.MLLockScannerDelegate, backgroundLocation: Swift.Bool = false, loggerConfiguration: MLBluetooth.LoggerConfiguration = .production) -> Swift.Bool
+  @objc public func startScanning() -> Swift.Bool
+  @objc public func stopScanning()
+  @objc public func getScannerState() -> CoreBluetooth.CBManagerState
+  @objc public func setLockScannerDelegate(delegate: MLBluetooth.MLLockScannerDelegate)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class UnknownAuditEvent : ObjectiveC.NSObject {
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers @objc public class FirmwareUpdateCompleted : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc public var userId: Swift.Int
+  @objc public var firmwareVersion: Swift.Int
+  @objc deinit
+}
+@objc public enum MLStateOptions : Swift.Int {
+  case primary
+  case secondary
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers @objc public class TamperSensorActivated : ObjectiveC.NSObject {
+  @objc public var time: Foundation.Date
+  @objc deinit
+}
+extension MLBluetooth.MLBroadcastState : Swift.Equatable {}
+extension MLBluetooth.MLBroadcastState : Swift.Hashable {}
+extension MLBluetooth.MLBroadcastState : Swift.RawRepresentable {}
+extension MLBluetooth.MLBluetoothState : Swift.Equatable {}
+extension MLBluetooth.MLBluetoothState : Swift.Hashable {}
+extension MLBluetooth.MLBluetoothState : Swift.RawRepresentable {}
+extension MLBluetooth.MLFirmwareUpdateState.UpdateState : Swift.Equatable {}
+extension MLBluetooth.MLFirmwareUpdateState.UpdateState : Swift.Hashable {}
+extension MLBluetooth.MLFirmwareUpdateState.UpdateState : Swift.RawRepresentable {}
+extension MLBluetooth.MLInvalidPasscodeType : Swift.Equatable {}
+extension MLBluetooth.MLInvalidPasscodeType : Swift.Hashable {}
+extension MLBluetooth.MLInvalidPasscodeType : Swift.RawRepresentable {}
+extension MLBluetooth.MLRegion : Swift.Equatable {}
+extension MLBluetooth.MLRegion : Swift.Hashable {}
+extension MLBluetooth.MLRegion : Swift.RawRepresentable {}
+extension MLBluetooth.Visibility : Swift.Equatable {}
+extension MLBluetooth.Visibility : Swift.Hashable {}
+extension MLBluetooth.Visibility : Swift.RawRepresentable {}
+extension MLBluetooth.Mechanism.MechanismState : Swift.Equatable {}
+extension MLBluetooth.Mechanism.MechanismState : Swift.Hashable {}
+extension MLBluetooth.Mechanism.MechanismState : Swift.RawRepresentable {}
+extension MLBluetooth.LockResetError : Swift.Equatable {}
+extension MLBluetooth.LockResetError : Swift.Hashable {}
+extension MLBluetooth.MLPasscodeType : Swift.Equatable {}
+extension MLBluetooth.MLPasscodeType : Swift.Hashable {}
+extension MLBluetooth.MLPasscodeType : Swift.RawRepresentable {}
+extension MLBluetooth.MLDisconnectOptions : Swift.Equatable {}
+extension MLBluetooth.MLDisconnectOptions : Swift.Hashable {}
+extension MLBluetooth.MLDisconnectOptions : Swift.RawRepresentable {}
+extension MLBluetooth.MLAuditTrailEventId : Swift.Equatable {}
+extension MLBluetooth.MLAuditTrailEventId : Swift.Hashable {}
+extension MLBluetooth.MLAuditTrailEventId : Swift.RawRepresentable {}
+extension MLBluetooth.MLInvalidWirelessAccessAttemptType : Swift.Equatable {}
+extension MLBluetooth.MLInvalidWirelessAccessAttemptType : Swift.Hashable {}
+extension MLBluetooth.MLInvalidWirelessAccessAttemptType : Swift.RawRepresentable {}
+extension MLBluetooth.MLUnlockOptions : Swift.Equatable {}
+extension MLBluetooth.MLUnlockOptions : Swift.Hashable {}
+extension MLBluetooth.MLUnlockOptions : Swift.RawRepresentable {}
+extension MLBluetooth.LoggerConfiguration : Swift.Equatable {}
+extension MLBluetooth.LoggerConfiguration : Swift.Hashable {}
+extension MLBluetooth.LoggerConfiguration : Swift.RawRepresentable {}
+extension MLBluetooth.MLLockMechanism : Swift.Equatable {}
+extension MLBluetooth.MLLockMechanism : Swift.Hashable {}
+extension MLBluetooth.MLLockMechanism : Swift.RawRepresentable {}
+extension MLBluetooth.TemperatureEvent : Swift.Equatable {}
+extension MLBluetooth.TemperatureEvent : Swift.Hashable {}
+extension MLBluetooth.TemperatureEvent : Swift.RawRepresentable {}
+extension MLBluetooth.MLStateOptions : Swift.Equatable {}
+extension MLBluetooth.MLStateOptions : Swift.Hashable {}
+extension MLBluetooth.MLStateOptions : Swift.RawRepresentable {}

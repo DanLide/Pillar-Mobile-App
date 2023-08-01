@@ -1,0 +1,4 @@
+framework module MLBluetooth {
+  header "MLBluetooth-Swift.h"
+  requires objc
+}
