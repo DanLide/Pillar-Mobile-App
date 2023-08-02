@@ -3,6 +3,7 @@ import { View, StyleSheet, Vibration } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
+import TrackPlayer from 'react-native-track-player';
 
 import {
   CurrentProductStoreType,
@@ -17,7 +18,6 @@ import { ProductModal, ProductModalParams } from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
-import { scanMelody } from './Sound';
 import { RequestError } from '../data/helpers/tryFetch';
 
 type StoreModel = ScannerModalStoreType &
@@ -85,7 +85,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       async code => {
         setIsScannerActive(false);
         Vibration.vibrate();
-        scanMelody.play();
+        TrackPlayer.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);

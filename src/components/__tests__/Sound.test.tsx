@@ -1,10 +1,8 @@
-import Sound from 'react-native-sound';
-
-import { scanMelody } from '../Sound';
+import TrackPlayer from 'react-native-track-player';
 
 describe('Sound', () => {
   it('call scanMelody', () => {
-    scanMelody.play();
-    expect(Sound.prototype.play).toHaveBeenCalled();
+    TrackPlayer.play();
+    expect(TrackPlayer.play).toHaveBeenCalled();
   });
 });

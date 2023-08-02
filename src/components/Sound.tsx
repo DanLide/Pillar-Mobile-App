@@ -1,16 +1,53 @@
-import Sound from 'react-native-sound';
+import TrackPlayer, {
+  AppKilledPlaybackBehavior,
+  Capability,
+  RepeatMode,
+  Event
+} from 'react-native-track-player';
 
-import beep from '../../assets/sounds/beep.wav'
+const beepSound = {
+  id: '1',
+  url: require('../../assets/sounds/beep.wav'),
+}
 
-Sound.setCategory('Playback');
-
-const scanMelody = new Sound(beep, '', (error) => {
-  if (error) {
-    console.error("failed to load the sound", error);
-    return;
+export async function setupPlayer() {
+  let isSetup = false;
+  try {
+    await TrackPlayer.getCurrentTrack();
+    isSetup = true;
   }
-})
+  catch {
+    await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({
+      android: {
+        appKilledPlaybackBehavior:
+          AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+      },
+      capabilities: [
+        Capability.Play,
+      ],
+      compactCapabilities: [
+        Capability.Play,
+      ],
+      progressUpdateEventInterval: 2,
+    });
 
-export {
-  scanMelody
+    isSetup = true;
+  }
+  finally {
+    return isSetup;
+  }
+}
+
+export async function addTracks() {
+  await TrackPlayer.add([
+    beepSound,
+  ]);
+  await TrackPlayer.setRepeatMode(RepeatMode.Off);
+}
+
+export async function playbackService() {
+  TrackPlayer.addEventListener(Event.PlaybackQueueEnded, () => {
+    addTracks();
+  });
 }
