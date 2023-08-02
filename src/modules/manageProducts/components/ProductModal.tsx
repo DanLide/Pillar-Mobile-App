@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,6 +52,8 @@ export const ProductModal = memo(
     onClose,
     onChangeProductQuantity,
   }: ProductModalProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
@@ -77,10 +79,13 @@ export const ProductModal = memo(
       [enabledSuppliers, product?.supplierPartyRoleId],
     );
 
-    const handleSubmit = useCallback(
-      () => product && onSubmit(product),
-      [onSubmit, product],
-    );
+    const handleSubmit = useCallback(async () => {
+      if (!product) return;
+
+      setIsLoading(true);
+      await onSubmit(product);
+      setIsLoading(false);
+    }, [onSubmit, product]);
 
     const scrollTo = useCallback(
       (destination: number) => {
@@ -198,11 +203,13 @@ export const ProductModal = memo(
           <Button
             title="Edit"
             type={ButtonType.secondary}
+            disabled={isLoading}
             buttonStyle={styles.buttonContainer}
           />
           <Button
             title="Done"
             type={ButtonType.primary}
+            isLoading={isLoading}
             buttonStyle={styles.buttonContainer}
             onPress={handleSubmit}
           />

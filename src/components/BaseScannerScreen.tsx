@@ -38,7 +38,7 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: () => void;
+  onSubmit?: () => Promise<void>;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
   ProductModalComponent?: React.FC<ProductModalProps>;
@@ -115,10 +115,13 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     );
 
     const onProductSubmit = useCallback(
-      (product: ProductModel) => {
-        const { nameDetails, reservedCount } = product;
+      async (product: ProductModel) => {
+        if (onSubmit) {
+          await onSubmit();
+          return;
+        }
 
-        onSubmit?.();
+        const { nameDetails, reservedCount } = product;
 
         store.addProduct(product);
 

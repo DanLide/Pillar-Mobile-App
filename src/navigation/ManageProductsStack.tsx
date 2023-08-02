@@ -11,7 +11,7 @@ import { SelectStockScreen } from '../modules/manageProducts/SelectStockScreen';
 import { ManageProductsScreen } from '../modules/manageProducts/ManageProductsScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
-import { ScannerScreen } from '../modules/manageProducts/ScannerScreen';
+import ScannerScreen from '../modules/manageProducts/ScannerScreen';
 
 const Stack = createStackNavigator<ManageProductsStackParamList>();
 

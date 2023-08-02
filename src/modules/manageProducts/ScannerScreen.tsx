@@ -19,6 +19,8 @@ import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
 import { onUpdateProduct } from '../../data/updateProduct';
 import { fetchProductDetails } from '../../data/fetchProductDetails';
+import { useToast } from 'react-native-toast-notifications';
+import { ToastType } from '../../contexts/types';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -29,11 +31,13 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-export const ScannerScreen: React.FC = observer(() => {
+const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
   const store = useRef<BaseProductsStore>(manageProductsStore).current;
+
+  const toast = useToast();
 
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
@@ -45,29 +49,42 @@ export const ScannerScreen: React.FC = observer(() => {
     [store],
   );
 
-  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+  const closeModal = useCallback(() => setModalParams(initModalParams), []);
 
-  const onFetchProduct = useCallback(
+  const fetchProduct = useCallback(
     (code: string) => fetchProductDetails(store, btoa(code)),
     [store],
   );
 
-  const updateProduct = useCallback(
-    () => onUpdateProduct(manageProductsStore),
-    [],
-  );
+  const updateProduct = useCallback(async () => {
+    const error = await onUpdateProduct(manageProductsStore);
+
+    if (error) {
+      toast.show('Sorry, there was an issue saving the product update', {
+        type: ToastType.Error,
+      });
+      return;
+    }
+
+    closeModal();
+    toast.show('Product Updated', { type: ToastType.Success });
+  }, [closeModal, toast]);
 
   return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen
-        store={store}
-        modalParams={modalParams}
-        onProductScan={onProductScan}
-        onFetchProduct={onFetchProduct}
-        onSubmit={updateProduct}
-        onCloseModal={onCloseModal}
-        ProductModalComponent={ProductModal}
-      />
-    </ToastContextProvider>
+    <BaseScannerScreen
+      store={store}
+      modalParams={modalParams}
+      onProductScan={onProductScan}
+      onFetchProduct={fetchProduct}
+      onSubmit={updateProduct}
+      onCloseModal={closeModal}
+      ProductModalComponent={ProductModal}
+    />
   );
 });
+
+export default () => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <ScannerScreen />
+  </ToastContextProvider>
+);
