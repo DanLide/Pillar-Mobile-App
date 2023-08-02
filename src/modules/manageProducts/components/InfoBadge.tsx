@@ -1,62 +1,65 @@
-import React, { memo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import { colors, fonts } from '../../../theme';
+import { isNil } from 'ramda';
 
-enum BadgeType {
+export enum BadgeType {
   Small,
   Medium,
   Large,
 }
 
 interface Props {
-  subtitle: string;
   title: string;
-  type: BadgeType;
+  subtitle?: number | string;
+  titleWithNewLine?: string;
+  type?: BadgeType;
 }
 
-const InfoBadge = memo(({ type }: Props) => {
-  return (
-    <View style={styles.badge}>
-      <Text style={styles.badgeTitle}>Pieces Per{'\n'} Container</Text>
-      <View style={styles.chip}>
-        <Text style={styles.chipText}>{product?.unitsPerContainer}</Text>
+export const InfoBadge = memo(
+  ({ type, title, titleWithNewLine, subtitle }: Props) => {
+    const containerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => (type === BadgeType.Medium ? styles.badgeMedium : styles.badge),
+      [type],
+    );
+
+    const Subtitle = useMemo<JSX.Element | undefined>(() => {
+      if (isNil(subtitle)) return;
+
+      switch (type) {
+        case BadgeType.Medium:
+          return <Text style={styles.subtitleMedium}>{subtitle}</Text>;
+        case BadgeType.Large:
+          return <Text style={styles.subtitleLarge}>{subtitle}</Text>;
+        default:
+          return (
+            <View style={styles.chip}>
+              <Text style={styles.subtitleSmall}>{subtitle}</Text>
+            </View>
+          );
+      }
+    }, [subtitle, type]);
+
+    return (
+      <View style={containerStyle}>
+        <Text style={styles.title}>
+          {title}
+          {titleWithNewLine ? `\n${titleWithNewLine}` : null}
+        </Text>
+        {Subtitle}
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   badge: {
     alignItems: 'center',
     gap: 8,
   },
-  badgeSmall: {
+  badgeMedium: {
     alignItems: 'center',
     gap: 4,
-  },
-  badgeSmallTitle: {
-    color: colors.grayDark,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  badgeTitle: {
-    color: colors.grayDark2,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  badgeQuantity: {
-    color: colors.black,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 24,
-    lineHeight: 28,
-  },
-  badgeSubtitle: {
-    color: colors.textNeutral,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 14,
-    lineHeight: 18,
   },
   chip: {
     backgroundColor: colors.background,
@@ -64,9 +67,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 4,
   },
-  chipText: {
+  subtitleLarge: {
+    color: colors.black,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 24,
+    lineHeight: 28,
+  },
+  subtitleMedium: {
+    color: colors.textNeutral,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 14,
+    lineHeight: 18,
+  },
+  subtitleSmall: {
     color: colors.black,
     fontFamily: fonts.TT_Bold,
     fontSize: 14,
+  },
+  title: {
+    color: colors.grayDark2,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 14,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+  titleSmall: {
+    color: colors.grayDark,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 14,
+    lineHeight: 18,
   },
 });

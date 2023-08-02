@@ -20,6 +20,7 @@ import {
 } from '../../productModal';
 
 import { colors, fonts } from '../../../theme';
+import { BadgeType, InfoBadge } from './InfoBadge';
 
 enum ScrollDirection {
   Down,
@@ -144,59 +145,52 @@ export const ProductModal = memo(
             />
             <Text style={styles.category}>{category?.description}</Text>
             <View style={styles.minMaxContainer}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeTitle}>Minimum Quantity</Text>
-                <Text style={styles.badgeQuantity}>{product?.min}</Text>
-              </View>
+              <InfoBadge
+                type={BadgeType.Large}
+                title="Minimum Quantity"
+                subtitle={product?.min}
+              />
               <Text style={styles.slash}>/</Text>
-              <View style={styles.badge}>
-                <Text style={styles.badgeTitle}>Maximum Quantity</Text>
-                <Text style={styles.badgeQuantity}>{product?.max}</Text>
-              </View>
+              <InfoBadge
+                type={BadgeType.Large}
+                title="Maximum Quantity"
+                subtitle={product?.max}
+              />
             </View>
             <View style={styles.orderSettings}>
-              <View style={styles.badge}>
-                <Text style={styles.badgeTitle}>
-                  Pieces Per{'\n'} Container
-                </Text>
-                <View style={styles.chip}>
-                  <Text style={styles.chipText}>
-                    {product?.unitsPerContainer}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.badge}>
-                <Text style={styles.badgeTitle}>Shipment{'\n'} Quantity</Text>
-                <View style={styles.chip}>
-                  <Text style={styles.chipText}>{product?.orderMultiple}</Text>
-                </View>
-              </View>
-              <View style={styles.badge}>
-                <Text style={styles.badgeTitle}>On Order</Text>
-                <View style={styles.chip}>
-                  <Text style={styles.chipText}>{product?.onOrder}</Text>
-                </View>
-              </View>
+              <InfoBadge
+                title="Pieces Per"
+                titleWithNewLine="Container"
+                subtitle={product?.unitsPerContainer}
+              />
+              <InfoBadge
+                title="Shipment"
+                titleWithNewLine="Quantity"
+                subtitle={product?.orderMultiple}
+              />
+              <InfoBadge title="On Order" subtitle={product?.onOrder} />
             </View>
             <View style={styles.bottomInfo}>
-              <View style={styles.badgeSmall}>
-                <Text style={styles.badgeTitle}>Distributor</Text>
-                <Text style={styles.badgeSubtitle}>{supplier?.name}</Text>
-              </View>
-              <View style={styles.badgeSmall}>
-                <Text style={styles.badgeTitle}>Restock From</Text>
-                <Text style={styles.badgeSubtitle}>{restockFrom?.name}</Text>
-              </View>
-              <View style={styles.badgeSmall}>
-                <Text style={styles.badgeTitle}>UPC</Text>
-                <Text style={styles.badgeSubtitle}>{product?.upc}</Text>
-              </View>
-              <View style={styles.badgeSmall}>
-                <Text style={styles.badgeTitle}>Recoverable</Text>
-                <Text style={styles.badgeSubtitle}>
-                  {product?.isRecoverable ? 'Yes' : 'No'}
-                </Text>
-              </View>
+              <InfoBadge
+                type={BadgeType.Medium}
+                title="Distributor"
+                subtitle={supplier?.name}
+              />
+              <InfoBadge
+                type={BadgeType.Medium}
+                title="Restock From"
+                subtitle={restockFrom?.name}
+              />
+              <InfoBadge
+                type={BadgeType.Medium}
+                title="UPC"
+                subtitle={product?.upc}
+              />
+              <InfoBadge
+                type={BadgeType.Medium}
+                title="Recoverable"
+                subtitle={product?.isRecoverable ? 'Yes' : 'No'}
+              />
             </View>
           </View>
         </Animated.ScrollView>
@@ -219,38 +213,6 @@ export const ProductModal = memo(
 );
 
 const styles = StyleSheet.create({
-  badge: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  badgeSmall: {
-    alignItems: 'center',
-    gap: 4,
-  },
-  badgeSmallTitle: {
-    color: colors.grayDark,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  badgeTitle: {
-    color: colors.grayDark2,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  badgeQuantity: {
-    color: colors.black,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 24,
-    lineHeight: 28,
-  },
-  badgeSubtitle: {
-    color: colors.textNeutral,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 14,
-    lineHeight: 18,
-  },
   bottomInfo: {
     gap: 16,
   },
@@ -270,17 +232,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     fontSize: 14,
     lineHeight: 20,
-  },
-  chip: {
-    backgroundColor: colors.background,
-    borderRadius: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 4,
-  },
-  chipText: {
-    color: colors.black,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 14,
   },
   contentContainer: {
     gap: 24,
