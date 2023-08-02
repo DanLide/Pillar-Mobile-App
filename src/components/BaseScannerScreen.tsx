@@ -104,7 +104,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       async code => {
         setIsScannerActive(false);
         trigger('selection', hapticOptions);
-        scanMelody.play();
+        // scanMelody.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);

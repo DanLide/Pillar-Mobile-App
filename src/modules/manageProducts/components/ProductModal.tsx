@@ -11,15 +11,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { find, whereEq } from 'ramda';
 
-import { Button, ButtonType, Modal } from '../../components';
+import { Button, ButtonType, Modal } from '../../../components';
 import {
   Description,
   ProductModalProps,
   ProductModalType,
   ProductQuantity,
-} from '../productModal';
+} from '../../productModal';
 
-import { colors, fonts } from '../../theme';
+import { colors, fonts } from '../../../theme';
 
 enum ScrollDirection {
   Down,
@@ -51,11 +51,10 @@ export const ProductModal = memo(
     onClose,
     onChangeProductQuantity,
   }: ProductModalProps) => {
-    const headerHeight = useHeaderHeight();
+    const modalCollapsedOffset = useHeaderHeight();
+    const { top: modalExpandedOffset } = useSafeAreaInsets();
 
-    const topOffset = useSharedValue(headerHeight);
-
-    const { top: statusBarHeight } = useSafeAreaInsets();
+    const topOffset = useSharedValue(modalCollapsedOffset);
 
     const category = useMemo(
       () => find(whereEq({ id: product?.categoryId }), categories),
@@ -91,9 +90,9 @@ export const ProductModal = memo(
     );
 
     const clearProductModalStoreOnClose = useCallback(() => {
-      scrollTo(headerHeight);
+      scrollTo(modalCollapsedOffset);
       onClose();
-    }, [headerHeight, onClose, scrollTo]);
+    }, [onClose, modalCollapsedOffset, scrollTo]);
 
     const scrollHandler = useAnimatedScrollHandler(
       {
@@ -105,10 +104,10 @@ export const ProductModal = memo(
 
           switch (scrollDirection) {
             case ScrollDirection.Up:
-              scrollTo(headerHeight - statusBarHeight);
+              scrollTo(modalExpandedOffset);
               break;
             case ScrollDirection.Down:
-              scrollTo(headerHeight);
+              scrollTo(modalCollapsedOffset);
               break;
           }
         },
