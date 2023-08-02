@@ -1,6 +1,6 @@
 import { Task } from './helpers';
 import { ManageProductsStore } from '../modules/manageProducts/stores';
-import { updateProductAPI } from './api/productsAPI';
+import { updateProductQuantityAPI } from './api/productsAPI';
 
 export const onUpdateProduct = (manageProductsStore: ManageProductsStore) =>
   new UpdateProductTask(manageProductsStore).run();
@@ -14,7 +14,7 @@ export class UpdateProductTask extends Task {
   }
 
   async run() {
-    await updateProductAPI(
+    await updateProductQuantityAPI(
       this.manageProductsStore.getCurrentProduct,
       this.manageProductsStore.currentStock,
     );

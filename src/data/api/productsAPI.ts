@@ -172,11 +172,11 @@ export const getEnabledSuppliersByProductIdAPI = (productId: number) => {
   });
 };
 
-export const updateProductAPI = (
+export const updateProductQuantityAPI = (
   product?: ProductModel,
   currentStock?: StockModel,
 ) => {
-  const url = new URLProvider().updateProduct();
+  const url = new URLProvider().updateProductQuantity();
 
   const body = JSON.stringify([
     {
@@ -192,6 +192,12 @@ export const updateProductAPI = (
 
   return tryAuthFetch<string>({
     url,
-    request: { method: 'POST', body },
+    request: {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   });
 };

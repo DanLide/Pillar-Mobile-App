@@ -182,9 +182,9 @@ export class URLProvider {
     );
   }
 
-  updateProduct() {
+  updateProductQuantity() {
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/InventoryTransaction`,
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryTransaction`,
     );
   }
 }
