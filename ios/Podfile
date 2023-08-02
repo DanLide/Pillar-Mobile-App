@@ -49,21 +49,6 @@ abstract_target 'RepairStackAbstract' do
     # Pods for testing
   end
 
-  target 'RepairStackReleasePROD' do
-    inherit! :complete
-    # Pods for release
-  end
-
-  target 'RepairStackReleaseUAT' do
-    inherit! :complete
-    # Pods for release
-  end
-
-  target 'RepairStackReleaseQA' do
-    inherit! :complete
-    # Pods for release
-  end
-
   target 'RepairStackQA' do
     inherit! :complete
     # Pods for release

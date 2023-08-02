@@ -19,10 +19,12 @@ agvtool new-marketing-version $stringVersion
 
 cd ../ios_export
 
+# where $1 is Target name
 xcodebuild -workspace ../ios/RepairStack.xcworkspace  -scheme "$1" -archivePath build/RepairStack.xcarchive archive
 
 xcodebuild -exportArchive -archivePath build/RepairStack.xcarchive -exportPath build -exportOptionsPlist src/ExportOptions.plist
 
+# where $2 is dropbox key
 python src/upload_manifest.py --v "$stringVersion" --t "$2"
 
 rm -Rf build/manifest.plist
