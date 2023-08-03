@@ -122,8 +122,6 @@
 		00E356EE1AD99517003FC87E /* RepairStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RepairStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* RepairStackTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RepairStackTests.m; sourceTree = "<group>"; };
-		023A0B287E48B77598820B62 /* Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig"; sourceTree = "<group>"; };
-		037FE0AFC4D911EB7AC76D1D /* Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig"; sourceTree = "<group>"; };
 		0F76F3C673B3575309229ACC /* Pods-RepairStack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack.release.xcconfig"; path = "Target Support Files/Pods-RepairStack/Pods-RepairStack.release.xcconfig"; sourceTree = "<group>"; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = RepairStack/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = RepairStack/AppDelegate.mm; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RepairStack/main.m; sourceTree = "<group>"; };
 		1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-LightItalic.otf"; path = "../assets/fonts/3MCircular-LightItalic.otf"; sourceTree = "<group>"; };
 		29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
-		34DC0A54178E71DCB92E5C1A /* Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig"; sourceTree = "<group>"; };
 		35687FC0B2B6150FF4C5E22F /* Pods-RepairStack-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
 		368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-BoldItalic.otf"; path = "../assets/fonts/3MCircular-BoldItalic.otf"; sourceTree = "<group>"; };
 		3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Bold.otf"; path = "../assets/fonts/3MCircularTT-Bold.otf"; sourceTree = "<group>"; };
@@ -152,38 +149,29 @@
 		726995C02A79AC14008C7ACB /* RepairStackPROD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackPROD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726995C12A79AC14008C7ACB /* RepairStack prod-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack prod-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack prod-Info.plist"; sourceTree = "<absolute>"; };
 		72A711562A576EB900870488 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		7652C9377B09497781B42A2F /* libPods-RepairStackAbstract-RepairStackReleasePROD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleasePROD.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B88CC87B172967C9C7AAE3F /* Pods-RepairStack-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Book.otf"; path = "../assets/fonts/3MCircular-Book.otf"; sourceTree = "<group>"; };
 		819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackQA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RepairStack/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		86D340BD8F6E4CBCB5F40A10 /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleaseUAT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Light.otf"; path = "../assets/fonts/3MCircularTT-Light.otf"; sourceTree = "<group>"; };
-		9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
 		95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MLBluetooth.xcframework; path = RepairStack/frameworks/MLBluetooth.xcframework; sourceTree = "<group>"; };
 		95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTMasterLockModule.h; sourceTree = "<group>"; };
 		95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTMasterLockModule.m; sourceTree = "<group>"; };
 		95C46AC429D55D300021495A /* RepairStack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RepairStack.entitlements; path = RepairStack/RepairStack.entitlements; sourceTree = "<group>"; };
-		965426215994A02D118D0E60 /* Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseQA/Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig"; sourceTree = "<group>"; };
 		9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Black.otf"; path = "../assets/fonts/3MCircularTT-Black.otf"; sourceTree = "<group>"; };
 		9C8477C47B6C524BEED4C70D /* Pods-RepairStackAbstract-RepairStack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; sourceTree = "<group>"; };
 		9F588BC41CF347C7AC095551 /* 3MCircular-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Light.otf"; path = "../assets/fonts/3MCircular-Light.otf"; sourceTree = "<group>"; };
 		A10F68306F6708F2FF79350E /* Pods-RepairStackAbstract-RepairStackQA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackQA.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackQA/Pods-RepairStackAbstract-RepairStackQA.release.xcconfig"; sourceTree = "<group>"; };
 		A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Italic.otf"; path = "../assets/fonts/3MCircularTT-Italic.otf"; sourceTree = "<group>"; };
-		B61B72E6337E8A747BBBE1B0 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackReleaseQA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8366F508EEEE39860632760 /* Pods-RepairStack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack/Pods-RepairStack.debug.xcconfig"; sourceTree = "<group>"; };
-		BCC05D0E6E5AB3118AB6ED41 /* Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleasePROD/Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig"; sourceTree = "<group>"; };
 		BDAEE5F23EE741309650C29F /* 3MCircular-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Bold.otf"; path = "../assets/fonts/3MCircular-Bold.otf"; sourceTree = "<group>"; };
 		BF8378FC0054E545EE27BA55 /* Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig"; sourceTree = "<group>"; };
 		C0A1923211ED75E208C3EEAF /* Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackUAT/Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig"; sourceTree = "<group>"; };
 		DC0C9B7EDD6C9EBF556D1B9D /* Pods-RepairStackAbstract-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
 		E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackPROD.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E4459A7535F1DA493A7BC1C4 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig"; sourceTree = "<group>"; };
 		E45C7BF323A90D17571A5F7A /* Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackPROD/Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig"; sourceTree = "<group>"; };
 		E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-BoldItalic.otf"; path = "../assets/fonts/3MCircularTT-BoldItalic.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F337615BF3F1F1A16EA0C58A /* Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackRelease/Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig"; sourceTree = "<group>"; };
-		F8FE93A79631C4113C29A546 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackReleaseUAT/Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,7 +236,6 @@
 			children = (
 				95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */,
 				95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */,
-				9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */,
 				95C46AC429D55D300021495A /* RepairStack.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -290,9 +277,6 @@
 				5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */,
 				E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */,
 				819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */,
-				7652C9377B09497781B42A2F /* libPods-RepairStackAbstract-RepairStackReleasePROD.a */,
-				B61B72E6337E8A747BBBE1B0 /* libPods-RepairStackAbstract-RepairStackReleaseQA.a */,
-				86D340BD8F6E4CBCB5F40A10 /* libPods-RepairStackAbstract-RepairStackReleaseUAT.a */,
 				437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */,
 			);
 			name = Frameworks;
@@ -344,20 +328,12 @@
 				35687FC0B2B6150FF4C5E22F /* Pods-RepairStack-RepairStackTests.release.xcconfig */,
 				9C8477C47B6C524BEED4C70D /* Pods-RepairStackAbstract-RepairStack.debug.xcconfig */,
 				45D21D02C990BF6286BD5B0F /* Pods-RepairStackAbstract-RepairStack.release.xcconfig */,
-				F337615BF3F1F1A16EA0C58A /* Pods-RepairStackAbstract-RepairStackRelease.debug.xcconfig */,
-				023A0B287E48B77598820B62 /* Pods-RepairStackAbstract-RepairStackRelease.release.xcconfig */,
 				29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */,
 				DC0C9B7EDD6C9EBF556D1B9D /* Pods-RepairStackAbstract-RepairStackTests.release.xcconfig */,
 				BF8378FC0054E545EE27BA55 /* Pods-RepairStackAbstract-RepairStackPROD.debug.xcconfig */,
 				E45C7BF323A90D17571A5F7A /* Pods-RepairStackAbstract-RepairStackPROD.release.xcconfig */,
 				5BCA6DFD28A123CD5A5F2CB0 /* Pods-RepairStackAbstract-RepairStackQA.debug.xcconfig */,
 				A10F68306F6708F2FF79350E /* Pods-RepairStackAbstract-RepairStackQA.release.xcconfig */,
-				34DC0A54178E71DCB92E5C1A /* Pods-RepairStackAbstract-RepairStackReleasePROD.debug.xcconfig */,
-				BCC05D0E6E5AB3118AB6ED41 /* Pods-RepairStackAbstract-RepairStackReleasePROD.release.xcconfig */,
-				037FE0AFC4D911EB7AC76D1D /* Pods-RepairStackAbstract-RepairStackReleaseQA.debug.xcconfig */,
-				965426215994A02D118D0E60 /* Pods-RepairStackAbstract-RepairStackReleaseQA.release.xcconfig */,
-				F8FE93A79631C4113C29A546 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.debug.xcconfig */,
-				E4459A7535F1DA493A7BC1C4 /* Pods-RepairStackAbstract-RepairStackReleaseUAT.release.xcconfig */,
 				C0A1923211ED75E208C3EEAF /* Pods-RepairStackAbstract-RepairStackUAT.debug.xcconfig */,
 				5C0853117BC0A10D34724A1F /* Pods-RepairStackAbstract-RepairStackUAT.release.xcconfig */,
 			);
