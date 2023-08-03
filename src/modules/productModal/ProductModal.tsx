@@ -4,7 +4,10 @@ import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
 
 import { Modal } from '../../components';
-import { ProductQuantity } from './components/quantityTab';
+import {
+  ProductQuantity,
+  ProductQuantityToastType,
+} from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { colors } from '../../theme';
@@ -27,10 +30,11 @@ export enum ProductModalType {
 
 export interface ProductModalParams {
   type: ProductModalType;
-  error?: string;
   isEdit?: boolean;
   maxValue?: number;
   onHand?: number;
+  toastType?: ProductQuantityToastType;
+  onToastAction?: () => void;
 }
 
 export interface ProductModalProps extends ProductModalParams {
@@ -71,7 +75,7 @@ export const ProductModal = memo(
     type,
     product,
     stockName,
-    error,
+    toastType,
     isEdit,
     maxValue = 0,
     onHand = 0,
@@ -149,7 +153,7 @@ export const ProductModal = memo(
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
                 jobSelectable={type === ProductModalType.Remove}
-                error={error}
+                toastType={toastType}
                 maxValue={maxValue}
                 style={{ paddingTop: 16 }}
                 onHand={onHand}
@@ -178,10 +182,10 @@ export const ProductModal = memo(
         product,
         onSubmit,
         clearProductModalStoreOnClose,
+        type,
         onChangeProductQuantity,
         isEdit,
-        type,
-        error,
+        toastType,
         maxValue,
         onHand,
         onJobSelectNavigation,

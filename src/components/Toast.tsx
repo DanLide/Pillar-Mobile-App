@@ -1,4 +1,9 @@
-import React, { NamedExoticComponent, useCallback, useMemo } from 'react';
+import React, {
+  NamedExoticComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
   Dimensions,
   StyleProp,
@@ -19,6 +24,7 @@ const { width } = Dimensions.get('window');
 
 export enum ToastActionType {
   Close = 'Close',
+  Retry = 'Retry',
   Undo = 'Undo',
 }
 
@@ -34,11 +40,15 @@ const icons: Record<
   NamedExoticComponent<SVGs.SvgPropsWithColors>
 > = {
   [ToastType.Error]: SVGs.ListErrorIcon,
-  [ToastType.Info]: SVGs.ListAffirmativeIcon,
-  [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
+  [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
+
+  [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.TooltipInfoIcon,
+
+  [ToastType.Success]: SVGs.ListAffirmativeIcon,
+  [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
 };
 
 export const Toast: React.FC<Props> = ({
@@ -65,15 +75,22 @@ export const Toast: React.FC<Props> = ({
     );
   }, [primary, secondary, type]);
 
-  const Message = useMemo<JSX.Element>(
-    () =>
-      typeof message === 'string' ? (
-        <ToastMessage>{message}</ToastMessage>
-      ) : (
-        message
-      ),
-    [message],
-  );
+  const messageStyle = useMemo(() => {
+    switch (type) {
+      case ToastType.ProductUpdateSuccess:
+        return styles.messageLeft;
+      default:
+        return null;
+    }
+  }, [type]);
+
+  const Message = useMemo<JSX.Element>(() => {
+    if (typeof message === 'string') {
+      return <ToastMessage style={messageStyle}>{message}</ToastMessage>;
+    }
+
+    return message;
+  }, [message, messageStyle]);
 
   const ActionButtonContent = useMemo<JSX.Element | null>(() => {
     switch (actionType) {
@@ -83,6 +100,15 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idCloseIcon(testID)}
             color={action}
           />
+        );
+      case ToastActionType.Retry:
+        return (
+          <Text
+            testID={testIds.idRetryText(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Retry
+          </Text>
         );
       case ToastActionType.Undo:
         return (
@@ -103,12 +129,15 @@ export const Toast: React.FC<Props> = ({
     [secondary, style],
   );
 
-  const handleRightButtonPress = useCallback(() => {
+  const handleRightButtonPress = useCallback(async () => {
     switch (actionType) {
       case ToastActionType.Close:
-        return onHide();
+        onHide();
+        break;
+      case ToastActionType.Retry:
       case ToastActionType.Undo:
-        return onPress?.(id);
+        await onPress?.(id);
+        break;
     }
   }, [actionType, onHide, onPress, id]);
 
@@ -149,4 +178,5 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     width: width - 16,
   },
+  messageLeft: { textAlign: 'left' },
 });

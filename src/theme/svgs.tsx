@@ -568,6 +568,19 @@ export const AffirmativeIcon = memo(
   ),
 );
 
+export const AffirmationSolidIcon = memo(
+  ({ primaryColor, ...props }: SvgPropsWithColors) => (
+    <Svg width={24} height={24} fill="none" {...props}>
+      <Path
+        fill={primaryColor}
+        fillRule="evenodd"
+        d="m16.555 7.878 1.007 1.078-8.017 7.482-3.118-3.119 1.043-1.043 2.11 2.111 6.975-6.509ZM12 2C6.487 2 2 6.486 2 12s4.487 10 10 10c5.514 0 10-4.486 10-10S17.514 2 12 2Z"
+        clipRule="evenodd"
+      />
+    </Svg>
+  ),
+);
+
 export const ErrorIcon = memo(
   ({ primaryColor, secondaryColor, ...props }: SvgPropsWithColors) => (
     <Svg width={17} height={17} fill="none" {...props}>

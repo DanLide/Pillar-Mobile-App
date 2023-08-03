@@ -1,4 +1,8 @@
-import { ProductQuantity, Description } from './components/quantityTab';
+import {
+  ProductQuantity,
+  Description,
+  ProductQuantityToastType,
+} from './components/quantityTab';
 import {
   ProductModal,
   ProductModalType,
@@ -8,4 +12,4 @@ import {
 
 export { ProductModal, ProductModalType, Description, ProductQuantity };
 
-export type { ProductModalParams, ProductModalProps };
+export type { ProductModalParams, ProductModalProps, ProductQuantityToastType };

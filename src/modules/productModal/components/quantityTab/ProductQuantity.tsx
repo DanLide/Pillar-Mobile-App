@@ -21,20 +21,32 @@ import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 
+export type ProductQuantityToastType =
+  | ToastType.ProductQuantityError
+  | ToastType.ProductUpdateError;
+
 interface Props extends ViewProps {
   type?: ProductModalType;
   maxValue: number;
   onHand: number;
   isEdit?: boolean;
   jobSelectable?: boolean;
-  error?: string;
+  toastType?: ProductQuantityToastType;
   product?: ProductModel;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
   onPressAddToList?: () => void;
   onJobSelectNavigation?: () => void;
+  onToastAction?: () => void;
 }
+
+export const toastMessages: Record<ProductQuantityToastType, string> = {
+  [ToastType.ProductQuantityError]:
+    "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
+  [ToastType.ProductUpdateError]:
+    'Sorry, there was an issue saving the product update',
+};
 
 export const ProductQuantity: React.FC<Props> = observer(
   ({
@@ -42,7 +54,7 @@ export const ProductQuantity: React.FC<Props> = observer(
     product,
     isEdit,
     jobSelectable,
-    error,
+    toastType,
     maxValue,
     onHand,
     style,
@@ -50,14 +62,19 @@ export const ProductQuantity: React.FC<Props> = observer(
     onPressAddToList,
     onJobSelectNavigation,
     onRemove,
+    onToastAction,
   }) => {
     const jobNumber = product?.job?.jobNumber;
 
     const toast = useToast();
 
     useEffect(() => {
-      if (error) toast.show?.(error, { type: ToastType.ProductQuantityError });
-    }, [error, toast]);
+      if (toastType)
+        toast.show?.(toastMessages[toastType], {
+          type: toastType,
+          onPress: onToastAction,
+        });
+    }, [onToastAction, toast, toastType]);
 
     if (!product) return null;
 
@@ -99,7 +116,7 @@ export const ProductQuantity: React.FC<Props> = observer(
             maxValue={maxValue}
             minValue={minQty}
             stepValue={minQty}
-            disabled={!!error}
+            disabled={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             onChange={onChange}
             onRemove={onRemove}
@@ -114,7 +131,7 @@ export const ProductQuantity: React.FC<Props> = observer(
           />
         </View>
 
-        {jobSelectable && !error && (
+        {jobSelectable && toastType !== ToastType.ProductQuantityError && (
           <View>
             <Pressable
               onPress={onJobSelectNavigation}
@@ -135,7 +152,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
         {type !== ProductModalType.ManageProduct && (
           <Button
-            disabled={!!error}
+            disabled={toastType === ToastType.ProductQuantityError}
             type={ButtonType.primary}
             buttonStyle={styles.continueButton}
             title={buttonLabel}

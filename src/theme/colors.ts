@@ -26,6 +26,8 @@ export const colors = {
   green: '#0A672F',
   greenLight: '#D9FAE6',
   green2: '#00FD92',
+  green3: '#51C981',
+  green4: '#2A854E',
   yellow: '#FFC156',
   blue: '#1A51C2',
   blueLight: '#E8F3FF',

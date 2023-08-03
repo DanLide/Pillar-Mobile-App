@@ -9,7 +9,10 @@ import { testIds } from '../helpers';
 
 import { ToastType } from './types';
 
-type Props = PropsWithChildren<ToastProviderProps> & { testID?: string };
+interface Props extends PropsWithChildren<ToastProviderProps> {
+  disableSafeArea?: boolean;
+  testID?: string;
+}
 
 const TOAST_DURATION_MS = 3000;
 const OFFSET_DEFAULT = 16;
@@ -19,6 +22,7 @@ export const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
 export const ToastContextProvider: React.FC<Props> = ({
   children,
   offset = 0,
+  disableSafeArea,
   testID = 'toastContext',
   ...props
 }) => {
@@ -30,20 +34,6 @@ export const ToastContextProvider: React.FC<Props> = ({
         <Toast
           {...toast}
           type={ToastType.Error}
-          actionType={ToastActionType.Close}
-        />
-      ),
-      [ToastType.Info]: toast => (
-        <Toast
-          {...toast}
-          type={ToastType.Info}
-          actionType={ToastActionType.Close}
-        />
-      ),
-      [ToastType.Success]: toast => (
-        <Toast
-          {...toast}
-          type={ToastType.Success}
           actionType={ToastActionType.Close}
         />
       ),
@@ -62,12 +52,47 @@ export const ToastContextProvider: React.FC<Props> = ({
           style={styles.productQuantityError}
         />
       ),
+      [ToastType.ProductUpdateError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ProductUpdateError}
+          actionType={ToastActionType.Retry}
+        />
+      ),
+
+      [ToastType.Info]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.Info}
+          actionType={ToastActionType.Close}
+        />
+      ),
+
+      [ToastType.Success]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.Success}
+          actionType={ToastActionType.Close}
+        />
+      ),
+      [ToastType.ProductUpdateSuccess]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ProductUpdateSuccess}
+          actionType={ToastActionType.Close}
+        />
+      ),
     }),
     [],
   );
 
+  const ContainerComponent = disableSafeArea ? View : SafeAreaView;
+
   return (
-    <SafeAreaView testID={testIds.idContainer(testID)} style={styles.container}>
+    <ContainerComponent
+      testID={testIds.idContainer(testID)}
+      style={styles.container}
+    >
       <View style={styles.container}>
         <ToastProvider
           duration={TOAST_DURATION_MS}
@@ -80,7 +105,7 @@ export const ToastContextProvider: React.FC<Props> = ({
           {children}
         </ToastProvider>
       </View>
-    </SafeAreaView>
+    </ContainerComponent>
   );
 };
 

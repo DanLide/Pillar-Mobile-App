@@ -6,15 +6,11 @@ import { BaseScannerScreen } from '../../components';
 import { ProductModal } from './components';
 
 import {
-  ScannerModalStoreType,
   CurrentProductStoreType,
-  StockProductStoreType,
   ProductModel,
+  ScannerModalStoreType,
+  StockProductStoreType,
 } from '../../stores/types';
-import {
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-  ToastContextProvider,
-} from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
 import { onUpdateProduct } from '../../data/updateProduct';
@@ -60,14 +56,15 @@ const ScannerScreen: React.FC = observer(() => {
     const error = await onUpdateProduct(manageProductsStore);
 
     if (error) {
-      toast.show('Sorry, there was an issue saving the product update', {
-        type: ToastType.Error,
+      setModalParams({
+        type: ProductModalType.ManageProduct,
+        toastType: ToastType.ProductUpdateError,
       });
       return;
     }
 
     closeModal();
-    toast.show('Product Updated', { type: ToastType.Success });
+    toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
   }, [closeModal, toast]);
 
   return (
@@ -83,8 +80,4 @@ const ScannerScreen: React.FC = observer(() => {
   );
 });
 
-export default () => (
-  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-    <ScannerScreen />
-  </ToastContextProvider>
-);
+export default ScannerScreen;
