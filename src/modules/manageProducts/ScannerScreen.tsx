@@ -17,6 +17,10 @@ import { onUpdateProduct } from '../../data/updateProduct';
 import { fetchProductDetails } from '../../data/fetchProductDetails';
 import { useToast } from 'react-native-toast-notifications';
 import { ToastType } from '../../contexts/types';
+import {
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from '../../contexts';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -80,4 +84,8 @@ const ScannerScreen: React.FC = observer(() => {
   );
 });
 
-export default ScannerScreen;
+export default () => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <ScannerScreen />
+  </ToastContextProvider>
+);
