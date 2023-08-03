@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,6 +22,8 @@ import {
 import { colors, fonts } from '../../../theme';
 import { BadgeType, InfoBadge } from './InfoBadge';
 import { ToastContextProvider } from '../../../contexts';
+import { categoriesStore, suppliersStore } from '../../../stores';
+import { observer } from 'mobx-react';
 
 enum ScrollDirection {
   Down,
@@ -37,14 +39,11 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
   restSpeedThreshold: 10,
 };
 
-export const ProductModal = memo(
+export const ProductModal = observer(
   ({
     type,
     product,
     stockName,
-    categories,
-    suppliers,
-    enabledSuppliers,
     toastType,
     onToastAction,
     isEdit,
@@ -62,23 +61,27 @@ export const ProductModal = memo(
     const topOffset = useSharedValue(modalCollapsedOffset);
 
     const category = useMemo(
-      () => find(whereEq({ id: product?.categoryId }), categories),
-      [categories, product?.categoryId],
+      () =>
+        find(whereEq({ id: product?.categoryId }), categoriesStore.categories),
+      [product?.categoryId],
     );
 
     const supplier = useMemo(
       () =>
-        find(whereEq({ partyRoleId: product?.supplierPartyRoleId }), suppliers),
-      [product?.supplierPartyRoleId, suppliers],
+        find(
+          whereEq({ partyRoleId: product?.supplierPartyRoleId }),
+          suppliersStore.suppliers,
+        ),
+      [product?.supplierPartyRoleId],
     );
 
     const restockFrom = useMemo(
       () =>
         find(
           whereEq({ partyRoleId: product?.supplierPartyRoleId }),
-          enabledSuppliers,
+          suppliersStore.enabledSuppliers,
         ),
-      [enabledSuppliers, product?.supplierPartyRoleId],
+      [product?.supplierPartyRoleId],
     );
 
     const handleSubmit = useCallback(async () => {

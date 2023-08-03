@@ -18,7 +18,6 @@ import {
 } from '../../contexts';
 import { ProductModel } from '../../stores/types';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { CategoryResponse, SupplierResponse } from '../../data/api/productsAPI';
 
 export enum ProductModalType {
   Remove,
@@ -40,10 +39,6 @@ export interface ProductModalParams {
 export interface ProductModalProps extends ProductModalParams {
   product?: ProductModel;
   stockName?: string;
-
-  categories: CategoryResponse[];
-  suppliers: SupplierResponse[];
-  enabledSuppliers: SupplierResponse[];
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;

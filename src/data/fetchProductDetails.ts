@@ -4,13 +4,9 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchProductAPI } from './api';
 
 import {
-  CategoryResponse,
-  getCategoriesByFacilityIdAPI,
   getEnabledSuppliersByProductIdAPI,
   getProductSettingsByIdAPI,
-  getSupplierListByFacilityIdAPI,
   ProductResponse,
-  SupplierResponse,
 } from './api/productsAPI';
 
 import {
@@ -18,13 +14,12 @@ import {
   ProductModel,
   StockProductStoreType,
 } from '../stores/types';
+import { SupplierModel } from '../stores/SuppliersStore';
+import { suppliersStore } from '../stores';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
-
-  categories: CategoryResponse[];
-  suppliers: SupplierResponse[];
-  enabledSuppliers: SupplierResponse[];
+  enabledSuppliers: SupplierModel[];
 }
 
 export const fetchProductDetails = async (
@@ -33,24 +28,18 @@ export const fetchProductDetails = async (
 ) => {
   const productContext: FetchProductByScannedCodeContext = {
     product: undefined,
-
-    categories: [],
-    suppliers: [],
     enabledSuppliers: [],
   };
-  const result = await new TaskExecutor([
+  return new TaskExecutor([
     new FetchProductDetails(productContext, scanCode, store),
     new SaveProductToStoreTask(productContext, store),
   ]).execute();
-
-  return result;
 };
 
 export class FetchProductDetails extends Task {
   productContext: FetchProductByScannedCodeContext;
   scanCode: string;
   stockStore?: StockProductStoreType;
-  fetchProductDetails?: boolean;
 
   constructor(
     productContext: FetchProductByScannedCodeContext,
@@ -64,22 +53,18 @@ export class FetchProductDetails extends Task {
   }
 
   async run(): Promise<void> {
-    const product = await getFetchProductAPI(
-      this.scanCode,
-      this.stockStore?.currentStock,
-    );
+    const currentStock = this.stockStore?.currentStock;
 
-    this.productContext.categories = await getCategoriesByFacilityIdAPI();
+    const product = await getFetchProductAPI(this.scanCode, currentStock);
 
-    const { max, min, orderMultiple } = await getProductSettingsByIdAPI(
-      product.productId,
-      this.stockStore?.currentStock,
-    );
+    const [settings, enabledSuppliers] = await Promise.all([
+      getProductSettingsByIdAPI(product.productId, currentStock),
+      getEnabledSuppliersByProductIdAPI(product.productId),
+    ]);
 
-    this.productContext.suppliers = await getSupplierListByFacilityIdAPI();
+    const { max, min, orderMultiple } = settings;
 
-    this.productContext.enabledSuppliers =
-      await getEnabledSuppliersByProductIdAPI(product.productId);
+    this.productContext.enabledSuppliers = enabledSuppliers;
 
     this.productContext.product = {
       ...product,
@@ -104,12 +89,9 @@ export class SaveProductToStoreTask extends Task {
   }
 
   async run(): Promise<void> {
-    const { product, categories, suppliers, enabledSuppliers } =
-      this.productContext;
+    const { product, enabledSuppliers } = this.productContext;
 
-    this.currentProductStore.setCategories(categories);
-    this.currentProductStore.setSuppliers(suppliers);
-    this.currentProductStore.setEnabledSuppliers(enabledSuppliers);
+    suppliersStore.setEnabledSuppliers(enabledSuppliers);
 
     this.currentProductStore.setCurrentProduct(
       product && this.mapProductResponse(product),

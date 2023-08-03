@@ -9,77 +9,88 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 
-import { StockModel } from '../stores/StocksStore';
+import { StockModel, StockStore } from '../stores/StocksStore';
 import { stocksStore } from '../stores';
 import { fetchStocks } from '../../../data/fetchStocks';
 import { StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
+import { AuthError, BadRequestError } from '../../../data/helpers/tryFetch';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
+  onFetchStocks?: (
+    store: StockStore,
+  ) => Promise<void | BadRequestError | AuthError>;
 }
 
 const keyExtractor = (item: StockModel) => String(item.partyRoleId);
 const errorText =
   'Sorry, we are unable to connect to your stock location right now. To continue, you may need to locate a key to unlock the stock location.';
 
-export const StocksList: React.FC<Props> = observer(({ onPressItem }) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState(false);
+export const StocksList: React.FC<Props> = observer(
+  ({ onPressItem, onFetchStocks }) => {
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState(false);
 
-  const onFetchStocks = useCallback(async () => {
-    setIsLoading(true);
-    const error = await fetchStocks(stocksStore);
-    setIsLoading(false);
-    if (error) {
-      setIsError(true);
-    }
-  }, []);
+    const handleFetchStocks = useCallback(async () => {
+      setIsLoading(true);
 
-  const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
-    ({ item }) => <StocksListItem item={item} onPressItem={onPressItem} />,
-    [onPressItem],
-  );
+      const fetchStocksFunction = onFetchStocks ? onFetchStocks : fetchStocks;
 
-  const handlePressRetry = () => {
-    onFetchStocks();
-    setIsError(false);
-  };
+      const error = await fetchStocksFunction(stocksStore);
 
-  useEffect(() => {
-    onFetchStocks();
-  }, []);
+      setIsLoading(false);
 
-  if (isLoading) {
-    return <ActivityIndicator size="large" />;
-  }
+      if (error) {
+        setIsError(true);
+      }
+    }, [onFetchStocks]);
 
-  if (isError) {
-    return (
-      <View style={styles.container}>
-        <View style={styles.infoContainer}>
-          <SVGs.StockLocationErrorIcon />
-          <Text style={styles.text}>{errorText}</Text>
-        </View>
-        <Button
-          title="Retry"
-          type={ButtonType.primary}
-          buttonStyle={styles.buttonStyle}
-          onPress={handlePressRetry}
-        />
-      </View>
+    const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
+      ({ item }) => <StocksListItem item={item} onPressItem={onPressItem} />,
+      [onPressItem],
     );
-  }
 
-  return (
-    <FlatList
-      data={stocksStore.stocks}
-      renderItem={renderStockListItem}
-      keyExtractor={keyExtractor}
-    />
-  );
-});
+    const handlePressRetry = () => {
+      handleFetchStocks();
+      setIsError(false);
+    };
+
+    useEffect(() => {
+      handleFetchStocks();
+    }, [handleFetchStocks]);
+
+    if (isLoading) {
+      return <ActivityIndicator size="large" />;
+    }
+
+    if (isError) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.infoContainer}>
+            <SVGs.StockLocationErrorIcon />
+            <Text style={styles.text}>{errorText}</Text>
+          </View>
+          <Button
+            title="Retry"
+            type={ButtonType.primary}
+            buttonStyle={styles.buttonStyle}
+            onPress={handlePressRetry}
+          />
+        </View>
+      );
+    }
+
+    return (
+      <FlatList
+        data={stocksStore.stocks}
+        renderItem={renderStockListItem}
+        keyExtractor={keyExtractor}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
