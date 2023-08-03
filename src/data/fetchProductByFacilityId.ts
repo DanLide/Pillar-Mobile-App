@@ -72,7 +72,7 @@ export class SaveProductToStoreTask extends Task {
   ): ProductModel {
     const { manufacturer, partNumber, size, removedBy } = product;
     const inventoryUseTypeId =
-      removedBy === 'Each Piece'
+      removedBy === 'Percent'
         ? InventoryUseType.Percent
         : InventoryUseType.Container;
 

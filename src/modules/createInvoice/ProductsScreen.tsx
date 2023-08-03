@@ -25,6 +25,7 @@ export const ProductsScreen = memo(({ navigation }: Props) => {
       store={store}
       onComplete={onComplete}
       tooltipTitle="Scan to add products to list"
+      primaryButtonTitle="Submit"
       ListComponent={BaseSelectedProductsList}
     />
   );

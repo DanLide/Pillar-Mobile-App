@@ -5,6 +5,7 @@ import {
   AppNavigator,
   LeftBarType,
   ManageProductsStackParamList,
+  RightBarType,
 } from './types';
 import { getScreenOptions } from './helpers';
 import { SelectStockScreen } from '../modules/manageProducts/SelectStockScreen';
@@ -56,6 +57,7 @@ export const ManageProductsStack: React.FC = () => {
         options={getScreenOptions({
           title: 'Manage Products',
           leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.QuestionMark
         })}
       />
     </Stack.Navigator>

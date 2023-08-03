@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { HapticOptions, trigger } from 'react-native-haptic-feedback';
+import { View, StyleSheet, Vibration } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
+import TrackPlayer from 'react-native-track-player';
 
 import {
   CurrentProductStoreType,
@@ -22,7 +22,6 @@ import {
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
-import { scanMelody } from './Sound';
 import { RequestError } from '../data/helpers/tryFetch';
 
 type StoreModel = ScannerModalStoreType &
@@ -49,10 +48,6 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
     'This product cannot be found in our product database',
   [ScannerScreenError.ProductNotAssignedToStock]:
     'This product is not assigned to a this stock location',
-};
-
-const hapticOptions: HapticOptions = {
-  enableVibrateFallback: true,
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -103,8 +98,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
       async code => {
         setIsScannerActive(false);
-        trigger('selection', hapticOptions);
-        scanMelody.play();
+        Vibration.vibrate();
+        TrackPlayer.play();
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);
@@ -160,7 +155,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           title={store.currentStock?.organizationName}
         />
         <ScanProduct
-          onPressScan={onScanProduct}
+          onScan={onScanProduct}
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
         />

@@ -16,17 +16,39 @@ jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),
 );
 jest.mock('react-native-vision-camera', () => {});
-jest.mock('react-native-sound', () => {
-  class SoundMock {}
-
-  SoundMock.prototype.setVolume = jest.fn();
-  SoundMock.prototype.setNumberOfLoops = jest.fn();
-  SoundMock.prototype.play = jest.fn();
-  SoundMock.prototype.stop = jest.fn();
-
-  SoundMock.setCategory = jest.fn();
-
-  return SoundMock;
+jest.mock('react-native-track-player', () => {
+  return {
+    addEventListener: jest.fn(),
+    registerEventHandler: jest.fn(),
+    registerPlaybackService: jest.fn(),
+    setupPlayer: jest.fn(),
+    destroy: jest.fn(),
+    updateOptions: jest.fn(),
+    add: jest.fn(),
+    remove: jest.fn(),
+    skip: jest.fn(),
+    skipToNext: jest.fn(),
+    skipToPrevious: jest.fn(),
+    removeUpcomingTracks: jest.fn(),
+    // playback commands
+    reset: jest.fn(),
+    play: jest.fn(),
+    pause: jest.fn(),
+    stop: jest.fn(),
+    seekTo: jest.fn(),
+    setVolume: jest.fn(),
+    setRate: jest.fn(),
+    // player getters
+    getQueue: jest.fn(),
+    getTrack: jest.fn(),
+    getCurrentTrack: jest.fn(),
+    getVolume: jest.fn(),
+    getDuration: jest.fn(),
+    getPosition: jest.fn(),
+    getBufferedPosition: jest.fn(),
+    getState: jest.fn(),
+    getRate: jest.fn(),
+  };
 });
 
 jest.mock('react-native-device-info', () => ({

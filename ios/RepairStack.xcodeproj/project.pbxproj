@@ -42,6 +42,13 @@
 		953DF4BC29E3FDD900247A0B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		953DF4C129E3FDD900247A0B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		953DF4C229E3FDD900247A0B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		95ACE4CB2A7804030059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		95ACE4CC2A7804030059C020 /* MLBluetooth.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		95ACE4D02A78041C0059C020 /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		95ACE4D12A78041C0059C020 /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		95ACE4D22A78041C0059C020 /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
+		95ACE4D32A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
+		95ACE4D42A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
 		985638F8FA7C43B080DD64AD /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
 		A9046BF2D8D54406BBB84C8D /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
 		AE8CB1D09E2F43838AF6265F /* 3MCircular-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */; };
@@ -60,6 +67,20 @@
 			remoteInfo = RepairStack;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		95ACE4CD2A7804030059C020 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				95ACE4CC2A7804030059C020 /* MLBluetooth.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* RepairStackTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RepairStackTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,9 +112,12 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = RepairStack/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Light.otf"; path = "../assets/fonts/3MCircularTT-Light.otf"; sourceTree = "<group>"; };
 		91E5E186411975104EE3F062 /* libPods-RepairStackAbstract-RepairStackRelease.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackRelease.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
+		9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RepairStack/RepairStackRelease.entitlements; sourceTree = "<group>"; };
 		953DF4C929E3FDD900247A0B /* RepairStackRelease.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackRelease.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		953DF4CA29E3FDD900247A0B /* RepairStackRelease-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStackRelease-Info.plist"; path = "/Users/andriy/Documents/work/3m/Pillar-Mobile-App/ios/RepairStackRelease-Info.plist"; sourceTree = "<absolute>"; };
+		95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MLBluetooth.xcframework; path = RepairStack/frameworks/MLBluetooth.xcframework; sourceTree = "<group>"; };
+		95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTMasterLockModule.h; sourceTree = "<group>"; };
+		95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTMasterLockModule.m; sourceTree = "<group>"; };
 		95C46AC429D55D300021495A /* RepairStack.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RepairStack.entitlements; path = RepairStack/RepairStack.entitlements; sourceTree = "<group>"; };
 		9828813FCD4843E9BF637256 /* 3MCircularTT-Black.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Black.otf"; path = "../assets/fonts/3MCircularTT-Black.otf"; sourceTree = "<group>"; };
 		9C8477C47B6C524BEED4C70D /* Pods-RepairStackAbstract-RepairStack.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack.debug.xcconfig"; sourceTree = "<group>"; };
@@ -113,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C5A1C7A520DD8AE5BD6D7C8 /* libPods-RepairStackAbstract-RepairStackTests.a in Frameworks */,
+				95ACE4D32A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4E4D7B38216AFED6DA6FD002 /* libPods-RepairStackAbstract-RepairStack.a in Frameworks */,
+				95ACE4CB2A7804030059C020 /* MLBluetooth.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +155,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				062CCA49D456C0CE4E831064 /* libPods-RepairStackAbstract-RepairStackRelease.a in Frameworks */,
+				95ACE4D42A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -155,7 +182,9 @@
 		13B07FAE1A68108700A75B9A /* RepairStack */ = {
 			isa = PBXGroup;
 			children = (
-				9520819829F6B2AD0021A8D8 /* RepairStackRelease.entitlements */,
+				95ACE4CE2A78041B0059C020 /* RCTMasterLockModule.h */,
+				95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */,
+				9520819829F6B2AD0021A8D8 /* RepairStack/RepairStackRelease.entitlements */,
 				95C46AC429D55D300021495A /* RepairStack.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -192,6 +221,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				3C8FFB1BC2B7EF4FB1A3CBC7 /* libPods-RepairStackAbstract-RepairStack.a */,
 				91E5E186411975104EE3F062 /* libPods-RepairStackAbstract-RepairStackRelease.a */,
@@ -287,6 +317,7 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				67646909599C648C1E807621 /* [CP] Copy Pods Resources */,
 				244AE2817BD6CB14779F15FB /* [CP] Embed Pods Frameworks */,
+				95ACE4CD2A7804030059C020 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -660,6 +691,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95ACE4D12A78041C0059C020 /* RCTMasterLockModule.m in Sources */,
 				00E356F31AD99517003FC87E /* RepairStackTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -670,6 +702,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				95ACE4D02A78041C0059C020 /* RCTMasterLockModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -679,6 +712,7 @@
 			files = (
 				953DF4BB29E3FDD900247A0B /* AppDelegate.mm in Sources */,
 				953DF4BC29E3FDD900247A0B /* main.m in Sources */,
+				95ACE4D22A78041C0059C020 /* RCTMasterLockModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -755,7 +789,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = RepairStack/Info.plist;
@@ -794,7 +828,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = RepairStack/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -968,7 +1002,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				EXCLUDED_ARCHS = i386;
@@ -1008,7 +1042,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStackRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				EXCLUDED_ARCHS = i386;
 				INFOPLIST_FILE = "RepairStackRelease-Info.plist";

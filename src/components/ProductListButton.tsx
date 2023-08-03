@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+    borderColor: colors.purple,
   },
   titleText: {
     color: colors.purple,

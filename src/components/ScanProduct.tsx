@@ -1,4 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 import {
   StyleSheet,
   LayoutChangeEvent,
@@ -7,39 +13,39 @@ import {
   View,
   Pressable,
   TouchableOpacity,
-  Text,
 } from 'react-native';
 import Animated, {
+  FadeOutDown,
+  FadeInUp,
+  Layout,
   useSharedValue,
   useAnimatedStyle,
   SharedValue,
 } from 'react-native-reanimated';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
-import { encode as btoa, decode } from 'base-64';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
 import ProductListButton from './ProductListButton';
-import { SVGs, TorchIconState, colors, fonts } from '../theme';
-import { AppNavigator } from '../navigation/types';
+import { SVGs, colors, fonts } from '../theme';
 import { TooltipBar } from './TooltipBar';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
 const WINDOW_WIDTH = Dimensions.get('window').width;
+const NORMAL_ZOOM = 1;
+const ZOOM_IN = 1.5;
+const SCAN_SQUARE_WIDTH = 48;
+const DISSAPIERED_QR_CODE_DELAY_MS = 200;
+const AUTOSCAN_TIMEOUT_MS = 200;
+const BORDER_WIDTH = 3;
+const FLASH_TIME_MS = 200;
 
 export type ScanProductProps = {
-  onPressScan: (code: Barcode['content']['data']) => void;
+  onScan: (code: Barcode['content']['data']) => void;
   isActive?: boolean;
   scannedProductCount?: number;
 };
-
-const MISSED_BARCODE_LIMIT = 5;
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const QRIconSize = 24;
@@ -53,61 +59,50 @@ type Coordinate = {
 };
 
 type QRButtonProps = {
-  barcode: Barcode;
-  scanlineLayout: LayoutRectangle;
   onPress: () => void;
   index: number;
-  isSelected?: boolean;
   isDisabled: boolean;
-  cordinates: SharedValue<Coordinate[]>;
+  coordinates: SharedValue<Coordinate[]>;
   isGreenBorder: boolean;
   barcodeFormat: Barcode['format'];
 };
 
 type BarcodeStateItem = Barcode & {
-  missedBarCodeCount: number;
-  isSelected: boolean;
-  isOnScanLine: boolean;
-  isItemShouldBeDeleted: boolean;
-};
-
-const getScannedCode = (rowValue: string, codeType: BarcodeFormat) => {
-  console.warn(rowValue, btoa(rowValue));
-  switch (codeType) {
-    case BarcodeFormat.QR_CODE:
-      return btoa(rowValue);
-    default:
-      return btoa(rowValue);
-  }
+  timeStampLastDetectionInFrame: Date;
+  timeStampAutoscanFocus: Date | null;
 };
 
 const QRButton: React.FC<QRButtonProps> = ({
   index,
-  cordinates,
-  isSelected,
+  coordinates,
   onPress,
   isDisabled,
   isGreenBorder,
   barcodeFormat,
 }) => {
-  const Icon =
-    barcodeFormat === BarcodeFormat.QR_CODE ? SVGs.QRIcon : SVGs.BarcodeIcon;
+  const [isPressed, setIsPressed] = useState(false);
+
+  const CenterIcon = isGreenBorder
+    ? SVGs.CheckMark
+    : barcodeFormat === BarcodeFormat.QR_CODE
+    ? SVGs.QRIcon
+    : SVGs.BarcodeIcon;
 
   const animatedStyleButton = useAnimatedStyle(() => {
-    if (!cordinates?.value?.[index]) return {};
+    if (!coordinates?.value?.[index]) return {};
 
-    const { left, right, bottom, top } = cordinates.value[index];
+    const { left, right, bottom, top } = coordinates.value[index];
 
     return {
-      height: bottom - top,
-      width: right - left,
-      transform: [{ translateX: left }, { translateY: top }],
+      height: bottom - top + 30,
+      width: right - left + 30,
+      transform: [{ translateX: left - 15 }, { translateY: top - 15 }],
     };
   }, []);
 
   const animatedStyleIcon = useAnimatedStyle(() => {
-    if (!cordinates?.value?.[index]) return {};
-    const { bottom, top } = cordinates.value[index];
+    if (!coordinates?.value?.[index]) return {};
+    const { bottom, top } = coordinates.value[index];
 
     const height = (bottom - top) / ScaleCoef;
     const scale = height / QRIconSize;
@@ -122,183 +117,228 @@ const QRButton: React.FC<QRButtonProps> = ({
       style={[
         styles.scanBorder,
         animatedStyleButton,
-        isSelected
-          ? {
-              backgroundColor: colors.purpleWithOpacity,
-              borderColor: colors.purple,
-            }
-          : {
-              borderColor: isGreenBorder ? colors.green2 : colors.yellow,
-            },
+        (isPressed || isGreenBorder) && styles.greenBorder,
       ]}
+      onPressIn={() => setIsPressed(true)}
+      onPressOut={() => setIsPressed(false)}
       onPress={onPress}
       disabled={isDisabled}
     >
-      <Animated.View style={[styles.iconWrapper, animatedStyleIcon]}>
-        <Icon width={QRIconSize} height={QRIconSize} />
+      <Animated.View
+        style={[
+          styles.iconWrapper,
+          animatedStyleIcon,
+          !isGreenBorder && {
+            backgroundColor: colors.white,
+          },
+        ]}
+      >
+        <CenterIcon width={QRIconSize} height={QRIconSize} />
       </Animated.View>
     </AnimatedPressable>
   );
 };
 
-const getToolTipText = (barcodesOnScanLine, isSeletedBarcode) => {
-  if (!barcodesOnScanLine.length) {
-    return 'Point camera at product code';
-  } else if (barcodesOnScanLine.length === 1) {
-    return 'Tap on product code or Capture button to proceed';
-  } else if (isSeletedBarcode) {
-    return 'Tap on Capture button to proceed';
-  } else if (barcodesOnScanLine.length > 1) {
-    return 'Tap on product code to select it';
-  }
-
-  return '';
-};
+const oneBarcodeToolTipText = 'Point camera at product code';
+const multipleBarcodeToolTipText = 'Tap the code you want to scan';
 
 const ScanProduct: React.FC<ScanProductProps> = ({
-  onPressScan,
+  onScan,
   isActive,
   scannedProductCount,
 }) => {
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
-  const scanLineLayoutRef = useRef<LayoutRectangle | null>(null);
   const ratio = useRef<number | null>(null);
   const widthCorrection = useRef<number | null>(null);
   const heightCorrection = useRef<number | null>(null);
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
-
-  const [barcodesState, setBarcodesState] = useState<BarcodeStateItem[]>([]);
 
   const [isTorchOn, toggleIsTorchOn] = useSwitchState();
+  const [isZoomToggled, setIsZoomToggled] = useSwitchState();
+  const [barcodesLength, setBarcodesLength] = useState(0);
+  const [autoScanDone, setAutoScanDone] = useState(false);
+  const [isBlinkOn, setIsBlinkOn] = useState(false);
+
   const barcodesSharedValue = useSharedValue<Coordinate[]>([]);
 
-  const mapToScreenCoordinates = useCallback(cornerPoints => {
-    const frame = frameRef.current;
+  const scanSquareLayout = useRef<LayoutRectangle | null>(null);
+  const barcodesState = useRef<BarcodeStateItem[]>([]);
 
-    if (ratio.current === null) {
-      const frameRatio = frame.height / frame.width;
-      const previewRatio =
-        scannerLayoutRef.current.height / scannerLayoutRef.current.width;
-
-      const xRatio = frame.width / scannerLayoutRef.current.width;
-      const yRatio = frame.height / scannerLayoutRef.current.height;
-      ratio.current = Math.min(xRatio, yRatio);
-
-      const isWidthAffected = frameRatio < previewRatio;
-
-      if (isWidthAffected) {
-        const expectedPreviewWidth =
-          scannerLayoutRef.current.height / frameRatio;
-        widthCorrection.current =
-          (expectedPreviewWidth - scannerLayoutRef.current.width) / 2;
-      } else {
-        const expectedPreviewHeight =
-          scannerLayoutRef.current.width * previewRatio;
-        heightCorrection.current =
-          (expectedPreviewHeight - scannerLayoutRef.current.height) / 2;
-      }
+  useEffect(() => {
+    if (autoScanDone && isActive) {
+      setAutoScanDone(false);
     }
+  }, [isActive, autoScanDone]);
 
-    const xArray = cornerPoints?.map(corner => corner.x);
-    const yArray = cornerPoints?.map(corner => corner.y);
+  useEffect(() => {
+    if (isBlinkOn) {
+      setTimeout(() => {
+        setIsBlinkOn(false);
+      }, FLASH_TIME_MS);
+    }
+  }, [isBlinkOn]);
 
-    const left = Math.min(...xArray) / ratio.current - widthCorrection.current;
-    const right = Math.max(...xArray) / ratio.current - widthCorrection.current;
-    const bottom =
-      Math.max(...yArray) / ratio.current - heightCorrection.current;
-    const top = Math.min(...yArray) / ratio.current - heightCorrection.current;
+  const mapToScreenCoordinates = useCallback(
+    (cornerPoints: Barcode['cornerPoints']) => {
+      const frame = frameRef.current;
 
-    return { left, right, bottom, top };
-  }, []);
+      // count ratio only once to save memory resource
+      if (ratio.current === null) {
+        const frameRatio = frame.height / frame.width;
+        const previewRatio =
+          scannerLayoutRef.current.height / scannerLayoutRef.current.width;
 
-  const onRead = (barcodes, frame) => {
+        // horizontal ratio
+        const xRatio = frame.width / scannerLayoutRef.current.width;
+        // vertical ratio
+        const yRatio = frame.height / scannerLayoutRef.current.height;
+        ratio.current = Math.min(xRatio, yRatio);
+
+        // calculate correction because ration of width and height for frame and View different
+        const isWidthAffected = frameRatio < previewRatio;
+
+        if (isWidthAffected) {
+          const expectedPreviewWidth =
+            scannerLayoutRef.current.height / frameRatio;
+          widthCorrection.current =
+            (expectedPreviewWidth - scannerLayoutRef.current.width) / 2;
+        } else {
+          const expectedPreviewHeight =
+            scannerLayoutRef.current.width * previewRatio;
+          heightCorrection.current =
+            (expectedPreviewHeight - scannerLayoutRef.current.height) / 2;
+        }
+      }
+
+      const xArray = cornerPoints?.map(corner => corner.x);
+      const yArray = cornerPoints?.map(corner => corner.y);
+
+      const left =
+        Math.min(...xArray) / ratio.current - widthCorrection.current;
+      const right =
+        Math.max(...xArray) / ratio.current - widthCorrection.current;
+      const bottom =
+        Math.max(...yArray) / ratio.current - heightCorrection.current;
+      const top =
+        Math.min(...yArray) / ratio.current - heightCorrection.current;
+
+      return { left, right, bottom, top };
+    },
+    [],
+  );
+
+  const scanBarcode = (code?: string) => {
+    if (!code) return;
+    onScan(code);
+    setIsBlinkOn(true);
+  };
+
+  const onRead = (barcodes: Barcode[], frame) => {
     if (
       !frame ||
       !scannerLayoutRef.current ||
-      (barcodes.length === 0 && barcodesState.length === 0)
+      (barcodes.length === 0 && barcodesState.current.length === 0)
     ) {
+      !barcodesLength && setBarcodesLength(0);
       return;
     }
 
     frameRef.current = frame;
 
-    let needStateUpdate = false;
-    const updatedCoordinates = [];
+    let isBarcodesLengthUpdated = false;
+    const currentDate = new Date();
 
-    for (let index = 0; index < barcodesState.length; index++) {
-      const prevBarcode = barcodesState[index];
-      const updatedBarcodeIndex = barcodes.findIndex(_barcode => {
-        return (
-          JSON.stringify(_barcode.rawValue) ===
-          JSON.stringify(prevBarcode.rawValue)
-        );
-      });
-
-      // because by default barcode object is freezed,
-      // to see isNew barcode need rewrite barcode
-      const updatedBarcode = { ...barcodes[updatedBarcodeIndex] };
-
-      // barcode missed
-      if (updatedBarcodeIndex === -1) {
-        if (prevBarcode.missedBarCodeCount === MISSED_BARCODE_LIMIT - 1) {
-          prevBarcode.isItemShouldBeDeleted = true;
-          needStateUpdate = true;
-        } else {
-          prevBarcode.missedBarCodeCount++;
-          updatedCoordinates.push(barcodesSharedValue.value[index]);
-        }
-        continue;
-      }
-      const updatedCoordinate = mapToScreenCoordinates(
-        updatedBarcode.cornerPoints,
+    // adding and updating existing barcodes status
+    barcodes.forEach(updatedBarcode => {
+      const barcodeForUpdatingIndex = barcodesState.current.findIndex(
+        stateBarcode => {
+          return stateBarcode.rawValue === updatedBarcode.rawValue;
+        },
       );
-      updatedCoordinates.push(updatedCoordinate);
 
-      const isOnScanLine =
-        scanLineLayoutRef.current.y >= updatedCoordinate?.top &&
-        scanLineLayoutRef.current.y <= updatedCoordinate?.bottom;
-
-      if (prevBarcode.isOnScanLine !== isOnScanLine) {
-        needStateUpdate = true;
-        prevBarcode.isOnScanLine = isOnScanLine;
-      }
-
-      updatedBarcode.isNew = false;
-      barcodes[updatedBarcodeIndex] = updatedBarcode;
-    }
-
-    barcodesState.forEach((barcodeItem, index) => {
-      barcodeItem.isItemShouldBeDeleted && barcodesState.splice(index, 1);
-    });
-
-    const newBarcodes = barcodes.filter(_barcode => {
-      return _barcode.isNew !== false;
-    });
-
-    if (newBarcodes.length) {
-      needStateUpdate = true;
-
-      newBarcodes.forEach(_barcode => {
-        const updatedCoordinate = mapToScreenCoordinates(_barcode.cornerPoints);
-        updatedCoordinates.push(updatedCoordinate);
-        const isOnScanLine =
-          scanLineLayoutRef.current.y >= updatedCoordinate?.top &&
-          scanLineLayoutRef.current.y <= updatedCoordinate?.bottom;
-        barcodesState.push({
-          ..._barcode,
-          missedBarCodeCount: 0,
-          isSelected: false,
-          isItemShouldBeDeleted: false,
-          isOnScanLine,
+      // updating existing barcodes status
+      if (barcodeForUpdatingIndex !== -1) {
+        barcodesState.current[barcodeForUpdatingIndex] = {
+          ...barcodesState.current[barcodeForUpdatingIndex],
+          ...updatedBarcode,
+          timeStampLastDetectionInFrame: currentDate,
+        };
+      } else {
+        // adding new barcode
+        isBarcodesLengthUpdated = true;
+        barcodesState.current.push({
+          ...updatedBarcode,
+          timeStampLastDetectionInFrame: currentDate,
+          timeStampAutoscanFocus: null,
         });
+      }
+    });
+
+    // filtering outdated codes
+    barcodesState.current = barcodesState.current?.filter(barcode => {
+      if (
+        currentDate - barcode.timeStampLastDetectionInFrame >
+        DISSAPIERED_QR_CODE_DELAY_MS
+      ) {
+        isBarcodesLengthUpdated = true;
+        return false;
+      }
+      return true;
+    });
+
+    // need to rebuild react tree to mount/unmount elements
+    isBarcodesLengthUpdated && setBarcodesLength(barcodes.length);
+
+    barcodesSharedValue.value = barcodesState.current?.map(barcode =>
+      mapToScreenCoordinates(barcode.cornerPoints),
+    );
+
+    // autoscan logic below
+    // reset timeStamp if another code appeared in Frame
+    if (barcodesState.current.length !== 1) {
+      barcodesState.current.forEach(e => {
+        e.timeStampAutoscanFocus = null;
       });
+      return;
     }
 
-    barcodesSharedValue.value = updatedCoordinates;
+    const singleBarcodeState = barcodesState.current[0];
+    const updatedCoordinate = barcodesSharedValue.value[0];
 
-    if (needStateUpdate) {
-      setBarcodesState([...barcodesState]);
+    const centerX =
+      (updatedCoordinate?.right - updatedCoordinate?.left) / 2 +
+      updatedCoordinate?.left;
+    const centerY =
+      (updatedCoordinate?.bottom - updatedCoordinate?.top) / 2 +
+      updatedCoordinate?.top;
+
+    const isBarcodeInCenter =
+      centerX >= scanSquareLayout.current.x &&
+      centerX <= scanSquareLayout.current.x + scanSquareLayout.current?.width &&
+      centerY >= scanSquareLayout.current.y &&
+      centerY <= scanSquareLayout.current.y + scanSquareLayout.current?.height;
+
+    // reset, barcode moved from scan area
+    if (!isBarcodeInCenter) {
+      singleBarcodeState.timeStampAutoscanFocus = null;
+      return;
+    }
+
+    // set time when frame qr`a state start satisfy to be autoscanned
+    if (singleBarcodeState.timeStampAutoscanFocus === null) {
+      singleBarcodeState.timeStampAutoscanFocus = currentDate;
+      return;
+    }
+
+    // autoscan
+    if (
+      singleBarcodeState.timeStampAutoscanFocus &&
+      currentDate - singleBarcodeState.timeStampAutoscanFocus >
+        AUTOSCAN_TIMEOUT_MS
+    ) {
+      scanBarcode(singleBarcodeState?.rawValue);
+      setAutoScanDone(true);
+      singleBarcodeState.timeStampAutoscanFocus = null;
     }
   };
 
@@ -306,107 +346,135 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     scannerLayoutRef.current = nativeEvent.layout;
   }, []);
 
-  const onLayoutScanLine = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    scanLineLayoutRef.current = nativeEvent.layout;
-  }, []);
-
-  const selectedBarcode = barcodesState.find(barcode => barcode.isSelected);
-  const barcodesOnScanLine = barcodesState.filter(
-    barcode => barcode.isOnScanLine,
+  const onLayoutScanSquare = useCallback(
+    ({ nativeEvent }: LayoutChangeEvent) => {
+      scanSquareLayout.current = nativeEvent.layout;
+    },
+    [],
   );
-  const isOneBarcodeOnScanLine = barcodesOnScanLine.length === 1;
-  const isScanButtonDisabled = !selectedBarcode && !isOneBarcodeOnScanLine;
 
-  const onPressScanButton = () => {
-    const data = selectedBarcode || barcodesOnScanLine?.[0];
-    data?.rawValue && onPressScan(data.rawValue);
+  const onPressZoom = () => {
+    setIsZoomToggled();
   };
 
-  const renderBarcodes = () =>
-    barcodesState?.map((barcodeData, index) => {
+  const tooltipText =
+    barcodesLength > 1 ? multipleBarcodeToolTipText : oneBarcodeToolTipText;
+
+  const renderCenterScanSquare = useMemo(
+    () => (
+      <View style={styles.centreSquareWrapper}>
+        <View
+          onLayout={onLayoutScanSquare}
+          style={styles.centreSquareContainer}
+        >
+          <View
+            style={[
+              styles.baseScanSquareStyle,
+              styles.topLeft,
+              autoScanDone && styles.greenBorder,
+            ]}
+          />
+          <View
+            style={[
+              styles.baseScanSquareStyle,
+              styles.topRight,
+              autoScanDone && styles.greenBorder,
+            ]}
+          />
+          <View
+            style={[
+              styles.baseScanSquareStyle,
+              styles.bottomRight,
+              autoScanDone && styles.greenBorder,
+            ]}
+          />
+          <View
+            style={[
+              styles.baseScanSquareStyle,
+              styles.bottomLeft,
+              autoScanDone && styles.greenBorder,
+            ]}
+          />
+        </View>
+      </View>
+    ),
+    [onLayoutScanSquare, autoScanDone],
+  );
+
+  const renderBarcodes = () => {
+    if (!barcodesLength) {
+      return null;
+    }
+    return barcodesState.current?.map((barcodeData, index) => {
       if (!barcodeData) {
         return null;
       }
       const onPress = () => {
-        barcodesState.forEach(_barcode => (_barcode.isSelected = false));
-        barcodeData.isSelected = true;
-
-        setBarcodesState([...barcodesState]);
-        if (isOneBarcodeOnScanLine && barcodeData.rawValue) {
-          onPressScan(barcodeData.rawValue);
-        }
+        scanBarcode(barcodeData.rawValue);
       };
 
       return (
         <QRButton
           key={index + 'barcodeFrame'}
           index={index}
-          cordinates={barcodesSharedValue}
-          scanlineLayout={scanLineLayoutRef.current}
+          coordinates={barcodesSharedValue}
           onPress={onPress}
-          isSelected={barcodeData.isSelected}
-          isDisabled={!barcodeData.isOnScanLine}
-          isGreenBorder={isOneBarcodeOnScanLine && barcodeData.isOnScanLine}
+          isGreenBorder={autoScanDone}
+          isDisabled={barcodesLength === 1}
           barcodeFormat={barcodeData.format}
         />
       );
     });
-
-  const renderTorchIcon = useCallback(
-    ({ pressed }) => {
-      const state = pressed
-        ? TorchIconState.Pressed
-        : isTorchOn
-        ? TorchIconState.Active
-        : TorchIconState.Passive;
-      return <SVGs.TorchIcon state={state} />;
-    },
-    [isTorchOn],
-  );
+  };
 
   return (
     <View style={styles.container}>
       <TooltipBar
-        title={getToolTipText(barcodesOnScanLine, selectedBarcode)}
+        title={tooltipText}
         containerStyle={styles.tooltipContainer}
       />
+      {isBlinkOn && (
+        <Animated.View
+          style={styles.isBlinkOn}
+          layout={Layout.duration(FLASH_TIME_MS)}
+          entering={FadeInUp}
+          exiting={FadeOutDown}
+        />
+      )}
       <View style={[styles.scanner]}>
         <Scanner
           torch={isTorchOn ? 'on' : 'off'}
+          zoom={isZoomToggled ? ZOOM_IN : NORMAL_ZOOM}
           style={styles.scanner}
           onRead={onRead}
           isActive={isActive}
           onLayout={onLayoutScanner}
         />
       </View>
-      <View style={styles.shadow} />
-      <View style={styles.scanline} onLayout={onLayoutScanLine} />
-      <View style={[styles.shadow, styles.bottomShadow]} />
-      <TouchableOpacity
-        onPress={() => navigation.navigate(AppNavigator.HowToScanScreen)}
-        style={styles.questionMark}
-      >
-        <SVGs.QuestionMark color={colors.white} />
-      </TouchableOpacity>
       {renderBarcodes()}
-      <Pressable onPress={toggleIsTorchOn} style={styles.torch}>
-        {renderTorchIcon}
-      </Pressable>
+      {barcodesLength < 2 && renderCenterScanSquare}
       <View style={styles.buttonsContainer}>
+        <TouchableOpacity
+          style={[
+            styles.smallBottomButton,
+            { backgroundColor: isTorchOn ? colors.purple : colors.white },
+          ]}
+          onPress={toggleIsTorchOn}
+        >
+          {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
+        </TouchableOpacity>
         <ProductListButton
           containerStyle={styles.listButtonContainer}
           count={scannedProductCount}
         />
         <TouchableOpacity
-          onPress={onPressScanButton}
-          disabled={isScanButtonDisabled}
           style={[
-            styles.scanButton,
-            isScanButtonDisabled && styles.disabledStyle,
+            styles.smallBottomButton,
+            { backgroundColor: isZoomToggled ? colors.purple : colors.white },
           ]}
+          onPress={onPressZoom}
         >
-          <SVGs.CaptureIcon />
-          <Text style={styles.captureText}>Capture</Text>
+          {isZoomToggled ? <SVGs.ZoomOutIcon /> : <SVGs.ZoomInIcon />}
         </TouchableOpacity>
       </View>
     </View>
@@ -421,6 +489,13 @@ const styles = StyleSheet.create({
     height: WINDOW_HEIGHT,
     position: 'absolute',
   },
+  isBlinkOn: {
+    width: WINDOW_WIDTH,
+    height: WINDOW_HEIGHT,
+    position: 'absolute',
+    backgroundColor: colors.white,
+    zIndex: 100,
+  },
   scanline: {
     height: 5,
     backgroundColor: colors.red,
@@ -432,42 +507,6 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: 'hidden',
   },
-  shadow: {
-    height: '30%',
-    width: '100%',
-    backgroundColor: colors.blackWidthOpacity,
-  },
-  bottomShadow: {
-    marginTop: 'auto',
-  },
-  torch: {
-    position: 'absolute',
-    left: '5%',
-    top: '6%',
-    padding: 4,
-    zIndex: 100,
-    width: 42,
-    height: 42,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-  },
-  questionMark: {
-    position: 'absolute',
-    top: '6%',
-    right: '5%',
-    zIndex: 100,
-  },
-  scanButton: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: colors.purple,
-    flexDirection: 'row',
-    height: 56,
-    borderRadius: 8,
-    flex: 1,
-    marginLeft: 4,
-  },
   buttonsContainer: {
     bottom: 16,
     position: 'absolute',
@@ -475,6 +514,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex: 100,
     marginHorizontal: '5%',
+    columnGap: 8,
+  },
+  smallBottomButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    borderRadius: 8,
   },
   listButtonContainer: {
     flex: 1,
@@ -485,7 +531,6 @@ const styles = StyleSheet.create({
     height: 19,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.white,
   },
   captureText: {
     color: colors.white,
@@ -504,11 +549,82 @@ const styles = StyleSheet.create({
     zIndex: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    borderColor: colors.yellow,
   },
   tooltipContainer: {
     position: 'absolute',
     top: 4,
     left: 4,
     margin: 0,
+  },
+  centreSquareWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  centreSquareContainer: {
+    aspectRatio: 1,
+    width: WINDOW_WIDTH / 2,
+    height: WINDOW_WIDTH / 2,
+    position: 'absolute',
+    alignSelf: 'center',
+  },
+  baseScanSquareStyle: {
+    position: 'absolute',
+    height: SCAN_SQUARE_WIDTH,
+    width: SCAN_SQUARE_WIDTH,
+    borderColor: colors.white,
+  },
+  topLeft: {
+    top: 0,
+    left: 0,
+    borderColor: colors.white,
+    borderTopWidth: BORDER_WIDTH,
+    borderLeftWidth: BORDER_WIDTH,
+    borderTopLeftRadius: 25,
+  },
+  topRight: {
+    top: 0,
+    right: 0,
+    borderTopWidth: BORDER_WIDTH,
+    borderRightWidth: BORDER_WIDTH,
+    borderTopRightRadius: 25,
+  },
+  bottomLeft: {
+    bottom: 0,
+    left: 0,
+    borderBottomWidth: BORDER_WIDTH,
+    borderLeftWidth: BORDER_WIDTH,
+    borderBottomLeftRadius: 25,
+  },
+  bottomRight: {
+    bottom: 0,
+    right: 0,
+
+    borderBottomWidth: BORDER_WIDTH,
+    borderRightWidth: BORDER_WIDTH,
+    borderBottomRightRadius: 25,
+  },
+  shadowScanBorderBase: {
+    borderColor: colors.black,
+  },
+  topLeftShift: {
+    top: BORDER_WIDTH,
+    left: BORDER_WIDTH,
+  },
+  topRightShift: {
+    top: BORDER_WIDTH,
+    right: -BORDER_WIDTH,
+  },
+  bottomLeftShift: {
+    bottom: -BORDER_WIDTH,
+    left: BORDER_WIDTH,
+  },
+  bottomRightShift: {
+    bottom: -BORDER_WIDTH,
+    right: -BORDER_WIDTH,
+  },
+  greenBorder: {
+    borderColor: colors.green5,
   },
 });

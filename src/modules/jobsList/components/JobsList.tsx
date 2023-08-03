@@ -1,4 +1,11 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  LegacyRef,
+  useRef,
+} from 'react';
 import {
   FlatList,
   View,
@@ -38,6 +45,7 @@ export const JobsList: React.FC<Props> = observer(
     inputContainerStyle,
     onPressItem,
   }) => {
+    const listRef = useRef<FlatList | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [filterValue, setFilterValue] = useState<string>('');
@@ -80,6 +88,13 @@ export const JobsList: React.FC<Props> = observer(
     }, [onFetchJobs]);
 
     const keyExtractor = (item: JobModel) => String(item.jobId);
+    const onChangeText = (text: string) => {
+      listRef.current?.scrollToOffset({
+        offset: 0,
+        animated: false,
+      });
+      setFilterValue(text);
+    }
 
     if (isLoading) {
       return <ActivityIndicator size="large" style={styles.loading} />;
@@ -114,7 +129,7 @@ export const JobsList: React.FC<Props> = observer(
           rightIcon={() => (
             <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
           )}
-          onChangeText={setFilterValue}
+          onChangeText={onChangeText}
           placeholderTextColor={colors.blackSemiLight}
         />
         <FlatList
@@ -122,6 +137,7 @@ export const JobsList: React.FC<Props> = observer(
           keyExtractor={keyExtractor}
           data={filterValue ? filteredList : jobsStore.jobs}
           renderItem={renderJobListItem}
+          ref={listRef}
         />
         {footerComponent}
       </>
