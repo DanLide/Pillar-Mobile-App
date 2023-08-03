@@ -232,9 +232,6 @@ export const BaseProductsScreen = observer(
 
           <ProductModal
             {...modalParams}
-            categories={store.getCategories}
-            suppliers={store.getSuppliers}
-            enabledSuppliers={store.getEnabledSuppliers}
             product={store.getCurrentProduct}
             stockName={store.stockName}
             onSubmit={onSubmitProduct}
