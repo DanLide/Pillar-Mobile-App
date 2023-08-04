@@ -2,13 +2,19 @@ import { ProductResponse } from '../../data/api/productsAPI';
 import { JobModel } from '../../modules/jobsList/stores/JobsStore';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
-export interface ProductModel extends Omit<ProductResponse, 'isRecoverable'> {
+export interface ProductModel
+  extends Omit<
+    ProductResponse,
+    'isRecoverable' | 'inventoryClassificationTypeId' | 'unitPer'
+  > {
   uuid: string;
   isRemoved: boolean;
   reservedCount: number;
   nameDetails: string;
-  job?: JobModel;
   isRecoverable: boolean;
+  categoryId?: number;
+  unitsPerContainer?: number;
+  job?: JobModel;
 }
 
 export interface ClearStoreType {

@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { useIsFocused } from '@react-navigation/native';
@@ -8,10 +8,11 @@ import {
   ManageProductsStackParamList,
 } from '../../navigation/types';
 import { ClearStoreType, StockProductStoreType } from '../../stores/types';
-import { StockModel } from '../stocksList/stores/StocksStore';
+import { StockModel, StockStore } from '../stocksList/stores/StocksStore';
 import { InfoTitleBar, InfoTitleBarType } from '../../components';
 import { StocksList } from '../stocksList/components/StocksList';
 import { manageProductsStore } from './stores';
+import { fetchManageProductsStocks } from '../../data/fetchManageProductStocks';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -37,13 +38,18 @@ export const SelectStockScreen = memo(({ navigation }: Props) => {
     navigation.navigate(AppNavigator.ManageProductsScreen);
   };
 
+  const fetchStocks = useCallback(
+    (store: StockStore) => fetchManageProductsStocks(store),
+    [],
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
         title="Select a Stock Location"
       />
-      <StocksList onPressItem={onItemPress} />
+      <StocksList onFetchStocks={fetchStocks} onPressItem={onItemPress} />
     </SafeAreaView>
   );
 });

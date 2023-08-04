@@ -1,9 +1,13 @@
 import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
 import { StyleSheet, Dimensions, View, Alert } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
+import { SharedValue } from 'react-native-reanimated';
 
 import { Modal } from '../../components';
-import { ProductQuantity } from './components/quantityTab';
+import {
+  ProductQuantity,
+  ProductQuantityToastType,
+} from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { colors } from '../../theme';
@@ -13,6 +17,7 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModel } from '../../stores/types';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 export enum ProductModalType {
   Remove,
@@ -24,13 +29,14 @@ export enum ProductModalType {
 
 export interface ProductModalParams {
   type: ProductModalType;
-  error?: string;
   isEdit?: boolean;
   maxValue?: number;
   onHand?: number;
+  toastType?: ProductQuantityToastType;
+  onToastAction?: () => void;
 }
 
-interface Props extends ProductModalParams {
+export interface ProductModalProps extends ProductModalParams {
   product?: ProductModel;
   stockName?: string;
 
@@ -57,7 +63,6 @@ const getTabs = (type: ProductModalType): Tabs[] => {
   }
 };
 
-const NAVIGATION_HEADER_HEIGHT = 64;
 const MODAL_HEADER_HEIGHT = 70;
 
 export const ProductModal = memo(
@@ -65,7 +70,7 @@ export const ProductModal = memo(
     type,
     product,
     stockName,
-    error,
+    toastType,
     isEdit,
     maxValue = 0,
     onHand = 0,
@@ -73,9 +78,16 @@ export const ProductModal = memo(
     onSubmit,
     onRemove,
     onChangeProductQuantity,
-  }: Props) => {
+  }: ProductModalProps) => {
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(0);
+
+    const headerHeight = useHeaderHeight();
+
+    const topOffset = useMemo<SharedValue<number>>(
+      () => ({ value: headerHeight }),
+      [headerHeight],
+    );
 
     const tabs = useMemo(() => getTabs(type), [type]);
 
@@ -136,8 +148,9 @@ export const ProductModal = memo(
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
                 jobSelectable={type === ProductModalType.Remove}
-                error={error}
+                toastType={toastType}
                 maxValue={maxValue}
+                style={{ paddingTop: 16 }}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
@@ -164,10 +177,10 @@ export const ProductModal = memo(
         product,
         onSubmit,
         clearProductModalStoreOnClose,
+        type,
         onChangeProductQuantity,
         isEdit,
-        type,
-        error,
+        toastType,
         maxValue,
         onHand,
         onJobSelectNavigation,
@@ -193,7 +206,7 @@ export const ProductModal = memo(
         onClose={clearProductModalStoreOnClose}
         title={stockName}
         titleContainerStyle={styles.titleContainer}
-        topOffset={64}
+        topOffset={topOffset}
         semiTitle={title}
       >
         <ToastContextProvider
@@ -204,7 +217,7 @@ export const ProductModal = memo(
             ref={carouselRef}
             loop={false}
             width={width}
-            height={height - NAVIGATION_HEADER_HEIGHT - MODAL_HEADER_HEIGHT}
+            height={height - headerHeight - MODAL_HEADER_HEIGHT}
             autoPlay={false}
             enabled={false}
             data={tabs}

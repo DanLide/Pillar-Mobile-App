@@ -117,6 +117,36 @@ export class URLProvider {
     );
   }
 
+  getCategoriesByFacilityId() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryClassificationType/InventoryClassification/${facilityId}`,
+    );
+  }
+
+  getProductSettingsById(productId: number, currentStock?: StockModel) {
+    const partyRoleID = currentStock?.partyRoleId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductAreaSettings/${productId}/${partyRoleID}`,
+    );
+  }
+
+  getSupplierListByFacilityId() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/${facilityId}`,
+    );
+  }
+
+  getEnabledSuppliersByProductId(productId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/GetSupplierListByProductID/${productId}/true`,
+    );
+  }
+
   getFetchJobsBySso() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
@@ -149,6 +179,12 @@ export class URLProvider {
   createInvoice(jobId: number) {
     return new URL(
       `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/CreateInvoiceByJob/${jobId}`,
+    );
+  }
+
+  updateProductQuantity() {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryTransaction`,
     );
   }
 }

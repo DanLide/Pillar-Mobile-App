@@ -14,7 +14,11 @@ import {
 import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
 import { Utils } from '../data/helpers/utils';
-import { ProductModal, ProductModalParams } from '../modules/productModal';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalProps,
+} from '../modules/productModal';
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
@@ -33,8 +37,10 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
+  onSubmit?: () => Promise<void>;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
+  ProductModalComponent?: React.FC<ProductModalProps>;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -45,7 +51,15 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
-  ({ store, modalParams, onProductScan, onCloseModal, onFetchProduct }) => {
+  ({
+    store,
+    modalParams,
+    onProductScan,
+    onSubmit,
+    onCloseModal,
+    onFetchProduct,
+    ProductModalComponent = ProductModal,
+  }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const toast = useToast();
@@ -96,7 +110,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     );
 
     const onProductSubmit = useCallback(
-      (product: ProductModel) => {
+      async (product: ProductModel) => {
+        if (onSubmit) {
+          await onSubmit();
+          return;
+        }
+
         const { nameDetails, reservedCount } = product;
 
         store.addProduct(product);
@@ -113,7 +132,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           { type: ToastType.Info },
         );
       },
-      [store, toast],
+      [onSubmit, store, toast],
     );
 
     const setEditableProductQuantity = useCallback(
@@ -140,7 +159,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           isActive={isScannerActive}
           scannedProductCount={scannedProducts.length}
         />
-        <ProductModal
+        <ProductModalComponent
           {...modalParams}
           product={store.getCurrentProduct}
           stockName={store.stockName}

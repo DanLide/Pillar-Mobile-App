@@ -17,6 +17,8 @@ export const idCloseIcon = (testID: string) => `${testID}:closeIcon`;
 
 export const idUndoText = (testID: string) => `${testID}:undoText`;
 
+export const idRetryText = (testID: string) => `${testID}:retryText`;
+
 export const idPrimaryButton = (testID: string) => `${testID}:primaryButton`;
 
 export const idSecondaryButton = (testID: string) =>

@@ -85,8 +85,8 @@ const QRButton: React.FC<QRButtonProps> = ({
   const CenterIcon = isGreenBorder
     ? SVGs.CheckMark
     : barcodeFormat === BarcodeFormat.QR_CODE
-      ? SVGs.QRIcon
-      : SVGs.BarcodeIcon;
+    ? SVGs.QRIcon
+    : SVGs.BarcodeIcon;
 
   const animatedStyleButton = useAnimatedStyle(() => {
     if (!coordinates?.value?.[index]) return {};
@@ -228,7 +228,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   );
 
   const scanBarcode = (code?: string) => {
-    if (!code) return
+    if (!code) return;
     onScan(code);
     setIsBlinkOn(true);
   };
@@ -237,12 +237,9 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (
       !frame ||
       !scannerLayoutRef.current ||
-      (
-        barcodes.length === 0 &&
-        barcodesState.current.length === 0
-      )
+      (barcodes.length === 0 && barcodesState.current.length === 0)
     ) {
-      !barcodesLength && setBarcodesLength(0)
+      !barcodesLength && setBarcodesLength(0);
       return;
     }
 
@@ -302,7 +299,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       barcodesState.current.forEach(e => {
         e.timeStampAutoscanFocus = null;
       });
-      return
+      return;
     }
 
     const singleBarcodeState = barcodesState.current[0];
@@ -337,7 +334,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (
       singleBarcodeState.timeStampAutoscanFocus &&
       currentDate - singleBarcodeState.timeStampAutoscanFocus >
-      AUTOSCAN_TIMEOUT_MS
+        AUTOSCAN_TIMEOUT_MS
     ) {
       scanBarcode(singleBarcodeState?.rawValue);
       setAutoScanDone(true);
@@ -366,7 +363,10 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   const renderCenterScanSquare = useMemo(
     () => (
       <View style={styles.centreSquareWrapper}>
-        <View onLayout={onLayoutScanSquare} style={styles.centreSquareContainer}>
+        <View
+          onLayout={onLayoutScanSquare}
+          style={styles.centreSquareContainer}
+        >
           <View
             style={[
               styles.baseScanSquareStyle,
@@ -403,7 +403,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
 
   const renderBarcodes = () => {
     if (!barcodesLength) {
-      return null
+      return null;
     }
     return barcodesState.current?.map((barcodeData, index) => {
       if (!barcodeData) {
@@ -424,7 +424,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           barcodeFormat={barcodeData.format}
         />
       );
-    })
+    });
   };
 
   return (
@@ -625,6 +625,6 @@ const styles = StyleSheet.create({
     right: -BORDER_WIDTH,
   },
   greenBorder: {
-    borderColor: colors.green3,
+    borderColor: colors.green5,
   },
 });

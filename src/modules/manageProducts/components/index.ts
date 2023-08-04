@@ -1,3 +1,4 @@
+import { ProductModal } from './ProductModal';
 import { SelectedProductsList } from './SelectedProductsList';
 
-export { SelectedProductsList };
+export { SelectedProductsList, ProductModal };

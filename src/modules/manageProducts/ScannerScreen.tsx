@@ -1,19 +1,26 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
+import { encode as btoa } from 'base-64';
 
 import { BaseScannerScreen } from '../../components';
+import { ProductModal } from './components';
 
 import {
-  ScannerModalStoreType,
   CurrentProductStoreType,
+  ProductModel,
+  ScannerModalStoreType,
   StockProductStoreType,
 } from '../../stores/types';
-import {
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-  ToastContextProvider,
-} from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
+import { onUpdateProduct } from '../../data/updateProduct';
+import { fetchProductDetails } from '../../data/fetchProductDetails';
+import { useToast } from 'react-native-toast-notifications';
+import { ToastType } from '../../contexts/types';
+import {
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from '../../contexts';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -24,15 +31,61 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-export const ScannerScreen: React.FC = observer(() => {
+const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
   const store = useRef<BaseProductsStore>(manageProductsStore).current;
 
+  const toast = useToast();
+
+  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
+    async product =>
+      setModalParams({
+        type: ProductModalType.ManageProduct,
+        maxValue: store.getMaxValue(product),
+        onHand: store.getOnHand(product),
+      }),
+    [store],
+  );
+
+  const closeModal = useCallback(() => setModalParams(initModalParams), []);
+
+  const fetchProduct = useCallback(
+    (code: string) => fetchProductDetails(store, btoa(code)),
+    [store],
+  );
+
+  const updateProduct = useCallback(async () => {
+    const error = await onUpdateProduct(manageProductsStore);
+
+    if (error) {
+      setModalParams({
+        type: ProductModalType.ManageProduct,
+        toastType: ToastType.ProductUpdateError,
+      });
+      return;
+    }
+
+    closeModal();
+    toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
+  }, [closeModal, toast]);
+
   return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen store={store} modalParams={modalParams} />
-    </ToastContextProvider>
+    <BaseScannerScreen
+      store={store}
+      modalParams={modalParams}
+      onProductScan={onProductScan}
+      onFetchProduct={fetchProduct}
+      onSubmit={updateProduct}
+      onCloseModal={closeModal}
+      ProductModalComponent={ProductModal}
+    />
   );
 });
+
+export default () => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <ScannerScreen />
+  </ToastContextProvider>
+);

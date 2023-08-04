@@ -1,9 +1,18 @@
-import { TransactionType } from '../../constants/common.enum';
+import {
+  InventoryAdjusmentType,
+  TransactionType,
+} from '../../constants/common.enum';
 import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
 
-export interface ProductResponse {
+export interface ProductSettingsResponse {
+  max?: number;
+  min?: number;
+  orderMultiple?: number;
+}
+
+export interface ProductResponse extends ProductSettingsResponse {
   productId: number;
   name: string;
   isRecoverable: 'Yes' | 'No';
@@ -13,6 +22,24 @@ export interface ProductResponse {
   partNo: string;
   manufactureCode: string;
   nameDetails: string;
+  unitPer: number;
+  inventoryClassificationTypeId: string;
+  inventoryAssignmentId?: number;
+  supplierPartyRoleId?: number;
+  onOrder?: number;
+  upc?: string;
+  min?: number;
+  max?: number;
+}
+
+export interface CategoryResponse {
+  id: number;
+  description: string;
+}
+
+export interface SupplierResponse {
+  name: string;
+  partyRoleId: number;
 }
 
 export interface RemoveProductResponse {
@@ -106,5 +133,71 @@ export const getFetchProductByFacilityIdAPI = (scanCode: string) => {
   return tryAuthFetch<ProductByFacilityIdResponse[]>({
     url,
     request: { method: 'GET' },
+  });
+};
+
+export const getCategoriesByFacilityIdAPI = () => {
+  const url = new URLProvider().getCategoriesByFacilityId();
+
+  return tryAuthFetch<CategoryResponse[]>({ url, request: { method: 'GET' } });
+};
+
+export const getProductSettingsByIdAPI = (
+  productId: number,
+  currentStock?: StockModel,
+) => {
+  const url = new URLProvider().getProductSettingsById(productId, currentStock);
+
+  return tryAuthFetch<ProductSettingsResponse>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getSupplierListByFacilityIdAPI = () => {
+  const url = new URLProvider().getSupplierListByFacilityId();
+
+  return tryAuthFetch<SupplierResponse[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getEnabledSuppliersByProductIdAPI = (productId: number) => {
+  const url = new URLProvider().getEnabledSuppliersByProductId(productId);
+
+  return tryAuthFetch<SupplierResponse[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const updateProductQuantityAPI = (
+  product?: ProductModel,
+  currentStock?: StockModel,
+) => {
+  const url = new URLProvider().updateProductQuantity();
+
+  const body = JSON.stringify([
+    {
+      partyRoleId: currentStock?.partyRoleId,
+      productId: product?.productId,
+      inventoryAssignmentId: product?.inventoryAssignmentId,
+      quantityOriginal: product?.onHand,
+      quantityCounted: product?.reservedCount,
+      transactionTypeId: TransactionType.Adjustment,
+      inventoryAdjustmentTypeId: InventoryAdjusmentType.Normal,
+    },
+  ]);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   });
 };

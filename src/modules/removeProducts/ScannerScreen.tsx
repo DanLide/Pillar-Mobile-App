@@ -17,6 +17,7 @@ import {
   ProductModel,
   StockProductStoreType,
 } from '../../stores/types';
+import { ToastType } from '../../contexts/types';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -41,14 +42,14 @@ export const ScannerScreen: React.FC = observer(() => {
 
       const minQty = getProductMinQty(product.inventoryUseTypeId);
 
-      const error =
+      const toastType =
         removedProductCount >= product.onHand || product.onHand < minQty
-          ? "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section"
+          ? ToastType.ProductQuantityError
           : undefined;
 
       setModalParams({
         type: ProductModalType.Remove,
-        error,
+        toastType,
         maxValue: store.getMaxValue(product),
         onHand: store.getOnHand(product),
       });

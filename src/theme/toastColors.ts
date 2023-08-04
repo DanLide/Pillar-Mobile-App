@@ -12,29 +12,41 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
-  [ToastType.Info]: {
-    primary: colors.purple,
-    secondary: colors.magnolia,
-    action: colors.purpleDark,
-  },
-  [ToastType.Success]: {
-    primary: colors.green2,
-    secondary: colors.greenLight,
-    action: colors.green,
+  [ToastType.ProductQuantityError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
   },
   [ToastType.ScanError]: {
     primary: colors.red,
     secondary: colors.redLight,
     action: colors.redDark,
   },
-  [ToastType.ProductQuantityError]: {
+  [ToastType.ProductUpdateError]: {
     primary: colors.red,
     secondary: colors.redLight,
     action: colors.redDark,
+  },
+
+  [ToastType.Info]: {
+    primary: colors.purple,
+    secondary: colors.magnolia,
+    action: colors.purpleDark,
   },
   [ToastType.TooltipInfo]: {
     primary: colors.purple,
     secondary: colors.background,
     action: colors.purpleDark,
+  },
+
+  [ToastType.Success]: {
+    primary: colors.green2,
+    secondary: colors.greenLight,
+    action: colors.green,
+  },
+  [ToastType.ProductUpdateSuccess]: {
+    primary: colors.green3,
+    secondary: colors.greenLight,
+    action: colors.green4,
   },
 };
