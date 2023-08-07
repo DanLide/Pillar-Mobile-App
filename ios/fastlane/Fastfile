@@ -22,7 +22,7 @@ platform :ios do
 
     xcodebuild(
       workspace: "RepairStack.xcworkspace",
-      scheme: "RepairStack",
+      scheme: "RepairStackQA",
       configuration: 'Debug',
       build: true,
       destination: "generic/platform=iOS",
