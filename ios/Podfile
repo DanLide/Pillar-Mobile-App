@@ -44,19 +44,24 @@ abstract_target 'RepairStackAbstract' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
-  target 'RepairStack' do
+  target 'RepairStackTests' do
     inherit! :complete
-    # Pods for debug
+    # Pods for testing
   end
 
-  target 'RepairStackRelease' do
+  target 'RepairStackQA' do
     inherit! :complete
     # Pods for release
   end
 
-  target 'RepairStackTests' do
+  target 'RepairStackUAT' do
     inherit! :complete
-    # Pods for testing
+    # Pods for release
+  end
+
+  target 'RepairStackPROD' do
+    inherit! :complete
+    # Pods for release
   end
 
   post_install do |installer|

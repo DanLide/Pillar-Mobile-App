@@ -74,3 +74,5 @@ yarn-error.log
 /ios_export/archive
 /ios_export/build
 
+# Env
+.env
