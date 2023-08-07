@@ -92,7 +92,7 @@ export const EditQuantity = memo(
       const updatedCount =
         Math.ceil(currentValue / stepValue) * stepValue - stepValue;
 
-      const displayText = removeLeadingZero(updatedCount);
+      const displayText = updatedCount === 0 ? String(updatedCount) : removeLeadingZero(updatedCount);
 
       setNewValue(displayText);
     }, [currentValue, stepValue, setNewValue]);
@@ -111,24 +111,13 @@ export const EditQuantity = memo(
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
 
-      if (currentValue > minValue) {
+      if (currentValue >= minValue) {
         return (
           <TouchableOpacity
             style={[styles.quantityButton, styles.border]}
             onPress={onDecreaseCount}
           >
             <SVGs.MinusIcon color={colors.black} />
-          </TouchableOpacity>
-        );
-      }
-
-      if (isEdit) {
-        return (
-          <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
-            onPress={onRemove}
-          >
-            <SVGs.TrashIcon color={colors.black} />
           </TouchableOpacity>
         );
       }
