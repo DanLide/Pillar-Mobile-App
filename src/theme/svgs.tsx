@@ -772,5 +772,5 @@ export const ConnectedWorker = memo((props: SvgProps) => (
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },
-  tooltipAbsolute: { position: 'absolute', top: -16, right: -8 },
+  tooltipAbsolute: { position: 'absolute', top: "15%", right: -8 },
 });
