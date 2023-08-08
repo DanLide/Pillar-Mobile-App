@@ -107,20 +107,8 @@ export const ProductModal = memo(
     }, [onClose]);
 
     const onRemoveAlert = useCallback(() => {
-      Alert.alert('Remove confirmation', '', [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {
-          text: 'Remove',
-          onPress: () => {
-            if (product) onRemove?.(product);
-            clearProductModalStoreOnClose();
-          },
-        },
-      ]);
+      if (product) onRemove?.(product);
+      clearProductModalStoreOnClose();
     }, [clearProductModalStoreOnClose, product, onRemove]);
 
     const renderItem = useCallback(

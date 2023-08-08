@@ -82,11 +82,6 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const minQty = getProductMinQty(inventoryUseTypeId);
 
-    const buttonLabel =
-      (jobSelectable && isRecoverable) ||
-      type === ProductModalType.CreateInvoice
-        ? 'Next'
-        : 'Done';
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent
         ? 'decimal-pad'
@@ -103,6 +98,44 @@ export const ProductQuantity: React.FC<Props> = observer(
         onPressAddToList?.();
       }
     };
+
+    const renderBottomButton = () => {
+      if (type === ProductModalType.ManageProduct) {
+        return null
+      }
+
+      if (isEdit && reservedCount === 0) {
+        return (
+          <Pressable
+            style={styles.deleteButton}
+            onPress={onRemove}
+          >
+            <SVGs.TrashIcon color={colors.redDark} />
+            <Text style={styles.deleteButtonText}>
+              Delete
+            </Text>
+          </Pressable>
+        )
+      }
+
+      const buttonLabel =
+        (jobSelectable && isRecoverable) ||
+          type === ProductModalType.CreateInvoice
+          ? 'Next'
+          : 'Done';
+
+      const disabled = toastType === ToastType.ProductQuantityError || reservedCount ===0
+
+      return (
+        <Button
+          disabled={disabled}
+          type={ButtonType.primary}
+          buttonStyle={styles.continueButton}
+          title={buttonLabel}
+          onPress={onPressButton}
+        />
+      )
+    }
 
     return (
       <View style={[styles.container, style]}>
@@ -149,16 +182,7 @@ export const ProductQuantity: React.FC<Props> = observer(
             ) : null}
           </View>
         )}
-
-        {type !== ProductModalType.ManageProduct && (
-          <Button
-            disabled={toastType === ToastType.ProductQuantityError}
-            type={ButtonType.primary}
-            buttonStyle={styles.continueButton}
-            title={buttonLabel}
-            onPress={onPressButton}
-          />
-        )}
+        {renderBottomButton()}
       </View>
     );
   },
@@ -195,5 +219,25 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: colors.purpleDark,
     backgroundColor: colors.white2,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.red,
+    height: 48,
+    marginTop: 'auto',
+    marginBottom: 16,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+  },
+  deleteButtonText: {
+    color: colors.redDark,
+    fontWeight: '700',
+    fontSize: 20,
+    fontFamily: fonts.TT_Bold,
+    marginLeft: 15,
   },
 });
