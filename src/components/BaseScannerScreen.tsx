@@ -87,8 +87,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         const product = store.getCurrentProduct;
 
-        if (!product)
-          return onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
+        if (!product) {
+          onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
+          setIsScannerActive(true);
+          return
+        }
 
         onProductScan?.(product);
       },
@@ -101,10 +104,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         Vibration.vibrate();
         TrackPlayer.play();
 
-        if (typeof code === 'string') await fetchProductByCode(code);
-        else onScanError?.(ScannerScreenError.ProductNotFound);
-
-        setIsScannerActive(true);
+        if (typeof code === 'string') {
+          await fetchProductByCode(code)
+        } else {
+          onScanError?.(ScannerScreenError.ProductNotFound);
+          setIsScannerActive(true);
+        }
       },
       [fetchProductByCode, onScanError],
     );
