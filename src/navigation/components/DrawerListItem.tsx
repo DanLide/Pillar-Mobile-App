@@ -85,6 +85,6 @@ const styles = StyleSheet.create({
   },
   chevron: {
     marginLeft: 'auto',
-    marginRight: 15,
+    paddingHorizontal: 15,
   }
 });
