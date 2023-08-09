@@ -769,6 +769,17 @@ export const ConnectedWorker = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const DownIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M7 10h10l-5 5-5-5Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },
