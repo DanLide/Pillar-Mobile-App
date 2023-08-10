@@ -1,19 +1,9 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { colors, fonts } from '../../../../theme';
-import { InventoryUseType } from '../../../../constants/common.enum';
-import { ColoredTooltip } from '../../../../components';
+import { InventoryTypeBadge } from '../../../../components';
 import { ProductModel } from '../../../../stores/types';
-
-const InventoryTypeName = {
-  [InventoryUseType.Stock]: 'Stock',
-  [InventoryUseType.Percent]: 'Percent',
-  [InventoryUseType.Container]: 'Container',
-  [InventoryUseType.Each]: 'Each Piece',
-  [InventoryUseType.NonStock]: 'Special Order',
-  [InventoryUseType.All]: 'All',
-};
 
 interface Props {
   hideOnHandCount?: boolean;
@@ -27,51 +17,23 @@ export const FooterDescription: React.FC<Props> = ({
   hideOnHandCount,
   product,
   onHand,
-}) => {
-  const InventoryTypeNameString = product.inventoryUseTypeId
-    ? InventoryTypeName[product.inventoryUseTypeId]
-    : undefined;
-
-  const getInventoryUseTypeLabelTheme = useCallback(() => {
-    switch (product.inventoryUseTypeId) {
-      case InventoryUseType.Container:
-        return { backgroundColor: colors.blueLight, color: colors.blue };
-      case InventoryUseType.Each:
-        return { backgroundColor: colors.greenLight, color: colors.green };
-      case InventoryUseType.Percent:
-        return { backgroundColor: colors.redLight, color: colors.redSemiLight };
-      case InventoryUseType.NonStock:
-        return { backgroundColor: colors.pinkLight, color: colors.pink };
-      default:
-        return undefined;
-    }
-  }, [product.inventoryUseTypeId]);
-
-  const inventoryUseTypeLabelTheme = getInventoryUseTypeLabelTheme();
-
-  return (
-    <View style={styles.container}>
-      {hideOnHandCount ? null : (
-        <View style={[styles.itemContainer, { marginRight: 16 }]}>
-          <Text style={styles.title}>In Stock</Text>
-          <Text style={styles.subtitleInStock}>
-            {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
-          </Text>
-        </View>
-      )}
-
-      <View style={styles.itemContainer}>
-        <Text style={styles.title}>Remove by</Text>
-        {InventoryTypeNameString ? (
-          <ColoredTooltip
-            title={InventoryTypeNameString}
-            textStyles={inventoryUseTypeLabelTheme}
-          />
-        ) : null}
+}) => (
+  <View style={styles.container}>
+    {hideOnHandCount ? null : (
+      <View style={[styles.itemContainer, { marginRight: 16 }]}>
+        <Text style={styles.title}>In Stock</Text>
+        <Text style={styles.subtitleInStock}>
+          {onHand > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : onHand}
+        </Text>
       </View>
+    )}
+
+    <View style={styles.itemContainer}>
+      <Text style={styles.title}>Remove by</Text>
+      <InventoryTypeBadge inventoryUseTypeId={product.inventoryUseTypeId} />
     </View>
-  );
-};
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {

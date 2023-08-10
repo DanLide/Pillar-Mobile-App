@@ -4,6 +4,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/default
 import Animated, {
+  runOnJS,
   useAnimatedScrollHandler,
   useSharedValue,
   withSpring,
@@ -24,6 +25,7 @@ import { BadgeType, InfoBadge } from './InfoBadge';
 import { ToastContextProvider } from '../../../contexts';
 import { categoriesStore, suppliersStore } from '../../../stores';
 import { observer } from 'mobx-react';
+import { EditProduct } from './EditProduct';
 
 enum ScrollDirection {
   Down,
@@ -46,13 +48,13 @@ export const ProductModal = observer(
     stockName,
     toastType,
     onToastAction,
-    isEdit,
     maxValue = 0,
     onHand = 0,
     onSubmit,
     onClose,
     onChangeProductQuantity,
   }: ProductModalProps) => {
+    const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const modalCollapsedOffset = useHeaderHeight();
@@ -100,6 +102,8 @@ export const ProductModal = observer(
       [topOffset],
     );
 
+    const handleEdit = useCallback(() => setIsEdit(isEdit => !isEdit), []);
+
     const clearProductModalStoreOnClose = useCallback(() => {
       scrollTo(modalCollapsedOffset);
       onClose();
@@ -141,6 +145,7 @@ export const ProductModal = observer(
             stickyHeaderIndices={[0]}
             contentContainerStyle={styles.contentContainer}
             bounces={false}
+            nestedScrollEnabled
           >
             <Description product={product} topOffset={topOffset} />
             <View style={styles.settings}>
@@ -155,63 +160,70 @@ export const ProductModal = observer(
                 onHand={onHand}
                 onToastAction={onToastAction}
               />
-              <Text style={styles.category}>{category?.description}</Text>
-              <View style={styles.minMaxContainer}>
-                <InfoBadge
-                  type={BadgeType.Large}
-                  title="Minimum Quantity"
-                  subtitle={product?.min}
-                />
-                <Text style={styles.slash}>/</Text>
-                <InfoBadge
-                  type={BadgeType.Large}
-                  title="Maximum Quantity"
-                  subtitle={product?.max}
-                />
-              </View>
-              <View style={styles.orderSettings}>
-                <InfoBadge
-                  title="Pieces Per"
-                  titleWithNewLine="Container"
-                  subtitle={product?.unitsPerContainer}
-                />
-                <InfoBadge
-                  title="Shipment"
-                  titleWithNewLine="Quantity"
-                  subtitle={product?.orderMultiple}
-                />
-                <InfoBadge title="On Order" subtitle={product?.onOrder} />
-              </View>
-              <View style={styles.bottomInfo}>
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Distributor"
-                  subtitle={supplier?.name}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Restock From"
-                  subtitle={restockFrom?.name}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="UPC"
-                  subtitle={product?.upc}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Recoverable"
-                  subtitle={product?.isRecoverable ? 'Yes' : 'No'}
-                />
-              </View>
+              {isEdit ? (
+                <EditProduct product={product} />
+              ) : (
+                <>
+                  <Text style={styles.category}>{category?.description}</Text>
+                  <View style={styles.minMaxContainer}>
+                    <InfoBadge
+                      type={BadgeType.Large}
+                      title="Minimum Quantity"
+                      subtitle={product?.min}
+                    />
+                    <Text style={styles.slash}>/</Text>
+                    <InfoBadge
+                      type={BadgeType.Large}
+                      title="Maximum Quantity"
+                      subtitle={product?.max}
+                    />
+                  </View>
+                  <View style={styles.orderSettings}>
+                    <InfoBadge
+                      title="Pieces Per"
+                      titleWithNewLine="Container"
+                      subtitle={product?.unitsPerContainer}
+                    />
+                    <InfoBadge
+                      title="Shipment"
+                      titleWithNewLine="Quantity"
+                      subtitle={product?.orderMultiple}
+                    />
+                    <InfoBadge title="On Order" subtitle={product?.onOrder} />
+                  </View>
+                  <View style={styles.bottomInfo}>
+                    <InfoBadge
+                      type={BadgeType.Medium}
+                      title="Distributor"
+                      subtitle={supplier?.name}
+                    />
+                    <InfoBadge
+                      type={BadgeType.Medium}
+                      title="Restock From"
+                      subtitle={restockFrom?.name}
+                    />
+                    <InfoBadge
+                      type={BadgeType.Medium}
+                      title="UPC"
+                      subtitle={product?.upc}
+                    />
+                    <InfoBadge
+                      type={BadgeType.Medium}
+                      title="Recoverable"
+                      subtitle={product?.isRecoverable ? 'Yes' : 'No'}
+                    />
+                  </View>
+                </>
+              )}
             </View>
           </Animated.ScrollView>
           <View style={styles.buttons}>
             <Button
-              title="Edit"
+              title={isEdit ? 'Cancel' : 'Edit'}
               type={ButtonType.secondary}
               disabled={isLoading}
               buttonStyle={styles.buttonContainer}
+              onPress={handleEdit}
             />
             <Button
               title="Done"

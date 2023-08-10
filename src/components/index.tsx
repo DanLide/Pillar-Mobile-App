@@ -24,7 +24,8 @@ import { BaseProductsScreen } from './BaseProductsScreen';
 import { ResultProductsListItem } from './ResultProductsListItem';
 import BaseResultScreen from './BaseResultScreen';
 import { BaseSelectedProductsList } from './BaseSelectedProductsList';
-import { Dropdown } from './Dropdown';
+import { Dropdown, DropdownItem } from './Dropdown';
+import { InventoryTypeBadge } from './InventoryTypeBadge';
 
 export {
   Scanner,
@@ -55,6 +56,7 @@ export {
   BaseResultScreen,
   BaseSelectedProductsList,
   Dropdown,
+  InventoryTypeBadge,
 };
 
-export type { ScanProductProps };
+export type { ScanProductProps, DropdownItem };
