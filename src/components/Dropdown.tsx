@@ -4,7 +4,7 @@ import {
   FlatList,
   LayoutChangeEvent,
   ListRenderItem,
-  Modal,
+  Platform,
   Pressable,
   PressableStateCallbackType,
   StyleProp,
@@ -41,12 +41,15 @@ interface Props<T> extends ViewProps {
   renderItem?: (item: T) => JSX.Element;
 }
 
-const { height: WINDOW_HEIGHT } = Dimensions.get('window');
+const isDropdownItem = <T,>(item?: DropdownItem | T): item is DropdownItem =>
+  !!(item as DropdownItem)?.value;
 
 const OptionsSeparator = () => <View style={styles.optionsSeparator} />;
 
-const isDropdownItem = <T,>(item?: DropdownItem | T): item is DropdownItem =>
-  !!(item as DropdownItem)?.value;
+const { height: WINDOW_HEIGHT } = Dimensions.get('window');
+
+const Z_INDEX_DEFAULT = 5000;
+const Z_INDEX_ACTIVE = 6000;
 
 export const Dropdown = <T extends object | number | string = DropdownItem>({
   data,
@@ -60,26 +63,41 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const [pickerHeight, setPickerHeight] = useState(0);
-  const [pickerOffset, setPickerOffset] = useState({ x: 0, y: 0 });
   const [direction, setDirection] = useState(dropdownDirection);
 
   const pickerRef = useRef<TouchableOpacity>(null);
 
+  const _zIndex = useMemo(() => {
+    if (isOpen) {
+      return Z_INDEX_ACTIVE;
+    }
+
+    return Z_INDEX_DEFAULT;
+  }, [isOpen]);
+
+  const zIndexContainer = useMemo(
+    () =>
+      Platform.OS !== 'android' && {
+        zIndex: _zIndex,
+      },
+    [_zIndex],
+  );
+
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.container, style],
-    [style],
+    () => [styles.container, zIndexContainer, style],
+    [style, zIndexContainer],
   );
 
   const dropdownContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       styles.dropdownContainer,
       {
-        [direction]: pickerOffset.y,
-        left: pickerOffset.x - 16,
+        [direction]: 0,
         maxHeight,
+        zIndex: _zIndex,
       },
     ],
-    [direction, maxHeight, pickerOffset],
+    [_zIndex, direction, maxHeight],
   );
 
   const SelectedOption = useMemo<JSX.Element | null>(() => {
@@ -102,17 +120,16 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
 
   const handlePress = useCallback(async () => {
     if (!isOpen) {
-      const [x, y] = await new Promise<[number, number]>(resolve =>
-        pickerRef.current?.measureInWindow((x, y) => resolve([x, y])),
+      const yOffset = await new Promise<number>(resolve =>
+        pickerRef.current?.measureInWindow((x, y) => resolve(y)),
       );
 
-      const size = y + maxHeight + pickerHeight + bottomOffset;
+      const size = yOffset + maxHeight + pickerHeight + bottomOffset;
 
       const direction =
         size < WINDOW_HEIGHT ? DropdownDirection.TOP : DropdownDirection.BOTTOM;
 
       setDirection(direction);
-      setPickerOffset({ x, y });
     }
 
     setIsOpen(not);
@@ -138,25 +155,23 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
     [handlePress, renderItem],
   );
   return (
-    <View style={containerStyle}>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.pickerContainer}
-        onPress={handlePress}
-        onLayout={handleLayoutChange}
-        ref={pickerRef}
-      >
-        {!isOpen && (
+    <>
+      <View style={containerStyle}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.pickerContainer}
+          onPress={handlePress}
+          onLayout={handleLayoutChange}
+          ref={pickerRef}
+        >
           <View style={styles.pickerLabelContainer}>
             <Text style={styles.pickerLabel}>{label}</Text>
           </View>
-        )}
-        {SelectedOption}
-        <SVGs.DownIcon color={colors.black} />
-      </TouchableOpacity>
+          {SelectedOption}
+          <SVGs.DownIcon color={colors.black} />
+        </TouchableOpacity>
 
-      <Modal visible={isOpen} transparent animationType="none">
-        <Pressable style={styles.overlay} onPress={handlePress}>
+        {isOpen && (
           <View style={dropdownContainerStyle}>
             <View style={styles.pickerLabelContainer}>
               <Text style={[styles.pickerLabel, styles.pickerLabelActive]}>
@@ -172,9 +187,11 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
               ItemSeparatorComponent={OptionsSeparator}
             />
           </View>
-        </Pressable>
-      </Modal>
-    </View>
+        )}
+      </View>
+
+      {isOpen && <Pressable style={styles.overlay} onPress={handlePress} />}
+    </>
   );
 };
 
@@ -186,7 +203,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     backgroundColor: colors.white,
     borderRadius: 8,
+    left: 0,
     marginHorizontal: 16,
+    right: 0,
     shadowColor: colors.black,
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.2,
@@ -199,8 +218,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   option: {
+    alignItems: 'flex-start',
     paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingVertical: 11,
   },
   optionActive: {
     backgroundColor: colors.magnolia,
@@ -217,8 +237,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   overlay: {
-    height: '100%',
-    width: '100%',
+    ...StyleSheet.absoluteFillObject,
+    zIndex: Z_INDEX_ACTIVE - 1,
   },
   pickerContainer: {
     alignItems: 'center',
@@ -244,11 +264,11 @@ const styles = StyleSheet.create({
   },
   pickerLabelContainer: {
     backgroundColor: colors.white,
-    borderRadius: 2,
+    borderRadius: 8,
     left: 6,
     paddingHorizontal: 1,
     position: 'absolute',
     top: -8,
-    zIndex: 999,
+    zIndex: Z_INDEX_ACTIVE,
   },
 });
