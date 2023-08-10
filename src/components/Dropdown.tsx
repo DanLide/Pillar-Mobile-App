@@ -1,17 +1,23 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
   FlatList,
   LayoutChangeEvent,
   ListRenderItem,
+  Modal,
   Pressable,
+  PressableStateCallbackType,
+  StyleProp,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  ViewProps,
+  ViewStyle,
 } from 'react-native';
+import { equals, not } from 'ramda';
+
 import { colors, fonts, SVGs } from '../theme';
-import { not } from 'ramda';
 import { TOAST_OFFSET_ABOVE_SINGLE_BUTTON } from '../contexts';
 
 export enum DropdownDirection {
@@ -24,145 +30,159 @@ export interface DropdownItem {
   value: number | string;
 }
 
-interface Props {
-  data: Array<DropdownItem>;
+interface Props<T> extends ViewProps {
+  data: Array<T>;
   label: string;
-  item?: DropdownItem;
+  selectedItem?: T;
   bottomOffset?: number;
   dropdownDirection?: DropdownDirection;
   maxHeight?: number;
-  onSelect?: (item: { label: string; value: string }) => void;
+  onSelect?: (item: T) => void;
+  renderItem?: (item: T) => JSX.Element;
 }
-
-const Z_INDEX_DEFAULT = 1;
-const Z_INDEX_LABEL = 9999;
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
 
-export const Dropdown = memo(
-  ({
-    data,
-    item,
-    label,
-    dropdownDirection = DropdownDirection.TOP,
-    bottomOffset = TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-    maxHeight = 200,
-  }: Props) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [pickerHeight, setPickerHeight] = useState(0);
-    const [direction, setDirection] = useState(dropdownDirection);
+const OptionsSeparator = () => <View style={styles.optionsSeparator} />;
 
-    const pickerRef = useRef<TouchableOpacity>(null);
+const isDropdownItem = <T,>(item?: DropdownItem | T): item is DropdownItem =>
+  !!(item as DropdownItem)?.value;
 
-    const dropdownContainerStyle = useMemo(
-      () => [
-        styles.dropdownContainer,
-        {
-          [direction]: 0,
-          maxHeight,
-        },
-      ],
-      [direction, maxHeight],
-    );
+export const Dropdown = <T extends object | number | string = DropdownItem>({
+  data,
+  selectedItem,
+  label,
+  dropdownDirection = DropdownDirection.TOP,
+  bottomOffset = TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  maxHeight = 200,
+  renderItem,
+  style,
+}: Props<T>) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [pickerHeight, setPickerHeight] = useState(0);
+  const [pickerOffset, setPickerOffset] = useState({ x: 0, y: 0 });
+  const [direction, setDirection] = useState(dropdownDirection);
 
-    const handleLayoutChange = useCallback((e: LayoutChangeEvent) => {
-      setPickerHeight(e.nativeEvent.layout.height);
-    }, []);
+  const pickerRef = useRef<TouchableOpacity>(null);
 
-    const handlePress = useCallback(async () => {
-      if (!isOpen) {
-        const yOffset = await new Promise<number>(resolve =>
-          pickerRef.current?.measureInWindow((_, y) => resolve(y)),
-        );
+  const containerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.container, style],
+    [style],
+  );
 
-        const size = yOffset + maxHeight + pickerHeight + bottomOffset;
+  const dropdownContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [
+      styles.dropdownContainer,
+      {
+        [direction]: pickerOffset.y,
+        left: pickerOffset.x - 16,
+        maxHeight,
+      },
+    ],
+    [direction, maxHeight, pickerOffset],
+  );
 
-        const direction =
-          size < WINDOW_HEIGHT
-            ? DropdownDirection.TOP
-            : DropdownDirection.BOTTOM;
+  const SelectedOption = useMemo<JSX.Element | null>(() => {
+    if (selectedItem && renderItem) return renderItem(selectedItem);
 
-        setDirection(direction);
-      }
+    if (isDropdownItem(selectedItem)) {
+      return (
+        <Text numberOfLines={1} style={styles.optionLabel}>
+          {selectedItem?.label}
+        </Text>
+      );
+    }
 
-      setIsOpen(not);
-    }, [isOpen, maxHeight, pickerHeight, bottomOffset]);
+    return null;
+  }, [selectedItem, renderItem]);
 
-    const renderItem = useCallback<ListRenderItem<DropdownItem>>(
-      ({ item }) => (
-        <Pressable
-          key={item.value}
-          style={{
-            borderColor: colors.grayLight2,
-            borderBottomWidth: 0.5,
-            paddingHorizontal: 16,
-            paddingVertical: 10,
-          }}
-          onPress={handlePress}
-        >
-          <Text numberOfLines={1} style={[styles.category]}>
-            {item.label}
-          </Text>
-        </Pressable>
-      ),
-      [handlePress],
-    );
+  const handleLayoutChange = useCallback((e: LayoutChangeEvent) => {
+    setPickerHeight(e.nativeEvent.layout.height);
+  }, []);
 
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.pickerContainer}
-          onPress={handlePress}
-          onLayout={handleLayoutChange}
-          ref={pickerRef}
-        >
-          {!isOpen && (
-            <View style={styles.pickerLabelContainer}>
-              <Text style={styles.pickerLabel}>{label}</Text>
-            </View>
+  const handlePress = useCallback(async () => {
+    if (!isOpen) {
+      const [x, y] = await new Promise<[number, number]>(resolve =>
+        pickerRef.current?.measureInWindow((x, y) => resolve([x, y])),
+      );
+
+      const size = y + maxHeight + pickerHeight + bottomOffset;
+
+      const direction =
+        size < WINDOW_HEIGHT ? DropdownDirection.TOP : DropdownDirection.BOTTOM;
+
+      setDirection(direction);
+      setPickerOffset({ x, y });
+    }
+
+    setIsOpen(not);
+  }, [isOpen, maxHeight, pickerHeight, bottomOffset]);
+
+  const renderOption = useCallback<ListRenderItem<T>>(
+    ({ item }) => {
+      const style = ({ pressed }: PressableStateCallbackType) =>
+        pressed || equals(selectedItem, item)
+          ? [styles.option, styles.optionActive]
+          : styles.option;
+
+      return (
+        <Pressable style={style} onPress={handlePress}>
+          {isDropdownItem(item) ? (
+            <Text numberOfLines={1} style={styles.optionLabel}>
+              {item.label}
+            </Text>
+          ) : (
+            renderItem?.(item)
           )}
-          <Text numberOfLines={1} style={styles.category}>
-            {item?.label}
-          </Text>
-          <SVGs.DownIcon color={colors.black} />
-        </TouchableOpacity>
+        </Pressable>
+      );
+    },
+    [handlePress, renderItem, selectedItem],
+  );
+  return (
+    <View style={containerStyle}>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.pickerContainer}
+        onPress={handlePress}
+        onLayout={handleLayoutChange}
+        ref={pickerRef}
+      >
+        {!isOpen && (
+          <View style={styles.pickerLabelContainer}>
+            <Text style={styles.pickerLabel}>{label}</Text>
+          </View>
+        )}
+        {SelectedOption}
+        <SVGs.DownIcon color={colors.black} />
+      </TouchableOpacity>
 
-        {isOpen && (
+      <Modal visible={isOpen} transparent animationType="none">
+        <Pressable style={styles.overlay} onPress={handlePress}>
           <View style={dropdownContainerStyle}>
             <View style={styles.pickerLabelContainer}>
-              <Text
-                style={[
-                  styles.pickerLabel,
-                  { color: colors.purpleDark, fontFamily: fonts.TT_Bold },
-                ]}
-              >
+              <Text style={[styles.pickerLabel, styles.pickerLabelActive]}>
                 {label}
               </Text>
             </View>
             <FlatList
               contentContainerStyle={styles.flatListContentContainer}
               data={data}
-              renderItem={renderItem}
+              renderItem={renderOption}
               style={styles.flex}
               nestedScrollEnabled
+              ItemSeparatorComponent={OptionsSeparator}
             />
           </View>
-        )}
-      </View>
-    );
-  },
-);
+        </Pressable>
+      </Modal>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  category: {
-    color: colors.grayDark2,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 16,
-    lineHeight: 20,
-    flex: 1,
-  },
   container: {
-    width: '100%',
+    alignSelf: 'stretch',
   },
   dropdownContainer: {
     position: 'absolute',
@@ -179,6 +199,28 @@ const styles = StyleSheet.create({
   },
   flex: {
     flex: 1,
+  },
+  option: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  optionActive: {
+    backgroundColor: colors.magnolia,
+  },
+  optionLabel: {
+    color: colors.grayDark2,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 16,
+    lineHeight: 20,
+    flex: 1,
+  },
+  optionsSeparator: {
+    borderColor: colors.grayLight2,
+    borderBottomWidth: 0.5,
+  },
+  overlay: {
+    height: '100%',
+    width: '100%',
   },
   pickerContainer: {
     alignItems: 'center',
@@ -198,6 +240,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
   },
+  pickerLabelActive: {
+    color: colors.purpleDark,
+    fontFamily: fonts.TT_Bold,
+  },
   pickerLabelContainer: {
     backgroundColor: colors.white,
     borderRadius: 2,
@@ -205,6 +251,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 1,
     position: 'absolute',
     top: -8,
-    zIndex: Z_INDEX_LABEL,
+    zIndex: 999,
   },
 });
