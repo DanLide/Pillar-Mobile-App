@@ -1,5 +1,6 @@
 export const colors = {
   purpleDark: '#7634BC',
+  purpleDark2: '#2E104F',
   purple: '#9657D9',
   purpleLight: '#DBC2F9',
   purpleDisabled: '#C7A8E9',
@@ -19,6 +20,7 @@ export const colors = {
   textNeutral: '#313136',
   grayDark: '#95959E',
   neutral30: '#CBCBD4',
+  neutral40: '#B3B3BD',
   gray: '#E1E1E8',
   grayLight: '#F8F8FA',
   grayLight2: '#F0F0F0',

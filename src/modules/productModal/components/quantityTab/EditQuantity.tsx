@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  memo,
-  useMemo,
-  useState,
-  useRef,
-} from 'react';
+import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -16,6 +10,10 @@ import {
   NativeSyntheticEvent,
   TextInputContentSizeChangeEventData,
   PixelRatio,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  Text,
 } from 'react-native';
 import { pipe, replace } from 'ramda';
 
@@ -26,6 +24,9 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   maxValue: number;
   minValue: number;
   stepValue: number;
+  label?: string;
+  initFontSize?: number;
+  vertical?: boolean;
   disabled?: boolean;
   isEdit?: boolean;
 
@@ -36,7 +37,8 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
 const removeLeadingZero = pipe(String, replace(/^0+/, ''));
-const INITIAL_FONT_SIZE = 78
+
+const INITIAL_FONT_SIZE = 78;
 
 export const EditQuantity = memo(
   ({
@@ -45,6 +47,9 @@ export const EditQuantity = memo(
     maxValue,
     minValue,
     stepValue,
+    label,
+    initFontSize = INITIAL_FONT_SIZE,
+    vertical,
     disabled,
     keyboardType,
     onChange,
@@ -53,13 +58,34 @@ export const EditQuantity = memo(
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
     const displayMinValue = removeLeadingZero(minValue);
+
     const layoutInputRef = useRef<null | LayoutRectangle>(null);
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
-    const [fontSize, setFontSize] = useState(INITIAL_FONT_SIZE);
+    const [fontSize, setFontSize] = useState(initFontSize);
 
-    const style = {
-      fontSize: fontSize,
-    };
+    const containerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
+      [vertical],
+    );
+
+    const inputStyle = useMemo<StyleProp<TextStyle>>(
+      () => [
+        styles.input,
+        vertical && styles.inputVertical,
+        disabled && styles.inputDisabled,
+        { fontSize },
+      ],
+      [disabled, fontSize, vertical],
+    );
+
+    const quantityButtonStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [
+        styles.quantityButton,
+        styles.border,
+        vertical && styles.quantityButtonVertical,
+      ],
+      [vertical],
+    );
 
     const setNewValue = useCallback(
       (value: string) => {
@@ -114,7 +140,7 @@ export const EditQuantity = memo(
       if (currentValue > minValue) {
         return (
           <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
+            style={quantityButtonStyle}
             onPress={onDecreaseCount}
           >
             <SVGs.MinusIcon color={colors.black} />
@@ -124,61 +150,85 @@ export const EditQuantity = memo(
 
       if (isEdit) {
         return (
-          <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
-            onPress={onRemove}
-          >
+          <TouchableOpacity style={quantityButtonStyle} onPress={onRemove}>
             <SVGs.TrashIcon color={colors.black} />
           </TouchableOpacity>
         );
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, isEdit, minValue, disabled, onDecreaseCount, onRemove]);
+    }, [
+      disabled,
+      currentValue,
+      minValue,
+      isEdit,
+      quantityButtonStyle,
+      onDecreaseCount,
+      onRemove,
+    ]);
 
     const onLayout = ({ nativeEvent }: LayoutChangeEvent) => {
       layoutInputRef.current = nativeEvent.layout;
     };
 
-    const onContentSizeChange = ({ nativeEvent: { contentSize: { width } } }:
-      NativeSyntheticEvent<TextInputContentSizeChangeEventData>
-    ) => {
+    const onContentSizeChange = ({
+      nativeEvent: {
+        contentSize: { width },
+      },
+    }: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
       if (!layoutInputRef.current?.width || !width) {
-        return
+        return;
       }
       if (layoutInputRef.current?.width < width) {
-        return setFontSize(PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width) * 0.9);
+        return setFontSize(
+          PixelRatio.roundToNearestPixel(
+            (fontSize * layoutInputRef.current?.width) / width,
+          ) * 0.9,
+        );
       }
-      if (fontSize === INITIAL_FONT_SIZE) {
-        return
+      if (fontSize === initFontSize) {
+        return;
       }
-      const increasedFontSize = PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width);
-      const increasedWidth = width * increasedFontSize / fontSize;
+      const increasedFontSize = PixelRatio.roundToNearestPixel(
+        (fontSize * layoutInputRef.current?.width) / width,
+      );
+      const increasedWidth = (width * increasedFontSize) / fontSize;
       if (layoutInputRef.current?.width >= increasedWidth) {
-        setFontSize(increasedFontSize > INITIAL_FONT_SIZE ? INITIAL_FONT_SIZE : increasedFontSize * 0.9);
+        setFontSize(
+          increasedFontSize > initFontSize
+            ? initFontSize
+            : increasedFontSize * 0.9,
+        );
       }
-    }
+    };
 
     return (
-      <View style={styles.container}>
+      <View style={containerStyle}>
         {DecreaseButton}
-        <TextInput
-          contextMenuHidden
-          editable={!disabled}
-          style={[styles.input, style, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : displayValue}
-          keyboardType={keyboardType}
-          onChangeText={onChangeInputText}
-          returnKeyType="done"
-          onBlur={onFocusLost}
-          onLayout={onLayout}
-          onContentSizeChange={onContentSizeChange}
-        />
+        <View>
+          {label && (
+            <View style={styles.inputLabelContainer}>
+              <Text style={styles.inputLabel}>{label}</Text>
+            </View>
+          )}
+          <TextInput
+            contextMenuHidden
+            editable={!disabled}
+            style={inputStyle}
+            value={disabled ? '-' : displayValue}
+            keyboardType={keyboardType}
+            onChangeText={onChangeInputText}
+            returnKeyType="done"
+            onBlur={onFocusLost}
+            onLayout={onLayout}
+            onContentSizeChange={onContentSizeChange}
+          />
+        </View>
         {disabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
+            style={quantityButtonStyle}
             onPress={onIncreaseCount}
           >
             <SVGs.PlusIcon color={colors.black} />
@@ -192,7 +242,6 @@ export const EditQuantity = memo(
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'row',
     gap: 11,
     justifyContent: 'center',
   },
@@ -210,11 +259,38 @@ const styles = StyleSheet.create({
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
   },
+  inputLabel: {
+    color: colors.white,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 14,
+    lineHeight: 28,
+  },
+  inputLabelContainer: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: colors.purpleDark2,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  inputVertical: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderTopWidth: 0,
+    height: 48,
+    maxWidth: 108,
+    padding: 8,
+  },
   quantityButton: {
     width: 48,
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  quantityButtonVertical: {
+    width: 87,
+    height: 48,
   },
   border: {
     borderWidth: 1,

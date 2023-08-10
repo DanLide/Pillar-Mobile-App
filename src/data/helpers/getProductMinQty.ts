@@ -1,7 +1,7 @@
 import { InventoryUseType } from '../../constants/common.enum';
 
 export const getProductMinQty = (
-  inventoryUseType: InventoryUseType,
+  inventoryUseType?: InventoryUseType,
 ): number => {
   switch (inventoryUseType) {
     case InventoryUseType.Percent:

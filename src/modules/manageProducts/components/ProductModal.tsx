@@ -226,7 +226,7 @@ export const ProductModal = observer(
               onPress={handleEdit}
             />
             <Button
-              title="Done"
+              title={isEdit ? 'Save' : 'Done'}
               type={ButtonType.primary}
               isLoading={isLoading}
               buttonStyle={styles.buttonContainer}

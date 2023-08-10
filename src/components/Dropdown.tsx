@@ -15,7 +15,7 @@ import {
   ViewProps,
   ViewStyle,
 } from 'react-native';
-import { equals, not } from 'ramda';
+import { not } from 'ramda';
 
 import { colors, fonts, SVGs } from '../theme';
 import { TOAST_OFFSET_ABOVE_SINGLE_BUTTON } from '../contexts';
@@ -121,9 +121,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
   const renderOption = useCallback<ListRenderItem<T>>(
     ({ item }) => {
       const style = ({ pressed }: PressableStateCallbackType) =>
-        pressed || equals(selectedItem, item)
-          ? [styles.option, styles.optionActive]
-          : styles.option;
+        pressed ? [styles.option, styles.optionActive] : styles.option;
 
       return (
         <Pressable style={style} onPress={handlePress}>
@@ -137,7 +135,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
         </Pressable>
       );
     },
-    [handlePress, renderItem, selectedItem],
+    [handlePress, renderItem],
   );
   return (
     <View style={containerStyle}>

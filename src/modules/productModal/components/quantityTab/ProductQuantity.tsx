@@ -111,7 +111,7 @@ export const ProductQuantity: React.FC<Props> = observer(
         )}
         <View>
           <EditQuantity
-            isEdit={isEdit}
+            isEdit={isEdit && type !== ProductModalType.ManageProduct}
             currentValue={reservedCount}
             maxValue={maxValue}
             minValue={minQty}
@@ -121,14 +121,16 @@ export const ProductQuantity: React.FC<Props> = observer(
             onChange={onChange}
             onRemove={onRemove}
           />
-          <FooterDescription
-            hideOnHandCount={
-              type === ProductModalType.CreateInvoice ||
-              type === ProductModalType.ManageProduct
-            }
-            product={product}
-            onHand={onHand}
-          />
+          {type === ProductModalType.ManageProduct && isEdit ? null : (
+            <FooterDescription
+              hideOnHandCount={
+                type === ProductModalType.CreateInvoice ||
+                type === ProductModalType.ManageProduct
+              }
+              product={product}
+              onHand={onHand}
+            />
+          )}
         </View>
 
         {jobSelectable && toastType !== ToastType.ProductQuantityError && (
