@@ -9,6 +9,7 @@ import {
   Dropdown,
   DropdownItem,
   InventoryTypeBadge,
+  Tooltip,
 } from '../../../components';
 import { InventoryUseType } from '../../../constants/common.enum';
 import { colors, fonts } from '../../../theme';
@@ -48,6 +49,18 @@ export const EditProduct = observer(({ product }: Props) => {
     [categories, categoryId],
   );
 
+  const shipmentQuantityTooltip = useMemo(
+    () => (
+      <Text style={styles.tooltipMessage}>
+        <Text style={[styles.tooltipMessage, styles.textBold]}>
+          Shipment Quantity
+        </Text>{' '}
+        - The increment in which the product is shipped (i.e 4-pack)
+      </Text>
+    ),
+    [],
+  );
+
   const renderInventoryType = useCallback(
     (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
     [],
@@ -63,31 +76,79 @@ export const EditProduct = observer(({ product }: Props) => {
         style={styles.inventoryTypes}
       />
       <Dropdown data={categories} selectedItem={category} label="Category" />
-      <View style={styles.orderSettings}>
-        <Text style={styles.orderSettingsLabel}>Order Settings</Text>
-        <View style={styles.minMaxContainer}>
-          <EditQuantity
-            vertical
-            label="Minimum"
-            currentValue={product?.min ?? 0}
-            maxValue={MAX_VALUE}
-            minValue={MIN_VALUE}
-            stepValue={stepValue}
-            initFontSize={28}
-            onChange={console.log}
-          />
-          <Text style={styles.slash}>/</Text>
-          <EditQuantity
-            vertical
-            label="Maximum"
-            currentValue={product?.max ?? 0}
-            maxValue={MAX_VALUE}
-            minValue={MIN_VALUE}
-            stepValue={stepValue}
-            initFontSize={28}
-            onChange={console.log}
-          />
+      <View style={styles.orderSection}>
+        <View style={styles.orderSettings}>
+          <View style={styles.minMaxContainer}>
+            <Text style={styles.orderSettingsLabel}>Order Settings</Text>
+            <View style={styles.minMaxRow}>
+              <EditQuantity
+                vertical
+                label="Minimum"
+                currentValue={product?.min ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={stepValue}
+                initFontSize={28}
+                onChange={console.log}
+              />
+              <Text style={styles.slash}>/</Text>
+              <EditQuantity
+                vertical
+                label="Maximum"
+                currentValue={product?.max ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={stepValue}
+                initFontSize={28}
+                onChange={console.log}
+              />
+            </View>
+          </View>
+          <View style={styles.orderQuantities}>
+            <EditQuantity
+              vertical
+              label="Pieces Per"
+              labelWithNewLine="Container"
+              currentValue={product?.unitsPerContainer ?? 0}
+              maxValue={MAX_VALUE}
+              minValue={MIN_VALUE}
+              stepValue={stepValue}
+              initFontSize={28}
+              onChange={console.log}
+            />
+            <EditQuantity
+              vertical
+              label="Shipment"
+              labelWithNewLine="Quantity"
+              currentValue={product?.orderMultiple ?? 0}
+              maxValue={MAX_VALUE}
+              minValue={MIN_VALUE}
+              stepValue={stepValue}
+              initFontSize={28}
+              onChange={console.log}
+            />
+            <EditQuantity
+              disabled
+              vertical
+              label="On order"
+              labelContainerStyle={styles.onOrderLabel}
+              currentValue={product?.onOrder ?? 0}
+              maxValue={MAX_VALUE}
+              minValue={MIN_VALUE}
+              stepValue={stepValue}
+              initFontSize={28}
+              onChange={console.log}
+            />
+          </View>
         </View>
+        <Tooltip
+          message={shipmentQuantityTooltip}
+          contentStyle={styles.shipmentQuantity}
+        >
+          <Text style={styles.shipmentQuantityText}>
+            What is Shipment Quantity?
+          </Text>
+        </Tooltip>
       </View>
     </>
   );
@@ -97,14 +158,26 @@ const styles = StyleSheet.create({
   inventoryTypes: {
     alignSelf: 'center',
   },
-  orderSettings: {
+  onOrderLabel: {
+    paddingVertical: 11,
+  },
+  orderQuantities: {
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
+  },
+  orderSection: {
     alignSelf: 'stretch',
-    borderBottomWidth: 1,
     borderBottomColor: colors.neutral40,
+    borderBottomWidth: 1,
     borderTopWidth: 1,
     borderTopColor: colors.neutral40,
     gap: 24,
     paddingVertical: 24,
+  },
+  orderSettings: {
+    gap: 48,
+    paddingHorizontal: 16,
   },
   orderSettingsLabel: {
     alignSelf: 'center',
@@ -114,15 +187,39 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   minMaxContainer: {
+    gap: 24,
+  },
+  minMaxRow: {
     alignItems: 'center',
     flexDirection: 'row',
     gap: 16,
     justifyContent: 'center',
+  },
+  shipmentQuantity: {
+    paddingVertical: 8,
+  },
+  shipmentQuantityText: {
+    color: colors.purpleDark,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'center',
   },
   slash: {
     color: colors.grayDark3,
     fontFamily: fonts.TT_Light,
     fontSize: 44,
     paddingTop: 16,
+  },
+  tooltipMessage: {
+    color: colors.grayDark3,
+    flex: 1,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+    letterSpacing: 0.16,
+    textAlign: 'left',
+  },
+  textBold: {
+    fontFamily: fonts.TT_Bold,
   },
 });

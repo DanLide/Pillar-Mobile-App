@@ -39,7 +39,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   });
 
   const messageStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.message, { bottom: containerHeight - 12 }],
+    () => [styles.message, { bottom: containerHeight - 8 }],
     [containerHeight],
   );
 
@@ -51,7 +51,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const pointerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       styles.pointer,
-      { bottom: containerHeight - 16, left: infoIconLayout.x },
+      { bottom: containerHeight - 12, left: infoIconLayout.x },
     ],
     [containerHeight, infoIconLayout],
   );
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   message: {
+    alignSelf: 'center',
     position: 'absolute',
   },
   overlay: {

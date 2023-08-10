@@ -467,6 +467,17 @@ export const InfoIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const InfoLargeIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={25} fill="none" {...props}>
+    <Path
+      fill="#000"
+      fillRule="evenodd"
+      d="M3.475 12.5c0 4.701 3.824 8.525 8.525 8.525 4.701 0 8.525-3.824 8.525-8.525 0-4.701-3.824-8.525-8.525-8.525-4.701 0-8.525 3.824-8.525 8.525ZM2 12.5c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10-10-4.486-10-10Zm10-6.1c-.603 0-1.057.455-1.057 1.057 0 .603.454 1.057 1.057 1.057s1.057-.454 1.057-1.057c0-.602-.454-1.057-1.057-1.057Zm-.734 12.2h1.469v-8.198h-1.469V18.6Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const CabinetIcon = memo((props: SvgProps) => (
   <Svg width="24" height="25" viewBox="0 0 24 25" fill="none" {...props}>
     <Path

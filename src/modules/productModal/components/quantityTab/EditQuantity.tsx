@@ -15,7 +15,7 @@ import {
   ViewStyle,
   Text,
 } from 'react-native';
-import { pipe, replace } from 'ramda';
+import { equals, ifElse, pipe, replace } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 
@@ -24,7 +24,11 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   maxValue: number;
   minValue: number;
   stepValue: number;
+
   label?: string;
+  labelWithNewLine?: string;
+  labelContainerStyle?: StyleProp<ViewStyle>;
+
   initFontSize?: number;
   vertical?: boolean;
   disabled?: boolean;
@@ -36,7 +40,11 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
 
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
-const removeLeadingZero = pipe(String, replace(/^0+/, ''));
+const removeLeadingZero = ifElse(
+  equals(0),
+  String,
+  pipe(String, replace(/^0+/, '')),
+);
 
 const INITIAL_FONT_SIZE = 78;
 
@@ -48,6 +56,8 @@ export const EditQuantity = memo(
     minValue,
     stepValue,
     label,
+    labelWithNewLine,
+    labelContainerStyle,
     initFontSize = INITIAL_FONT_SIZE,
     vertical,
     disabled,
@@ -76,6 +86,11 @@ export const EditQuantity = memo(
         { fontSize },
       ],
       [disabled, fontSize, vertical],
+    );
+
+    const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [styles.inputLabelContainer, labelContainerStyle],
+      [labelContainerStyle],
     );
 
     const quantityButtonStyle = useMemo<StyleProp<ViewStyle>>(
@@ -207,8 +222,11 @@ export const EditQuantity = memo(
         {DecreaseButton}
         <View>
           {label && (
-            <View style={styles.inputLabelContainer}>
-              <Text style={styles.inputLabel}>{label}</Text>
+            <View style={inputLabelContainerStyle}>
+              <Text style={styles.inputLabel}>
+                {label}
+                {labelWithNewLine ? `\n${labelWithNewLine}` : null}
+              </Text>
             </View>
           )}
           <TextInput
@@ -263,7 +281,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontFamily: fonts.TT_Regular,
     fontSize: 14,
-    lineHeight: 28,
+    lineHeight: 18,
   },
   inputLabelContainer: {
     alignItems: 'center',
