@@ -206,8 +206,6 @@ export const updateProductQuantityAPI = (
 export const updateProductSettingsAPI = (product?: ProductModel) => {
   const url = new URLProvider().updateProductSettings(product?.productId);
 
-  console.log(url);
-
   const body = JSON.stringify({
     ProductID: product?.productId,
     UPC: product?.upc,
@@ -217,8 +215,6 @@ export const updateProductSettingsAPI = (product?: ProductModel) => {
     InventoryClassificationTypeID: product?.categoryId,
     IsRecoverable: product?.isRecoverable,
   });
-
-  console.log(body);
 
   return tryAuthFetch<string>({
     url,
@@ -239,8 +235,6 @@ export const updateProductAreaSettingsAPI = (
 ) => {
   const url = new URLProvider().updateProductAreaSettings();
 
-  console.log(url);
-
   const body = JSON.stringify({
     productId: product?.productId,
     partyRoleId: facilityId,
@@ -250,8 +244,6 @@ export const updateProductAreaSettingsAPI = (
     StorageAreaId: stockId,
     InventoryAssignmentId: product?.inventoryAssignmentId,
   });
-
-  console.log(body);
 
   return tryAuthFetch<string>({
     url,
