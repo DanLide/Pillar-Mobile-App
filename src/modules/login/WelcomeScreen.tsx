@@ -42,7 +42,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
           icon={<SVGs.ConnectedWorker color={colors.purpleDark} />}
           buttonStyle={styles.ssoLoginButton}
           textStyle={styles.ssoLoginButtonText}
-          title="Log In with Single Sing-On (SSO)"
+          title="Log In with Single Sign-On (SSO)"
           onPress={onPressSSOLogin}
         />
       </View>

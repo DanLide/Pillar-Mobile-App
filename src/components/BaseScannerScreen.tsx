@@ -47,7 +47,7 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
   [ScannerScreenError.ProductNotFound]:
     'This product cannot be found in our product database',
   [ScannerScreenError.ProductNotAssignedToStock]:
-    'This product is not assigned to a this stock location',
+    'This product is not assigned to this stock location',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
