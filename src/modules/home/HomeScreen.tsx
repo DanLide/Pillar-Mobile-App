@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { NavigationProp, ParamListBase } from '@react-navigation/native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import { authStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
@@ -9,13 +8,14 @@ import { colors, fonts, SVGs } from '../../theme';
 
 import ListItem from './components/ListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button } from '../../components';
 
 interface Props {
   navigation: StackNavigationProp<HomeStackParamList, AppNavigator.HomeScreen>;
 }
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const isNavigationToShopSelectAvailable =
+    (ssoStore.getSSOList?.length || 0) > 1;
   const canRemoveProduct = permissionProvider.canRemoveProduct();
   const canReturnProduct = permissionProvider.canReturnProduct();
 
@@ -38,13 +38,21 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const onCreateInvoice = () =>
     navigation.navigate(AppNavigator.CreateInvoiceStack);
 
+  const onNavigateToSelectShopLocation = () => {
+    navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
+  };
+
   const renderBorderBetweenTheItems = canRemoveProduct && canReturnProduct;
   return (
     <View style={styles.container}>
-      <View style={styles.infoContainer}>
+      <TouchableOpacity
+        onPress={onNavigateToSelectShopLocation}
+        style={styles.infoContainer}
+        disabled={!isNavigationToShopSelectAvailable}
+      >
         <SVGs.CabinetIcon />
         <Text style={styles.infoText}>{ssoStore.getCurrentSSO?.name}</Text>
-      </View>
+      </TouchableOpacity>
       <View style={styles.infoContainer}>
         <SVGs.ProfileIcon />
         <Text style={styles.infoText}>{authStore.getName}</Text>
