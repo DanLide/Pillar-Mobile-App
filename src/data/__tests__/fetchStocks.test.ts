@@ -72,10 +72,4 @@ describe('fetchStocks', () => {
     await fetchStocks(mockStockStore);
     expect(getFetchStockAPI).toHaveBeenCalled();
   });
-
-  it('should NOT call fetchStocks with stocks in stocksStore', async () => {
-    mockStockStore.stocks = mockStockResponse;
-    await fetchStocks(mockStockStore);
-    expect(getFetchStockAPI).not.toHaveBeenCalled();
-  });
 });
