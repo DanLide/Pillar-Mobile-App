@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { getVersion } from 'react-native-device-info';
@@ -15,21 +9,26 @@ import { colors, fonts, SVGs } from '../../theme';
 import Logo from '../../../assets/images/Logo.png';
 import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
+import { AppNavigator } from '../types';
 
-export const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigation }) => {
+export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
+  navigation,
+}) => {
+  const isNavigationToShopSelectAvailable =
+    (ssoStore.getSSOList?.length || 0) > 1;
   const version = `Version ${getVersion()}`;
   const onLogout = () => {
     authStore.logOut();
   };
 
+  const onNavigateToSelectShopLocation = () => {
+    navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
+  };
+
   return (
     <SafeAreaView style={styles.drawerContainer}>
       <View style={styles.topContainer}>
-        <Image
-          source={Logo}
-          style={styles.image}
-          resizeMode='contain'
-        />
+        <Image source={Logo} style={styles.image} resizeMode="contain" />
         <TouchableOpacity
           style={styles.closeButton}
           onPress={navigation.closeDrawer}
@@ -39,17 +38,20 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigatio
       </View>
 
       <DrawerListItem
-        title={authStore.getName || ""}
+        title={authStore.getName || ''}
         subtitle={authStore?.userRole}
         icon={<SVGs.ProfileIcon />}
       />
       <DrawerListItem
-        title={ssoStore.getCurrentSSO?.name || ""}
+        onPress={onNavigateToSelectShopLocation}
+        title={ssoStore.getCurrentSSO?.name || ''}
         subtitle={ssoStore.getCurrentSSO?.address}
         icon={<SVGs.CabinetIcon />}
+        showChevron={isNavigationToShopSelectAvailable}
+        disabled={!isNavigationToShopSelectAvailable}
       />
       <DrawerListItem
-        title={"Settings"}
+        title={'Settings'}
         icon={<SVGs.SettingsIcon />}
         showChevron
       />
@@ -64,15 +66,13 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({ navigatio
         <DrawerListButton
           icon={<SVGs.SupportIcon color={colors.blue} />}
           title="Support"
-          subtitle='Contact Information'
+          subtitle="Contact Information"
         />
-        <Text style={styles.subtitleText}>
-          {version}
-        </Text>
+        <Text style={styles.subtitleText}>{version}</Text>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   drawerContainer: {
@@ -112,11 +112,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.TT_Regular,
     color: colors.blackSemiLight,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subtitleText: {
     marginTop: 6,
-    color: colors.blackLight
+    color: colors.blackLight,
   },
   separator: {
     height: 1,

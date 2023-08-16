@@ -1,7 +1,10 @@
 import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
-import { StockModel, StockStore } from '../modules/stocksList/stores/StocksStore';
+import {
+  StockModel,
+  StockStore,
+} from '../modules/stocksList/stores/StocksStore';
 
 interface FetchStocksContext {
   stocks: StockModel[];
@@ -11,14 +14,12 @@ export const fetchStocks = async (stocksStore: StockStore) => {
   const stocksContext: FetchStocksContext = {
     stocks: [],
   };
-  if (!stocksStore.stocks.length) {
-    const result = await new TaskExecutor([
-      new FetchStocksTask(stocksContext),
-      new SaveStocksToStore(stocksContext, stocksStore),
-    ]).execute();
+  const result = await new TaskExecutor([
+    new FetchStocksTask(stocksContext),
+    new SaveStocksToStore(stocksContext, stocksStore),
+  ]).execute();
 
-    return result;
-  }
+  return result;
 };
 
 export class FetchStocksTask extends Task {

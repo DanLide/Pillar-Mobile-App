@@ -45,6 +45,10 @@ type CameraPermissionScreenParams = {
   nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
 };
 
+type SelectSSOScreenParams = {
+  isUpdating?: boolean;
+};
+
 export type AppStackParamList = {
   [AppNavigator.UnauthStack]: undefined;
   [AppNavigator.HomeStack]: undefined;
@@ -60,7 +64,7 @@ export type HomeStackParamList = {
   [AppNavigator.Drawer]: undefined;
   [AppNavigator.TermsScreen]: undefined;
   [AppNavigator.LanguageSelectScreen]: undefined;
-  [AppNavigator.SelectSSOScreen]: undefined;
+  [AppNavigator.SelectSSOScreen]: SelectSSOScreenParams;
   [AppNavigator.RemoveProductsStack]: undefined;
   [AppNavigator.ReturnProductsStack]: undefined;
   [AppNavigator.ManageProductsStack]: undefined;

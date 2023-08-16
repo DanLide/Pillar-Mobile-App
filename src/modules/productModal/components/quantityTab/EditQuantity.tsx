@@ -152,7 +152,7 @@ export const EditQuantity = memo(
     const DecreaseButton = useMemo(() => {
       if (disabled) return <View style={styles.quantityButton} />;
 
-      if (currentValue > minValue) {
+      if (currentValue >= minValue) {
         return (
           <TouchableOpacity
             style={quantityButtonStyle}
@@ -163,23 +163,13 @@ export const EditQuantity = memo(
         );
       }
 
-      if (isEdit) {
-        return (
-          <TouchableOpacity style={quantityButtonStyle} onPress={onRemove}>
-            <SVGs.TrashIcon color={colors.black} />
-          </TouchableOpacity>
-        );
-      }
-
       return <View style={styles.quantityButton} />;
     }, [
       disabled,
       currentValue,
       minValue,
-      isEdit,
       quantityButtonStyle,
       onDecreaseCount,
-      onRemove,
     ]);
 
     const onLayout = ({ nativeEvent }: LayoutChangeEvent) => {

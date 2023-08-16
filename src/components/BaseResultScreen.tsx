@@ -67,14 +67,20 @@ const BaseResultScreen: React.FC<Props> = observer(
 
     const tooltipMessage = useMemo(
       () => (
-        <Text style={styles.tooltipMessage}>
-          If the products are associated with a job, you will get an email to
-          download an invoice. You can also retrieve the invoice in RepairStack.{' '}
-          <Text style={[styles.tooltipMessage, styles.textBold]}>
-            These products will also be sent to the associated job in your
-            management software.
-          </Text>
-        </Text>
+        <View style={styles.toolTipContainer}>
+          <View style={styles.rowContainer}>
+            <Text style={styles.dotStyle}>•</Text>
+            <Text style={styles.tooltipMessage}>
+              {' Your invoice is viewable in '}<Text style={[styles.tooltipMessage, styles.textBold]}>RepairStack™</Text> and/or your integrated Body Shop Management System.
+            </Text>
+          </View>
+          <View style={styles.rowContainer}>
+            <Text style={styles.dotStyle}>•</Text>
+            <Text style={styles.tooltipMessage}>
+              {' An email notification has been sent to your shop with a link for the invoice.'}
+            </Text>
+          </View>
+        </View>
       ),
       [],
     );
@@ -160,7 +166,7 @@ const BaseResultScreen: React.FC<Props> = observer(
         ) : groupByJob ? (
           <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
             <Text style={styles.contextFooterText}>
-              What will be submitted as an invoice?
+              Where’s my Invoice?
             </Text>
           </Tooltip>
         ) : null,
@@ -311,6 +317,10 @@ const styles = StyleSheet.create({
     color: colors.black,
     paddingVertical: 8,
   },
+  dotStyle: {
+    fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+  },
   tooltipMessage: {
     flex: 1,
     fontFamily: fonts.TT_Regular,
@@ -347,6 +357,12 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+  },
+  toolTipContainer: {
+    flex: 1
   },
 });
 

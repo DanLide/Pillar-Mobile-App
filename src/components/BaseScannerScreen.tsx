@@ -47,7 +47,7 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
   [ScannerScreenError.ProductNotFound]:
     'This product cannot be found in our product database',
   [ScannerScreenError.ProductNotAssignedToStock]:
-    'This product is not assigned to a this stock location',
+    'This product is not assigned to this stock location',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -67,14 +67,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const scannedProducts = store.getProducts;
 
     const onScanError = useCallback(
-      (error: ScannerScreenError) => {
+      (error: ScannerScreenError) =>
         toast.show(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
-        });
-
-        setIsScannerActive(true);
-      },
+        }),
       [toast],
     );
 
@@ -90,8 +87,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         const product = store.getCurrentProduct;
 
-        if (!product)
-          return onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
+        if (!product) {
+          onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
+          setIsScannerActive(true);
+          return
+        }
 
         onProductScan?.(product);
       },
@@ -104,8 +104,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         Vibration.vibrate();
         TrackPlayer.play();
 
-        if (typeof code === 'string') await fetchProductByCode(code);
-        else onScanError?.(ScannerScreenError.ProductNotFound);
+        if (typeof code === 'string') {
+          await fetchProductByCode(code)
+        } else {
+          onScanError?.(ScannerScreenError.ProductNotFound);
+          setIsScannerActive(true);
+        }
       },
       [fetchProductByCode, onScanError],
     );

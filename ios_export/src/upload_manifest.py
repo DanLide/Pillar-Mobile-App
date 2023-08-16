@@ -12,13 +12,16 @@ dp_builds_folder = "builds"
 parser=argparse.ArgumentParser()
 parser.add_argument('--v', metavar='BUILD_VERSION', type=str, help='The version of the build.')
 parser.add_argument('--t', metavar='DROP_BOX_TOKEN', type=str, help='Drop box token.')
+parser.add_argument('--n', metavar='IPA_FILENAME', type=str, help='Name of generated ipa file.')
 
 args = parser.parse_args()
 build_version = args.v
 dp_access_token = args.t
+n_arg = args.n
+ipa_filename = f"build/{n_arg}.ipa"
 
 # RENAME IPA
-os.rename("build/RepairStackRelease.ipa", ipa_file)
+os.rename(ipa_filename, ipa_file)
 
 
 dp_client = dropbox.Dropbox(dp_access_token)
