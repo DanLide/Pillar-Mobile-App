@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, Vibration } from 'react-native';
+import { StyleSheet, Vibration, View } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -37,7 +37,7 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: () => Promise<void>;
+  onSubmit?: () => void | unknown;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
   ProductModalComponent?: React.FC<ProductModalProps>;
@@ -67,11 +67,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const scannedProducts = store.getProducts;
 
     const onScanError = useCallback(
-      (error: ScannerScreenError) =>
+      (error: ScannerScreenError) => {
         toast.show(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
-        }),
+        });
+
+        setIsScannerActive(true);
+      },
       [toast],
     );
 
@@ -95,7 +98,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [onFetchProduct, store, onScanError, onProductScan],
     );
 
-    const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
+    const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
         setIsScannerActive(false);
         Vibration.vibrate();
@@ -103,17 +106,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         if (typeof code === 'string') await fetchProductByCode(code);
         else onScanError?.(ScannerScreenError.ProductNotFound);
-
-        setIsScannerActive(true);
       },
       [fetchProductByCode, onScanError],
     );
 
     const onProductSubmit = useCallback(
-      async (product: ProductModel) => {
+      (product: ProductModel) => {
         if (onSubmit) {
-          await onSubmit();
-          return;
+          return onSubmit();
         }
 
         const { nameDetails, reservedCount } = product;

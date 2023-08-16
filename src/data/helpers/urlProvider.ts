@@ -187,4 +187,16 @@ export class URLProvider {
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryTransaction`,
     );
   }
+
+  updateProductSettings(productId?: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/UpdateProductSettings/${productId}`,
+    );
+  }
+
+  updateProductAreaSettings() {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductAreaSettings/1`,
+    );
+  }
 }

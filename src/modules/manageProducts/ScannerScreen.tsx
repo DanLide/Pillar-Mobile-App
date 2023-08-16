@@ -31,7 +31,7 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-const ScannerScreen: React.FC = observer(() => {
+const ScannerScreen = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
@@ -64,12 +64,12 @@ const ScannerScreen: React.FC = observer(() => {
         type: ProductModalType.ManageProduct,
         toastType: ToastType.ProductUpdateError,
       });
-      return;
+
+      return error;
     }
 
-    closeModal();
     toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
-  }, [closeModal, toast]);
+  }, [toast]);
 
   return (
     <BaseScannerScreen

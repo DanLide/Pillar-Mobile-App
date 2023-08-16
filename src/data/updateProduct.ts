@@ -1,6 +1,11 @@
 import { Task } from './helpers';
 import { ManageProductsStore } from '../modules/manageProducts/stores';
-import { updateProductQuantityAPI } from './api/productsAPI';
+import {
+  updateProductAreaSettingsAPI,
+  updateProductQuantityAPI,
+  updateProductSettingsAPI,
+} from './api/productsAPI';
+import { ssoStore } from '../stores';
 
 export const onUpdateProduct = async (
   manageProductsStore: ManageProductsStore,
@@ -21,13 +26,19 @@ export class UpdateProductTask extends Task {
   }
 
   async run() {
-    const product = this.manageProductsStore.getCurrentProduct;
+    const viewProduct = this.manageProductsStore.getCurrentProduct;
+    const editProduct = this.manageProductsStore.updatedProduct;
 
-    if (product?.reservedCount === product?.onHand) return;
+    const stockId = this.manageProductsStore.currentStock?.partyRoleId;
+    const facilityId = ssoStore.getCurrentSSO?.pisaId;
 
-    await updateProductQuantityAPI(
-      product,
-      this.manageProductsStore.currentStock,
-    );
+    await Promise.all([
+      updateProductQuantityAPI(
+        viewProduct,
+        this.manageProductsStore.currentStock,
+      ),
+      updateProductSettingsAPI(editProduct),
+      updateProductAreaSettingsAPI(editProduct, stockId, facilityId),
+    ]);
   }
 }

@@ -19,6 +19,7 @@ interface Props extends SwitchProps {
 }
 
 const Switch: React.FC<Props> = ({
+  value,
   label,
   style,
   labelStyle,
@@ -39,8 +40,8 @@ const Switch: React.FC<Props> = ({
       onPress={onPress}
       testID={testIds.idContainer(testID)}
     >
-      <RNSwitch onValueChange={onPress} {...props} />
       {label ? <Text style={mergedLabelStyle}>{label}</Text> : null}
+      <RNSwitch value={value} onValueChange={onPress} {...props} />
     </Pressable>
   );
 };

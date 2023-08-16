@@ -43,7 +43,7 @@ export interface ProductModalProps extends ProductModalParams {
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
   onClose: () => void;
-  onSubmit: (product: ProductModel) => void;
+  onSubmit: (product: ProductModel) => void | unknown;
 }
 
 const { width, height } = Dimensions.get('window');

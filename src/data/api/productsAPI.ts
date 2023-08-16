@@ -10,6 +10,7 @@ export interface ProductSettingsResponse {
   max?: number;
   min?: number;
   orderMultiple?: number;
+  replenishedFormId?: number;
 }
 
 export interface ProductResponse extends ProductSettingsResponse {
@@ -194,6 +195,68 @@ export const updateProductQuantityAPI = (
     url,
     request: {
       method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};
+
+export const updateProductSettingsAPI = (product?: ProductModel) => {
+  const url = new URLProvider().updateProductSettings(product?.productId);
+
+  console.log(url);
+
+  const body = JSON.stringify({
+    ProductID: product?.productId,
+    UPC: product?.upc,
+    InventoryUseTypeID: product?.inventoryUseTypeId.toString(),
+    UnitPer: product?.unitsPerContainer,
+    SupplierPartyRoleID: product?.supplierPartyRoleId,
+    InventoryClassificationTypeID: product?.categoryId,
+    IsRecoverable: product?.isRecoverable,
+  });
+
+  console.log(body);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};
+
+export const updateProductAreaSettingsAPI = (
+  product?: ProductModel,
+  stockId?: number,
+  facilityId?: number,
+) => {
+  const url = new URLProvider().updateProductAreaSettings();
+
+  console.log(url);
+
+  const body = JSON.stringify({
+    productId: product?.productId,
+    partyRoleId: facilityId,
+    min: product?.min,
+    max: product?.max,
+    replenishedFormId: product?.replenishedFormId,
+    StorageAreaId: stockId,
+    InventoryAssignmentId: product?.inventoryAssignmentId,
+  });
+
+  console.log(body);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      method: 'PUT',
       body,
       headers: {
         'Content-Type': 'application/json',
