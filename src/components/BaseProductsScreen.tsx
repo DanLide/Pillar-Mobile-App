@@ -31,6 +31,7 @@ import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
+import { SvgProps } from 'react-native-svg';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -88,14 +89,12 @@ export const BaseProductsScreen = observer(
       ? ButtonType.primary
       : ButtonType.secondary;
 
-    const ScanIcon = useMemo(
-      () => (
-        <SVGs.CodeIcon
-          color={hideCompleteButton ? colors.white : colors.purple}
-          width={32}
-          height={23.33}
-        />
-      ),
+    const scanIconProps = useMemo<SvgProps>(
+      () => ({
+        color: hideCompleteButton ? colors.white : colors.purple,
+        height: 23.33,
+        width: 32,
+      }),
       [hideCompleteButton],
     );
 
@@ -214,7 +213,8 @@ export const BaseProductsScreen = observer(
           <View style={styles.buttons}>
             <Button
               type={scanButtonType}
-              icon={ScanIcon}
+              icon={SVGs.CodeIcon}
+              iconProps={scanIconProps}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
               title="Scan"

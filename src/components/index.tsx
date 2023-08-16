@@ -1,5 +1,5 @@
 import Scanner from './Scanner';
-import Input from './Input';
+import Input, { InputType } from './Input';
 import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
@@ -30,6 +30,7 @@ import { InventoryTypeBadge } from './InventoryTypeBadge';
 export {
   Scanner,
   Input,
+  InputType,
   Button,
   Text,
   Switch,

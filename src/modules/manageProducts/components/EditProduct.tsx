@@ -1,24 +1,41 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import {
+  Modal as RNModal,
+  StyleSheet,
+  Text,
+  TextInput,
+  Vibration,
+  View,
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
 
-import { categoriesStore } from '../../../stores';
-import { ProductModel } from '../../../stores/types';
+import { categoriesStore, suppliersStore } from '../../../stores';
 import {
+  Button,
+  ButtonType,
   Dropdown,
   DropdownItem,
+  InfoTitleBar,
+  InfoTitleBarType,
+  Input,
+  InputType,
   InventoryTypeBadge,
+  ScanProductProps,
+  Switch,
   Tooltip,
 } from '../../../components';
 import { InventoryUseType } from '../../../constants/common.enum';
-import { colors, fonts } from '../../../theme';
+import { colors, fonts, SVGs } from '../../../theme';
 import { EditQuantity } from '../../productModal/components/quantityTab';
 import { getProductMinQty } from '../../../data/helpers';
-
-interface Props {
-  product?: ProductModel;
-}
+import { manageProductsStore } from '../stores';
+import { SvgProps } from 'react-native-svg';
+import { LeftBarButton, TitleBar } from '../../../navigation/components';
+import { LeftBarType } from '../../../navigation/types';
+import ScanProduct from '../../../components/ScanProduct';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const inventoryTypes = [
   InventoryUseType.Each,
@@ -29,11 +46,26 @@ const inventoryTypes = [
 
 const MAX_VALUE = 99999;
 const MIN_VALUE = 0;
+const STEP_VALUE = 1;
 
-export const EditProduct = observer(({ product }: Props) => {
-  const [categoryId, setCategoryId] = useState(product?.categoryId);
+const SCAN_ICON_PROPS: SvgProps = {
+  height: 23.33,
+  width: 32,
+};
 
-  const stepValue = getProductMinQty(product?.inventoryUseTypeId);
+export const EditProduct = observer(() => {
+  const store = useRef(manageProductsStore).current;
+  const inputRef = useRef<TextInput | null>(null);
+
+  const [isScannerActive, setIsScannerActive] = useState(true);
+  const [isUpcActive, setIsUpcActive] = useState(false);
+
+  const headerHeight = useHeaderHeight();
+  const { top } = useSafeAreaInsets();
+
+  const product = store.updatedProduct;
+
+  const minQty = getProductMinQty(product?.inventoryUseTypeId);
 
   const categories = useMemo<DropdownItem[]>(
     () =>
@@ -44,9 +76,45 @@ export const EditProduct = observer(({ product }: Props) => {
     [],
   );
 
-  const category = useMemo(
-    () => find(whereEq({ value: categoryId }), categories),
-    [categories, categoryId],
+  const category = useMemo<DropdownItem | undefined>(
+    () => find(whereEq({ value: product?.categoryId }), categories),
+    [categories, product?.categoryId],
+  );
+
+  const suppliers = useMemo<DropdownItem[]>(
+    () =>
+      suppliersStore.suppliers.map(item => ({
+        label: item.name,
+        value: item.partyRoleId,
+      })),
+    [],
+  );
+
+  const supplier = useMemo<DropdownItem | undefined>(
+    () => find(whereEq({ value: product?.supplierPartyRoleId }), suppliers),
+    [product?.supplierPartyRoleId, suppliers],
+  );
+
+  const enabledSuppliers = useMemo<DropdownItem[]>(
+    () =>
+      suppliersStore.enabledSuppliers.map(item => ({
+        label: item.name,
+        value: item.partyRoleId,
+      })),
+    [],
+  );
+
+  const enabledSupplier = useMemo<DropdownItem | undefined>(
+    () =>
+      find(
+        whereEq(
+          product?.replenishedFormId
+            ? { value: product?.replenishedFormId }
+            : { label: 'Distributor' },
+        ),
+        enabledSuppliers,
+      ),
+    [enabledSuppliers, product?.replenishedFormId],
   );
 
   const shipmentQuantityTooltip = useMemo(
@@ -61,21 +129,58 @@ export const EditProduct = observer(({ product }: Props) => {
     [],
   );
 
+  const restockFromTooltip = useMemo(
+    () => (
+      <Text style={styles.tooltipMessage}>
+        <Text style={[styles.tooltipMessage, styles.textBold]}>
+          Restock From
+        </Text>{' '}
+        - Choose to replenish either from your distributor or from another Stock
+        Location
+      </Text>
+    ),
+    [],
+  );
+
   const renderInventoryType = useCallback(
     (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
     [],
   );
 
+  const onScanProduct = useCallback<ScanProductProps['onScan']>(
+    async code => {
+      setIsScannerActive(false);
+      Vibration.vibrate();
+      // TrackPlayer.play();
+
+      if (typeof code === 'string') {
+        store.setUpc(code);
+        inputRef?.current?.focus();
+      }
+
+      setIsScannerActive(true);
+      setIsUpcActive(false);
+    },
+    [store],
+  );
+
   return (
     <>
       <Dropdown
+        label="Remove By"
         data={inventoryTypes}
         selectedItem={product?.inventoryUseTypeId}
         renderItem={renderInventoryType}
-        label="Remove By"
         style={styles.inventoryTypes}
+        onSelect={item => store.setInventoryType(item)}
       />
-      <Dropdown data={categories} selectedItem={category} label="Category" />
+      <Dropdown
+        label="Category"
+        data={categories}
+        selectedItem={category}
+        style={styles.categories}
+        onSelect={item => store.setCategory(+item.value)}
+      />
       <View style={styles.orderSection}>
         <View style={styles.orderSettings}>
           <View style={styles.minMaxContainer}>
@@ -86,10 +191,10 @@ export const EditProduct = observer(({ product }: Props) => {
                 label="Minimum"
                 currentValue={product?.min ?? 0}
                 maxValue={MAX_VALUE}
-                minValue={MIN_VALUE}
-                stepValue={stepValue}
+                minValue={minQty}
+                stepValue={minQty}
                 initFontSize={28}
-                onChange={console.log}
+                onChange={value => store.setMinValue(value)}
               />
               <Text style={styles.slash}>/</Text>
               <EditQuantity
@@ -97,10 +202,10 @@ export const EditProduct = observer(({ product }: Props) => {
                 label="Maximum"
                 currentValue={product?.max ?? 0}
                 maxValue={MAX_VALUE}
-                minValue={MIN_VALUE}
-                stepValue={stepValue}
+                minValue={minQty}
+                stepValue={minQty}
                 initFontSize={28}
-                onChange={console.log}
+                onChange={value => store.setMaxValue(value)}
               />
             </View>
           </View>
@@ -112,9 +217,9 @@ export const EditProduct = observer(({ product }: Props) => {
               currentValue={product?.unitsPerContainer ?? 0}
               maxValue={MAX_VALUE}
               minValue={MIN_VALUE}
-              stepValue={stepValue}
+              stepValue={STEP_VALUE}
               initFontSize={28}
-              onChange={console.log}
+              onChange={value => store.setUnitsPerContainer(value)}
             />
             <EditQuantity
               vertical
@@ -123,9 +228,9 @@ export const EditProduct = observer(({ product }: Props) => {
               currentValue={product?.orderMultiple ?? 0}
               maxValue={MAX_VALUE}
               minValue={MIN_VALUE}
-              stepValue={stepValue}
+              stepValue={STEP_VALUE}
               initFontSize={28}
-              onChange={console.log}
+              onChange={value => store.setOrderMultiple(value)}
             />
             <EditQuantity
               disabled
@@ -135,9 +240,9 @@ export const EditProduct = observer(({ product }: Props) => {
               currentValue={product?.onOrder ?? 0}
               maxValue={MAX_VALUE}
               minValue={MIN_VALUE}
-              stepValue={stepValue}
+              stepValue={STEP_VALUE}
               initFontSize={28}
-              onChange={console.log}
+              onChange={value => store.setOnOrder(value)}
             />
           </View>
         </View>
@@ -150,20 +255,118 @@ export const EditProduct = observer(({ product }: Props) => {
           </Text>
         </Tooltip>
       </View>
+      <View style={styles.bottomSection}>
+        <Dropdown
+          label="Distributor"
+          data={suppliers}
+          selectedItem={supplier}
+          onSelect={item => store.setSupplier(+item.value)}
+        />
+        <View style={styles.spaceBetweenContainer}>
+          <Dropdown
+            label="Restock From"
+            data={enabledSuppliers}
+            selectedItem={enabledSupplier}
+            style={styles.restockFromDropdown}
+            onSelect={item => store.setRestockFrom(+item.value)}
+          />
+          <View style={styles.infoIconContainer}>
+            <Tooltip message={restockFromTooltip} />
+          </View>
+        </View>
+        <View style={styles.spaceBetweenContainer}>
+          <Input
+            type={InputType.Primary}
+            value={product?.upc}
+            label="UPC Number"
+            placeholder="Unassigned"
+            ref={inputRef}
+            containerStyle={{ flexGrow: 1 }}
+          />
+          <Button
+            title="Scan"
+            type={ButtonType.secondary}
+            icon={SVGs.CodeIcon}
+            iconProps={SCAN_ICON_PROPS}
+            buttonStyle={styles.scanButton}
+            textStyle={styles.scanButtonText}
+            onPress={() => setIsUpcActive(true)}
+          />
+        </View>
+        <Switch
+          trackColor={{ true: colors.purple }}
+          value={product?.isRecoverable}
+          label="Recoverable"
+          labelStyle={styles.recoverableLabel}
+          style={styles.spaceBetweenContainer}
+          onPress={() => store.toggleIsRecoverable()}
+        />
+      </View>
+      {isUpcActive && (
+        <RNModal animationType="none">
+          <View
+            style={{
+              backgroundColor: colors.purple,
+              height: top,
+            }}
+          />
+          <View
+            style={{
+              alignItems: 'center',
+              backgroundColor: colors.purple,
+              height: headerHeight - top,
+              justifyContent: 'center',
+            }}
+          >
+            <LeftBarButton
+              leftBarButtonType={LeftBarType.Back}
+              onPress={() => setIsUpcActive(false)}
+              style={{ position: 'absolute', left: 0 }}
+            />
+            <TitleBar title="Edit Product" />
+          </View>
+          <View style={{ flex: 1, backgroundColor: colors.background }}>
+            <InfoTitleBar
+              type={InfoTitleBarType.Primary}
+              title={store.stockName}
+            />
+            <ScanProduct
+              onScan={onScanProduct}
+              isActive={isScannerActive}
+              isUPC={true}
+              scannedProductCount={0}
+            />
+          </View>
+        </RNModal>
+      )}
     </>
   );
 });
 
 const styles = StyleSheet.create({
+  bottomSection: {
+    alignSelf: 'stretch',
+    gap: 24,
+    paddingBottom: 16,
+    paddingHorizontal: 16,
+  },
+  categories: {
+    marginHorizontal: 16,
+  },
+  infoIconContainer: {
+    justifyContent: 'center',
+    height: 42,
+    width: 42,
+  },
   inventoryTypes: {
     alignSelf: 'center',
+    minWidth: 150,
   },
   onOrderLabel: {
     paddingVertical: 11,
   },
   orderQuantities: {
     flexDirection: 'row',
-    gap: 8,
     justifyContent: 'space-between',
   },
   orderSection: {
@@ -195,6 +398,22 @@ const styles = StyleSheet.create({
     gap: 16,
     justifyContent: 'center',
   },
+  recoverableLabel: {
+    fontFamily: fonts.TT_Regular,
+    fontSize: 16,
+    lineHeight: 20,
+  },
+  restockFromDropdown: {
+    flexGrow: 1,
+  },
+  scanButton: {
+    paddingHorizontal: 24,
+    paddingVertical: 8,
+  },
+  scanButtonText: {
+    fontSize: 18,
+    lineHeight: 27,
+  },
   shipmentQuantity: {
     paddingVertical: 8,
   },
@@ -210,6 +429,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Light,
     fontSize: 44,
     paddingTop: 16,
+  },
+  spaceBetweenContainer: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'space-between',
   },
   tooltipMessage: {
     color: colors.grayDark3,
