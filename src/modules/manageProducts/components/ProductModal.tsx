@@ -48,15 +48,17 @@ export const ProductModal = observer(
     stockName,
     toastType,
     onToastAction,
+    isEdit,
     maxValue = 0,
     onHand = 0,
     onSubmit,
+    onEditPress,
+    onCancelPress,
     onClose,
     onChangeProductQuantity,
   }: ProductModalProps) => {
     const store = useRef(manageProductsStore).current;
 
-    const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const modalCollapsedOffset = useHeaderHeight();
@@ -102,9 +104,9 @@ export const ProductModal = observer(
 
     const clearProductModalStoreOnClose = useCallback(() => {
       scrollTo(modalCollapsedOffset);
-      setIsEdit(false);
+      onCancelPress?.();
       onClose();
-    }, [onClose, modalCollapsedOffset, scrollTo]);
+    }, [scrollTo, modalCollapsedOffset, onCancelPress, onClose]);
 
     const handleSubmit = useCallback(async () => {
       if (!product) return;
@@ -113,13 +115,17 @@ export const ProductModal = observer(
       const error = await onSubmit(product);
       setIsLoading(false);
 
-      if (!error) clearProductModalStoreOnClose();
-    }, [clearProductModalStoreOnClose, onSubmit, product]);
+      if (!isEdit && !error) clearProductModalStoreOnClose();
+    }, [clearProductModalStoreOnClose, isEdit, onSubmit, product]);
 
     const handleEdit = useCallback(() => {
       store.setUpdatedProduct(product);
-      setIsEdit(isEdit => !isEdit);
-    }, [product, store]);
+      onEditPress?.();
+    }, [onEditPress, product, store]);
+
+    const handleCancel = useCallback(() => {
+      onCancelPress?.();
+    }, [onCancelPress]);
 
     const scrollHandler = useAnimatedScrollHandler(
       {
@@ -166,21 +172,21 @@ export const ProductModal = observer(
             >
               <Description product={product} topOffset={topOffset} />
               <View style={styles.settings}>
-                <ProductQuantity
-                  type={type}
-                  product={product}
-                  onChangeProductQuantity={onChangeProductQuantity}
-                  isEdit={isEdit}
-                  jobSelectable={false}
-                  toastType={toastType}
-                  maxValue={maxValue}
-                  onHand={onHand}
-                  onToastAction={onToastAction}
-                />
                 {isEdit ? (
                   <EditProduct />
                 ) : (
                   <>
+                    <ProductQuantity
+                      type={type}
+                      product={product}
+                      onChangeProductQuantity={onChangeProductQuantity}
+                      isEdit={isEdit}
+                      jobSelectable={false}
+                      toastType={toastType}
+                      maxValue={maxValue}
+                      onHand={onHand}
+                      onToastAction={onToastAction}
+                    />
                     <Text style={styles.category}>{category?.description}</Text>
                     <View style={styles.minMaxContainer}>
                       <InfoBadge
@@ -240,7 +246,7 @@ export const ProductModal = observer(
                 type={ButtonType.secondary}
                 disabled={isLoading}
                 buttonStyle={styles.buttonContainer}
-                onPress={handleEdit}
+                onPress={isEdit ? handleCancel : handleEdit}
               />
               <Button
                 title={isEdit ? 'Save' : 'Done'}

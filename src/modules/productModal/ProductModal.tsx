@@ -42,6 +42,8 @@ export interface ProductModalProps extends ProductModalParams {
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
+  onEditPress?: () => void;
+  onCancelPress?: () => void;
   onClose: () => void;
   onSubmit: (product: ProductModel) => void | unknown;
 }

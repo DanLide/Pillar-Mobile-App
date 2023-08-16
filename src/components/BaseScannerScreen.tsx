@@ -38,6 +38,8 @@ interface Props {
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: () => void | unknown;
+  onEditPress?: () => void;
+  onCancelPress?: () => void;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
   ProductModalComponent?: React.FC<ProductModalProps>;
@@ -56,6 +58,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     modalParams,
     onProductScan,
     onSubmit,
+    onEditPress,
+    onCancelPress,
     onCloseModal,
     onFetchProduct,
     ProductModalComponent = ProductModal,
@@ -67,11 +71,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const scannedProducts = store.getProducts;
 
     const onScanError = useCallback(
-      (error: ScannerScreenError) =>
+      (error: ScannerScreenError) => {
+        setIsScannerActive(true);
+
         toast.show(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
-        }),
+        });
+      },
       [toast],
     );
 
@@ -81,6 +88,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           ? await onFetchProduct(code)
           : await fetchProductByScannedCode(store, btoa(code));
 
+        console.log(networkError);
+
         // TODO: Handle Network errors
         if (networkError)
           return onScanError?.(ScannerScreenError.ProductNotFound);
@@ -89,8 +98,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         if (!product) {
           onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
-          setIsScannerActive(true);
-          return
+          return;
         }
 
         onProductScan?.(product);
@@ -105,10 +113,9 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         TrackPlayer.play();
 
         if (typeof code === 'string') {
-          await fetchProductByCode(code)
+          await fetchProductByCode(code);
         } else {
           onScanError?.(ScannerScreenError.ProductNotFound);
-          setIsScannerActive(true);
         }
       },
       [fetchProductByCode, onScanError],
@@ -168,6 +175,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           product={store.getCurrentProduct}
           stockName={store.stockName}
           onSubmit={onProductSubmit}
+          onEditPress={onEditPress}
+          onCancelPress={onCancelPress}
           onClose={handleCloseModal}
           onChangeProductQuantity={setEditableProductQuantity}
         />

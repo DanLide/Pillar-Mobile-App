@@ -27,6 +27,12 @@ export class ManageProductsStore extends BaseProductsStore {
     this.updatedProduct = product;
   }
 
+  @action setOnHand(reservedCount: number) {
+    if (!this.updatedProduct) return;
+
+    this.updatedProduct = { ...this.updatedProduct, reservedCount };
+  }
+
   @action setInventoryType(inventoryUseTypeId: number) {
     if (!this.updatedProduct) return;
 

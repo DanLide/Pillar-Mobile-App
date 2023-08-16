@@ -27,7 +27,10 @@ import {
 } from '../../../components';
 import { InventoryUseType } from '../../../constants/common.enum';
 import { colors, fonts, SVGs } from '../../../theme';
-import { EditQuantity } from '../../productModal/components/quantityTab';
+import {
+  EditQuantity,
+  ProductQuantity,
+} from '../../productModal/components/quantityTab';
 import { getProductMinQty } from '../../../data/helpers';
 import { manageProductsStore } from '../stores';
 import { SvgProps } from 'react-native-svg';
@@ -36,6 +39,7 @@ import { LeftBarType } from '../../../navigation/types';
 import ScanProduct from '../../../components/ScanProduct';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductModalType } from '../../productModal';
 
 const inventoryTypes = [
   InventoryUseType.Each,
@@ -166,6 +170,12 @@ export const EditProduct = observer(() => {
 
   return (
     <>
+      <ProductQuantity
+        type={ProductModalType.ManageProduct}
+        product={product}
+        onChangeProductQuantity={quantity => store.setOnHand(quantity)}
+        maxValue={store.getMaxValue()}
+      />
       <Dropdown
         label="Remove By"
         data={inventoryTypes}

@@ -6,9 +6,9 @@ import { InventoryTypeBadge } from '../../../../components';
 import { ProductModel } from '../../../../stores/types';
 
 interface Props {
-  hideOnHandCount?: boolean;
   product: ProductModel;
-  onHand: number;
+  hideOnHandCount?: boolean;
+  onHand?: number;
 }
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
@@ -16,7 +16,7 @@ const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 export const FooterDescription: React.FC<Props> = ({
   hideOnHandCount,
   product,
-  onHand,
+  onHand = 0,
 }) => (
   <View style={styles.container}>
     {hideOnHandCount ? null : (

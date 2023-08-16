@@ -23,12 +23,13 @@ import { Description } from './Description';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
-  | ToastType.ProductUpdateError;
+  | ToastType.ProductUpdateError
+  | ToastType.ProductUpdateSuccess;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
   maxValue: number;
-  onHand: number;
+  onHand?: number;
   isEdit?: boolean;
   jobSelectable?: boolean;
   toastType?: ProductQuantityToastType;
@@ -46,6 +47,7 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
     "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
   [ToastType.ProductUpdateError]:
     'Sorry, there was an issue saving the product update',
+  [ToastType.ProductUpdateSuccess]: 'Product Updated',
 };
 
 export const ProductQuantity: React.FC<Props> = observer(
@@ -101,30 +103,26 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const renderBottomButton = () => {
       if (type === ProductModalType.ManageProduct) {
-        return null
+        return null;
       }
 
       if (isEdit && reservedCount === 0) {
         return (
-          <Pressable
-            style={styles.deleteButton}
-            onPress={onRemove}
-          >
+          <Pressable style={styles.deleteButton} onPress={onRemove}>
             <SVGs.TrashIcon color={colors.redDark} />
-            <Text style={styles.deleteButtonText}>
-              Delete
-            </Text>
+            <Text style={styles.deleteButtonText}>Delete</Text>
           </Pressable>
-        )
+        );
       }
 
       const buttonLabel =
         (jobSelectable && isRecoverable) ||
-          type === ProductModalType.CreateInvoice
+        type === ProductModalType.CreateInvoice
           ? 'Next'
           : 'Done';
 
-      const disabled = toastType === ToastType.ProductQuantityError || reservedCount ===0
+      const disabled =
+        toastType === ToastType.ProductQuantityError || reservedCount === 0;
 
       return (
         <Button
@@ -134,8 +132,8 @@ export const ProductQuantity: React.FC<Props> = observer(
           title={buttonLabel}
           onPress={onPressButton}
         />
-      )
-    }
+      );
+    };
 
     return (
       <View style={[styles.container, style]}>
