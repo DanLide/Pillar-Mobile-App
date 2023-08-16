@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { Button, ButtonType } from '../../components';
-import Logo from '../../../assets/images/Logo.png';
+import Logo from '../../../assets/images/logo.png';
 import { colors, fonts, SVGs } from '../../theme';
 import { AppNavigator, UnauthStackParamsList } from '../../navigation/types';
 import { ssoLogin } from '../../data/ssoLogin';
