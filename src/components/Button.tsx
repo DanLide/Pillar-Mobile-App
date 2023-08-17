@@ -55,12 +55,15 @@ const Button: React.FC<ExtendedButtonProps> = ({
         case ButtonType.primary:
           return [
             styles.primaryContainer,
-            isDisabled && styles.primaryButtonDisabled,
+            isDisabled ? styles.primaryButtonDisabled : undefined,
           ];
         case ButtonType.secondary:
           return styles.secondaryContainer;
         default:
-          return null;
+          return [
+            styles.button,
+            isDisabled ? styles.primaryButtonDisabled : undefined,
+          ];
       }
     },
     [isDisabled],
@@ -85,9 +88,8 @@ const Button: React.FC<ExtendedButtonProps> = ({
     (state: PressableStateCallbackType) => StyleProp<ViewStyle>
   >(
     ({ pressed }) => [
-      styles.button,
       getStyleByType(type),
-      pressed && styles.buttonPressed,
+      pressed ? styles.buttonPressed : undefined,
       buttonStyle,
     ],
     [getStyleByType, type, buttonStyle],
@@ -101,10 +103,10 @@ const Button: React.FC<ExtendedButtonProps> = ({
         case ButtonType.secondary:
           return [
             styles.secondaryText,
-            isDisabled && styles.secondaryTextDisabled,
+            isDisabled ? styles.secondaryTextDisabled : undefined,
           ];
         default:
-          return null;
+          return styles.buttonText;
       }
     },
     [isDisabled],
@@ -114,9 +116,8 @@ const Button: React.FC<ExtendedButtonProps> = ({
     (state: PressableStateCallbackType) => StyleProp<TextStyle>
   >(
     ({ pressed }) => [
-      styles.buttonText,
       getTextStyleByType(type),
-      pressed && styles.buttonTextPressed,
+      pressed ? styles.buttonTextPressed : undefined,
       textStyle,
     ],
     [getTextStyleByType, type, textStyle],
@@ -176,7 +177,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 17,
-    color: 'white',
+    color: colors.white,
   },
   buttonTextPressed: {
     color: colors.white,
@@ -187,6 +188,9 @@ const styles = StyleSheet.create({
   primaryContainer: {
     borderRadius: 8,
     backgroundColor: colors.purple,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
   },
   primaryText: {
     color: colors.white,
@@ -198,6 +202,9 @@ const styles = StyleSheet.create({
     borderColor: colors.grayDark,
     borderRadius: 8,
     backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
   },
   secondaryText: {
     color: colors.purpleDark,

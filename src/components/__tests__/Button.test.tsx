@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { render } from '@testing-library/react-native';
-import Svg from 'react-native-svg';
+import Svg, { SvgProps } from 'react-native-svg';
 
 import { Button, ButtonType } from '..';
 import { testIds } from '../../helpers';
 
 const mockTitle = 'mockTitle';
-const mockIcon = <Svg />;
+const mockIcon = memo((props: SvgProps) => <Svg {...props} />);
 
 describe('Button', () => {
   it('render Button with title', () => {
@@ -50,18 +50,24 @@ describe('Button', () => {
       <Button title={mockTitle} type={ButtonType.primary} />,
     );
     const container = getByTestId(testIds.idContainer('button'));
-    expect(container.props.style).toEqual({
-      alignItems: 'center',
-      backgroundColor: '#9657D9',
-      borderRadius: 8,
-      height: 50,
-      justifyContent: 'center',
-      opacity: 1,
-    });
+    expect(container.props.style).toEqual([
+      [
+        {
+          alignItems: 'center',
+          backgroundColor: '#9657D9',
+          borderRadius: 8,
+          height: 50,
+          justifyContent: 'center',
+        },
+        undefined,
+      ],
+      undefined,
+      undefined,
+    ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
-      { color: 'white', fontSize: 17 },
       { color: '#FFFFFF', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+      undefined,
       undefined,
     ]);
   });
@@ -71,20 +77,26 @@ describe('Button', () => {
       <Button title={mockTitle} type={ButtonType.secondary} />,
     );
     const container = getByTestId(testIds.idContainer('button'));
-    expect(container.props.style).toEqual({
-      alignItems: 'center',
-      backgroundColor: '#FFFFFF',
-      borderColor: '#95959E',
-      borderRadius: 8,
-      borderWidth: 1,
-      height: 50,
-      justifyContent: 'center',
-      opacity: 1,
-    });
+    expect(container.props.style).toEqual([
+      {
+        alignItems: 'center',
+        backgroundColor: '#FFFFFF',
+        borderColor: '#95959E',
+        borderRadius: 8,
+        borderWidth: 1,
+        height: 50,
+        justifyContent: 'center',
+      },
+      undefined,
+      undefined,
+    ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
-      { color: 'white', fontSize: 17 },
-      { color: '#7634BC', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+      [
+        { color: '#7634BC', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+        undefined,
+      ],
+      undefined,
       undefined,
     ]);
   });
@@ -92,6 +104,6 @@ describe('Button', () => {
   it('render button opacity for disabled status', () => {
     const { getByTestId } = render(<Button title={mockTitle} disabled />);
     const container = getByTestId(testIds.idContainer('button'));
-    expect(container.props.style).toHaveProperty('opacity', 0.2);
+    expect(container.props.style[0][1]).toHaveProperty('opacity', 0.5);
   });
 });
