@@ -256,3 +256,31 @@ export const updateProductAreaSettingsAPI = (
     },
   });
 };
+
+export const updateProductOrderMultipleAPI = (
+  product?: ProductModel,
+  stockId?: number,
+) => {
+  const url = new URLProvider().updateProductOrderMultiple();
+
+  const body = JSON.stringify([
+    {
+      productId: product?.productId,
+      stockLocationId: stockId,
+      orderMultiple: product?.orderMultiple,
+    },
+  ]);
+
+  console.log(url, body);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      method: 'PUT',
+      body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};

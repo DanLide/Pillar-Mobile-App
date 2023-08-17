@@ -2,6 +2,7 @@ import { Task, TaskExecutor } from './helpers';
 import { ManageProductsStore } from '../modules/manageProducts/stores';
 import {
   updateProductAreaSettingsAPI,
+  updateProductOrderMultipleAPI,
   updateProductQuantityAPI,
   updateProductSettingsAPI,
 } from './api/productsAPI';
@@ -72,6 +73,9 @@ export class UpdateProductTask extends Task {
       ],
     );
 
+    const shouldUpdateOrderMultiple =
+      updatedProduct?.orderMultiple !== currentProduct?.orderMultiple;
+
     await Promise.all([
       shouldUpdateQuantity &&
         updateProductQuantityAPI(
@@ -82,6 +86,8 @@ export class UpdateProductTask extends Task {
         updateProductSettingsAPI(updatedProduct),
       !isEmpty(shouldUpdateAreaSettings) &&
         updateProductAreaSettingsAPI(updatedProduct, stockId, facilityId),
+      shouldUpdateOrderMultiple &&
+        updateProductOrderMultipleAPI(updatedProduct, stockId),
     ]);
   }
 }

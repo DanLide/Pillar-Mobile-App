@@ -1,4 +1,4 @@
-import {Config} from 'react-native-config'
+import { Config } from 'react-native-config';
 
 export const environment = {
   b2c: {
@@ -26,6 +26,9 @@ export const environment = {
     },
     pisaJob: {
       apiUri: `${Config.API_URL}/job`,
+    },
+    inventory: {
+      apiUri: `${Config.API_URL}/inventory`,
     },
   },
 };
