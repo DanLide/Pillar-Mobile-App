@@ -14,7 +14,7 @@ import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
 import { FooterDescription } from './FooterDescription';
 import { ToastType } from '../../../../contexts/types';
-import { getProductMinQty } from '../../../../data/helpers';
+import { getProductStepQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
@@ -29,11 +29,13 @@ export type ProductQuantityToastType =
 interface Props extends ViewProps {
   type?: ProductModalType;
   maxValue: number;
+  minValue?: number;
   onHand?: number;
   isEdit?: boolean;
   jobSelectable?: boolean;
   toastType?: ProductQuantityToastType;
   product?: ProductModel;
+  disabled?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -58,7 +60,9 @@ export const ProductQuantity: React.FC<Props> = observer(
     jobSelectable,
     toastType,
     maxValue,
+    minValue,
     onHand,
+    disabled,
     style,
     onChangeProductQuantity,
     onPressAddToList,
@@ -82,7 +86,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const { isRecoverable, inventoryUseTypeId, reservedCount } = product;
 
-    const minQty = getProductMinQty(inventoryUseTypeId);
+    const stepQty = getProductStepQty(inventoryUseTypeId);
 
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent
@@ -145,9 +149,10 @@ export const ProductQuantity: React.FC<Props> = observer(
             isEdit={isEdit && type !== ProductModalType.ManageProduct}
             currentValue={reservedCount}
             maxValue={maxValue}
-            minValue={minQty}
-            stepValue={minQty}
-            disabled={toastType === ToastType.ProductQuantityError}
+            minValue={minValue ?? stepQty}
+            stepValue={stepQty}
+            disabled={disabled}
+            error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             onChange={onChange}
             onRemove={onRemove}

@@ -4,7 +4,7 @@ import { Task, TaskExecutor } from './taskExecutor';
 import { environment } from './environment';
 import { URLProvider } from './urlProvider';
 import { Permissions, permissions } from './permissions';
-import { getProductMinQty } from './getProductMinQty';
+import { getProductStepQty } from './getProductStepQty';
 
 export {
   tryFetch,
@@ -14,7 +14,7 @@ export {
   environment,
   URLProvider,
   permissions,
-  getProductMinQty,
+  getProductStepQty,
 };
 
 export type { Permissions };

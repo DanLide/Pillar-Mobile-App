@@ -32,6 +32,7 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   initFontSize?: number;
   vertical?: boolean;
   disabled?: boolean;
+  error?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
@@ -50,7 +51,6 @@ const INITIAL_FONT_SIZE = 78;
 
 export const EditQuantity = memo(
   ({
-    isEdit,
     currentValue,
     maxValue,
     minValue,
@@ -61,9 +61,9 @@ export const EditQuantity = memo(
     initFontSize = INITIAL_FONT_SIZE,
     vertical,
     disabled,
+    error,
     keyboardType,
     onChange,
-    onRemove,
   }: Props) => {
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
@@ -72,6 +72,8 @@ export const EditQuantity = memo(
     const layoutInputRef = useRef<null | LayoutRectangle>(null);
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
     const [fontSize, setFontSize] = useState(initFontSize);
+
+    const isInputDisabled = disabled || error;
 
     const containerStyle = useMemo<StyleProp<ViewStyle>>(
       () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
@@ -82,10 +84,10 @@ export const EditQuantity = memo(
       () => [
         styles.input,
         vertical && styles.inputVertical,
-        disabled && styles.inputDisabled,
+        error && styles.inputError,
         { fontSize },
       ],
-      [disabled, fontSize, vertical],
+      [error, fontSize, vertical],
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -150,9 +152,12 @@ export const EditQuantity = memo(
     }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
 
     const DecreaseButton = useMemo(() => {
-      if (disabled) return <View style={styles.quantityButton} />;
+      if (isInputDisabled) return <View style={styles.quantityButton} />;
 
-      if (currentValue >= minValue) {
+      if (
+        !(currentValue === minValue && minValue === 0) &&
+        currentValue >= minValue
+      ) {
         return (
           <TouchableOpacity
             style={quantityButtonStyle}
@@ -165,7 +170,7 @@ export const EditQuantity = memo(
 
       return <View style={styles.quantityButton} />;
     }, [
-      disabled,
+      isInputDisabled,
       currentValue,
       minValue,
       quantityButtonStyle,
@@ -221,9 +226,9 @@ export const EditQuantity = memo(
           )}
           <TextInput
             contextMenuHidden
-            editable={!disabled}
+            editable={!isInputDisabled}
             style={inputStyle}
-            value={disabled ? '-' : displayValue}
+            value={error ? '-' : displayValue}
             keyboardType={keyboardType}
             onChangeText={onChangeInputText}
             returnKeyType="done"
@@ -232,7 +237,7 @@ export const EditQuantity = memo(
             onContentSizeChange={onContentSizeChange}
           />
         </View>
-        {disabled || currentValue === maxValue || isNaN(currentValue) ? (
+        {isInputDisabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
@@ -263,7 +268,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
   },
-  inputDisabled: {
+  inputError: {
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
   },

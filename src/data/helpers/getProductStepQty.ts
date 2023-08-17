@@ -1,6 +1,6 @@
 import { InventoryUseType } from '../../constants/common.enum';
 
-export const getProductMinQty = (
+export const getProductStepQty = (
   inventoryUseType?: InventoryUseType,
 ): number => {
   switch (inventoryUseType) {

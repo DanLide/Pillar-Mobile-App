@@ -32,7 +32,7 @@ import {
   EditQuantity,
   ProductQuantity,
 } from '../../productModal/components/quantityTab';
-import { getProductMinQty } from '../../../data/helpers';
+import { getProductStepQty } from '../../../data/helpers';
 import { manageProductsStore } from '../stores';
 import { SvgProps } from 'react-native-svg';
 import { LeftBarButton, TitleBar } from '../../../navigation/components';
@@ -69,7 +69,7 @@ export const EditProduct = observer(() => {
 
   const product = store.updatedProduct;
 
-  const minQty = getProductMinQty(product?.inventoryUseTypeId);
+  const minQty = getProductStepQty(product?.inventoryUseTypeId);
 
   const categories = useMemo<DropdownItem[]>(
     () =>

@@ -27,6 +27,7 @@ import { observer } from 'mobx-react';
 import { EditProduct } from './EditProduct';
 import { manageProductsStore } from '../stores';
 import { InventoryUseType } from '../../../constants/common.enum';
+import { permissionProvider } from '../../../data/providers';
 
 enum ScrollDirection {
   Down,
@@ -64,6 +65,8 @@ export const ProductModal = observer(
 
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
+
+    const canEditProduct = permissionProvider.canEditProduct();
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 
@@ -185,7 +188,9 @@ export const ProductModal = observer(
                       jobSelectable={false}
                       toastType={toastType}
                       maxValue={maxValue}
+                      minValue={0}
                       onHand={onHand}
+                      disabled={!canEditProduct}
                       onToastAction={onToastAction}
                     />
                     <Text style={styles.category}>{category?.description}</Text>
@@ -245,13 +250,15 @@ export const ProductModal = observer(
               </View>
             </Animated.ScrollView>
             <View style={styles.buttons}>
-              <Button
-                title={isEdit ? 'Cancel' : 'Edit'}
-                type={ButtonType.secondary}
-                disabled={isLoading}
-                buttonStyle={styles.buttonContainer}
-                onPress={isEdit ? handleCancel : handleEdit}
-              />
+              {canEditProduct && (
+                <Button
+                  title={isEdit ? 'Cancel' : 'Edit'}
+                  type={ButtonType.secondary}
+                  disabled={isLoading}
+                  buttonStyle={styles.buttonContainer}
+                  onPress={isEdit ? handleCancel : handleEdit}
+                />
+              )}
               <Button
                 title={isEdit ? 'Save' : 'Done'}
                 type={ButtonType.primary}
