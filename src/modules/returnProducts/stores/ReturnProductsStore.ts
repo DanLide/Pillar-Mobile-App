@@ -4,7 +4,7 @@ import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 import { ProductModel } from '../../../stores/types';
 import { getReservedCountById } from '../../../stores/helpers';
 
-const PRODUCT_MAX_COUNT = 999;
+const PRODUCT_MAX_COUNT = 9999;
 
 export class ReturnProductsStore extends BaseProductsStore {
   @override get getMaxValue() {
