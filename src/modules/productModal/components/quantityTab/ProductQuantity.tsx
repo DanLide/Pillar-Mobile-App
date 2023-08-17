@@ -36,6 +36,7 @@ interface Props extends ViewProps {
   toastType?: ProductQuantityToastType;
   product?: ProductModel;
   disabled?: boolean;
+  hideCount?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -63,6 +64,7 @@ export const ProductQuantity: React.FC<Props> = observer(
     minValue,
     onHand,
     disabled,
+    hideCount,
     style,
     onChangeProductQuantity,
     onPressAddToList,
@@ -152,6 +154,7 @@ export const ProductQuantity: React.FC<Props> = observer(
             minValue={minValue ?? stepQty}
             stepValue={stepQty}
             disabled={disabled}
+            hideCount={hideCount}
             error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             onChange={onChange}

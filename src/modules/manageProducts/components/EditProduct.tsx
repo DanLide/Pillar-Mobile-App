@@ -1,12 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import {
-  Modal as RNModal,
-  StyleSheet,
-  Text,
-  TextInput,
-  Vibration,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TextInput, Vibration, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
 import TrackPlayer from 'react-native-track-player';
@@ -17,8 +10,6 @@ import {
   ButtonType,
   Dropdown,
   DropdownItem,
-  InfoTitleBar,
-  InfoTitleBarType,
   Input,
   InputType,
   InventoryTypeBadge,
@@ -35,12 +26,8 @@ import {
 import { getProductStepQty } from '../../../data/helpers';
 import { manageProductsStore } from '../stores';
 import { SvgProps } from 'react-native-svg';
-import { LeftBarButton, TitleBar } from '../../../navigation/components';
-import { LeftBarType } from '../../../navigation/types';
-import ScanProduct from '../../../components/ScanProduct';
-import { useHeaderHeight } from '@react-navigation/elements';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ProductModalType } from '../../productModal';
+import { ProductModalProps, ProductModalType } from '../../productModal';
+import { UpcScanner } from './UpcScanner';
 
 const inventoryTypes = [
   InventoryUseType.Each,
@@ -58,297 +45,272 @@ const SCAN_ICON_PROPS: SvgProps = {
   width: 32,
 };
 
-export const EditProduct = observer(() => {
-  const store = useRef(manageProductsStore).current;
-  const inputRef = useRef<TextInput | null>(null);
+type Props = Pick<
+  ProductModalProps,
+  'onHand' | 'maxValue' | 'toastType' | 'onToastAction'
+>;
+export const EditProduct = observer(
+  ({ onHand, maxValue, toastType, onToastAction }: Props) => {
+    const store = useRef(manageProductsStore).current;
+    const inputRef = useRef<TextInput | null>(null);
 
-  const [isUpcActive, setIsUpcActive] = useState(false);
+    const [isUpcActive, setIsUpcActive] = useState(false);
 
-  const headerHeight = useHeaderHeight();
-  const { top } = useSafeAreaInsets();
+    const product = store.updatedProduct;
 
-  const product = store.updatedProduct;
+    const minQty = getProductStepQty(product?.inventoryUseTypeId);
 
-  const minQty = getProductStepQty(product?.inventoryUseTypeId);
+    const categories = useMemo<DropdownItem[]>(
+      () =>
+        categoriesStore.categories.map(item => ({
+          label: item.description,
+          value: item.id,
+        })),
+      [],
+    );
 
-  const categories = useMemo<DropdownItem[]>(
-    () =>
-      categoriesStore.categories.map(item => ({
-        label: item.description,
-        value: item.id,
-      })),
-    [],
-  );
+    const category = useMemo<DropdownItem | undefined>(
+      () => find(whereEq({ value: product?.categoryId }), categories),
+      [categories, product?.categoryId],
+    );
 
-  const category = useMemo<DropdownItem | undefined>(
-    () => find(whereEq({ value: product?.categoryId }), categories),
-    [categories, product?.categoryId],
-  );
+    const suppliers = useMemo<DropdownItem[]>(
+      () =>
+        suppliersStore.suppliers.map(item => ({
+          label: item.name,
+          value: item.partyRoleId,
+        })),
+      [],
+    );
 
-  const suppliers = useMemo<DropdownItem[]>(
-    () =>
-      suppliersStore.suppliers.map(item => ({
-        label: item.name,
-        value: item.partyRoleId,
-      })),
-    [],
-  );
+    const supplier = useMemo<DropdownItem | undefined>(
+      () => find(whereEq({ value: product?.supplierPartyRoleId }), suppliers),
+      [product?.supplierPartyRoleId, suppliers],
+    );
 
-  const supplier = useMemo<DropdownItem | undefined>(
-    () => find(whereEq({ value: product?.supplierPartyRoleId }), suppliers),
-    [product?.supplierPartyRoleId, suppliers],
-  );
+    const enabledSuppliers = useMemo<DropdownItem[]>(
+      () =>
+        suppliersStore.enabledSuppliers.map(item => ({
+          label: item.name,
+          value: item.partyRoleId,
+        })),
+      [],
+    );
 
-  const enabledSuppliers = useMemo<DropdownItem[]>(
-    () =>
-      suppliersStore.enabledSuppliers.map(item => ({
-        label: item.name,
-        value: item.partyRoleId,
-      })),
-    [],
-  );
+    const enabledSupplier = useMemo<DropdownItem | undefined>(
+      () =>
+        find(whereEq({ value: product?.replenishedFormId }), enabledSuppliers),
+      [enabledSuppliers, product?.replenishedFormId],
+    );
 
-  const enabledSupplier = useMemo<DropdownItem | undefined>(
-    () =>
-      find(
-        whereEq(
-          product?.replenishedFormId
-            ? { value: product?.replenishedFormId }
-            : { label: 'Distributor' },
-        ),
-        enabledSuppliers,
+    const shipmentQuantityTooltip = useMemo(
+      () => (
+        <Text style={styles.tooltipMessage}>
+          <Text style={[styles.tooltipMessage, styles.textBold]}>
+            Shipment Quantity
+          </Text>{' '}
+          - The increment in which the product is shipped (i.e 4-pack)
+        </Text>
       ),
-    [enabledSuppliers, product?.replenishedFormId],
-  );
+      [],
+    );
 
-  const shipmentQuantityTooltip = useMemo(
-    () => (
-      <Text style={styles.tooltipMessage}>
-        <Text style={[styles.tooltipMessage, styles.textBold]}>
-          Shipment Quantity
-        </Text>{' '}
-        - The increment in which the product is shipped (i.e 4-pack)
-      </Text>
-    ),
-    [],
-  );
+    const restockFromTooltip = useMemo(
+      () => (
+        <Text style={styles.tooltipMessage}>
+          <Text style={[styles.tooltipMessage, styles.textBold]}>
+            Restock From
+          </Text>{' '}
+          - Choose to replenish either from your distributor or from another
+          Stock Location
+        </Text>
+      ),
+      [],
+    );
 
-  const restockFromTooltip = useMemo(
-    () => (
-      <Text style={styles.tooltipMessage}>
-        <Text style={[styles.tooltipMessage, styles.textBold]}>
-          Restock From
-        </Text>{' '}
-        - Choose to replenish either from your distributor or from another Stock
-        Location
-      </Text>
-    ),
-    [],
-  );
+    const renderInventoryType = useCallback(
+      (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
+      [],
+    );
 
-  const renderInventoryType = useCallback(
-    (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
-    [],
-  );
+    const onScanProduct = useCallback<ScanProductProps['onScan']>(
+      async code => {
+        Vibration.vibrate();
+        TrackPlayer.play();
 
-  const onScanProduct = useCallback<ScanProductProps['onScan']>(
-    async code => {
-      Vibration.vibrate();
-      TrackPlayer.play();
+        if (typeof code === 'string') {
+          store.setUpc(code);
+          inputRef?.current?.focus();
+        }
 
-      if (typeof code === 'string') {
-        store.setUpc(code);
-        inputRef?.current?.focus();
-      }
+        setIsUpcActive(false);
+      },
+      [store],
+    );
 
-      setIsUpcActive(false);
-    },
-    [store],
-  );
+    const onUpcClose = useCallback(() => setIsUpcActive(false), []);
 
-  return (
-    <>
-      <ProductQuantity
-        type={ProductModalType.ManageProduct}
-        product={product}
-        onChangeProductQuantity={quantity => store.setOnHand(quantity)}
-        maxValue={store.getMaxValue()}
-      />
-      <Dropdown
-        label="Remove By"
-        data={inventoryTypes}
-        selectedItem={product?.inventoryUseTypeId}
-        renderItem={renderInventoryType}
-        style={styles.inventoryTypes}
-        onSelect={item => store.setInventoryType(item)}
-      />
-      <Dropdown
-        label="Category"
-        data={categories}
-        selectedItem={category}
-        style={styles.categories}
-        onSelect={item => store.setCategory(+item.value)}
-      />
-      <View style={styles.orderSection}>
-        <View style={styles.orderSettings}>
-          <View style={styles.minMaxContainer}>
-            <Text style={styles.orderSettingsLabel}>Order Settings</Text>
-            <View style={styles.minMaxRow}>
-              <EditQuantity
-                vertical
-                label="Minimum"
-                currentValue={product?.min ?? 0}
-                maxValue={MAX_VALUE}
-                minValue={minQty}
-                stepValue={minQty}
-                initFontSize={28}
-                onChange={value => store.setMinValue(value)}
-              />
-              <Text style={styles.slash}>/</Text>
-              <EditQuantity
-                vertical
-                label="Maximum"
-                currentValue={product?.max ?? 0}
-                maxValue={MAX_VALUE}
-                minValue={minQty}
-                stepValue={minQty}
-                initFontSize={28}
-                onChange={value => store.setMaxValue(value)}
-              />
+    return (
+      <>
+        <ProductQuantity
+          type={ProductModalType.ManageProduct}
+          product={product}
+          onChangeProductQuantity={quantity => store.setOnHand(quantity)}
+          maxValue={maxValue ?? 0}
+          minValue={0}
+          onHand={onHand}
+          toastType={toastType}
+          onToastAction={onToastAction}
+        />
+        <Dropdown
+          label="Remove By"
+          data={inventoryTypes}
+          selectedItem={product?.inventoryUseTypeId}
+          renderItem={renderInventoryType}
+          style={styles.inventoryTypes}
+          onSelect={item => store.setInventoryType(item)}
+        />
+        <Dropdown
+          label="Category"
+          data={categories}
+          selectedItem={category}
+          style={styles.categories}
+          onSelect={item => store.setCategory(+item.value)}
+        />
+        <View style={styles.orderSection}>
+          <View style={styles.orderSettings}>
+            <View style={styles.minMaxContainer}>
+              <Text style={styles.orderSettingsLabel}>Order Settings</Text>
+              <View style={styles.minMaxRow}>
+                <EditQuantity
+                  vertical
+                  label="Minimum"
+                  currentValue={product?.min ?? 0}
+                  maxValue={MAX_VALUE}
+                  minValue={minQty}
+                  stepValue={minQty}
+                  initFontSize={28}
+                  onChange={value => store.setMinValue(value)}
+                />
+                <Text style={styles.slash}>/</Text>
+                <EditQuantity
+                  vertical
+                  label="Maximum"
+                  currentValue={product?.max ?? 0}
+                  maxValue={MAX_VALUE}
+                  minValue={minQty}
+                  stepValue={minQty}
+                  initFontSize={28}
+                  onChange={value => store.setMaxValue(value)}
+                />
+              </View>
             </View>
-          </View>
-          <View style={styles.orderQuantities}>
-            {product?.inventoryUseTypeId === InventoryUseType.Each && (
+            <View style={styles.orderQuantities}>
+              {product?.inventoryUseTypeId === InventoryUseType.Each && (
+                <EditQuantity
+                  vertical
+                  label="Pieces Per"
+                  labelWithNewLine="Container"
+                  currentValue={product?.unitsPerContainer ?? 0}
+                  maxValue={MAX_VALUE}
+                  minValue={MIN_VALUE}
+                  stepValue={STEP_VALUE}
+                  initFontSize={28}
+                  onChange={value => store.setUnitsPerContainer(value)}
+                />
+              )}
               <EditQuantity
                 vertical
-                label="Pieces Per"
-                labelWithNewLine="Container"
-                currentValue={product?.unitsPerContainer ?? 0}
+                label="Shipment"
+                labelWithNewLine="Quantity"
+                currentValue={product?.orderMultiple ?? 0}
                 maxValue={MAX_VALUE}
                 minValue={MIN_VALUE}
                 stepValue={STEP_VALUE}
                 initFontSize={28}
-                onChange={value => store.setUnitsPerContainer(value)}
+                onChange={value => store.setOrderMultiple(value)}
               />
-            )}
-            <EditQuantity
-              vertical
-              label="Shipment"
-              labelWithNewLine="Quantity"
-              currentValue={product?.orderMultiple ?? 0}
-              maxValue={MAX_VALUE}
-              minValue={MIN_VALUE}
-              stepValue={STEP_VALUE}
-              initFontSize={28}
-              onChange={value => store.setOrderMultiple(value)}
-            />
-            <EditQuantity
-              disabled
-              vertical
-              label="On order"
-              labelContainerStyle={styles.onOrderLabel}
-              currentValue={product?.onOrder ?? 0}
-              maxValue={MAX_VALUE}
-              minValue={MIN_VALUE}
-              stepValue={STEP_VALUE}
-              initFontSize={28}
-              onChange={value => store.setOnOrder(value)}
-            />
+              <EditQuantity
+                disabled
+                hideCount
+                vertical
+                label="On order"
+                labelContainerStyle={styles.onOrderLabel}
+                currentValue={product?.onOrder ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={STEP_VALUE}
+                initFontSize={28}
+                onChange={value => store.setOnOrder(value)}
+              />
+            </View>
           </View>
+          <Tooltip
+            message={shipmentQuantityTooltip}
+            contentStyle={styles.shipmentQuantity}
+          >
+            <Text style={styles.shipmentQuantityText}>
+              What is Shipment Quantity?
+            </Text>
+          </Tooltip>
         </View>
-        <Tooltip
-          message={shipmentQuantityTooltip}
-          contentStyle={styles.shipmentQuantity}
-        >
-          <Text style={styles.shipmentQuantityText}>
-            What is Shipment Quantity?
-          </Text>
-        </Tooltip>
-      </View>
-      <View style={styles.bottomSection}>
-        <Dropdown
-          label="Distributor"
-          data={suppliers}
-          selectedItem={supplier}
-          onSelect={item => store.setSupplier(+item.value)}
-        />
-        <View style={styles.spaceBetweenContainer}>
+        <View style={styles.bottomSection}>
           <Dropdown
-            label="Restock From"
-            data={enabledSuppliers}
-            selectedItem={enabledSupplier}
-            style={styles.restockFromDropdown}
-            onSelect={item => store.setRestockFrom(+item.value)}
+            label="Distributor"
+            data={suppliers}
+            selectedItem={supplier}
+            onSelect={item => store.setSupplier(+item.value)}
           />
-          <View style={styles.infoIconContainer}>
-            <Tooltip message={restockFromTooltip} />
+          <View style={styles.spaceBetweenContainer}>
+            <Dropdown
+              label="Restock From"
+              data={enabledSuppliers}
+              selectedItem={enabledSupplier}
+              style={styles.restockFromDropdown}
+              onSelect={item => store.setRestockFrom(+item.value)}
+            />
+            <View style={styles.infoIconContainer}>
+              <Tooltip message={restockFromTooltip} />
+            </View>
           </View>
-        </View>
-        <View style={styles.spaceBetweenContainer}>
-          <Input
-            type={InputType.Primary}
-            value={product?.upc}
-            label="UPC Number"
-            placeholder="Unassigned"
-            ref={inputRef}
-            containerStyle={{ flexGrow: 1 }}
+          <View style={styles.spaceBetweenContainer}>
+            <Input
+              type={InputType.Primary}
+              value={product?.upc}
+              label="UPC Number"
+              placeholder="Unassigned"
+              ref={inputRef}
+              containerStyle={styles.upcInput}
+            />
+            <Button
+              title="Scan"
+              type={ButtonType.secondary}
+              icon={SVGs.CodeIcon}
+              iconProps={SCAN_ICON_PROPS}
+              buttonStyle={styles.scanButton}
+              textStyle={styles.scanButtonText}
+              onPress={() => setIsUpcActive(true)}
+            />
+          </View>
+          <Switch
+            trackColor={{ true: colors.purple }}
+            value={product?.isRecoverable}
+            label="Recoverable"
+            labelStyle={styles.recoverableLabel}
+            style={styles.spaceBetweenContainer}
+            onPress={() => store.toggleIsRecoverable()}
           />
-          <Button
-            title="Scan"
-            type={ButtonType.secondary}
-            icon={SVGs.CodeIcon}
-            iconProps={SCAN_ICON_PROPS}
-            buttonStyle={styles.scanButton}
-            textStyle={styles.scanButtonText}
-            onPress={() => setIsUpcActive(true)}
-          />
         </View>
-        <Switch
-          trackColor={{ true: colors.purple }}
-          value={product?.isRecoverable}
-          label="Recoverable"
-          labelStyle={styles.recoverableLabel}
-          style={styles.spaceBetweenContainer}
-          onPress={() => store.toggleIsRecoverable()}
+        <UpcScanner
+          isActive={isUpcActive}
+          stockName={store.stockName}
+          onScan={onScanProduct}
+          onClose={onUpcClose}
         />
-      </View>
-      <RNModal animationType="none" visible={isUpcActive}>
-        <View
-          style={{
-            backgroundColor: colors.purple,
-            height: top,
-          }}
-        />
-        <View
-          style={{
-            alignItems: 'center',
-            backgroundColor: colors.purple,
-            height: headerHeight - top,
-            justifyContent: 'center',
-          }}
-        >
-          <LeftBarButton
-            leftBarButtonType={LeftBarType.Back}
-            onPress={() => setIsUpcActive(false)}
-            style={{ position: 'absolute', left: 0 }}
-          />
-          <TitleBar title="Edit Product" />
-        </View>
-        <View style={{ flex: 1, backgroundColor: colors.background }}>
-          <InfoTitleBar
-            type={InfoTitleBarType.Primary}
-            title={store.stockName}
-          />
-          <ScanProduct
-            onScan={onScanProduct}
-            isActive={isUpcActive}
-            isUPC={true}
-          />
-        </View>
-      </RNModal>
-    </>
-  );
-});
+      </>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   bottomSection: {
@@ -453,5 +415,8 @@ const styles = StyleSheet.create({
   },
   textBold: {
     fontFamily: fonts.TT_Bold,
+  },
+  upcInput: {
+    flexGrow: 1,
   },
 });

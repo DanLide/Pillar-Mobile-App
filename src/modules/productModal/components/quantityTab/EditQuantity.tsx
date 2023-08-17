@@ -32,6 +32,7 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   initFontSize?: number;
   vertical?: boolean;
   disabled?: boolean;
+  hideCount?: boolean;
   error?: boolean;
   isEdit?: boolean;
 
@@ -61,6 +62,7 @@ export const EditQuantity = memo(
     initFontSize = INITIAL_FONT_SIZE,
     vertical,
     disabled,
+    hideCount,
     error,
     keyboardType,
     onChange,
@@ -74,6 +76,7 @@ export const EditQuantity = memo(
     const [fontSize, setFontSize] = useState(initFontSize);
 
     const isInputDisabled = disabled || error;
+    const isInputHidden = error || hideCount;
 
     const containerStyle = useMemo<StyleProp<ViewStyle>>(
       () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
@@ -84,10 +87,10 @@ export const EditQuantity = memo(
       () => [
         styles.input,
         vertical && styles.inputVertical,
-        error && styles.inputError,
+        isInputHidden && styles.inputHidden,
         { fontSize },
       ],
-      [error, fontSize, vertical],
+      [fontSize, isInputHidden, vertical],
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -268,7 +271,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
   },
-  inputError: {
+  inputHidden: {
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
   },
