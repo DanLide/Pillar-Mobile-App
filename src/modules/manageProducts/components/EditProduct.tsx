@@ -218,17 +218,19 @@ export const EditProduct = observer(() => {
             </View>
           </View>
           <View style={styles.orderQuantities}>
-            <EditQuantity
-              vertical
-              label="Pieces Per"
-              labelWithNewLine="Container"
-              currentValue={product?.unitsPerContainer ?? 0}
-              maxValue={MAX_VALUE}
-              minValue={MIN_VALUE}
-              stepValue={STEP_VALUE}
-              initFontSize={28}
-              onChange={value => store.setUnitsPerContainer(value)}
-            />
+            {product?.inventoryUseTypeId === InventoryUseType.Each && (
+              <EditQuantity
+                vertical
+                label="Pieces Per"
+                labelWithNewLine="Container"
+                currentValue={product?.unitsPerContainer ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={STEP_VALUE}
+                initFontSize={28}
+                onChange={value => store.setUnitsPerContainer(value)}
+              />
+            )}
             <EditQuantity
               vertical
               label="Shipment"
@@ -372,7 +374,7 @@ const styles = StyleSheet.create({
   },
   orderQuantities: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   orderSection: {
     alignSelf: 'stretch',

@@ -26,6 +26,7 @@ import { categoriesStore, suppliersStore } from '../../../stores';
 import { observer } from 'mobx-react';
 import { EditProduct } from './EditProduct';
 import { manageProductsStore } from '../stores';
+import { InventoryUseType } from '../../../constants/common.enum';
 
 enum ScrollDirection {
   Down,
@@ -202,11 +203,14 @@ export const ProductModal = observer(
                       />
                     </View>
                     <View style={styles.orderSettings}>
-                      <InfoBadge
-                        title="Pieces Per"
-                        titleWithNewLine="Container"
-                        subtitle={product?.unitsPerContainer}
-                      />
+                      {product?.inventoryUseTypeId ===
+                        InventoryUseType.Each && (
+                        <InfoBadge
+                          title="Pieces Per"
+                          titleWithNewLine="Container"
+                          subtitle={product?.unitsPerContainer}
+                        />
+                      )}
                       <InfoBadge
                         title="Shipment"
                         titleWithNewLine="Quantity"
