@@ -6,7 +6,7 @@ import { getVersion } from 'react-native-device-info';
 
 import { authStore, ssoStore } from '../../stores';
 import { colors, fonts, SVGs } from '../../theme';
-import Logo from '../../../assets/images/Logo.png';
+import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
 import { AppNavigator } from '../types';

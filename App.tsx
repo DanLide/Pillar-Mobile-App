@@ -22,7 +22,7 @@ import { addTracks, setupPlayer } from './src/components/Sound';
 
 import autoLogoutService, { AUTO_LOGOUT_TIMEOUT } from "./src/data/helpers/autologoutService";
 import splashScreenBackground from './assets/images/SplashScreenBackground.png';
-import splashScreenLogo from './assets/images/Logo1.png';
+import splashScreenLogo from './assets/images/logo.png';
 import { colors, fonts } from './src/theme';
 
 interface InitialProps {
