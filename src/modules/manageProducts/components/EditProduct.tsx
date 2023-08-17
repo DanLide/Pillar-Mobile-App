@@ -218,7 +218,7 @@ export const EditProduct = observer(() => {
             </View>
           </View>
           <View style={styles.orderQuantities}>
-            {product?.inventoryUseTypeId === InventoryUseType.Each && (
+            {product?.inventoryUseTypeId !== InventoryUseType.Each && (
               <EditQuantity
                 vertical
                 label="Pieces Per"

@@ -71,6 +71,8 @@ export class FetchProductDetails extends Task {
 
     this.productContext.enabledSuppliers = enabledSuppliers;
 
+    console.log(product, settings);
+
     this.productContext.product = {
       ...product,
       max,
