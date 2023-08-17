@@ -271,8 +271,6 @@ export const updateProductOrderMultipleAPI = (
     },
   ]);
 
-  console.log(url, body);
-
   return tryAuthFetch<string>({
     url,
     request: {

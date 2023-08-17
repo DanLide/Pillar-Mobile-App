@@ -88,8 +88,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           ? await onFetchProduct(code)
           : await fetchProductByScannedCode(store, btoa(code));
 
-        console.log(networkError);
-
         // TODO: Handle Network errors
         if (networkError)
           return onScanError?.(ScannerScreenError.ProductNotFound);
