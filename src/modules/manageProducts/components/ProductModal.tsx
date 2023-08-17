@@ -208,7 +208,7 @@ export const ProductModal = observer(
                       />
                     </View>
                     <View style={styles.orderSettings}>
-                      {product?.inventoryUseTypeId !==
+                      {product?.inventoryUseTypeId ===
                         InventoryUseType.Each && (
                         <InfoBadge
                           title="Pieces Per"
