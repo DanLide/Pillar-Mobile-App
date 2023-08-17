@@ -140,7 +140,7 @@ export const ProductModal = memo(
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 maxValue={maxValue}
-                style={{ paddingTop: 16 }}
+                style={styles.productQuantityContainer}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
@@ -225,5 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purpleLight,
     overflow: 'hidden',
     padding: 0,
+  },
+  productQuantityContainer: {
+    paddingTop: 16,
   },
 });
