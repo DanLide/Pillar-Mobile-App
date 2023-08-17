@@ -37,7 +37,7 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: () => void | unknown;
+  onSubmit?: (product: ProductModel) => void | unknown;
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;
@@ -124,7 +124,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onProductSubmit = useCallback(
       (product: ProductModel) => {
         if (onSubmit) {
-          return onSubmit();
+          return onSubmit(product);
         }
 
         const { nameDetails, reservedCount } = product;

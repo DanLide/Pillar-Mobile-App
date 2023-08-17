@@ -1,6 +1,8 @@
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 import { action, makeObservable, observable, override } from 'mobx';
 import { ProductModel } from '../../../stores/types';
+import { v1 as uuid } from 'uuid';
+import { addProductToList } from '../helpers';
 
 const PRODUCT_MAX_COUNT = 9999;
 
@@ -21,6 +23,11 @@ export class ManageProductsStore extends BaseProductsStore {
 
   @override get getEditableMaxValue() {
     return () => PRODUCT_MAX_COUNT;
+  }
+
+  @override addProduct(product: ProductModel) {
+    const scannedProduct = { ...product, isRemoved: false, uuid: uuid() };
+    this.products = addProductToList(scannedProduct, this.products);
   }
 
   @action setUpdatedProduct(product?: ProductModel) {

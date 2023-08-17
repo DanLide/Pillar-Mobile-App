@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { encode as btoa } from 'base-64';
 
@@ -49,6 +49,15 @@ const ScannerScreen = observer(() => {
 
   const toast = useToast();
 
+  const productModalParams = useMemo<ProductModalParams>(
+    () => ({
+      ...modalParams,
+      isEdit,
+      toastType,
+    }),
+    [isEdit, modalParams, toastType],
+  );
+
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
       setModalParams({
@@ -68,26 +77,31 @@ const ScannerScreen = observer(() => {
     [store],
   );
 
-  const updateProduct = useCallback(async () => {
-    const updateProductFunction = isEdit
-      ? onUpdateProduct
-      : onUpdateProductQuantity;
+  const updateProduct = useCallback(
+    async (product: ProductModel) => {
+      const updateProductFunction = isEdit
+        ? onUpdateProduct
+        : onUpdateProductQuantity;
 
-    const error = await updateProductFunction(manageProductsStore);
+      const error = await updateProductFunction(manageProductsStore);
 
-    if (error) {
-      setToastType(ToastType.ProductUpdateError);
-      return error;
-    }
+      if (error) {
+        setToastType(ToastType.ProductUpdateError);
+        return error;
+      }
 
-    if (isEdit) {
-      setIsEdit(false);
-      setToastType(ToastType.ProductUpdateSuccess);
-      return;
-    }
+      if (isEdit) {
+        setIsEdit(false);
+        setToastType(ToastType.ProductUpdateSuccess);
+        return;
+      }
 
-    toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
-  }, [isEdit, toast]);
+      store.addProduct(product);
+
+      toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
+    },
+    [isEdit, store, toast],
+  );
 
   const handleEditPress = useCallback(() => {
     setIsEdit(true);
@@ -101,7 +115,7 @@ const ScannerScreen = observer(() => {
   return (
     <BaseScannerScreen
       store={store}
-      modalParams={{ ...modalParams, isEdit, toastType }}
+      modalParams={productModalParams}
       onProductScan={onProductScan}
       onFetchProduct={fetchProduct}
       onSubmit={updateProduct}

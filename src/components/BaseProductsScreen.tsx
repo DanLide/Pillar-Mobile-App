@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';
@@ -51,9 +45,8 @@ interface Props {
   store: Store;
   tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
-  hideCompleteButton?: boolean;
   primaryButtonTitle?: string;
-  onComplete?: () => Promise<void>;
+  onComplete?: () => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -61,6 +54,11 @@ const { width, height } = Dimensions.get('window');
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
   maxValue: undefined,
+};
+
+const SCAN_ICON_PROPS: SvgProps = {
+  height: 23.33,
+  width: 32,
 };
 
 const alertMessage =
@@ -74,7 +72,6 @@ export const BaseProductsScreen = observer(
     store,
     tooltipTitle,
     ListComponent,
-    hideCompleteButton,
     primaryButtonTitle,
     onComplete,
   }: Props) => {
@@ -85,18 +82,12 @@ export const BaseProductsScreen = observer(
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
 
-    const scanButtonType = hideCompleteButton
-      ? ButtonType.primary
-      : ButtonType.secondary;
+    const scannedProductsCount = Object.keys(store.getProducts).length;
 
-    const scanIconProps = useMemo<SvgProps>(
-      () => ({
-        color: hideCompleteButton ? colors.white : colors.purple,
-        height: 23.33,
-        width: 32,
-      }),
-      [hideCompleteButton],
-    );
+    const scanButtonType =
+      modalType === ProductModalType.ManageProduct && !scannedProductsCount
+        ? ButtonType.primary
+        : ButtonType.secondary;
 
     useEffect(() => {
       autorun(() => {
@@ -126,11 +117,14 @@ export const BaseProductsScreen = observer(
     };
 
     const onCompleteRemove = async () => {
+      isNeedNavigateBack.current = true;
+
       setIsLoading(true);
       await onComplete?.();
       setIsLoading(false);
 
-      isNeedNavigateBack.current = true;
+      if (modalType === ProductModalType.ManageProduct) return;
+
       navigation.reset({
         index: 0,
         routes: [
@@ -214,22 +208,22 @@ export const BaseProductsScreen = observer(
             <Button
               type={scanButtonType}
               icon={SVGs.CodeIcon}
-              iconProps={scanIconProps}
+              iconProps={SCAN_ICON_PROPS}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
               title="Scan"
               onPress={onPressScan}
             />
 
-            {!hideCompleteButton && (
+            {modalType === ProductModalType.ManageProduct &&
+            scannedProductsCount ? (
               <Button
                 type={ButtonType.primary}
-                disabled={!Object.keys(store.getProducts).length}
                 buttonStyle={styles.buttonContainer}
                 title={primaryButtonTitle ?? 'Complete'}
                 onPress={onCompleteRemove}
               />
-            )}
+            ) : null}
           </View>
 
           <ProductModal
