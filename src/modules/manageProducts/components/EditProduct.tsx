@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
+import TrackPlayer from 'react-native-track-player';
 
 import { categoriesStore, suppliersStore } from '../../../stores';
 import {
@@ -61,7 +62,6 @@ export const EditProduct = observer(() => {
   const store = useRef(manageProductsStore).current;
   const inputRef = useRef<TextInput | null>(null);
 
-  const [isScannerActive, setIsScannerActive] = useState(true);
   const [isUpcActive, setIsUpcActive] = useState(false);
 
   const headerHeight = useHeaderHeight();
@@ -153,16 +153,14 @@ export const EditProduct = observer(() => {
 
   const onScanProduct = useCallback<ScanProductProps['onScan']>(
     async code => {
-      setIsScannerActive(false);
       Vibration.vibrate();
-      // TrackPlayer.play();
+      TrackPlayer.play();
 
       if (typeof code === 'string') {
         store.setUpc(code);
         inputRef?.current?.focus();
       }
 
-      setIsScannerActive(true);
       setIsUpcActive(false);
     },
     [store],
@@ -312,43 +310,40 @@ export const EditProduct = observer(() => {
           onPress={() => store.toggleIsRecoverable()}
         />
       </View>
-      {isUpcActive && (
-        <RNModal animationType="none">
-          <View
-            style={{
-              backgroundColor: colors.purple,
-              height: top,
-            }}
+      <RNModal animationType="none" visible={isUpcActive}>
+        <View
+          style={{
+            backgroundColor: colors.purple,
+            height: top,
+          }}
+        />
+        <View
+          style={{
+            alignItems: 'center',
+            backgroundColor: colors.purple,
+            height: headerHeight - top,
+            justifyContent: 'center',
+          }}
+        >
+          <LeftBarButton
+            leftBarButtonType={LeftBarType.Back}
+            onPress={() => setIsUpcActive(false)}
+            style={{ position: 'absolute', left: 0 }}
           />
-          <View
-            style={{
-              alignItems: 'center',
-              backgroundColor: colors.purple,
-              height: headerHeight - top,
-              justifyContent: 'center',
-            }}
-          >
-            <LeftBarButton
-              leftBarButtonType={LeftBarType.Back}
-              onPress={() => setIsUpcActive(false)}
-              style={{ position: 'absolute', left: 0 }}
-            />
-            <TitleBar title="Edit Product" />
-          </View>
-          <View style={{ flex: 1, backgroundColor: colors.background }}>
-            <InfoTitleBar
-              type={InfoTitleBarType.Primary}
-              title={store.stockName}
-            />
-            <ScanProduct
-              onScan={onScanProduct}
-              isActive={isScannerActive}
-              isUPC={true}
-              scannedProductCount={0}
-            />
-          </View>
-        </RNModal>
-      )}
+          <TitleBar title="Edit Product" />
+        </View>
+        <View style={{ flex: 1, backgroundColor: colors.background }}>
+          <InfoTitleBar
+            type={InfoTitleBarType.Primary}
+            title={store.stockName}
+          />
+          <ScanProduct
+            onScan={onScanProduct}
+            isActive={isUpcActive}
+            isUPC={true}
+          />
+        </View>
+      </RNModal>
     </>
   );
 });

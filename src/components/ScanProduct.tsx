@@ -24,6 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
+import { isNil } from 'ramda';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
@@ -472,10 +473,14 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         >
           {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
         </TouchableOpacity>
-        <ProductListButton
-          containerStyle={styles.listButtonContainer}
-          count={scannedProductCount}
-        />
+        {isNil(scannedProductCount) ? (
+          <View />
+        ) : (
+          <ProductListButton
+            containerStyle={styles.listButtonContainer}
+            count={scannedProductCount}
+          />
+        )}
         <TouchableOpacity
           style={[
             styles.smallBottomButton,
@@ -521,9 +526,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     zIndex: 100,
-    marginHorizontal: '5%',
-    columnGap: 8,
+    gap: 8,
+    marginHorizontal: '10%',
+    width: '100%',
   },
   smallBottomButton: {
     justifyContent: 'center',
