@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  memo,
-  useMemo,
-  useState,
-  useRef,
-} from 'react';
+import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -16,8 +10,12 @@ import {
   NativeSyntheticEvent,
   TextInputContentSizeChangeEventData,
   PixelRatio,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  Text,
 } from 'react-native';
-import { pipe, replace } from 'ramda';
+import { equals, ifElse, pipe, replace } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 
@@ -26,7 +24,16 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   maxValue: number;
   minValue: number;
   stepValue: number;
+
+  label?: string;
+  labelWithNewLine?: string;
+  labelContainerStyle?: StyleProp<ViewStyle>;
+
+  initFontSize?: number;
+  vertical?: boolean;
   disabled?: boolean;
+  hideCount?: boolean;
+  error?: boolean;
   isEdit?: boolean;
 
   onRemove?: () => void;
@@ -35,31 +42,70 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
 
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
-const removeLeadingZero = pipe(String, replace(/^0+/, ''));
-const INITIAL_FONT_SIZE = 78
+const removeLeadingZero = ifElse(
+  equals(0),
+  String,
+  pipe(String, replace(/^0+/, '')),
+);
+
+const INITIAL_FONT_SIZE = 78;
 
 export const EditQuantity = memo(
   ({
-    isEdit,
     currentValue,
     maxValue,
     minValue,
     stepValue,
+    label,
+    labelWithNewLine,
+    labelContainerStyle,
+    initFontSize = INITIAL_FONT_SIZE,
+    vertical,
     disabled,
+    hideCount,
+    error,
     keyboardType,
     onChange,
-    onRemove,
   }: Props) => {
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
     const displayMinValue = removeLeadingZero(minValue);
+
     const layoutInputRef = useRef<null | LayoutRectangle>(null);
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
-    const [fontSize, setFontSize] = useState(INITIAL_FONT_SIZE);
+    const [fontSize, setFontSize] = useState(initFontSize);
 
-    const style = {
-      fontSize: fontSize,
-    };
+    const isInputDisabled = disabled || error;
+    const isInputHidden = error || hideCount;
+
+    const containerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
+      [vertical],
+    );
+
+    const inputStyle = useMemo<StyleProp<TextStyle>>(
+      () => [
+        styles.input,
+        vertical && styles.inputVertical,
+        isInputHidden && styles.inputHidden,
+        { fontSize },
+      ],
+      [fontSize, isInputHidden, vertical],
+    );
+
+    const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [styles.inputLabelContainer, labelContainerStyle],
+      [labelContainerStyle],
+    );
+
+    const quantityButtonStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [
+        styles.quantityButton,
+        styles.border,
+        vertical && styles.quantityButtonVertical,
+      ],
+      [vertical],
+    );
 
     const setNewValue = useCallback(
       (value: string) => {
@@ -92,7 +138,7 @@ export const EditQuantity = memo(
       const updatedCount =
         Math.ceil(currentValue / stepValue) * stepValue - stepValue;
 
-      const displayText = updatedCount === 0 ? String(updatedCount) : removeLeadingZero(updatedCount);
+      const displayText = removeLeadingZero(updatedCount);
 
       setNewValue(displayText);
     }, [currentValue, stepValue, setNewValue]);
@@ -109,12 +155,15 @@ export const EditQuantity = memo(
     }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
 
     const DecreaseButton = useMemo(() => {
-      if (disabled) return <View style={styles.quantityButton} />;
+      if (isInputDisabled) return <View style={styles.quantityButton} />;
 
-      if (currentValue >= minValue) {
+      if (
+        !(currentValue === minValue && minValue === 0) &&
+        currentValue >= minValue
+      ) {
         return (
           <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
+            style={quantityButtonStyle}
             onPress={onDecreaseCount}
           >
             <SVGs.MinusIcon color={colors.black} />
@@ -123,51 +172,79 @@ export const EditQuantity = memo(
       }
 
       return <View style={styles.quantityButton} />;
-    }, [currentValue, isEdit, minValue, disabled, onDecreaseCount, onRemove]);
+    }, [
+      isInputDisabled,
+      currentValue,
+      minValue,
+      quantityButtonStyle,
+      onDecreaseCount,
+    ]);
 
     const onLayout = ({ nativeEvent }: LayoutChangeEvent) => {
       layoutInputRef.current = nativeEvent.layout;
     };
 
-    const onContentSizeChange = ({ nativeEvent: { contentSize: { width } } }:
-      NativeSyntheticEvent<TextInputContentSizeChangeEventData>
-    ) => {
+    const onContentSizeChange = ({
+      nativeEvent: {
+        contentSize: { width },
+      },
+    }: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
       if (!layoutInputRef.current?.width || !width) {
-        return
+        return;
       }
       if (layoutInputRef.current?.width < width) {
-        return setFontSize(PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width) * 0.9);
+        return setFontSize(
+          PixelRatio.roundToNearestPixel(
+            (fontSize * layoutInputRef.current?.width) / width,
+          ) * 0.9,
+        );
       }
-      if (fontSize === INITIAL_FONT_SIZE) {
-        return
+      if (fontSize === initFontSize) {
+        return;
       }
-      const increasedFontSize = PixelRatio.roundToNearestPixel(fontSize * layoutInputRef.current?.width / width);
-      const increasedWidth = width * increasedFontSize / fontSize;
+      const increasedFontSize = PixelRatio.roundToNearestPixel(
+        (fontSize * layoutInputRef.current?.width) / width,
+      );
+      const increasedWidth = (width * increasedFontSize) / fontSize;
       if (layoutInputRef.current?.width >= increasedWidth) {
-        setFontSize(increasedFontSize > INITIAL_FONT_SIZE ? INITIAL_FONT_SIZE : increasedFontSize * 0.9);
+        setFontSize(
+          increasedFontSize > initFontSize
+            ? initFontSize
+            : increasedFontSize * 0.9,
+        );
       }
-    }
+    };
 
     return (
-      <View style={styles.container}>
+      <View style={containerStyle}>
         {DecreaseButton}
-        <TextInput
-          contextMenuHidden
-          editable={!disabled}
-          style={[styles.input, style, disabled && styles.inputDisabled]}
-          value={disabled ? '-' : displayValue}
-          keyboardType={keyboardType}
-          onChangeText={onChangeInputText}
-          returnKeyType="done"
-          onBlur={onFocusLost}
-          onLayout={onLayout}
-          onContentSizeChange={onContentSizeChange}
-        />
-        {disabled || currentValue === maxValue || isNaN(currentValue) ? (
+        <View>
+          {label && (
+            <View style={inputLabelContainerStyle}>
+              <Text style={styles.inputLabel}>
+                {label}
+                {labelWithNewLine ? `\n${labelWithNewLine}` : null}
+              </Text>
+            </View>
+          )}
+          <TextInput
+            contextMenuHidden
+            editable={!isInputDisabled}
+            style={inputStyle}
+            value={error ? '-' : displayValue}
+            keyboardType={keyboardType}
+            onChangeText={onChangeInputText}
+            returnKeyType="done"
+            onBlur={onFocusLost}
+            onLayout={onLayout}
+            onContentSizeChange={onContentSizeChange}
+          />
+        </View>
+        {isInputDisabled || currentValue === maxValue || isNaN(currentValue) ? (
           <View style={styles.quantityButton} />
         ) : (
           <TouchableOpacity
-            style={[styles.quantityButton, styles.border]}
+            style={quantityButtonStyle}
             onPress={onIncreaseCount}
           >
             <SVGs.PlusIcon color={colors.black} />
@@ -181,7 +258,6 @@ export const EditQuantity = memo(
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    flexDirection: 'row',
     gap: 11,
     justifyContent: 'center',
   },
@@ -195,15 +271,42 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
   },
-  inputDisabled: {
+  inputHidden: {
     color: colors.blackSemiLight,
     backgroundColor: colors.gray,
+  },
+  inputLabel: {
+    color: colors.white,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 14,
+    lineHeight: 18,
+  },
+  inputLabelContainer: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    backgroundColor: colors.purpleDark2,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  inputVertical: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderTopWidth: 0,
+    height: 48,
+    maxWidth: 108,
+    padding: 8,
   },
   quantityButton: {
     width: 48,
     height: 48,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  quantityButtonVertical: {
+    width: 87,
+    height: 48,
   },
   border: {
     borderWidth: 1,

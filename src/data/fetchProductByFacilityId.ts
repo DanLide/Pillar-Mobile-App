@@ -1,6 +1,6 @@
 import { v1 as uuid } from 'uuid';
 
-import { getProductMinQty, Task, TaskExecutor } from './helpers';
+import { getProductStepQty, Task, TaskExecutor } from './helpers';
 import { getFetchProductByFacilityIdAPI } from './api';
 
 import { ProductByFacilityIdResponse } from './api/productsAPI';
@@ -79,7 +79,7 @@ export class SaveProductToStoreTask extends Task {
     return {
       uuid: uuid(),
       isRemoved: false,
-      reservedCount: getProductMinQty(inventoryUseTypeId),
+      reservedCount: getProductStepQty(inventoryUseTypeId),
       nameDetails: [manufacturer, partNumber, size].join(' '),
       job: undefined,
       isRecoverable: product.isRecoverable,

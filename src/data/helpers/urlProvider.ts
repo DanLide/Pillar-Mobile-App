@@ -28,6 +28,7 @@ export class URLProvider {
       companies: { apiUri: string };
       pisaCompanyLocation: { apiUri: string };
       pisaEquipment: { apiUri: string };
+      inventory: { apiUri: string };
     };
   };
 
@@ -185,6 +186,24 @@ export class URLProvider {
   updateProductQuantity() {
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryTransaction`,
+    );
+  }
+
+  updateProductSettings(productId?: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/UpdateProductSettings/${productId}`,
+    );
+  }
+
+  updateProductAreaSettings() {
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductAreaSettings/1`,
+    );
+  }
+
+  updateProductOrderMultiple() {
+    return new URL(
+      `${this.currentEnv.modules.inventory.apiUri}/api/Inventory/OrderMultiple`,
     );
   }
 }

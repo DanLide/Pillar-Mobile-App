@@ -1,7 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useCallback } from 'react';
 import {
   StyleSheet,
-  TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
   TextStyle,
@@ -9,11 +8,15 @@ import {
   ActivityIndicator,
   StyleProp,
   View,
+  Pressable,
+  PressableStateCallbackType,
+  ColorValue,
 } from 'react-native';
 
 import { testIds } from '../helpers';
 import Text from './Text';
 import { colors, fonts } from '../theme';
+import { SvgProps } from 'react-native-svg';
 
 type ButtonProps = TouchableOpacityProps & TextProps;
 
@@ -28,7 +31,8 @@ interface ExtendedButtonProps extends ButtonProps {
   isLoading?: boolean;
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  icon?: JSX.Element;
+  icon?: React.NamedExoticComponent<SvgProps>;
+  iconProps?: SvgProps;
 }
 
 const Button: React.FC<ExtendedButtonProps> = ({
@@ -38,51 +42,89 @@ const Button: React.FC<ExtendedButtonProps> = ({
   buttonStyle,
   textStyle,
   disabled,
-  icon,
+  icon: Icon,
+  iconProps,
   testID = 'button',
   ...props
 }) => {
   const isDisabled = isLoading || disabled;
 
-  const getStyleByType = (type?: ButtonType) => {
-    switch (type) {
-      case ButtonType.primary:
-        return styles.primaryContainer;
-      case ButtonType.secondary:
-        return styles.secondaryContainer;
-      default:
-        return null;
-    }
-  };
-
-  const buttonMergedStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [
-      styles.button,
-      getStyleByType(type),
-      isDisabled && styles.disabledStyle,
-      buttonStyle,
-    ],
-    [type, buttonStyle, isDisabled],
+  const getStyleByType = useCallback(
+    (type?: ButtonType) => {
+      switch (type) {
+        case ButtonType.primary:
+          return [
+            styles.primaryContainer,
+            isDisabled ? styles.primaryButtonDisabled : undefined,
+          ];
+        case ButtonType.secondary:
+          return styles.secondaryContainer;
+        default:
+          return [
+            styles.button,
+            isDisabled ? styles.primaryButtonDisabled : undefined,
+          ];
+      }
+    },
+    [isDisabled],
   );
 
-  const getTextStyleByType = (type?: ButtonType) => {
-    switch (type) {
-      case ButtonType.primary:
-        return styles.primaryText;
-      case ButtonType.secondary:
-        return styles.secondaryText;
-      default:
-        return null;
-    }
-  };
+  const iconColor = useCallback<
+    (state: PressableStateCallbackType) => ColorValue | undefined
+  >(
+    ({ pressed }) => {
+      switch (type) {
+        case ButtonType.primary:
+          return colors.white;
+        case ButtonType.secondary:
+          if (isDisabled) return colors.grayDark;
+          return pressed ? colors.white : colors.black;
+      }
+    },
+    [isDisabled, type],
+  );
 
-  const textMergedStyle = useMemo<StyleProp<TextStyle>>(
-    () => [styles.buttonText, getTextStyleByType(type), textStyle],
-    [type, textStyle],
+  const buttonMergedStyle = useCallback<
+    (state: PressableStateCallbackType) => StyleProp<ViewStyle>
+  >(
+    ({ pressed }) => [
+      getStyleByType(type),
+      pressed ? styles.buttonPressed : undefined,
+      buttonStyle,
+    ],
+    [getStyleByType, type, buttonStyle],
+  );
+
+  const getTextStyleByType = useCallback(
+    (type?: ButtonType) => {
+      switch (type) {
+        case ButtonType.primary:
+          return styles.primaryText;
+        case ButtonType.secondary:
+          return [
+            styles.secondaryText,
+            isDisabled ? styles.secondaryTextDisabled : undefined,
+          ];
+        default:
+          return styles.buttonText;
+      }
+    },
+    [isDisabled],
+  );
+
+  const textMergedStyle = useCallback<
+    (state: PressableStateCallbackType) => StyleProp<TextStyle>
+  >(
+    ({ pressed }) => [
+      getTextStyleByType(type),
+      pressed ? styles.buttonTextPressed : undefined,
+      textStyle,
+    ],
+    [getTextStyleByType, type, textStyle],
   );
 
   return (
-    <TouchableOpacity
+    <Pressable
       {...props}
       disabled={isDisabled}
       style={buttonMergedStyle}
@@ -95,19 +137,24 @@ const Button: React.FC<ExtendedButtonProps> = ({
           testID={testIds.idLoadingIndicator(testID)}
         />
       ) : (
-        <View style={styles.buttonContainer} testID={testIds.idContent(testID)}>
-          {icon}
-          <Text
-            {...props}
-            style={textMergedStyle}
-            disabled
-            testID={testIds.idTitle(testID)}
+        state => (
+          <View
+            style={styles.buttonContainer}
+            testID={testIds.idContent(testID)}
           >
-            {title}
-          </Text>
-        </View>
+            {Icon && <Icon color={iconColor(state)} {...iconProps} />}
+            <Text
+              {...props}
+              style={textMergedStyle(state)}
+              disabled
+              testID={testIds.idTitle(testID)}
+            >
+              {title}
+            </Text>
+          </View>
+        )
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
@@ -119,21 +166,31 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 16,
   },
-  disabledStyle: {
-    opacity: 0.2,
+  buttonPressed: {
+    backgroundColor: colors.purpleDark3,
   },
   buttonContainer: {
     flexDirection: 'row',
+    gap: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
   buttonText: {
     fontSize: 17,
-    color: 'white',
+    color: colors.white,
+  },
+  buttonTextPressed: {
+    color: colors.white,
+  },
+  primaryButtonDisabled: {
+    opacity: 0.5,
   },
   primaryContainer: {
     borderRadius: 8,
     backgroundColor: colors.purple,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
   },
   primaryText: {
     color: colors.white,
@@ -145,11 +202,17 @@ const styles = StyleSheet.create({
     borderColor: colors.grayDark,
     borderRadius: 8,
     backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
   },
   secondaryText: {
     color: colors.purpleDark,
     fontSize: 23.5,
     fontFamily: fonts.TT_Bold,
+  },
+  secondaryTextDisabled: {
+    color: colors.grayDark,
   },
 });
 

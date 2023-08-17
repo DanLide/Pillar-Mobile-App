@@ -12,7 +12,6 @@ import {
 } from './types';
 import { StockModel } from '../modules/stocksList/stores/StocksStore';
 import { addProductByJob, getReservedCountById } from './helpers';
-import { CategoryResponse, SupplierResponse } from '../data/api/productsAPI';
 
 type BaseProductsStoreType = SyncedProductStoreType &
   StockProductStoreType &
@@ -25,17 +24,10 @@ export class BaseProductsStore implements BaseProductsStoreType {
   @observable products: ProductModel[];
   @observable currentProduct?: ProductModel;
 
-  @observable categories: CategoryResponse[];
-  @observable suppliers: SupplierResponse[];
-  @observable enabledSuppliers: SupplierResponse[];
-
   constructor() {
     this.currentStock = undefined;
     this.currentProduct = undefined;
     this.products = [];
-    this.categories = [];
-    this.suppliers = [];
-    this.enabledSuppliers = [];
 
     makeObservable(this);
   }
@@ -77,18 +69,6 @@ export class BaseProductsStore implements BaseProductsStoreType {
   @computed
   get getProducts() {
     return this.products;
-  }
-
-  @computed get getCategories() {
-    return this.categories;
-  }
-
-  @computed get getSuppliers() {
-    return this.suppliers;
-  }
-
-  @computed get getEnabledSuppliers() {
-    return this.enabledSuppliers;
   }
 
   @computed get getSortedProducts() {
@@ -143,25 +123,9 @@ export class BaseProductsStore implements BaseProductsStoreType {
     this.products = products;
   }
 
-  @action setCategories(categories: CategoryResponse[]) {
-    this.categories = categories;
-  }
-
-  @action setSuppliers(suppliers: SupplierResponse[]) {
-    this.suppliers = suppliers;
-  }
-
-  @action setEnabledSuppliers(suppliers: SupplierResponse[]) {
-    this.enabledSuppliers = suppliers;
-  }
-
   @action clear() {
     this.currentStock = undefined;
     this.products = [];
     this.currentProduct = undefined;
-
-    this.categories = [];
-    this.suppliers = [];
-    this.enabledSuppliers = [];
   }
 }

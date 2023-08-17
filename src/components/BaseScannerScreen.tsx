@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { View, StyleSheet, Vibration } from 'react-native';
+import { StyleSheet, Vibration, View } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
@@ -37,7 +37,9 @@ interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: () => Promise<void>;
+  onSubmit?: (product: ProductModel) => void | unknown;
+  onEditPress?: () => void;
+  onCancelPress?: () => void;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
   ProductModalComponent?: React.FC<ProductModalProps>;
@@ -56,6 +58,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     modalParams,
     onProductScan,
     onSubmit,
+    onEditPress,
+    onCancelPress,
     onCloseModal,
     onFetchProduct,
     ProductModalComponent = ProductModal,
@@ -67,11 +71,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const scannedProducts = store.getProducts;
 
     const onScanError = useCallback(
-      (error: ScannerScreenError) =>
+      (error: ScannerScreenError) => {
+        setIsScannerActive(true);
+
         toast.show(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
-        }),
+        });
+      },
       [toast],
     );
 
@@ -89,8 +96,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         if (!product) {
           onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
-          setIsScannerActive(true);
-          return
+          return;
         }
 
         onProductScan?.(product);
@@ -98,27 +104,25 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [onFetchProduct, store, onScanError, onProductScan],
     );
 
-    const onScanProduct = useCallback<ScanProductProps['onPressScan']>(
+    const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
         setIsScannerActive(false);
         Vibration.vibrate();
         TrackPlayer.play();
 
         if (typeof code === 'string') {
-          await fetchProductByCode(code)
+          await fetchProductByCode(code);
         } else {
           onScanError?.(ScannerScreenError.ProductNotFound);
-          setIsScannerActive(true);
         }
       },
       [fetchProductByCode, onScanError],
     );
 
     const onProductSubmit = useCallback(
-      async (product: ProductModel) => {
+      (product: ProductModel) => {
         if (onSubmit) {
-          await onSubmit();
-          return;
+          return onSubmit(product);
         }
 
         const { nameDetails, reservedCount } = product;
@@ -169,6 +173,8 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           product={store.getCurrentProduct}
           stockName={store.stockName}
           onSubmit={onProductSubmit}
+          onEditPress={onEditPress}
+          onCancelPress={onCancelPress}
           onClose={handleCloseModal}
           onChangeProductQuantity={setEditableProductQuantity}
         />

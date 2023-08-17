@@ -31,6 +31,7 @@ import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
+import { SvgProps } from 'react-native-svg';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -50,9 +51,8 @@ interface Props {
   store: Store;
   tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
-  hideCompleteButton?: boolean;
   primaryButtonTitle?: string;
-  onComplete?: () => Promise<void>;
+  onComplete?: () => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -60,6 +60,11 @@ const { width, height } = Dimensions.get('window');
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
   maxValue: undefined,
+};
+
+const SCAN_ICON_PROPS: SvgProps = {
+  height: 23.33,
+  width: 32,
 };
 
 const alertMessage =
@@ -73,7 +78,6 @@ export const BaseProductsScreen = observer(
     store,
     tooltipTitle,
     ListComponent,
-    hideCompleteButton,
     primaryButtonTitle,
     onComplete,
   }: Props) => {
@@ -84,20 +88,12 @@ export const BaseProductsScreen = observer(
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
 
-    const scanButtonType = hideCompleteButton
-      ? ButtonType.primary
-      : ButtonType.secondary;
+    const scannedProductsCount = Object.keys(store.getProducts).length;
 
-    const ScanIcon = useMemo(
-      () => (
-        <SVGs.CodeIcon
-          color={hideCompleteButton ? colors.white : colors.purple}
-          width={32}
-          height={23.33}
-        />
-      ),
-      [hideCompleteButton],
-    );
+    const scanButtonType =
+      modalType === ProductModalType.ManageProduct && !scannedProductsCount
+        ? ButtonType.primary
+        : ButtonType.secondary;
 
     useEffect(() => {
       autorun(() => {
@@ -126,12 +122,15 @@ export const BaseProductsScreen = observer(
       navigation.navigate(AppNavigator.ScannerScreen);
     };
 
-    const onCompleteRemove = async () => {
+    const onCompleteRemove = useCallback(async () => {
+      isNeedNavigateBack.current = true;
+
       setIsLoading(true);
       await onComplete?.();
       setIsLoading(false);
 
-      isNeedNavigateBack.current = true;
+      if (modalType === ProductModalType.ManageProduct) return;
+
       navigation.reset({
         index: 0,
         routes: [
@@ -141,7 +140,7 @@ export const BaseProductsScreen = observer(
           },
         ],
       });
-    };
+    }, [modalType, navigation, onComplete]);
 
     const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
@@ -180,6 +179,25 @@ export const BaseProductsScreen = observer(
 
     const onPressSecondary = useCallback(() => setAlertVisible(false), []);
 
+    const CompleteButton = useMemo<JSX.Element | null>(() => {
+      if (
+        modalType !== ProductModalType.ManageProduct ||
+        (modalType === ProductModalType.ManageProduct && scannedProductsCount)
+      ) {
+        return (
+          <Button
+            disabled={!scannedProductsCount}
+            type={ButtonType.primary}
+            buttonStyle={styles.buttonContainer}
+            title={primaryButtonTitle ?? 'Complete'}
+            onPress={onCompleteRemove}
+          />
+        );
+      }
+
+      return null;
+    }, [modalType, onCompleteRemove, primaryButtonTitle, scannedProductsCount]);
+
     return (
       <AlertWrapper
         visible={alertVisible}
@@ -214,22 +232,15 @@ export const BaseProductsScreen = observer(
           <View style={styles.buttons}>
             <Button
               type={scanButtonType}
-              icon={ScanIcon}
+              icon={SVGs.CodeIcon}
+              iconProps={SCAN_ICON_PROPS}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
               title="Scan"
               onPress={onPressScan}
             />
 
-            {!hideCompleteButton && (
-              <Button
-                type={ButtonType.primary}
-                disabled={!Object.keys(store.getProducts).length}
-                buttonStyle={styles.buttonContainer}
-                title={primaryButtonTitle ?? 'Complete'}
-                onPress={onCompleteRemove}
-              />
-            )}
+            {CompleteButton}
           </View>
 
           <ProductModal

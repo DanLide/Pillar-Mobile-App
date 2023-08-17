@@ -1,9 +1,4 @@
-import React, {
-  NamedExoticComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import React, { NamedExoticComponent, useCallback, useMemo } from 'react';
 import {
   Dimensions,
   StyleProp,
@@ -45,7 +40,7 @@ const icons: Record<
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
-  [ToastType.TooltipInfo]: SVGs.TooltipInfoIcon,
+  [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,

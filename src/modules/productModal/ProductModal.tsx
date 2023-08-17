@@ -42,8 +42,10 @@ export interface ProductModalProps extends ProductModalParams {
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
+  onEditPress?: () => void;
+  onCancelPress?: () => void;
   onClose: () => void;
-  onSubmit: (product: ProductModel) => void;
+  onSubmit: (product: ProductModel) => void | unknown;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -138,7 +140,7 @@ export const ProductModal = memo(
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 maxValue={maxValue}
-                style={{ paddingTop: 16 }}
+                style={styles.productQuantityContainer}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
@@ -223,5 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purpleLight,
     overflow: 'hidden',
     padding: 0,
+  },
+  productQuantityContainer: {
+    paddingTop: 16,
   },
 });

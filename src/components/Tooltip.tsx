@@ -2,14 +2,16 @@ import React, {
   PropsWithChildren,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from 'react';
 import {
-  LayoutChangeEvent,
-  LayoutRectangle,
+  Dimensions,
+  Modal,
   Pressable,
   StyleProp,
   StyleSheet,
+  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
@@ -24,23 +26,25 @@ export interface TooltipProps extends PropsWithChildren {
   contentStyle?: StyleProp<ViewStyle>;
 }
 
+const { height: WINDOW_HEIGHT } = Dimensions.get('window');
+
 export const Tooltip: React.FC<TooltipProps> = ({
   children,
   message,
   contentStyle,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [containerHeight, setContainerHeight] = useState(0);
-  const [infoIconLayout, setInfoIconLayout] = useState<LayoutRectangle>({
+  const [infoIconLayout, setInfoIconLayout] = useState({
+    height: 0,
     x: 0,
     y: 0,
-    width: 0,
-    height: 0,
   });
 
+  const pickerRef = useRef<View>(null);
+
   const messageStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.message, { bottom: containerHeight - 12 }],
-    [containerHeight],
+    () => [styles.message, { bottom: WINDOW_HEIGHT - infoIconLayout.y }],
+    [infoIconLayout.y],
   );
 
   const mergedContentStyle = useMemo<StyleProp<ViewStyle>>(
@@ -51,35 +55,43 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const pointerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [
       styles.pointer,
-      { bottom: containerHeight - 16, left: infoIconLayout.x },
+      {
+        bottom: WINDOW_HEIGHT - infoIconLayout.y - 2,
+        left: infoIconLayout.x,
+      },
     ],
-    [containerHeight, infoIconLayout],
+    [infoIconLayout],
   );
 
-  const onContainerLayout = useCallback(
-    (event: LayoutChangeEvent) =>
-      setContainerHeight(event.nativeEvent.layout.height),
-    [],
-  );
+  const openTooltip = useCallback(async () => {
+    const [x, y, height] = await new Promise<[number, number, number]>(
+      resolve =>
+        pickerRef.current?.measureInWindow((x, y, width, height) =>
+          resolve([x, y, height]),
+        ),
+    );
 
-  const onInfoIconLayout = useCallback(
-    (event: LayoutChangeEvent) => setInfoIconLayout(event.nativeEvent.layout),
-    [],
-  );
+    setInfoIconLayout({ x, y, height });
+    setIsVisible(true);
+  }, []);
 
-  const openTooltip = useCallback(() => setIsVisible(true), []);
   const closeTooltip = useCallback(() => setIsVisible(false), []);
 
   return (
-    <>
-      {isVisible && <Pressable style={styles.overlay} onPress={closeTooltip} />}
-      <View style={styles.container} onLayout={onContainerLayout}>
-        <Pressable onPress={openTooltip} style={mergedContentStyle}>
-          <InfoIcon onLayout={onInfoIconLayout} />
-          {children}
-        </Pressable>
-        {isVisible && (
-          <>
+    <View style={styles.container}>
+      <Pressable onPress={openTooltip} style={mergedContentStyle}>
+        <View ref={pickerRef}>
+          <InfoIcon />
+        </View>
+        {children}
+      </Pressable>
+      {isVisible && (
+        <Modal transparent animationType="none">
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.overlay}
+            onPress={closeTooltip}
+          >
             <Toast
               id="tooltip"
               message={message}
@@ -89,10 +101,10 @@ export const Tooltip: React.FC<TooltipProps> = ({
               style={messageStyle}
             />
             <View style={pointerStyle} />
-          </>
-        )}
-      </View>
-    </>
+          </TouchableOpacity>
+        </Modal>
+      )}
+    </View>
   );
 };
 
@@ -108,11 +120,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   message: {
+    alignSelf: 'center',
     position: 'absolute',
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    zIndex: 1,
+    height: '100%',
+    width: '100%',
   },
   pointer: {
     position: 'absolute',

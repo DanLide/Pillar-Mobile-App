@@ -19,7 +19,7 @@ describe('Input', () => {
       {
         alignItems: 'center',
         backgroundColor: '#FFFFFF',
-        borderColor: '#E1E1E8',
+        borderColor: '#CBCBD4',
         borderRadius: 9.5,
         borderWidth: 1,
         flexDirection: 'row',

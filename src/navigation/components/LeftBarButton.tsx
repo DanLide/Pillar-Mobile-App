@@ -1,24 +1,43 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { useNavigation } from '@react-navigation/native';
-import { TouchableOpacity, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  ViewProps,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import { LeftBarType } from '../types';
 import { SVGs, colors } from '../../theme';
 import { testIds } from '../../helpers';
 
-interface LeftBarButtonProps {
+interface LeftBarButtonProps extends ViewProps {
   leftBarButtonType?: LeftBarType;
   testID?: string;
+  onPress?: () => void;
 }
 
 export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   leftBarButtonType,
+  onPress,
+  style,
   testID = 'leftBarButton',
 }) => {
   const navigation = useNavigation();
 
+  const containerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.iconButton, style],
+    [style],
+  );
+
   const onIconPress = () => {
+    if (onPress) {
+      onPress();
+      return;
+    }
+
     switch (leftBarButtonType) {
       case LeftBarType.Back:
       case LeftBarType.Close: {
@@ -28,7 +47,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
         break;
       }
       case LeftBarType.Drawer: {
-        navigation?.openDrawer()
+        navigation?.openDrawer();
         break;
       }
       default:
@@ -59,7 +78,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   return (
     <TouchableOpacity
       testID={testIds.idButton(testID)}
-      style={styles.iconButton}
+      style={containerStyle}
       onPress={onIconPress}
     >
       {renderIcon()}

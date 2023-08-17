@@ -8,7 +8,9 @@ interface Props {
 }
 
 export const ColoredTooltip: React.FC<Props> = ({ title, textStyles }) => (
-  <Text style={[styles.text, textStyles]}>{title}</Text>
+  <Text numberOfLines={1} style={[styles.text, textStyles]}>
+    {title}
+  </Text>
 );
 
 const styles = StyleSheet.create({
