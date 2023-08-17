@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';
@@ -116,7 +122,7 @@ export const BaseProductsScreen = observer(
       navigation.navigate(AppNavigator.ScannerScreen);
     };
 
-    const onCompleteRemove = async () => {
+    const onCompleteRemove = useCallback(async () => {
       isNeedNavigateBack.current = true;
 
       setIsLoading(true);
@@ -134,7 +140,7 @@ export const BaseProductsScreen = observer(
           },
         ],
       });
-    };
+    }, [modalType, navigation, onComplete]);
 
     const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
@@ -172,6 +178,25 @@ export const BaseProductsScreen = observer(
     }, [navigation]);
 
     const onPressSecondary = useCallback(() => setAlertVisible(false), []);
+
+    const CompleteButton = useMemo<JSX.Element | null>(() => {
+      if (
+        modalType !== ProductModalType.ManageProduct ||
+        (modalType === ProductModalType.ManageProduct && scannedProductsCount)
+      ) {
+        return (
+          <Button
+            disabled={!scannedProductsCount}
+            type={ButtonType.primary}
+            buttonStyle={styles.buttonContainer}
+            title={primaryButtonTitle ?? 'Complete'}
+            onPress={onCompleteRemove}
+          />
+        );
+      }
+
+      return null;
+    }, [modalType, onCompleteRemove, primaryButtonTitle, scannedProductsCount]);
 
     return (
       <AlertWrapper
@@ -215,15 +240,7 @@ export const BaseProductsScreen = observer(
               onPress={onPressScan}
             />
 
-            {modalType === ProductModalType.ManageProduct &&
-            scannedProductsCount ? (
-              <Button
-                type={ButtonType.primary}
-                buttonStyle={styles.buttonContainer}
-                title={primaryButtonTitle ?? 'Complete'}
-                onPress={onCompleteRemove}
-              />
-            ) : null}
+            {CompleteButton}
           </View>
 
           <ProductModal
