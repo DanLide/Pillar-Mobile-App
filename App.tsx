@@ -91,7 +91,7 @@ const App = (initialProps: InitialProps) => {
         <Image
           resizeMode='contain'
           source={splashScreenLogo}
-          style={styles.logo}
+          style={styles.splashImageBackground}
         />
         <SafeAreaView style={styles.versionContainer}>
           <Text style={styles.versionText}>
@@ -138,9 +138,9 @@ const styles = StyleSheet.create({
   mainContainerHidden: {
     opacity: 0,
   },
-  logo: {
-    width: '80%',
-    // height: 48,
+  splashImageBackground: {
+    width: 282,
+    height: 48,
     position: 'absolute',
     zIndex: 1,
     top: '40%',
