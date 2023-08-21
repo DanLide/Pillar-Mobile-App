@@ -11,21 +11,26 @@ import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
 
 interface Props {
-  hideOnHandCount?: boolean;
   item: ProductModel;
-  onPress: (item: ProductModel) => void;
+  disabled?: boolean;
+  hideOnHandCount?: boolean;
+  onPress?: (item: ProductModel) => void;
 }
 
 const { width } = Dimensions.get('window');
 
 export const SelectedProductsListItem = memo(
-  ({ item, onPress, hideOnHandCount }: Props) => {
+  ({ item, disabled, hideOnHandCount, onPress }: Props) => {
     const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
-    const handlePress = useCallback(() => onPress(item), [item, onPress]);
+    const handlePress = useCallback(() => onPress?.(item), [item, onPress]);
 
     return (
-      <TouchableOpacity style={styles.container} onPress={handlePress}>
+      <TouchableOpacity
+        disabled={disabled}
+        style={styles.container}
+        onPress={handlePress}
+      >
         <View style={styles.leftContainer}>
           <Text numberOfLines={1} style={styles.title}>
             {name}

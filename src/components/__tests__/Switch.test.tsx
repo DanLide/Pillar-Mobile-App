@@ -16,7 +16,7 @@ describe('Switch', () => {
   it('render without label', () => {
     const { getByTestId } = render(<Switch />);
     expect(
-      getByTestId(testIds.idContainer('switch')).props.children[0][1],
+      getByTestId(testIds.idContainer('switch')).props.children[0][0],
     ).toBeNull();
   });
 
@@ -54,7 +54,7 @@ describe('Switch', () => {
     const { getByTestId } = render(<Switch onPress={mockOnPress} />);
     const container = getByTestId(testIds.idContainer('switch'));
     act(() => {
-      container.props.children[0][0].props.onValueChange();
+      container.props.children[0][1].props.onValueChange();
     });
     expect(mockOnPress).toHaveBeenCalled();
   });

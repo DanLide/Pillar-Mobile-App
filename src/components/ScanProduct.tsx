@@ -24,6 +24,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
+import { isNil } from 'ramda';
 
 import { useSwitchState } from '../hooks';
 import Scanner from './Scanner';
@@ -44,6 +45,7 @@ const FLASH_TIME_MS = 200;
 export type ScanProductProps = {
   onScan: (code: Barcode['content']['data']) => void;
   isActive?: boolean;
+  isUPC?: boolean;
   scannedProductCount?: number;
 };
 
@@ -141,10 +143,12 @@ const QRButton: React.FC<QRButtonProps> = ({
 
 const oneBarcodeToolTipText = 'Point camera at product code';
 const multipleBarcodeToolTipText = 'Tap the code you want to scan';
+const upcToolTipText = 'Scan UPC for product editing';
 
 const ScanProduct: React.FC<ScanProductProps> = ({
   onScan,
   isActive,
+  isUPC,
   scannedProductCount,
 }) => {
   const frameRef = useRef<Frame | null>(null);
@@ -357,8 +361,13 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     setIsZoomToggled();
   };
 
-  const tooltipText =
-    barcodesLength > 1 ? multipleBarcodeToolTipText : oneBarcodeToolTipText;
+  const tooltipText = useMemo<string>(() => {
+    if (isUPC) return upcToolTipText;
+
+    return barcodesLength > 1
+      ? multipleBarcodeToolTipText
+      : oneBarcodeToolTipText;
+  }, [barcodesLength, isUPC]);
 
   const renderCenterScanSquare = useMemo(
     () => (
@@ -448,6 +457,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           style={styles.scanner}
           onRead={onRead}
           isActive={isActive}
+          isUPC={isUPC}
           onLayout={onLayoutScanner}
         />
       </View>
@@ -463,10 +473,14 @@ const ScanProduct: React.FC<ScanProductProps> = ({
         >
           {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
         </TouchableOpacity>
-        <ProductListButton
-          containerStyle={styles.listButtonContainer}
-          count={scannedProductCount}
-        />
+        {isNil(scannedProductCount) ? (
+          <View />
+        ) : (
+          <ProductListButton
+            containerStyle={styles.listButtonContainer}
+            count={scannedProductCount}
+          />
+        )}
         <TouchableOpacity
           style={[
             styles.smallBottomButton,
@@ -512,9 +526,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     zIndex: 100,
-    marginHorizontal: '5%',
-    columnGap: 8,
+    gap: 8,
+    marginHorizontal: '10%',
+    width: '100%',
   },
   smallBottomButton: {
     justifyContent: 'center',

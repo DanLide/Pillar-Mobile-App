@@ -10,7 +10,7 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from '../../contexts';
-import { getProductMinQty } from '../../data/helpers';
+import { getProductStepQty } from '../../data/helpers';
 import {
   ScannerModalStoreType,
   CurrentProductStoreType,
@@ -40,7 +40,7 @@ export const ScannerScreen: React.FC = observer(() => {
         product.productId,
       );
 
-      const minQty = getProductMinQty(product.inventoryUseTypeId);
+      const minQty = getProductStepQty(product.inventoryUseTypeId);
 
       const toastType =
         removedProductCount >= product.onHand || product.onHand < minQty

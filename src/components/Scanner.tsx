@@ -1,28 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  ViewStyle,
-  View,
   ActivityIndicator,
+  Dimensions,
   LayoutChangeEvent,
   LayoutRectangle,
-  Dimensions,
+  View,
+  ViewStyle,
 } from 'react-native';
 import { runOnJS } from 'react-native-reanimated';
 import {
-  scanBarcodes,
-  BarcodeFormat,
   Barcode,
+  BarcodeFormat,
+  scanBarcodes,
 } from 'vision-camera-code-scanner';
 import {
+  Camera,
+  CameraDeviceFormat,
+  CameraProps,
+  Frame,
   useCameraDevices,
   useFrameProcessor,
-  Frame,
-  Camera,
-  CameraProps,
-  CameraDeviceFormat,
 } from 'react-native-vision-camera';
 
 export interface ScannerProps extends Partial<CameraProps> {
+  isUPC?: boolean;
   containerStyle?: ViewStyle;
   onRead: (barcode: Barcode[], frame: Frame) => void;
 }
@@ -34,7 +35,12 @@ const IPHONE_WIDTH = 2592;
 const VIDEO_WIDTH = isIpod ? IPOD_WIDTH : IPHONE_WIDTH;
 const PIXEL_FORMAT = '420v';
 
-const Scanner: React.FC<ScannerProps> = ({ onRead, ...props }) => {
+const Scanner: React.FC<ScannerProps> = ({
+  isActive = false,
+  isUPC,
+  onRead,
+  ...props
+}) => {
   const devices = useCameraDevices();
   const device = devices.back;
   const cameraRef = useRef<Camera | null>(null);
@@ -46,9 +52,13 @@ const Scanner: React.FC<ScannerProps> = ({ onRead, ...props }) => {
     frame => {
       'worklet';
 
-      const barcodes = scanBarcodes(frame, [BarcodeFormat.ALL_FORMATS], {
-        checkInverted: true,
-      });
+      const barcodes = scanBarcodes(
+        frame,
+        [isUPC ? BarcodeFormat.UPC_A : BarcodeFormat.ALL_FORMATS],
+        {
+          checkInverted: true,
+        },
+      );
 
       const filtered = barcodes.filter((value, index, self) => {
         return (
@@ -108,6 +118,7 @@ const Scanner: React.FC<ScannerProps> = ({ onRead, ...props }) => {
   return (
     <View onLayout={handleLayout} style={{ flex: 1 }}>
       <Camera
+        isActive={isActive}
         ref={cameraRef}
         frameProcessor={frameProcessor}
         audio={false}

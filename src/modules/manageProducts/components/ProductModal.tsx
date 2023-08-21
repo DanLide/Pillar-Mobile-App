@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/default
@@ -9,21 +9,21 @@ import Animated, {
   withSpring,
   WithSpringConfig,
 } from 'react-native-reanimated';
-import { find, whereEq } from 'ramda';
 
 import { Button, ButtonType, Modal } from '../../../components';
 import {
   Description,
   ProductModalProps,
   ProductModalType,
-  ProductQuantity,
 } from '../../productModal';
 
-import { colors, fonts } from '../../../theme';
-import { BadgeType, InfoBadge } from './InfoBadge';
+import { colors } from '../../../theme';
 import { ToastContextProvider } from '../../../contexts';
-import { categoriesStore, suppliersStore } from '../../../stores';
 import { observer } from 'mobx-react';
+import { EditProduct } from './EditProduct';
+import { manageProductsStore } from '../stores';
+import { permissionProvider } from '../../../data/providers';
+import { ViewProduct } from './ViewProduct';
 
 enum ScrollDirection {
   Down,
@@ -41,56 +41,29 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
 
 export const ProductModal = observer(
   ({
-    type,
     product,
+    onHand,
+    maxValue,
+    type,
     stockName,
     toastType,
     onToastAction,
     isEdit,
-    maxValue = 0,
-    onHand = 0,
     onSubmit,
+    onEditPress,
+    onCancelPress,
     onClose,
-    onChangeProductQuantity,
   }: ProductModalProps) => {
+    const store = useRef(manageProductsStore).current;
+
     const [isLoading, setIsLoading] = useState(false);
 
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
+    const canEditProduct = permissionProvider.canEditProduct();
+
     const topOffset = useSharedValue(modalCollapsedOffset);
-
-    const category = useMemo(
-      () =>
-        find(whereEq({ id: product?.categoryId }), categoriesStore.categories),
-      [product?.categoryId],
-    );
-
-    const supplier = useMemo(
-      () =>
-        find(
-          whereEq({ partyRoleId: product?.supplierPartyRoleId }),
-          suppliersStore.suppliers,
-        ),
-      [product?.supplierPartyRoleId],
-    );
-
-    const restockFrom = useMemo(
-      () =>
-        find(
-          whereEq({ partyRoleId: product?.supplierPartyRoleId }),
-          suppliersStore.enabledSuppliers,
-        ),
-      [product?.supplierPartyRoleId],
-    );
-
-    const handleSubmit = useCallback(async () => {
-      if (!product) return;
-
-      setIsLoading(true);
-      await onSubmit(product);
-      setIsLoading(false);
-    }, [onSubmit, product]);
 
     const scrollTo = useCallback(
       (destination: number) => {
@@ -102,8 +75,28 @@ export const ProductModal = observer(
 
     const clearProductModalStoreOnClose = useCallback(() => {
       scrollTo(modalCollapsedOffset);
+      onCancelPress?.();
       onClose();
-    }, [onClose, modalCollapsedOffset, scrollTo]);
+    }, [scrollTo, modalCollapsedOffset, onCancelPress, onClose]);
+
+    const handleSubmit = useCallback(async () => {
+      if (!product) return;
+
+      setIsLoading(true);
+      const error = await onSubmit(product);
+      setIsLoading(false);
+
+      if (!isEdit && !error) clearProductModalStoreOnClose();
+    }, [clearProductModalStoreOnClose, isEdit, onSubmit, product]);
+
+    const handleEdit = useCallback(() => {
+      store.setUpdatedProduct(product);
+      onEditPress?.();
+    }, [onEditPress, product, store]);
+
+    const handleCancel = useCallback(() => {
+      onCancelPress?.();
+    }, [onCancelPress]);
 
     const scrollHandler = useAnimatedScrollHandler(
       {
@@ -136,91 +129,56 @@ export const ProductModal = observer(
         semiTitle="View Product"
       >
         <ToastContextProvider disableSafeArea duration={0} offset={35}>
-          <Animated.ScrollView
-            onScroll={scrollHandler}
-            stickyHeaderIndices={[0]}
-            contentContainerStyle={styles.contentContainer}
-            bounces={false}
+          <KeyboardAvoidingView
+            keyboardVerticalOffset={85}
+            behavior="padding"
+            style={styles.keyboardAvoidingView}
           >
-            <Description product={product} topOffset={topOffset} />
-            <View style={styles.settings}>
-              <ProductQuantity
-                type={type}
-                product={product}
-                onChangeProductQuantity={onChangeProductQuantity}
-                isEdit={isEdit}
-                jobSelectable={false}
-                toastType={toastType}
-                maxValue={maxValue}
-                onHand={onHand}
-                onToastAction={onToastAction}
+            <Animated.ScrollView
+              onScroll={scrollHandler}
+              stickyHeaderIndices={[0]}
+              contentContainerStyle={styles.contentContainer}
+              bounces={false}
+              nestedScrollEnabled
+            >
+              <Description product={product} topOffset={topOffset} />
+              <View style={styles.settings}>
+                {isEdit ? (
+                  <EditProduct
+                    onHand={onHand}
+                    maxValue={maxValue}
+                    toastType={toastType}
+                    onToastAction={onToastAction}
+                  />
+                ) : (
+                  <ViewProduct
+                    onHand={onHand}
+                    maxValue={maxValue}
+                    toastType={toastType}
+                    onToastAction={onToastAction}
+                  />
+                )}
+              </View>
+            </Animated.ScrollView>
+            <View style={styles.buttons}>
+              {canEditProduct && (
+                <Button
+                  title={isEdit ? 'Cancel' : 'Edit'}
+                  type={ButtonType.secondary}
+                  disabled={isLoading}
+                  buttonStyle={styles.buttonContainer}
+                  onPress={isEdit ? handleCancel : handleEdit}
+                />
+              )}
+              <Button
+                title={isEdit ? 'Save' : 'Done'}
+                type={ButtonType.primary}
+                isLoading={isLoading}
+                buttonStyle={styles.buttonContainer}
+                onPress={handleSubmit}
               />
-              <Text style={styles.category}>{category?.description}</Text>
-              <View style={styles.minMaxContainer}>
-                <InfoBadge
-                  type={BadgeType.Large}
-                  title="Minimum Quantity"
-                  subtitle={product?.min}
-                />
-                <Text style={styles.slash}>/</Text>
-                <InfoBadge
-                  type={BadgeType.Large}
-                  title="Maximum Quantity"
-                  subtitle={product?.max}
-                />
-              </View>
-              <View style={styles.orderSettings}>
-                <InfoBadge
-                  title="Pieces Per"
-                  titleWithNewLine="Container"
-                  subtitle={product?.unitsPerContainer}
-                />
-                <InfoBadge
-                  title="Shipment"
-                  titleWithNewLine="Quantity"
-                  subtitle={product?.orderMultiple}
-                />
-                <InfoBadge title="On Order" subtitle={product?.onOrder} />
-              </View>
-              <View style={styles.bottomInfo}>
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Distributor"
-                  subtitle={supplier?.name}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Restock From"
-                  subtitle={restockFrom?.name}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="UPC"
-                  subtitle={product?.upc}
-                />
-                <InfoBadge
-                  type={BadgeType.Medium}
-                  title="Recoverable"
-                  subtitle={product?.isRecoverable ? 'Yes' : 'No'}
-                />
-              </View>
             </View>
-          </Animated.ScrollView>
-          <View style={styles.buttons}>
-            <Button
-              title="Edit"
-              type={ButtonType.secondary}
-              disabled={isLoading}
-              buttonStyle={styles.buttonContainer}
-            />
-            <Button
-              title="Done"
-              type={ButtonType.primary}
-              isLoading={isLoading}
-              buttonStyle={styles.buttonContainer}
-              onPress={handleSubmit}
-            />
-          </View>
+          </KeyboardAvoidingView>
         </ToastContextProvider>
       </Modal>
     );
@@ -228,9 +186,6 @@ export const ProductModal = observer(
 );
 
 const styles = StyleSheet.create({
-  bottomInfo: {
-    gap: 16,
-  },
   buttonContainer: {
     flex: 1,
     height: 48,
@@ -242,34 +197,16 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: colors.white,
   },
-  category: {
-    color: colors.black,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 14,
-    lineHeight: 20,
-  },
   contentContainer: {
     gap: 24,
-    paddingBottom: 24,
+    paddingBottom: 56,
   },
-  minMaxContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  orderSettings: {
-    alignItems: 'flex-end',
-    flexDirection: 'row',
-    gap: 40,
+  keyboardAvoidingView: {
+    flex: 1,
   },
   settings: {
     alignItems: 'center',
     gap: 24,
-  },
-  slash: {
-    color: colors.grayDark3,
-    fontFamily: fonts.TT_Light,
-    fontSize: 44,
-    paddingTop: 16,
   },
   titleContainer: {
     backgroundColor: colors.purpleLight,

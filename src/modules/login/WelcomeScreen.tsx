@@ -3,10 +3,11 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { Button, ButtonType } from '../../components';
-import Logo from '../../../assets/images/Logo.png';
+import Logo from '../../../assets/images/logo.png';
 import { colors, fonts, SVGs } from '../../theme';
 import { AppNavigator, UnauthStackParamsList } from '../../navigation/types';
 import { ssoLogin } from '../../data/ssoLogin';
+import { SvgProps } from 'react-native-svg';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -14,6 +15,8 @@ interface Props {
     AppNavigator.WelcomeScreen
   >;
 }
+
+const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
 export const WelcomeScreen = ({ navigation }: Props) => {
   const onPressContinue = () => {
@@ -39,10 +42,11 @@ export const WelcomeScreen = ({ navigation }: Props) => {
         <Text style={styles.text}>3M Employee ?</Text>
         <Button
           type={ButtonType.primary}
-          icon={<SVGs.ConnectedWorker color={colors.purpleDark} />}
+          icon={SVGs.ConnectedWorker}
+          iconProps={LOGIN_ICON_PROPS}
           buttonStyle={styles.ssoLoginButton}
           textStyle={styles.ssoLoginButtonText}
-          title="Log In with Single Sing-On (SSO)"
+          title="Log In with Single Sign-On (SSO)"
           onPress={onPressSSOLogin}
         />
       </View>

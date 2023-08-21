@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { encode as btoa } from 'base-64';
 
@@ -11,16 +11,21 @@ import {
   ScannerModalStoreType,
   StockProductStoreType,
 } from '../../stores/types';
-import { ProductModalParams, ProductModalType } from '../productModal';
+import {
+  ProductModalParams,
+  ProductModalType,
+  ProductQuantityToastType,
+} from '../productModal';
 import { manageProductsStore } from './stores';
 import { onUpdateProduct } from '../../data/updateProduct';
 import { fetchProductDetails } from '../../data/fetchProductDetails';
 import { useToast } from 'react-native-toast-notifications';
 import { ToastType } from '../../contexts/types';
 import {
-  ToastContextProvider,
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
 } from '../../contexts';
+import { onUpdateProductQuantity } from '../../data/updateProductQuantity';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -31,13 +36,27 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-const ScannerScreen: React.FC = observer(() => {
+const ScannerScreen = observer(() => {
+  const [isEdit, setIsEdit] = useState(false);
+  const [toastType, setToastType] = useState<
+    ProductQuantityToastType | undefined
+  >();
+
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
   const store = useRef<BaseProductsStore>(manageProductsStore).current;
 
   const toast = useToast();
+
+  const productModalParams = useMemo<ProductModalParams>(
+    () => ({
+      ...modalParams,
+      isEdit,
+      toastType,
+    }),
+    [isEdit, modalParams, toastType],
+  );
 
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
@@ -49,36 +68,60 @@ const ScannerScreen: React.FC = observer(() => {
     [store],
   );
 
-  const closeModal = useCallback(() => setModalParams(initModalParams), []);
+  const closeModal = useCallback(() => {
+    setModalParams(initModalParams);
+  }, []);
 
   const fetchProduct = useCallback(
     (code: string) => fetchProductDetails(store, btoa(code)),
     [store],
   );
 
-  const updateProduct = useCallback(async () => {
-    const error = await onUpdateProduct(manageProductsStore);
+  const updateProduct = useCallback(
+    async (product: ProductModel) => {
+      const updateProductFunction = isEdit
+        ? onUpdateProduct
+        : onUpdateProductQuantity;
 
-    if (error) {
-      setModalParams({
-        type: ProductModalType.ManageProduct,
-        toastType: ToastType.ProductUpdateError,
-      });
-      return;
-    }
+      const error = await updateProductFunction(manageProductsStore);
 
-    closeModal();
-    toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
-  }, [closeModal, toast]);
+      if (error) {
+        setToastType(ToastType.ProductUpdateError);
+        return error;
+      }
+
+      if (isEdit) {
+        setIsEdit(false);
+        setToastType(ToastType.ProductUpdateSuccess);
+        return;
+      }
+
+      store.addProduct(product);
+
+      toast.show('Product Updated', { type: ToastType.ProductUpdateSuccess });
+    },
+    [isEdit, store, toast],
+  );
+
+  const handleEditPress = useCallback(() => {
+    setIsEdit(true);
+  }, []);
+
+  const handleCancelPress = useCallback(() => {
+    setIsEdit(false);
+    setToastType(undefined);
+  }, []);
 
   return (
     <BaseScannerScreen
       store={store}
-      modalParams={modalParams}
+      modalParams={productModalParams}
       onProductScan={onProductScan}
       onFetchProduct={fetchProduct}
       onSubmit={updateProduct}
       onCloseModal={closeModal}
+      onEditPress={handleEditPress}
+      onCancelPress={handleCancelPress}
       ProductModalComponent={ProductModal}
     />
   );

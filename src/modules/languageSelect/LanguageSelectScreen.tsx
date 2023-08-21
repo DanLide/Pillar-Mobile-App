@@ -6,7 +6,7 @@ import { AppNavigator } from '../../navigation/types';
 
 import { Button } from '../../components';
 
-import { authStore } from '../../stores';
+import { authStore, ssoStore } from '../../stores';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -14,9 +14,13 @@ interface Props {
 
 export const LanguageSelectScreen: React.FC<Props> = ({ navigation }) => {
   const onSelectLanguage = () => {
-    // TODO: make API call and handle errors
+    // TODO: make API call and handle errors and remove setIsLanguage
+    authStore.setIsLanguage(true);
+
     !authStore.isTnCSelected
       ? navigation.navigate(AppNavigator.TermsScreen)
+      : !ssoStore.getCurrentSSO
+      ? navigation.navigate(AppNavigator.SelectSSOScreen)
       : navigation.reset({
           index: 0,
           routes: [{ name: AppNavigator.Drawer }],

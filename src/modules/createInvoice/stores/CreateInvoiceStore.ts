@@ -5,7 +5,7 @@ import { ProductModel } from '../../../stores/types';
 import { getReservedCountById } from '../../../stores/helpers';
 import { JobModel } from '../../jobsList/stores/JobsStore';
 
-const PRODUCT_MAX_COUNT = 999;
+const PRODUCT_MAX_COUNT = 9999;
 
 export class CreateInvoiceStore extends BaseProductsStore {
   currentJob?: JobModel;

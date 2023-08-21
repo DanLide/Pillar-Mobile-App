@@ -23,7 +23,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
       navigation={navigation}
       store={store}
       contextTitle="Return Complete"
-      contextBody="You Have successfully returned the following items from"
+      contextBody="You have successfully returned the following items from"
       errorListTitle="The following products were not returned"
       errorToastMessage="Sorry, some of the products on your list were not returned from inventory"
     />

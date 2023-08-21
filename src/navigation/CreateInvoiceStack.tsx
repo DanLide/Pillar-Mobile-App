@@ -2,7 +2,12 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { getScreenOptions } from './helpers';
-import { AppNavigator, LeftBarType, CreateInvoiceParamList } from './types';
+import { 
+  AppNavigator,
+  LeftBarType,
+  CreateInvoiceParamList,
+  RightBarType,
+} from './types';
 
 import { SelectJob } from '../modules/createInvoice/SelectJob';
 import { ScannerScreen } from '../modules/createInvoice/ScannerScreen';
@@ -30,6 +35,7 @@ export const CreateInvoiceStack: React.FC = () => {
         options={getScreenOptions({
           title: 'Create Invoice',
           leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.QuestionMark,
         })}
       />
       <Stack.Screen

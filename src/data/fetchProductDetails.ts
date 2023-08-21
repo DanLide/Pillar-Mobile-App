@@ -16,6 +16,7 @@ import {
 } from '../stores/types';
 import { SupplierModel } from '../stores/SuppliersStore';
 import { suppliersStore } from '../stores';
+import { find, whereEq } from 'ramda';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
@@ -62,7 +63,11 @@ export class FetchProductDetails extends Task {
       getEnabledSuppliersByProductIdAPI(product.productId),
     ]);
 
-    const { max, min, orderMultiple } = settings;
+    const { max, min, orderMultiple, replenishedFormId } = settings;
+
+    const restockFromId =
+      replenishedFormId ||
+      find(whereEq({ name: 'Distributor' }), enabledSuppliers)?.partyRoleId;
 
     this.productContext.enabledSuppliers = enabledSuppliers;
 
@@ -71,6 +76,7 @@ export class FetchProductDetails extends Task {
       max,
       min,
       orderMultiple,
+      replenishedFormId: restockFromId,
     };
   }
 }

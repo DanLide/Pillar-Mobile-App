@@ -14,7 +14,7 @@ import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
 import { FooterDescription } from './FooterDescription';
 import { ToastType } from '../../../../contexts/types';
-import { getProductMinQty } from '../../../../data/helpers';
+import { getProductStepQty } from '../../../../data/helpers';
 import { InventoryUseType } from '../../../../constants/common.enum';
 import { ProductModel } from '../../../../stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
@@ -23,16 +23,20 @@ import { Description } from './Description';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
-  | ToastType.ProductUpdateError;
+  | ToastType.ProductUpdateError
+  | ToastType.ProductUpdateSuccess;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
   maxValue: number;
-  onHand: number;
+  minValue?: number;
+  onHand?: number;
   isEdit?: boolean;
   jobSelectable?: boolean;
   toastType?: ProductQuantityToastType;
   product?: ProductModel;
+  disabled?: boolean;
+  hideCount?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -46,6 +50,7 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
     "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
   [ToastType.ProductUpdateError]:
     'Sorry, there was an issue saving the product update',
+  [ToastType.ProductUpdateSuccess]: 'Product Updated',
 };
 
 export const ProductQuantity: React.FC<Props> = observer(
@@ -56,7 +61,10 @@ export const ProductQuantity: React.FC<Props> = observer(
     jobSelectable,
     toastType,
     maxValue,
+    minValue,
     onHand,
+    disabled,
+    hideCount,
     style,
     onChangeProductQuantity,
     onPressAddToList,
@@ -80,7 +88,7 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const { isRecoverable, inventoryUseTypeId, reservedCount } = product;
 
-    const minQty = getProductMinQty(inventoryUseTypeId);
+    const stepQty = getProductStepQty(inventoryUseTypeId);
 
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent
@@ -101,30 +109,26 @@ export const ProductQuantity: React.FC<Props> = observer(
 
     const renderBottomButton = () => {
       if (type === ProductModalType.ManageProduct) {
-        return null
+        return null;
       }
 
       if (isEdit && reservedCount === 0) {
         return (
-          <Pressable
-            style={styles.deleteButton}
-            onPress={onRemove}
-          >
+          <Pressable style={styles.deleteButton} onPress={onRemove}>
             <SVGs.TrashIcon color={colors.redDark} />
-            <Text style={styles.deleteButtonText}>
-              Delete
-            </Text>
+            <Text style={styles.deleteButtonText}>Delete</Text>
           </Pressable>
-        )
+        );
       }
 
       const buttonLabel =
         (jobSelectable && isRecoverable) ||
-          type === ProductModalType.CreateInvoice
+        type === ProductModalType.CreateInvoice
           ? 'Next'
           : 'Done';
 
-      const disabled = toastType === ToastType.ProductQuantityError || reservedCount ===0
+      const disabled =
+        toastType === ToastType.ProductQuantityError || reservedCount === 0;
 
       return (
         <Button
@@ -134,8 +138,8 @@ export const ProductQuantity: React.FC<Props> = observer(
           title={buttonLabel}
           onPress={onPressButton}
         />
-      )
-    }
+      );
+    };
 
     return (
       <View style={[styles.container, style]}>
@@ -144,24 +148,28 @@ export const ProductQuantity: React.FC<Props> = observer(
         )}
         <View>
           <EditQuantity
-            isEdit={isEdit}
+            isEdit={isEdit && type !== ProductModalType.ManageProduct}
             currentValue={reservedCount}
             maxValue={maxValue}
-            minValue={minQty}
-            stepValue={minQty}
-            disabled={toastType === ToastType.ProductQuantityError}
+            minValue={minValue ?? stepQty}
+            stepValue={stepQty}
+            disabled={disabled}
+            hideCount={hideCount}
+            error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             onChange={onChange}
             onRemove={onRemove}
           />
-          <FooterDescription
-            hideOnHandCount={
-              type === ProductModalType.CreateInvoice ||
-              type === ProductModalType.ManageProduct
-            }
-            product={product}
-            onHand={onHand}
-          />
+          {type === ProductModalType.ManageProduct && isEdit ? null : (
+            <FooterDescription
+              hideOnHandCount={
+                type === ProductModalType.CreateInvoice ||
+                type === ProductModalType.ManageProduct
+              }
+              product={product}
+              onHand={onHand}
+            />
+          )}
         </View>
 
         {jobSelectable && toastType !== ToastType.ProductQuantityError && (

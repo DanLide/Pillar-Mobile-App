@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import { getVersion } from 'react-native-device-info';
+import { VolumeManager } from 'react-native-volume-manager';
 
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
@@ -21,7 +22,7 @@ import { addTracks, setupPlayer } from './src/components/Sound';
 
 import autoLogoutService, { AUTO_LOGOUT_TIMEOUT } from "./src/data/helpers/autologoutService";
 import splashScreenBackground from './assets/images/SplashScreenBackground.png';
-import splashScreenLogo from './assets/images/Logo1.png';
+import splashScreenLogo from './assets/images/logo.png';
 import { colors, fonts } from './src/theme';
 
 interface InitialProps {
@@ -47,6 +48,7 @@ const App = (initialProps: InitialProps) => {
       }
     }
     setup();
+    VolumeManager.setVolume(1);
   }, []);
 
   console.log(initialProps['rntoken']);

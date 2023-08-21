@@ -6,7 +6,7 @@ import { getVersion } from 'react-native-device-info';
 
 import { authStore, ssoStore } from '../../stores';
 import { colors, fonts, SVGs } from '../../theme';
-import Logo from '../../../assets/images/Logo.png';
+import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
 import { AppNavigator } from '../types';
@@ -14,13 +14,14 @@ import { AppNavigator } from '../types';
 export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
+  const isNavigationToShopSelectAvailable =
+    (ssoStore.getSSOList?.length || 0) > 1;
   const version = `Version ${getVersion()}`;
   const onLogout = () => {
     authStore.logOut();
   };
 
   const onNavigateToSelectShopLocation = () => {
-    navigation.closeDrawer();
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
   };
 
@@ -46,8 +47,8 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
         title={ssoStore.getCurrentSSO?.name || ''}
         subtitle={ssoStore.getCurrentSSO?.address}
         icon={<SVGs.CabinetIcon />}
-        showChevron
-        disabled={false}
+        showChevron={isNavigationToShopSelectAvailable}
+        disabled={!isNavigationToShopSelectAvailable}
       />
       <DrawerListItem
         title={'Settings'}
