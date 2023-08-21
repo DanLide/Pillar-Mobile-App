@@ -9,8 +9,14 @@ import {
   TextStyle,
   View,
   ViewStyle,
+  Pressable,
 } from 'react-native';
 import { SvgProps } from 'react-native-svg';
+// eslint-disable-next-line import/default
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 
 import { colors, fonts } from '../theme';
 import { testIds } from '../helpers';
@@ -22,9 +28,11 @@ export enum InputType {
 interface Props extends TextInputProps {
   type?: InputType;
   label?: string;
+  rightLabel?: string;
   containerStyle?: StyleProp<ViewStyle>;
   rightIcon?: React.NamedExoticComponent<SvgProps> | React.FC<SvgProps>;
   testID?: string;
+  onRightIconPress?: () => void;
 }
 
 const HIT_SLOP: Insets = {
@@ -39,8 +47,10 @@ const Input = forwardRef(
     {
       type,
       label,
+      rightLabel,
       containerStyle,
       rightIcon: RightIcon,
+      onRightIconPress,
       style,
       testID = 'input',
       ...props
@@ -72,24 +82,46 @@ const Input = forwardRef(
       }
     }, [style, type]);
 
+    const labelStyle = useAnimatedStyle(() => ({
+      color: isFocused ? colors.purpleDark : colors.grayDark2,
+      fontSize: withTiming(isFocused || props.value?.length ? 12 : 16, {
+        duration: 200,
+      }),
+      top: withTiming(isFocused || props.value?.length ? -8 : 16, {
+        duration: 200,
+      }),
+      left: withTiming(isFocused || props.value?.length ? 6 : 16, {
+        duration: 200,
+      }),
+    }));
+
     const Label = useMemo<JSX.Element | null>(() => {
       if (!label) return null;
 
       return (
-        <View style={styles.labelContainer}>
-          <Text style={[styles.label, isFocused && styles.labelActive]}>
-            {label}
-          </Text>
-        </View>
+        <Animated.Text style={[styles.label, labelStyle]}>
+          {label}
+        </Animated.Text>
       );
-    }, [isFocused, label]);
+    }, [label, labelStyle]);
 
-    const handleFocus = useCallback(() => setIsFocused(true), []);
-    const handleBlur = useCallback(() => setIsFocused(false), []);
+    const RightLabel = useMemo<JSX.Element | null>(() => {
+      if (!rightLabel) return null;
+
+      return <Text style={styles.rightLabelContainer}>{rightLabel}</Text>;
+    }, [rightLabel]);
+
+    const handleFocus = useCallback(() => {
+      setIsFocused(true);
+    }, []);
+    const handleBlur = useCallback(() => {
+      setIsFocused(false);
+    }, []);
 
     return (
       <View style={mergedContainerStyle} testID={testIds.idContainer(testID)}>
         {Label}
+        {RightLabel}
         <TextInput
           hitSlop={HIT_SLOP}
           style={inputStyle}
@@ -99,7 +131,11 @@ const Input = forwardRef(
           ref={ref}
           {...props}
         />
-        {RightIcon && <RightIcon color={colors.black} />}
+        {RightIcon && (
+          <Pressable style={styles.rightIcon} onPress={onRightIconPress}>
+            <RightIcon color={colors.grayDark3} />
+          </Pressable>
+        )}
       </View>
     );
   },
@@ -115,7 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 4.5,
     height: 47,
-    paddingHorizontal: 14,
+    paddingLeft: 14,
     paddingVertical: 9.5,
   },
   containerActive: {
@@ -144,10 +180,14 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   label: {
-    color: colors.grayDark2,
     fontFamily: fonts.TT_Regular,
-    fontSize: 12,
     lineHeight: 16,
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    left: 6,
+    paddingHorizontal: 1,
+    position: 'absolute',
+    top: -8,
   },
   labelActive: {
     color: colors.purpleDark,
@@ -156,7 +196,25 @@ const styles = StyleSheet.create({
   labelContainer: {
     backgroundColor: colors.white,
     borderRadius: 8,
-    left: 6,
+    paddingHorizontal: 1,
+    position: 'absolute',
+    zIndex: 1,
+  },
+  rightIcon: {
+    height: 44,
+    paddingHorizontal: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 5,
+  },
+  rightLabelContainer: {
+    color: colors.grayDark2,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+    lineHeight: 16,
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    right: 6,
     paddingHorizontal: 1,
     position: 'absolute',
     top: -8,

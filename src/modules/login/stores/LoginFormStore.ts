@@ -1,4 +1,4 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable, computed } from 'mobx';
 
 interface LoginForm {
   username: string;
@@ -14,6 +14,16 @@ export class LoginFormStore implements LoginForm {
     this.password = '';
 
     makeObservable(this);
+  }
+
+  @computed
+  get getUsername() {
+    return this.username;
+  }
+
+  @computed
+  get getPassword() {
+    return this.password;
   }
 
   @action setUsername(value: string) {

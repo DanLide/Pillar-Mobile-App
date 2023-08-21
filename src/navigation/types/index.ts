@@ -5,7 +5,7 @@ export enum AppNavigator {
   // UnauthStack
   UnauthStack = 'UnauthStack',
   WelcomeScreen = 'WelcomeScreen',
-  LoginScreen = 'LoginScreen',
+  LoginViaCredentialsScreen = 'LoginViaCredentialsScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -56,7 +56,7 @@ export type AppStackParamList = {
 
 export type UnauthStackParamsList = {
   [AppNavigator.WelcomeScreen]: undefined;
-  [AppNavigator.LoginScreen]: undefined;
+  [AppNavigator.LoginViaCredentialsScreen]: undefined;
 };
 
 export type HomeStackParamList = {

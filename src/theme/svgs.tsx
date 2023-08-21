@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import Svg, { Path, SvgProps, Mask, G, Rect, Line } from 'react-native-svg';
 import { StyleSheet, View } from 'react-native';
+import { colors } from '.';
 
 export interface SvgPropsWithColors extends SvgProps {
   primaryColor?: string;
@@ -791,8 +792,38 @@ export const DownIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const OpenEyeIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 1.5c1.379 0 2.5 1.122 2.5 2.5s-1.121 2.5-2.5 2.5A2.503 2.503 0 0 1 9.5 12c0-1.378 1.121-2.5 2.5-2.5ZM12 5C5.924 5 1 12 1 12s4.924 7 11 7 11-7 11-7-4.924-7-11-7Zm0 1.5c4.028 0 7.642 3.763 9.095 5.502-1.45 1.74-5.05 5.498-9.095 5.498-4.028 0-7.642-3.763-9.095-5.502C4.355 10.258 7.955 6.5 12 6.5Z"
+      clipRule="evenodd"
+    />
+    <Mask id="a" width={22} height={14} x={1} y={5} maskUnits="userSpaceOnUse">
+      <Path
+        fill={colors.white}
+        fillRule="evenodd"
+        d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm0 1.5c1.379 0 2.5 1.122 2.5 2.5s-1.121 2.5-2.5 2.5A2.503 2.503 0 0 1 9.5 12c0-1.378 1.121-2.5 2.5-2.5ZM12 5C5.924 5 1 12 1 12s4.924 7 11 7 11-7 11-7-4.924-7-11-7Zm0 1.5c4.028 0 7.642 3.763 9.095 5.502-1.45 1.74-5.05 5.498-9.095 5.498-4.028 0-7.642-3.763-9.095-5.502C4.355 10.258 7.955 6.5 12 6.5Z"
+        clipRule="evenodd"
+      />
+    </Mask>
+  </Svg>
+));
+
+export const CloseEyeIcon = memo((props: SvgProps) => (
+  <Svg width={23} height={20} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M1 18.94 2.061 20 13.843 8.217 21 1.06 19.939 0 9.699 10.24 1 18.94Zm9.164-11.286 1.579-1.58A4.034 4.034 0 0 0 11 6a4 4 0 0 0-4 4c0 .255.029.502.075.743l1.579-1.579a2.498 2.498 0 0 1 1.51-1.51ZM18.181 6l-1.063 1.063a21.619 21.619 0 0 1 2.977 2.939c-1.45 1.74-5.05 5.498-9.095 5.498a7.204 7.204 0 0 1-2.013-.306l-1.184 1.184C8.815 16.762 9.888 17 11 17c6.076 0 11-7 11-7s-1.483-2.1-3.819-4ZM3.819 14l1.063-1.063a21.674 21.674 0 0 1-2.977-2.939C3.355 8.258 6.955 4.5 11 4.5c.687 0 1.359.115 2.013.305l1.184-1.184c-1.012-.383-2.085-.62-3.197-.62-6.076 0-11 7-11 7s1.483 2.099 3.819 3.998Zm9.527-3.165 1.579-1.579c.046.242.075.49.075.745a4 4 0 0 1-4 4c-.255 0-.502-.03-.743-.075l1.579-1.58a2.495 2.495 0 0 0 1.51-1.51Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },
-  tooltipAbsolute: { position: 'absolute', top: "15%", right: -8 },
+  tooltipAbsolute: { position: 'absolute', top: '15%', right: -8 },
 });

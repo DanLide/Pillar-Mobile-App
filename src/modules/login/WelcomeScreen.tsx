@@ -20,7 +20,7 @@ const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
 export const WelcomeScreen = ({ navigation }: Props) => {
   const onPressContinue = () => {
-    navigation.navigate(AppNavigator.LoginScreen);
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen);
   };
 
   const onPressSSOLogin = async () => {
