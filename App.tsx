@@ -15,14 +15,15 @@ import {
 import TrackPlayer from 'react-native-track-player';
 import { getVersion } from 'react-native-device-info';
 import { VolumeManager } from 'react-native-volume-manager';
+import SplashScreen from 'react-native-splash-screen'
 
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
 
 import autoLogoutService, { AUTO_LOGOUT_TIMEOUT } from "./src/data/helpers/autologoutService";
-import splashScreenBackground from './assets/images/SplashScreenBackground.png';
-import splashScreenLogo from './assets/images/logo.png';
+import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
+import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
 
 interface InitialProps {
@@ -37,8 +38,8 @@ const backgroundImageSize = {
 const version = `Version ${getVersion()}`;
 
 const App = (initialProps: InitialProps) => {
-
   useEffect(() => {
+    SplashScreen.hide();
     async function setup() {
       await setupPlayer();
 
@@ -143,12 +144,12 @@ const styles = StyleSheet.create({
     height: 48,
     position: 'absolute',
     zIndex: 1,
-    top: '40%',
+    top: '47%',
     alignSelf: 'center',
   },
   versionContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 10,
     alignSelf: 'center',
   },
   versionText: {
