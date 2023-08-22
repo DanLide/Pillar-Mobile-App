@@ -2,6 +2,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <Firebase.h>
+#import "RNSplashScreen.h"
 
 @implementation AppDelegate
 
@@ -33,8 +34,11 @@
   }
   
   self.initialProps = @{@"rntoken" : keychainData};
+  [super application:application didFinishLaunchingWithOptions:launchOptions];
+
+  [RNSplashScreen show];
   
-  return [super application:application didFinishLaunchingWithOptions:launchOptions];
+  return  YES;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
