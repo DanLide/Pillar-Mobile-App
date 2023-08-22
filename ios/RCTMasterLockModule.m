@@ -21,6 +21,7 @@ NSString *const lockStatus_PendingRelock = @"PENDING_RELOCK";
 
 @interface RCTMasterLockModule ()
 @property NSMutableDictionary *locks;
+@property BOOL shouldScan;
 
 @end
 
@@ -30,6 +31,7 @@ NSString *const lockStatus_PendingRelock = @"PENDING_RELOCK";
     self = [super init];
     if (self) {
       self.locks = [NSMutableDictionary dictionary];
+      self.shouldScan = NO;
     }
     return self;
 }
@@ -39,6 +41,7 @@ RCT_EXPORT_METHOD(configure:(NSString *)license
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
+  self.shouldScan = YES;
   [[MLBluetoothSDK main] configureWithLicense:license delegate:self backgroundLocation:NO loggerConfiguration:LoggerConfigurationProduction];
   resolve(@"success");
 }
@@ -53,6 +56,15 @@ RCT_EXPORT_METHOD(initLock:(NSString *)deviceId
 
   lock.delegate = self;
   [self.locks setValue:lock forKey:deviceId];
+  resolve(@"success");
+}
+
+RCT_EXPORT_METHOD(deinit:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  self.shouldScan = NO;
+
+  [[MLBluetoothSDK main] stopScanning];
   resolve(@"success");
 }
 
@@ -78,6 +90,44 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
   }
 }
 
+RCT_EXPORT_METHOD(readRelockTime:(NSString *)deviceId
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  MLProduct *lock =[self.locks objectForKey:deviceId];
+  if (lock) {
+    [lock readRelockTimeWithCompletion:^(NSInteger time, NSError * error) {
+      if (error) {
+        reject([@(error.code) stringValue], error.description, error);
+      } else {
+        resolve([NSString stringWithFormat: @"%ld", (long)time]);
+      }
+    }];
+    
+  } else {
+    reject(@"-101", @"Lock is not inited", nil);
+  }
+}
+
+RCT_EXPORT_METHOD(writeRelockTime:(NSString *)deviceId
+                  time:(NSInteger)time
+                  resolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+  MLProduct *lock =[self.locks objectForKey:deviceId];
+  if (lock) {
+    [lock writeWithRelockTime:time completion:^(NSError * error) {
+      if (error) {
+        reject([@(error.code) stringValue], error.description, error);
+      } else {
+        resolve(@"success");
+      }
+    }];
+  } else {
+    reject(@"-101", @"Lock is not inited", nil);
+  }
+}
+
 - (NSArray<NSString *> *)supportedEvents {
   return @[visibilityStatusChannel, lockStatusChannel];
 }
@@ -92,7 +142,7 @@ RCT_EXPORT_METHOD(unlock:(NSString *)deviceId
 }
 
 - (void)bluetoothModuleDidUpdateWithState:(enum MLBluetoothState)state {
-  if (state == MLBluetoothStatePoweredOn) {
+  if (state == MLBluetoothStatePoweredOn && self.shouldScan) {
     [[MLBluetoothSDK main] startScanning];
   }
 }
