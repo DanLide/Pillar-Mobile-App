@@ -4,6 +4,7 @@ import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useToast } from 'react-native-toast-notifications';
 import TrackPlayer from 'react-native-track-player';
+import { VolumeManager } from 'react-native-volume-manager';
 
 import {
   CurrentProductStoreType,
@@ -107,6 +108,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
         setIsScannerActive(false);
+        await VolumeManager.setVolume(1);
         Vibration.vibrate();
         TrackPlayer.play();
 
