@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { getNavigationOptions, getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, UnauthStackParamsList } from './types';
 import { WelcomeScreen } from '../modules/login/WelcomeScreen';
-import { LoginScreen } from '../modules/login/components/LoginScreen';
+import { LoginViaCredentialsScreen } from '../modules/login/LoginViaCredentialsScreen';
 
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
@@ -17,10 +17,10 @@ export const UnauthStack: React.FC = () => {
         options={getNavigationOptions}
       />
       <Stack.Screen
-        name={AppNavigator.LoginScreen}
-        component={LoginScreen}
+        name={AppNavigator.LoginViaCredentialsScreen}
+        component={LoginViaCredentialsScreen}
         options={getScreenOptions({
-          title: 'Login',
+          title: 'RepairStack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />

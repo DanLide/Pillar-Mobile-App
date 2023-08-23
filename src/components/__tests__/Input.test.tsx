@@ -25,7 +25,7 @@ describe('Input', () => {
         flexDirection: 'row',
         gap: 4.5,
         height: 47,
-        paddingHorizontal: 14,
+        paddingLeft: 14,
         paddingVertical: 9.5,
       },
       { width: 12 },

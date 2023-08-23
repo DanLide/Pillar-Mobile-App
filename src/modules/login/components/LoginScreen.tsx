@@ -6,7 +6,6 @@ import { observer } from 'mobx-react';
 import { onLogin } from '../../../data/login';
 import { authStore } from '../../../stores';
 
-import { LoginForm } from './LoginForm';
 import LoginWithPIN, { LoginWithPINProps } from './LoginWithPIN';
 
 export const LoginScreen = observer(() => {
@@ -60,9 +59,7 @@ export const LoginScreen = observer(() => {
       </View>
       {isLoginWithPIN ? (
         <LoginWithPIN onTokenReceived={handleLoginWithPIN} />
-      ) : (
-        <LoginForm onPress={onSubmitLogin} isLoading={isLoading} />
-      )}
+      ) : null}
     </View>
   );
 });
