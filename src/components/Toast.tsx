@@ -139,8 +139,10 @@ export const Toast: React.FC<Props> = ({
       case ToastActionType.Close:
         onHide();
         break;
-      case ToastActionType.Retry:
       case ToastActionType.Undo:
+        onPress?.(id);
+        break;
+      case ToastActionType.Retry:
         setIsLoading(true);
         await onPress?.(id);
         setIsLoading(false);
