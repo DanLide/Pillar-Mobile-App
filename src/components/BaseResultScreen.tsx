@@ -9,7 +9,6 @@ import {
   FlatList,
 } from 'react-native';
 import { observer } from 'mobx-react';
-import { useToast } from 'react-native-toast-notifications';
 
 import {
   ProductModel,
@@ -29,6 +28,7 @@ import { ResultProductsListItem } from './ResultProductsListItem';
 import { OTHER_JOB_ID } from '../constants';
 import { Tooltip } from './Tooltip';
 import Button, { ButtonType } from './Button';
+import { useSingleToast } from '../hooks';
 
 type ProductsStore = SyncedProductStoreType & StockProductStoreType;
 
@@ -58,7 +58,7 @@ const BaseResultScreen: React.FC<Props> = observer(
     title,
     Header,
   }) => {
-    const toast = useToast();
+    const { showToast } = useSingleToast();
 
     const stockName = store.currentStock?.organizationName || '';
 
@@ -71,13 +71,19 @@ const BaseResultScreen: React.FC<Props> = observer(
           <View style={styles.rowContainer}>
             <Text style={styles.dotStyle}>•</Text>
             <Text style={styles.tooltipMessage}>
-              {' Your invoice is viewable in '}<Text style={[styles.tooltipMessage, styles.textBold]}>RepairStack™</Text> and/or your integrated Body Shop Management System.
+              {' Your invoice is viewable in '}
+              <Text style={[styles.tooltipMessage, styles.textBold]}>
+                RepairStack™
+              </Text>{' '}
+              and/or your integrated Body Shop Management System.
             </Text>
           </View>
           <View style={styles.rowContainer}>
             <Text style={styles.dotStyle}>•</Text>
             <Text style={styles.tooltipMessage}>
-              {' An email notification has been sent to your shop with a link for the invoice.'}
+              {
+                ' An email notification has been sent to your shop with a link for the invoice.'
+              }
             </Text>
           </View>
         </View>
@@ -87,9 +93,9 @@ const BaseResultScreen: React.FC<Props> = observer(
 
     useEffect(() => {
       if (notSyncedProducts.length) {
-        toast.show?.(errorToastMessage, { type: ToastType.Error });
+        showToast(errorToastMessage, { type: ToastType.Error });
       }
-    }, [errorToastMessage, notSyncedProducts.length, toast]);
+    }, [errorToastMessage, notSyncedProducts.length, showToast]);
 
     const onPressLogout = () => {
       authStore.logOut();
@@ -165,9 +171,7 @@ const BaseResultScreen: React.FC<Props> = observer(
           SyncedSectionFooter
         ) : groupByJob ? (
           <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
-            <Text style={styles.contextFooterText}>
-              Where’s my Invoice?
-            </Text>
+            <Text style={styles.contextFooterText}>Where’s my Invoice?</Text>
           </Tooltip>
         ) : null,
       [SyncedSectionFooter, groupByJob, tooltipMessage],
@@ -362,7 +366,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   toolTipContainer: {
-    flex: 1
+    flex: 1,
   },
 });
 
