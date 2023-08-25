@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import { getVersion } from 'react-native-device-info';
-import { VolumeManager } from 'react-native-volume-manager';
 import SplashScreen from 'react-native-splash-screen'
 
 import { AppStack } from './src/navigation';
@@ -49,7 +48,6 @@ const App = (initialProps: InitialProps) => {
       }
     }
     setup();
-    VolumeManager.setVolume(1);
   }, []);
 
   console.log(initialProps['rntoken']);

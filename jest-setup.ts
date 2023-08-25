@@ -16,6 +16,11 @@ jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),
 );
 jest.mock('react-native-vision-camera', () => {});
+jest.mock('react-native-volume-manager', () => {
+  return {
+    setVolume: jest.fn(),
+  }
+});
 jest.mock('react-native-track-player', () => {
   return {
     addEventListener: jest.fn(),
