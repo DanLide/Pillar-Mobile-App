@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, Vibration, View } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import { useToast } from 'react-native-toast-notifications';
 import TrackPlayer from 'react-native-track-player';
 import { VolumeManager } from 'react-native-volume-manager';
 
@@ -24,6 +23,7 @@ import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
 import { RequestError } from '../data/helpers/tryFetch';
+import { useSingleToast } from '../hooks';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -67,7 +67,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
   }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
-    const toast = useToast();
+    const { showToast } = useSingleToast();
 
     const scannedProducts = store.getProducts;
 
@@ -75,12 +75,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       (error: ScannerScreenError) => {
         setIsScannerActive(true);
 
-        toast.show(scannerErrorMessages[error], {
+        showToast(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
         });
       },
-      [toast],
+      [showToast],
     );
 
     const fetchProductByCode = useCallback(
@@ -131,7 +131,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         store.addProduct(product);
 
-        toast.show?.(
+        showToast(
           <ToastMessage>
             <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
             {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
@@ -143,7 +143,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           { type: ToastType.Info },
         );
       },
-      [onSubmit, store, toast],
+      [onSubmit, showToast, store],
     );
 
     const setEditableProductQuantity = useCallback(

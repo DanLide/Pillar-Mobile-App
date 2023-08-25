@@ -1,5 +1,11 @@
-import React, { NamedExoticComponent, useCallback, useMemo } from 'react';
+import React, {
+  NamedExoticComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   StyleProp,
   StyleSheet,
@@ -56,6 +62,8 @@ export const Toast: React.FC<Props> = ({
   onHide,
   onPress,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const { primary, secondary, action } = toastColors[type] ?? {};
 
   const LeftIcon = useMemo<JSX.Element>(() => {
@@ -88,6 +96,8 @@ export const Toast: React.FC<Props> = ({
   }, [message, messageStyle]);
 
   const ActionButtonContent = useMemo<JSX.Element | null>(() => {
+    if (isLoading) return <ActivityIndicator size="small" color={action} />;
+
     switch (actionType) {
       case ToastActionType.Close:
         return (
@@ -117,7 +127,7 @@ export const Toast: React.FC<Props> = ({
       default:
         return null;
     }
-  }, [actionType, testID, action]);
+  }, [isLoading, action, actionType, testID]);
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, { backgroundColor: secondary }, style],
@@ -129,9 +139,13 @@ export const Toast: React.FC<Props> = ({
       case ToastActionType.Close:
         onHide();
         break;
-      case ToastActionType.Retry:
       case ToastActionType.Undo:
+        onPress?.(id);
+        break;
+      case ToastActionType.Retry:
+        setIsLoading(true);
         await onPress?.(id);
+        setIsLoading(false);
         break;
     }
   }, [actionType, onHide, onPress, id]);

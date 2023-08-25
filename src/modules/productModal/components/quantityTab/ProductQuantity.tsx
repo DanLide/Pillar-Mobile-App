@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { memo, useEffect } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
@@ -7,8 +7,6 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { observer } from 'mobx-react';
-import { useToast } from 'react-native-toast-notifications';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
@@ -20,6 +18,7 @@ import { ProductModel } from '../../../../stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
+import { useSingleToast } from '../../../../hooks';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -53,7 +52,7 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
 };
 
-export const ProductQuantity: React.FC<Props> = observer(
+export const ProductQuantity = memo(
   ({
     type,
     product,
@@ -71,18 +70,18 @@ export const ProductQuantity: React.FC<Props> = observer(
     onJobSelectNavigation,
     onRemove,
     onToastAction,
-  }) => {
+  }: Props) => {
     const jobNumber = product?.job?.jobNumber;
 
-    const toast = useToast();
+    const { showToast } = useSingleToast();
 
     useEffect(() => {
       if (toastType)
-        toast.show?.(toastMessages[toastType], {
+        showToast(toastMessages[toastType], {
           type: toastType,
           onPress: onToastAction,
         });
-    }, [onToastAction, toast, toastType]);
+    }, [onToastAction, showToast, toastType]);
 
     if (!product) return null;
 
