@@ -72,6 +72,8 @@ export const EditQuantity = memo(
     const displayMinValue = removeLeadingZero(minValue);
 
     const layoutInputRef = useRef<null | LayoutRectangle>(null);
+    const contentRef = useRef<null | string>(null);
+
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
     const [fontSize, setFontSize] = useState(initFontSize);
 
@@ -189,9 +191,10 @@ export const EditQuantity = memo(
         contentSize: { width },
       },
     }: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-      if (!layoutInputRef.current?.width || !width) {
+      if (!layoutInputRef.current?.width || !width || contentRef.current === displayValue) {
         return;
       }
+      contentRef.current = displayValue;
       if (layoutInputRef.current?.width < width) {
         return setFontSize(
           PixelRatio.roundToNearestPixel(
@@ -203,14 +206,14 @@ export const EditQuantity = memo(
         return;
       }
       const increasedFontSize = PixelRatio.roundToNearestPixel(
-        (fontSize * layoutInputRef.current?.width) / width,
+        (fontSize * layoutInputRef.current?.width) / width * 0.9,
       );
       const increasedWidth = (width * increasedFontSize) / fontSize;
       if (layoutInputRef.current?.width >= increasedWidth) {
         setFontSize(
           increasedFontSize > initFontSize
             ? initFontSize
-            : increasedFontSize * 0.9,
+            : increasedFontSize,
         );
       }
     };
