@@ -3,6 +3,7 @@ export enum ToastType {
   ScanError = 'ScanError',
   ProductQuantityError = 'ProductQuantityError',
   ProductUpdateError = 'ProductUpdateError',
+  UpcUpdateError = 'UpcUpdateError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',

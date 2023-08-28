@@ -59,6 +59,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Retry}
         />
       ),
+      [ToastType.UpcUpdateError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.UpcUpdateError}
+          actionType={ToastActionType.Close}
+        />
+      ),
 
       [ToastType.Info]: toast => (
         <Toast

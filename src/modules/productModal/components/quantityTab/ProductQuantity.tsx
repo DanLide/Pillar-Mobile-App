@@ -23,7 +23,8 @@ import { useSingleToast } from '../../../../hooks';
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
   | ToastType.ProductUpdateError
-  | ToastType.ProductUpdateSuccess;
+  | ToastType.ProductUpdateSuccess
+  | ToastType.UpcUpdateError;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
@@ -50,6 +51,8 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
   [ToastType.ProductUpdateError]:
     'Sorry, there was an issue saving the product update',
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
+  [ToastType.UpcUpdateError]:
+    'This UPC already exists in the stock location of this product. Please, use another one',
 };
 
 export const ProductQuantity = memo(

@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
   WithSpringConfig,
 } from 'react-native-reanimated';
+import { observer } from 'mobx-react';
 
 import { Button, ButtonType, Modal } from '../../../components';
 import {
@@ -19,11 +20,17 @@ import {
 
 import { colors } from '../../../theme';
 import { ToastContextProvider } from '../../../contexts';
-import { observer } from 'mobx-react';
 import { EditProduct } from './EditProduct';
 import { manageProductsStore } from '../stores';
 import { permissionProvider } from '../../../data/providers';
 import { ViewProduct } from './ViewProduct';
+import { ToastType } from '../../../contexts/types';
+
+export enum ProductModalErrors {
+  UpcUpdateError = 'UpcUpdateError',
+  UpcLengthError = 'UpcLengthError',
+  UpcFormatError = 'UpcFormatError',
+}
 
 enum ScrollDirection {
   Down,
@@ -39,6 +46,16 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
   restSpeedThreshold: 10,
 };
 
+const getErrorMessage = (error: unknown) => {
+  switch (error) {
+    case ProductModalErrors.UpcUpdateError:
+    case ProductModalErrors.UpcFormatError:
+      return 'Invalid UPC Code';
+    case ProductModalErrors.UpcLengthError:
+      return 'UPC length should be 12 or 13 digits long';
+  }
+};
+
 export const ProductModal = observer(
   ({
     product,
@@ -47,7 +64,6 @@ export const ProductModal = observer(
     type,
     stockName,
     toastType,
-    onToastAction,
     isEdit,
     onSubmit,
     onEditPress,
@@ -55,8 +71,10 @@ export const ProductModal = observer(
     onClose,
   }: ProductModalProps) => {
     const store = useRef(manageProductsStore).current;
+    const scrollViewRef = useRef<Animated.ScrollView>(null);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [upcError, setUpcError] = useState<string | undefined>();
 
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
@@ -75,9 +93,17 @@ export const ProductModal = observer(
 
     const clearProductModalStoreOnClose = useCallback(() => {
       scrollTo(modalCollapsedOffset);
+      setUpcError(undefined);
       onCancelPress?.();
       onClose();
     }, [scrollTo, modalCollapsedOffset, onCancelPress, onClose]);
+
+    const handleError = useCallback((error: unknown) => {
+      const message = getErrorMessage(error);
+
+      setUpcError(message);
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, []);
 
     const handleSubmit = useCallback(async () => {
       if (!product) return;
@@ -86,8 +112,21 @@ export const ProductModal = observer(
       const error = await onSubmit(product);
       setIsLoading(false);
 
-      if (!isEdit && !error) clearProductModalStoreOnClose();
-    }, [clearProductModalStoreOnClose, isEdit, onSubmit, product]);
+      if (error) return handleError(error);
+
+      if (!isEdit) clearProductModalStoreOnClose();
+      else setUpcError(undefined);
+    }, [clearProductModalStoreOnClose, handleError, isEdit, onSubmit, product]);
+
+    const handleToastAction = useCallback(() => {
+      switch (toastType) {
+        case ToastType.ProductUpdateError:
+          return handleSubmit();
+        case ToastType.UpcUpdateError:
+          onEditPress?.();
+          break;
+      }
+    }, [handleSubmit, onEditPress, toastType]);
 
     const handleEdit = useCallback(() => {
       store.setUpdatedProduct(product);
@@ -95,8 +134,20 @@ export const ProductModal = observer(
     }, [onEditPress, product, store]);
 
     const handleCancel = useCallback(() => {
+      setUpcError(undefined);
       onCancelPress?.();
     }, [onCancelPress]);
+
+    const handleUpcChange = useCallback(() => {
+      setUpcError(undefined);
+    }, []);
+
+    const setEditableProductQuantity = useCallback(
+      (quantity: number) => {
+        store.setEditableProductQuantity(quantity);
+      },
+      [store],
+    );
 
     const scrollHandler = useAnimatedScrollHandler(
       {
@@ -139,23 +190,30 @@ export const ProductModal = observer(
               stickyHeaderIndices={[0]}
               contentContainerStyle={styles.contentContainer}
               bounces={false}
+              ref={scrollViewRef}
               nestedScrollEnabled
             >
               <Description product={product} topOffset={topOffset} />
               <View style={styles.settings}>
                 {isEdit ? (
                   <EditProduct
+                    product={product}
                     onHand={onHand}
                     maxValue={maxValue}
                     toastType={toastType}
-                    onToastAction={onToastAction}
+                    stockName={stockName}
+                    upcError={upcError}
+                    onUpcChange={handleUpcChange}
+                    onToastAction={handleToastAction}
                   />
                 ) : (
                   <ViewProduct
+                    product={product}
                     onHand={onHand}
                     maxValue={maxValue}
                     toastType={toastType}
-                    onToastAction={onToastAction}
+                    onToastAction={handleToastAction}
+                    onChangeProductQuantity={setEditableProductQuantity}
                   />
                 )}
               </View>

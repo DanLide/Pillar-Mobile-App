@@ -1,29 +1,36 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
+import { find, whereEq } from 'ramda';
+
 import {
   ProductQuantity,
   ProductModalProps,
   ProductModalType,
 } from '../../productModal';
-import { StyleSheet, Text, View } from 'react-native';
 import { BadgeType, InfoBadge } from './InfoBadge';
 import { InventoryUseType } from '../../../constants/common.enum';
-import { find, whereEq } from 'ramda';
-import { manageProductsStore } from '../stores';
 import { categoriesStore, suppliersStore } from '../../../stores';
 import { permissionProvider } from '../../../data/providers';
 import { colors, fonts } from '../../../theme';
 
-type Props = Pick<
-  ProductModalProps,
-  'onHand' | 'maxValue' | 'toastType' | 'onToastAction'
->;
+interface Props
+  extends Pick<
+    ProductModalProps,
+    'product' | 'onHand' | 'maxValue' | 'toastType' | 'onChangeProductQuantity'
+  > {
+  onToastAction?: () => void;
+}
 
 export const ViewProduct = observer(
-  ({ onHand, maxValue, toastType, onToastAction }: Props) => {
-    const store = useRef(manageProductsStore).current;
-
-    const product = store.getCurrentProduct;
+  ({
+    product,
+    onHand,
+    maxValue,
+    toastType,
+    onToastAction,
+    onChangeProductQuantity,
+  }: Props) => {
     const canEditProduct = permissionProvider.canEditProduct();
 
     const category = useMemo(
@@ -50,19 +57,12 @@ export const ViewProduct = observer(
       [product?.replenishedFormId],
     );
 
-    const setEditableProductQuantity = useCallback(
-      (quantity: number) => {
-        store.setEditableProductQuantity(quantity);
-      },
-      [store],
-    );
-
     return (
       <>
         <ProductQuantity
           type={ProductModalType.ManageProduct}
           product={product}
-          onChangeProductQuantity={setEditableProductQuantity}
+          onChangeProductQuantity={onChangeProductQuantity}
           jobSelectable={false}
           toastType={toastType}
           maxValue={maxValue ?? 0}

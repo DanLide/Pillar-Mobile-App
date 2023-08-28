@@ -1,4 +1,4 @@
-import { ProductModal } from './ProductModal';
+import { ProductModal, ProductModalErrors } from './ProductModal';
 import { SelectedProductsList } from './SelectedProductsList';
 
-export { SelectedProductsList, ProductModal };
+export { SelectedProductsList, ProductModal, ProductModalErrors };

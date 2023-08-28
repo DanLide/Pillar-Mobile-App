@@ -4221,6 +4221,11 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.npmjs.org/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
+gtin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gtin/-/gtin-1.0.2.tgz#78fb00110f6449295d9fd3b37633ff04eb6a06ad"
+  integrity sha512-jEsHMz16c3yz0rlM4TvUUU0022FTniIAcBfCDoch+38RJC32yGkdKFC9ixpBqPskYpCRrb614AjF8O0QQP0gPg==
+
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/has-bigints/-/has-bigints-1.0.2.tgz"

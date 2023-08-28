@@ -33,6 +33,11 @@ export interface ProductResponse extends ProductSettingsResponse {
   max?: number;
 }
 
+export type FacilityProductResponse = Pick<
+  ProductResponse,
+  'productId' | 'upc' | 'orderMultiple'
+>;
+
 export interface CategoryResponse {
   id: number;
   description: string;
@@ -280,5 +285,14 @@ export const updateProductOrderMultipleAPI = (
         'Content-Type': 'application/json',
       },
     },
+  });
+};
+
+export const getFacilityProducts = () => {
+  const url = new URLProvider().getFacilityProducts();
+
+  return tryAuthFetch<FacilityProductResponse[]>({
+    url,
+    request: { method: 'GET' },
   });
 };

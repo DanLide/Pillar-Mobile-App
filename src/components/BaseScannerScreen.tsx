@@ -37,6 +37,7 @@ export enum ScannerScreenError {
 interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
+  product?: ProductModel;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: (product: ProductModel) => void | unknown;
   onEditPress?: () => void;
@@ -57,6 +58,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
   ({
     store,
     modalParams,
+    product = store.getCurrentProduct,
     onProductScan,
     onSubmit,
     onEditPress,
@@ -172,7 +174,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         />
         <ProductModalComponent
           {...modalParams}
-          product={store.getCurrentProduct}
+          product={product}
           stockName={store.stockName}
           onSubmit={onProductSubmit}
           onEditPress={onEditPress}

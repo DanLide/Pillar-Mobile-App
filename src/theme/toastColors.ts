@@ -27,6 +27,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.UpcUpdateError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
 
   [ToastType.Info]: {
     primary: colors.purple,

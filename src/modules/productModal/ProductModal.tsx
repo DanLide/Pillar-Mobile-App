@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
-import { StyleSheet, Dimensions, View, Alert } from 'react-native';
+import { StyleSheet, Dimensions, View } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
 
@@ -33,7 +33,6 @@ export interface ProductModalParams {
   maxValue?: number;
   onHand?: number;
   toastType?: ProductQuantityToastType;
-  onToastAction?: () => void;
 }
 
 export interface ProductModalProps extends ProductModalParams {

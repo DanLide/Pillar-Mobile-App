@@ -206,4 +206,12 @@ export class URLProvider {
       `${this.currentEnv.modules.inventory.apiUri}/api/Inventory/OrderMultiple`,
     );
   }
+
+  getFacilityProducts() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/product/GetAllProduct/${facilityId}/-1`,
+    );
+  }
 }

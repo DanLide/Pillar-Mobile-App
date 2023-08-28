@@ -45,18 +45,31 @@ const SCAN_ICON_PROPS: SvgProps = {
   width: 32,
 };
 
-type Props = Pick<
-  ProductModalProps,
-  'onHand' | 'maxValue' | 'toastType' | 'onToastAction'
->;
+interface Props
+  extends Pick<
+    ProductModalProps,
+    'product' | 'onHand' | 'maxValue' | 'toastType' | 'stockName'
+  > {
+  upcError?: string;
+  onUpcChange?: (upc: string) => void;
+  onToastAction?: () => void;
+}
+
 export const EditProduct = observer(
-  ({ onHand, maxValue, toastType, onToastAction }: Props) => {
+  ({
+    product,
+    onHand,
+    maxValue,
+    toastType,
+    stockName,
+    upcError,
+    onUpcChange,
+    onToastAction,
+  }: Props) => {
     const store = useRef(manageProductsStore).current;
     const inputRef = useRef<TextInput | null>(null);
 
     const [isUpcActive, setIsUpcActive] = useState(false);
-
-    const product = store.updatedProduct;
 
     const minQty = getProductStepQty(product?.inventoryUseTypeId);
 
@@ -133,19 +146,27 @@ export const EditProduct = observer(
       [],
     );
 
+    const handleUpcChange = useCallback(
+      (upc: string) => {
+        onUpcChange?.(upc);
+        store.setUpc(upc);
+      },
+      [onUpcChange, store],
+    );
+
     const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
         Vibration.vibrate();
-        TrackPlayer.play();
+        // TrackPlayer.play();
 
         if (typeof code === 'string') {
-          store.setUpc(code);
+          handleUpcChange(code);
           inputRef?.current?.focus();
         }
 
         setIsUpcActive(false);
       },
-      [store],
+      [handleUpcChange],
     );
 
     const onUpcClose = useCallback(() => setIsUpcActive(false), []);
@@ -219,17 +240,17 @@ export const EditProduct = observer(
                   onChange={value => store.setUnitsPerContainer(value)}
                 />
               )}
-              {/*<EditQuantity*/}
-              {/*  vertical*/}
-              {/*  label="Shipment"*/}
-              {/*  labelWithNewLine="Quantity"*/}
-              {/*  currentValue={product?.orderMultiple ?? 0}*/}
-              {/*  maxValue={MAX_VALUE}*/}
-              {/*  minValue={MIN_VALUE}*/}
-              {/*  stepValue={STEP_VALUE}*/}
-              {/*  initFontSize={28}*/}
-              {/*  onChange={value => store.setOrderMultiple(value)}*/}
-              {/*/>*/}
+              <EditQuantity
+                vertical
+                label="Shipment"
+                labelWithNewLine="Quantity"
+                currentValue={product?.orderMultiple ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={STEP_VALUE}
+                initFontSize={28}
+                onChange={value => store.setOrderMultiple(value)}
+              />
               <EditQuantity
                 disabled
                 hideCount
@@ -275,12 +296,15 @@ export const EditProduct = observer(
           </View>
           <View style={styles.spaceBetweenContainer}>
             <Input
+              keyboardType="number-pad"
               type={InputType.Primary}
               value={product?.upc}
               label="UPC Number"
               placeholder="Unassigned"
+              error={upcError}
               ref={inputRef}
               containerStyle={styles.upcInput}
+              onChangeText={handleUpcChange}
             />
             <Button
               title="Scan"
@@ -303,7 +327,7 @@ export const EditProduct = observer(
         </View>
         <UpcScanner
           isActive={isUpcActive}
-          stockName={store.stockName}
+          stockName={stockName}
           onScan={onScanProduct}
           onClose={onUpcClose}
         />
