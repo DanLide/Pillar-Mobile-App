@@ -29,6 +29,7 @@ export class URLProvider {
       pisaCompanyLocation: { apiUri: string };
       pisaEquipment: { apiUri: string };
       inventory: { apiUri: string };
+      order: { apiUri: string };
     };
   };
 
@@ -212,6 +213,13 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/product/GetAllProduct/${facilityId}/-1`,
+    );
+  }
+
+  getOrders() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/${facilityId}`,
     );
   }
 }

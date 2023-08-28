@@ -29,6 +29,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const onManageProducts = () =>
     navigation.navigate(AppNavigator.ManageProductsStack);
 
+  const onOrders = () => navigation.navigate(AppNavigator.OrdersStack);
+
   const ArrowTopIcon = useMemo(() => <SVGs.ArrowTopIcon />, []);
   const ArrowBottomIcon = useMemo(() => <SVGs.ReturnProductIcon />, []);
   const ManageProductIcon = useMemo(() => <SVGs.ManageProductIcon />, []);
@@ -96,10 +98,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.shadowWrapper}>
         <ListItem
           title="Manage Orders"
-          subtitle="Create, edit and receive product orders "
-          disabled
+          subtitle="Create, edit and receive product orders"
           leftIcon={ManageOrderIcon}
-          onPress={onRemoveProducts}
+          onPress={onOrders}
         />
       </View>
     </View>

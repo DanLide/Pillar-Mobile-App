@@ -21,6 +21,7 @@ import { RemoveStack } from './RemoveStack';
 import { ManageProductsStack } from './ManageProductsStack';
 import { DrawerContent } from './components';
 import { CreateInvoiceStack } from './CreateInvoiceStack';
+import { OrdersStack } from './Orders';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -112,6 +113,11 @@ export const HomeStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.CreateInvoiceStack}
         component={CreateInvoiceStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.OrdersStack}
+        component={OrdersStack}
         options={getNavigationOptions}
       />
     </Stack.Navigator>

@@ -104,6 +104,17 @@ export enum TransactionType {
   BeginningBalance = 4,
 }
 
+export enum OrderStatusType {
+  APPROVAL = 'APPROVAL',
+  SUBMITTED = 'SUBMITTED',
+  POREQUIRED = 'PO REQUIRED',
+  TRANSMITTED = 'TRANSMITTED',
+  SHIPPED = 'SHIPPED',
+  RECEIVING = 'RECEIVING',
+  CLOSED = 'CLOSED',
+  CANCELLED = 'CANCELLED',
+}
+
 // export enum PartyRelationshipType {
 //   DistributorUsers = 1,
 //   MsoUsers = 2,
