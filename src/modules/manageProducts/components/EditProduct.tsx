@@ -237,17 +237,17 @@ export const EditProduct = observer(
                   onChange={value => store.setUnitsPerContainer(value)}
                 />
               )}
-              <EditQuantity
-                vertical
-                label="Shipment"
-                labelWithNewLine="Quantity"
-                currentValue={product?.orderMultiple ?? 0}
-                maxValue={MAX_VALUE}
-                minValue={MIN_VALUE}
-                stepValue={STEP_VALUE}
-                initFontSize={28}
-                onChange={value => store.setOrderMultiple(value)}
-              />
+              {/*<EditQuantity*/}
+              {/*  vertical*/}
+              {/*  label="Shipment"*/}
+              {/*  labelWithNewLine="Quantity"*/}
+              {/*  currentValue={product?.orderMultiple ?? 0}*/}
+              {/*  maxValue={MAX_VALUE}*/}
+              {/*  minValue={MIN_VALUE}*/}
+              {/*  stepValue={STEP_VALUE}*/}
+              {/*  initFontSize={28}*/}
+              {/*  onChange={value => store.setOrderMultiple(value)}*/}
+              {/*/>*/}
               <EditQuantity
                 disabled
                 hideCount
