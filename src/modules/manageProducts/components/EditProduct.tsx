@@ -156,9 +156,6 @@ export const EditProduct = observer(
 
     const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
-        Vibration.vibrate();
-        // TrackPlayer.play();
-
         if (typeof code === 'string') {
           handleUpcChange(code);
           inputRef?.current?.focus();
