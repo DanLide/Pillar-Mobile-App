@@ -13,8 +13,16 @@ import {
 } from '../../components';
 import { onLogin } from '../../data/login';
 import { authStore } from '../../stores';
+import { useSingleToast } from '../../hooks';
+import { ToastType } from '../../contexts/types';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from '../../contexts';
+import { BadRequestError } from '../../data/helpers/tryFetch';
 
-export const LoginViaCredentialsScreen = observer(() => {
+const LoginViaCredentialsScreenContent = observer(() => {
+  const { showToast } = useSingleToast();
   const loginFormRef = useRef(new LoginFormStore()).current;
   const authStoreRef = useRef(authStore).current;
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -22,21 +30,31 @@ export const LoginViaCredentialsScreen = observer(() => {
 
   const onSubmit = useCallback(async () => {
     setIsLoading(true);
-    const error = await onLogin(
+    const error = (await onLogin(
       { username: loginFormRef.username, password: loginFormRef.password },
       authStoreRef,
-    );
-    setIsLoading(false);
+    )) as BadRequestError | undefined;
 
     if (error) {
-      const message =
-        ('error_description' in error && error.error_description) ||
-        error.message ||
-        'Login Failed!';
-
-      Alert.alert('Error', message);
+      if (error.error_description?.includes('AADB2C90225')) {
+        showToast(
+          'Sorry, your username and password are incorrect. Please try again.',
+          {
+            type: ToastType.Error,
+            duration: 0,
+          },
+        );
+      } else {
+        showToast('Sorry, we are not able to login.', {
+          type: ToastType.Retry,
+          duration: 0,
+          onPress: onSubmit,
+        });
+      }
     }
-  }, [authStoreRef, loginFormRef.password, loginFormRef.username]);
+
+    setIsLoading(false);
+  }, [authStoreRef, loginFormRef.password, loginFormRef.username, showToast]);
 
   const onChangeUsername = (value: string) => {
     loginFormRef.setUsername(value);
@@ -47,7 +65,7 @@ export const LoginViaCredentialsScreen = observer(() => {
   };
 
   const isDisabled =
-    loginFormRef.password.length === 0 && loginFormRef.username.length === 0;
+    loginFormRef.password.length === 0 || loginFormRef.username.length === 0;
 
   const onRightIconPress = () => {
     setIsPasswordVisible(!isPasswordVisible);
@@ -98,6 +116,12 @@ export const LoginViaCredentialsScreen = observer(() => {
     </View>
   );
 });
+
+export const LoginViaCredentialsScreen = () => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <LoginViaCredentialsScreenContent />
+  </ToastContextProvider>
+);
 
 const styles = StyleSheet.create({
   container: {
