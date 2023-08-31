@@ -16,7 +16,8 @@ import {
 } from '../stores/types';
 import { SupplierModel } from '../stores/SuppliersStore';
 import { suppliersStore } from '../stores';
-import { find, whereEq } from 'ramda';
+import { find, pipe, prop, whereEq } from 'ramda';
+import { stocksStore } from '../modules/stocksList/stores';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
@@ -58,12 +59,19 @@ export class FetchProductDetails extends Task {
 
     const product = await getFetchProductAPI(this.scanCode, currentStock);
 
+    const { productId } = product;
+
     const [settings, enabledSuppliers] = await Promise.all([
-      getProductSettingsByIdAPI(product.productId, currentStock),
-      getEnabledSuppliersByProductIdAPI(product.productId),
+      getProductSettingsByIdAPI(productId, currentStock),
+      getEnabledSuppliersByProductIdAPI(productId),
     ]);
 
-    const { max, min, orderMultiple, replenishedFormId } = settings;
+    const { max, min, replenishedFormId } = settings;
+
+    const orderMultiple = pipe(
+      find(whereEq({ productId })),
+      prop('orderMultiple'),
+    )(stocksStore.facilityProducts);
 
     const restockFromId =
       replenishedFormId ||

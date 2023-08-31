@@ -77,6 +77,10 @@ export class UpdateProductTask extends Task {
     const shouldUpdateOrderMultiple =
       updatedProduct?.orderMultiple !== currentProduct?.orderMultiple;
 
+    if (shouldUpdateOrderMultiple) {
+      await updateProductOrderMultipleAPI(updatedProduct);
+    }
+
     await Promise.all([
       shouldUpdateQuantity &&
         updateProductQuantityAPI(
@@ -87,8 +91,6 @@ export class UpdateProductTask extends Task {
         updateProductSettingsAPI(updatedProduct),
       !isEmpty(shouldUpdateAreaSettings) &&
         updateProductAreaSettingsAPI(updatedProduct, stockId, facilityId),
-      shouldUpdateOrderMultiple &&
-        updateProductOrderMultipleAPI(updatedProduct, stockId),
     ]);
   }
 }

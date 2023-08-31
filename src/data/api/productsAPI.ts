@@ -5,6 +5,8 @@ import {
 import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
 import { StockModel } from '../../modules/stocksList/stores/StocksStore';
+import { assoc, find, pipe, whereEq } from 'ramda';
+import { stocksStore } from '../../modules/stocksList/stores';
 
 export interface ProductSettingsResponse {
   max?: number;
@@ -262,19 +264,15 @@ export const updateProductAreaSettingsAPI = (
   });
 };
 
-export const updateProductOrderMultipleAPI = (
-  product?: ProductModel,
-  stockId?: number,
-) => {
+export const updateProductOrderMultipleAPI = (product?: ProductModel) => {
   const url = new URLProvider().updateProductOrderMultiple();
 
-  const body = JSON.stringify([
-    {
-      productId: product?.productId,
-      stockLocationId: stockId,
-      orderMultiple: product?.orderMultiple,
-    },
-  ]);
+  const facilityProduct = pipe(
+    find(whereEq({ productId: product?.productId })),
+    assoc('orderMultiple', product?.orderMultiple),
+  )(stocksStore.facilityProducts);
+
+  const body = JSON.stringify([facilityProduct]);
 
   return tryAuthFetch<string>({
     url,

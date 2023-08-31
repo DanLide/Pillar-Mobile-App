@@ -1,8 +1,13 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, TextInput, Vibration, View } from 'react-native';
+import {
+  KeyboardTypeOptions,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
-import TrackPlayer from 'react-native-track-player';
 
 import { categoriesStore, suppliersStore } from '../../../stores';
 import {
@@ -36,7 +41,7 @@ const inventoryTypes = [
   InventoryUseType.Percent,
 ];
 
-const MAX_VALUE = 99999;
+const MAX_VALUE = 9999;
 const MIN_VALUE = 0;
 const STEP_VALUE = 1;
 
@@ -72,6 +77,11 @@ export const EditProduct = observer(
     const [isUpcActive, setIsUpcActive] = useState(false);
 
     const minQty = getProductStepQty(product?.inventoryUseTypeId);
+
+    const keyboardType: KeyboardTypeOptions =
+      product?.inventoryUseTypeId === InventoryUseType.Percent
+        ? 'decimal-pad'
+        : 'number-pad';
 
     const categories = useMemo<DropdownItem[]>(
       () =>
@@ -208,6 +218,7 @@ export const EditProduct = observer(
                   minValue={minQty}
                   stepValue={minQty}
                   initFontSize={28}
+                  keyboardType={keyboardType}
                   onChange={value => store.setMinValue(value)}
                 />
                 <Text style={styles.slash}>/</Text>
@@ -219,6 +230,7 @@ export const EditProduct = observer(
                   minValue={minQty}
                   stepValue={minQty}
                   initFontSize={28}
+                  keyboardType={keyboardType}
                   onChange={value => store.setMaxValue(value)}
                 />
               </View>
@@ -234,20 +246,22 @@ export const EditProduct = observer(
                   minValue={MIN_VALUE}
                   stepValue={STEP_VALUE}
                   initFontSize={28}
+                  keyboardType="number-pad"
                   onChange={value => store.setUnitsPerContainer(value)}
                 />
               )}
-              {/*<EditQuantity*/}
-              {/*  vertical*/}
-              {/*  label="Shipment"*/}
-              {/*  labelWithNewLine="Quantity"*/}
-              {/*  currentValue={product?.orderMultiple ?? 0}*/}
-              {/*  maxValue={MAX_VALUE}*/}
-              {/*  minValue={MIN_VALUE}*/}
-              {/*  stepValue={STEP_VALUE}*/}
-              {/*  initFontSize={28}*/}
-              {/*  onChange={value => store.setOrderMultiple(value)}*/}
-              {/*/>*/}
+              <EditQuantity
+                vertical
+                label="Shipment"
+                labelWithNewLine="Quantity"
+                currentValue={product?.orderMultiple ?? 0}
+                maxValue={MAX_VALUE}
+                minValue={MIN_VALUE}
+                stepValue={STEP_VALUE}
+                initFontSize={28}
+                keyboardType="number-pad"
+                onChange={value => store.setOrderMultiple(value)}
+              />
               <EditQuantity
                 disabled
                 hideCount
@@ -259,6 +273,7 @@ export const EditProduct = observer(
                 minValue={MIN_VALUE}
                 stepValue={STEP_VALUE}
                 initFontSize={28}
+                keyboardType="number-pad"
                 onChange={value => store.setOnOrder(value)}
               />
             </View>

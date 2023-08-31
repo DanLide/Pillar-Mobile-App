@@ -93,11 +93,11 @@ export const ViewProduct = observer(
               subtitle={product?.unitsPerContainer}
             />
           )}
-          {/*<InfoBadge*/}
-          {/*  title="Shipment"*/}
-          {/*  titleWithNewLine="Quantity"*/}
-          {/*  subtitle={product?.orderMultiple}*/}
-          {/*/>*/}
+          <InfoBadge
+            title="Shipment"
+            titleWithNewLine="Quantity"
+            subtitle={product?.orderMultiple ?? '-'}
+          />
           <InfoBadge title="On Order" subtitle={product?.onOrder} />
         </View>
         <View style={styles.bottomInfo}>
