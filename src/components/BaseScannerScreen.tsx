@@ -150,11 +150,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [store],
     );
 
-    const handleCloseModal = useCallback(() => {
-      onCloseModal?.();
-      store.removeCurrentProduct();
+    const handleCloseModal = () => {
       setIsScannerActive(true);
-    }, [onCloseModal, store]);
+      setTimeout(() => {
+        onCloseModal?.();
+        store.removeCurrentProduct();
+      }, 350);
+     
+    };
 
     return (
       <View style={styles.container}>

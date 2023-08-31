@@ -51,6 +51,7 @@ const Scanner: React.FC<ScannerProps> = ({
   const frameProcessor = useFrameProcessor(
     frame => {
       'worklet';
+      if(!isActive) return
 
       const barcodes = scanBarcodes(
         frame,
