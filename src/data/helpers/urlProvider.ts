@@ -180,7 +180,7 @@ export class URLProvider {
 
   createInvoice(jobId: number) {
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/CreateInvoiceByJob/${jobId}`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/SubmitInvoiceCCC/${jobId}`,
     );
   }
 
