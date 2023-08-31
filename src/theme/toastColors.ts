@@ -7,6 +7,11 @@ export const toastColors: Record<
   NonNullable<ToastProps['type']>,
   { primary: string; secondary: string; action?: string }
 > = {
+  [ToastType.Retry]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Error]: {
     primary: colors.red,
     secondary: colors.redLight,
