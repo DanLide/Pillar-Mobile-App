@@ -44,31 +44,10 @@ class CreateInvoiceTask extends Task {
     job: JobModel,
   ): CreateInvoiceRequestBody {
     return {
-      product: product.productId.toString(),
-      inventoryAssignmentId: 0, // todo
-      productId: product.productId,
-      manufactureCode: product.manufactureCode,
-      partNo: product.partNo,
-      size: product.size,
-      name: product.name,
-      jobPrice: 0, // todo
-      supplierPartyRoleId: 0, // todo
-      supplier: 'string', // todo
-      onHand: 0, // todo
-      extCost: 0, // todo
-      extPrice: 0, // todo
-      unitCost: 0, // todo
-      isTaxable: 0, // todo
-      isRecoverable: 'No',
+      ...product,
       jobID: job.jobId,
       jobNumber: job.jobNumber,
       qty: product.reservedCount,
-      jobDetailID: 0, // todo
-      type: 'string', // todo
-      description: product.name,
-      inventoryTransactionID: 0, // todo
-      tax: 0, // todo
-      status: 'string', // todo
     };
   }
 }
