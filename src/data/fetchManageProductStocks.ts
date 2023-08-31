@@ -2,6 +2,7 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
 import {
+  FacilityProductModel,
   StockModel,
   StockStore,
 } from '../modules/stocksList/stores/StocksStore';
@@ -9,6 +10,7 @@ import { CategoryModel } from '../stores/CategoriesStore';
 import { SupplierModel } from '../stores/SuppliersStore';
 import {
   getCategoriesByFacilityIdAPI,
+  getFacilityProducts,
   getSupplierListByFacilityIdAPI,
 } from './api/productsAPI';
 import { categoriesStore, suppliersStore } from '../stores';
@@ -17,6 +19,7 @@ interface FetchStocksContext {
   stocks: StockModel[];
   categories: CategoryModel[];
   suppliers: SupplierModel[];
+  facilityProducts: FacilityProductModel[];
 }
 
 export const fetchManageProductsStocks = async (stocksStore: StockStore) => {
@@ -24,6 +27,7 @@ export const fetchManageProductsStocks = async (stocksStore: StockStore) => {
     stocks: [],
     categories: [],
     suppliers: [],
+    facilityProducts: [],
   };
   if (!stocksStore.stocks.length) {
     return new TaskExecutor([
@@ -42,15 +46,19 @@ export class FetchManageProductStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const [stocks, categories, suppliers] = await Promise.all([
-      getFetchStockAPI(),
-      getCategoriesByFacilityIdAPI(),
-      getSupplierListByFacilityIdAPI(),
-    ]);
+    const [stocks, categories, suppliers, facilityProducts] = await Promise.all(
+      [
+        getFetchStockAPI(),
+        getCategoriesByFacilityIdAPI(),
+        getSupplierListByFacilityIdAPI(),
+        getFacilityProducts(),
+      ],
+    );
 
     this.fetchStocksContext.stocks = stocks;
     this.fetchStocksContext.categories = categories;
     this.fetchStocksContext.suppliers = suppliers;
+    this.fetchStocksContext.facilityProducts = facilityProducts;
   }
 }
 
@@ -65,8 +73,12 @@ export class SaveStocksToStore extends Task {
   }
 
   async run() {
-    this.stocksStore.setStocks(this.fetchStocksContext.stocks);
-    categoriesStore.setCategories(this.fetchStocksContext.categories);
-    suppliersStore.setSuppliers(this.fetchStocksContext.suppliers);
+    const { stocks, facilityProducts, categories, suppliers } =
+      this.fetchStocksContext;
+
+    this.stocksStore.setStocks(stocks);
+    this.stocksStore.setFacilityProducts(facilityProducts);
+    categoriesStore.setCategories(categories);
+    suppliersStore.setSuppliers(suppliers);
   }
 }

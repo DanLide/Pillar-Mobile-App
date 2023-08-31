@@ -44,6 +44,7 @@ const icons: Record<
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
+  [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
@@ -137,6 +138,7 @@ export const Toast: React.FC<Props> = ({
   const handleRightButtonPress = useCallback(async () => {
     switch (actionType) {
       case ToastActionType.Close:
+        onPress?.(id);
         onHide();
         break;
       case ToastActionType.Undo:

@@ -822,6 +822,17 @@ export const CloseEyeIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ErrorLinedIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={25} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M3.475 12.5c0 4.701 3.824 8.525 8.525 8.525 4.701 0 8.525-3.824 8.525-8.525 0-4.701-3.824-8.525-8.525-8.525-4.701 0-8.525 3.824-8.525 8.525ZM2 12.5c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10-10-4.486-10-10Zm10-1.042 3.555-3.556 1.043 1.043-3.555 3.555 3.555 3.556-1.043 1.043L12 13.543l-3.555 3.556-1.042-1.043 3.554-3.556-3.554-3.555 1.042-1.043L12 11.458Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },

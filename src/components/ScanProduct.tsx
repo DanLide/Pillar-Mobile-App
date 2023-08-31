@@ -13,6 +13,7 @@ import {
   View,
   Pressable,
   TouchableOpacity,
+  Vibration,
 } from 'react-native';
 import Animated, {
   FadeOutDown,
@@ -24,6 +25,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 import { Frame } from 'react-native-vision-camera';
+import TrackPlayer from 'react-native-track-player';
+import { VolumeManager } from 'react-native-volume-manager';
 import { isNil } from 'ramda';
 
 import { useSwitchState } from '../hooks';
@@ -231,8 +234,13 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     [],
   );
 
-  const scanBarcode = (code?: string) => {
+  const scanBarcode = async (code?: string) => {
     if (!code) return;
+
+    await VolumeManager.setVolume(1);
+    Vibration.vibrate();
+    TrackPlayer.play();
+
     onScan(code);
     setIsBlinkOn(true);
   };

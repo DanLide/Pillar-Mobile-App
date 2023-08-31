@@ -8,6 +8,7 @@ import {
 } from './api/productsAPI';
 import { ssoStore } from '../stores';
 import { difference, isEmpty } from 'ramda';
+import { stocksStore } from '../modules/stocksList/stores';
 
 export const onUpdateProduct = async (
   manageProductsStore: ManageProductsStore,
@@ -101,8 +102,14 @@ export class SaveUpdateProductToStore extends Task {
   }
 
   async run() {
+    const updatedProduct = this.manageProductsStore.updatedProduct;
+
     this.manageProductsStore.setCurrentProduct(
       this.manageProductsStore.updatedProduct,
     );
+
+    if (updatedProduct) {
+      stocksStore.updateFacilityProduct(updatedProduct);
+    }
   }
 }

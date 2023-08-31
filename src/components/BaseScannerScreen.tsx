@@ -1,9 +1,7 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Vibration, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import TrackPlayer from 'react-native-track-player';
-import { VolumeManager } from 'react-native-volume-manager';
 
 import {
   CurrentProductStoreType,
@@ -37,6 +35,7 @@ export enum ScannerScreenError {
 interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
+  product?: ProductModel;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: (product: ProductModel) => void | unknown;
   onEditPress?: () => void;
@@ -57,6 +56,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
   ({
     store,
     modalParams,
+    product = store.getCurrentProduct,
     onProductScan,
     onSubmit,
     onEditPress,
@@ -108,9 +108,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const onScanProduct = useCallback<ScanProductProps['onScan']>(
       async code => {
         setIsScannerActive(false);
-        await VolumeManager.setVolume(1);
-        Vibration.vibrate();
-        TrackPlayer.play();
 
         if (typeof code === 'string') {
           await fetchProductByCode(code);
@@ -172,7 +169,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         />
         <ProductModalComponent
           {...modalParams}
-          product={store.getCurrentProduct}
+          product={product}
           stockName={store.stockName}
           onSubmit={onProductSubmit}
           onEditPress={onEditPress}

@@ -18,7 +18,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
-import { colors, fonts } from '../theme';
+import { colors, fonts, SVGs } from '../theme';
 import { testIds } from '../helpers';
 
 export enum InputType {
@@ -29,6 +29,7 @@ interface Props extends TextInputProps {
   type?: InputType;
   label?: string;
   rightLabel?: string;
+  error?: string;
   containerStyle?: StyleProp<ViewStyle>;
   rightIcon?: React.NamedExoticComponent<SvgProps> | React.FC<SvgProps>;
   testID?: string;
@@ -48,6 +49,7 @@ const Input = forwardRef(
       type,
       label,
       rightLabel,
+      error,
       containerStyle,
       rightIcon: RightIcon,
       onRightIconPress,
@@ -111,12 +113,32 @@ const Input = forwardRef(
       return <Text style={styles.rightLabelContainer}>{rightLabel}</Text>;
     }, [rightLabel]);
 
+    const BottomLabel = useMemo<JSX.Element | null>(() => {
+      if (!error) return null;
+
+      return <Text style={styles.labelBottom}>{error}</Text>;
+    }, [error]);
+
     const handleFocus = useCallback(() => {
       setIsFocused(true);
     }, []);
     const handleBlur = useCallback(() => {
       setIsFocused(false);
     }, []);
+
+    const InputRightIcon = useMemo<JSX.Element | undefined>(() => {
+      if (error) {
+        return <SVGs.ErrorLinedIcon color={colors.red} />;
+      }
+
+      return (
+        RightIcon && (
+          <Pressable style={styles.rightIcon} onPress={onRightIconPress}>
+            <RightIcon color={colors.grayDark3} />
+          </Pressable>
+        )
+      );
+    }, [RightIcon, error, onRightIconPress]);
 
     return (
       <View style={mergedContainerStyle} testID={testIds.idContainer(testID)}>
@@ -131,11 +153,8 @@ const Input = forwardRef(
           ref={ref}
           {...props}
         />
-        {RightIcon && (
-          <Pressable style={styles.rightIcon} onPress={onRightIconPress}>
-            <RightIcon color={colors.grayDark3} />
-          </Pressable>
-        )}
+        {InputRightIcon}
+        {BottomLabel}
       </View>
     );
   },
@@ -192,6 +211,16 @@ const styles = StyleSheet.create({
   labelActive: {
     color: colors.purpleDark,
     fontFamily: fonts.TT_Bold,
+  },
+  labelBottom: {
+    bottom: -20,
+    color: colors.redDark,
+    fontFamily: fonts.TT_Regular,
+    fontSize: 12,
+    left: 0,
+    lineHeight: 16,
+    paddingTop: 3,
+    position: 'absolute',
   },
   labelContainer: {
     backgroundColor: colors.white,

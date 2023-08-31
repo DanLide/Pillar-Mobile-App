@@ -55,13 +55,21 @@ export class ManageProductsStore extends BaseProductsStore {
   @action setMinValue(min: number) {
     if (!this.updatedProduct) return;
 
-    this.updatedProduct = { ...this.updatedProduct, min };
+    const maxValue = this.updatedProduct.max ?? 0;
+
+    const max = min >= maxValue ? min : maxValue;
+
+    this.updatedProduct = { ...this.updatedProduct, min, max };
   }
 
   @action setMaxValue(max: number) {
     if (!this.updatedProduct) return;
 
-    this.updatedProduct = { ...this.updatedProduct, max };
+    const minValue = this.updatedProduct.min ?? 0;
+
+    const min = max <= minValue ? max : minValue;
+
+    this.updatedProduct = { ...this.updatedProduct, max, min };
   }
 
   @action setUnitsPerContainer(unitsPerContainer: number) {

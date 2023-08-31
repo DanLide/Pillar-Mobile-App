@@ -1,16 +1,12 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { encode as btoa } from 'base-64';
+import { isValid } from 'gtin';
 
 import { BaseScannerScreen } from '../../components';
-import { ProductModal } from './components';
+import { ProductModal, ProductModalErrors } from './components';
 
-import {
-  CurrentProductStoreType,
-  ProductModel,
-  ScannerModalStoreType,
-  StockProductStoreType,
-} from '../../stores/types';
+import { ProductModel } from '../../stores/types';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { manageProductsStore } from './stores';
 import { onUpdateProduct } from '../../data/updateProduct';
@@ -23,10 +19,8 @@ import {
 import { onUpdateProductQuantity } from '../../data/updateProductQuantity';
 import { assoc, mergeLeft } from 'ramda';
 import { useSingleToast } from '../../hooks';
-
-type BaseProductsStore = ScannerModalStoreType &
-  CurrentProductStoreType &
-  StockProductStoreType;
+import { stocksStore } from '../stocksList/stores';
+import { getIsUpcUnique } from './helpers';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -39,15 +33,19 @@ const ScannerScreen = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
-  const store = useRef<BaseProductsStore>(manageProductsStore).current;
+  const store = useRef(manageProductsStore).current;
 
   const { showToast } = useSingleToast();
+
+  const product = modalParams.isEdit
+    ? store.updatedProduct
+    : store.getCurrentProduct;
 
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
       setModalParams({
         type: ProductModalType.ManageProduct,
-        maxValue: store.getMaxValue(product),
+        maxValue: store.getMaxValue(),
         onHand: store.getOnHand(product),
       }),
     [store],
@@ -62,8 +60,44 @@ const ScannerScreen = observer(() => {
     [store],
   );
 
+  const handleEditPress = useCallback(() => {
+    setModalParams(mergeLeft({ isEdit: true, toastType: undefined }));
+  }, []);
+
+  const handleCancelPress = useCallback(() => {
+    setModalParams(mergeLeft({ isEdit: false, toastType: undefined }));
+  }, []);
+
+  const validateUpc = useCallback(
+    (upc?: string) => {
+      if (!modalParams.isEdit) return;
+
+      const upcLengthValidation = !!upc && [12, 13].includes(upc.length);
+
+      if (!upcLengthValidation) return ProductModalErrors.UpcLengthError;
+
+      const isUpcValid = isValid(upc);
+
+      if (!isUpcValid) return ProductModalErrors.UpcFormatError;
+
+      const isUpcUnique = getIsUpcUnique(product)(stocksStore.facilityProducts);
+
+      if (!isUpcUnique) {
+        setModalParams(assoc('toastType', ToastType.UpcUpdateError));
+        return ProductModalErrors.UpcUpdateError;
+      }
+    },
+    [modalParams.isEdit, product],
+  );
+
   const updateProduct = useCallback(
     async (product: ProductModel) => {
+      setModalParams(assoc('toastType', undefined));
+
+      const validationError = validateUpc(product.upc);
+
+      if (validationError) return validationError;
+
       const updateProductFunction = modalParams.isEdit
         ? onUpdateProduct
         : onUpdateProductQuantity;
@@ -71,22 +105,13 @@ const ScannerScreen = observer(() => {
       const error = await updateProductFunction(manageProductsStore);
 
       if (error) {
-        setModalParams(
-          mergeLeft({
-            toastType: ToastType.ProductUpdateError,
-            onToastAction: () => updateProduct(product),
-          }),
-        );
+        setModalParams(assoc('toastType', ToastType.ProductUpdateError));
         return error;
       }
 
       if (modalParams.isEdit) {
-        setModalParams(
-          mergeLeft({
-            isEdit: false,
-            toastType: ToastType.ProductUpdateSuccess,
-          }),
-        );
+        handleCancelPress();
+        setModalParams(assoc('toastType', ToastType.ProductUpdateSuccess));
         return;
       }
 
@@ -94,21 +119,14 @@ const ScannerScreen = observer(() => {
 
       showToast('Product Updated', { type: ToastType.ProductUpdateSuccess });
     },
-    [modalParams.isEdit, showToast, store],
+    [handleCancelPress, modalParams.isEdit, showToast, store, validateUpc],
   );
-
-  const handleEditPress = useCallback(() => {
-    setModalParams(assoc('isEdit', true));
-  }, []);
-
-  const handleCancelPress = useCallback(() => {
-    setModalParams(mergeLeft({ isEdit: false, toastType: undefined }));
-  }, []);
 
   return (
     <BaseScannerScreen
       store={store}
       modalParams={modalParams}
+      product={product}
       onProductScan={onProductScan}
       onFetchProduct={fetchProduct}
       onSubmit={updateProduct}

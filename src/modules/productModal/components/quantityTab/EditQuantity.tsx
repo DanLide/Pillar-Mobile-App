@@ -1,4 +1,11 @@
-import React, { useCallback, memo, useMemo, useState, useRef } from 'react';
+import React, {
+  useCallback,
+  memo,
+  useMemo,
+  useState,
+  useRef,
+  useEffect,
+} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -79,6 +86,12 @@ export const EditQuantity = memo(
 
     const isInputDisabled = disabled || error;
     const isInputHidden = error || hideCount;
+
+    useEffect(() => {
+      if (currentValue !== +displayValue) {
+        setDisplayValue(displayCurrentValue);
+      }
+    }, [currentValue, displayCurrentValue, displayValue]);
 
     const containerStyle = useMemo<StyleProp<ViewStyle>>(
       () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
