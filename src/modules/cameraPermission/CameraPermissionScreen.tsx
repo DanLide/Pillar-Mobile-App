@@ -66,7 +66,7 @@ export const CameraPermissionScreen = memo(({ navigation, route }: Props) => {
         {cameraPermission === RESULTS.BLOCKED ? (
           <Text style={styles.subtitle}>
             <Text>Allow camera access in{'\n'}</Text>
-            <Text style={styles.bold}>Settings {'>'} RepairStack.</Text>
+            <Text style={styles.bold}>Settings {'>'} RepairStack</Text>
           </Text>
         ) : (
           <Text style={styles.subtitle}>
