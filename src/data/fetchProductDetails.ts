@@ -68,11 +68,10 @@ export class FetchProductDetails extends Task {
 
     const { max, min, replenishedFormId } = settings;
 
-    const orderMultiple =
-      pipe(
-        find(whereEq({ productId })),
-        prop('orderMultiple'),
-      )(stocksStore.facilityProducts) ?? 0;
+    const orderMultiple = pipe(
+      find(whereEq({ productId })),
+      prop('orderMultiple'),
+    )(stocksStore.facilityProducts);
 
     const restockFromId =
       replenishedFormId ||

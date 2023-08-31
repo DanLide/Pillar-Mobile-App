@@ -96,7 +96,7 @@ export const ViewProduct = observer(
           <InfoBadge
             title="Shipment"
             titleWithNewLine="Quantity"
-            subtitle={product?.orderMultiple}
+            subtitle={product?.orderMultiple ?? '-'}
           />
           <InfoBadge title="On Order" subtitle={product?.onOrder} />
         </View>
