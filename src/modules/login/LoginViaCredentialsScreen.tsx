@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from 'react';
-import { View, StyleSheet, Alert, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { observer } from 'mobx-react';
 
 import { SVGs, colors, fonts } from '../../theme';
@@ -19,7 +19,7 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from '../../contexts';
-import { BadRequestError } from '../../data/helpers/tryFetch';
+import { isBadRequestError } from '../../data/helpers/utils';
 
 const LoginViaCredentialsScreenContent = observer(() => {
   const { showToast } = useSingleToast();
@@ -30,27 +30,28 @@ const LoginViaCredentialsScreenContent = observer(() => {
 
   const onSubmit = useCallback(async () => {
     setIsLoading(true);
-    const error = (await onLogin(
+    const error = await onLogin(
       { username: loginFormRef.username, password: loginFormRef.password },
       authStoreRef,
-    )) as BadRequestError | undefined;
+    );
 
-    if (error) {
-      if (error.error_description?.includes('AADB2C90225')) {
-        showToast(
-          'Sorry, your username and password are incorrect. Please try again.',
-          {
-            type: ToastType.Error,
-            duration: 0,
-          },
-        );
-      } else {
-        showToast('Sorry, we are not able to login.', {
-          type: ToastType.Retry,
+    if (
+      isBadRequestError(error) &&
+      error.error_description?.includes('AADB2C90225')
+    ) {
+      showToast(
+        'Sorry, your username and password are incorrect. Please try again.',
+        {
+          type: ToastType.Error,
           duration: 0,
-          onPress: onSubmit,
-        });
-      }
+        },
+      );
+    } else {
+      showToast('Sorry, we are not able to login.', {
+        type: ToastType.Retry,
+        duration: 0,
+        onPress: onSubmit,
+      });
     }
 
     setIsLoading(false);
