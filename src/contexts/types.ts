@@ -10,4 +10,6 @@ export enum ToastType {
 
   Success = 'Success',
   ProductUpdateSuccess = 'ProductUpdateSuccess',
+
+  Retry = 'Retry',
 }

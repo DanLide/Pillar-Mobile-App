@@ -1,4 +1,5 @@
 import { either, filter, isEmpty, isNil, map, not, pipe } from 'ramda';
+import { BadRequestError, RequestError } from './tryFetch';
 
 export class Utils {
   static zeroToUndefined<Type>(value: Type) {
@@ -41,3 +42,9 @@ export class Utils {
     return `${truncatedFirstHalf}...${truncatedSecondHalf}`;
   }
 }
+
+export const isBadRequestError = (
+  error: RequestError | BadRequestError | void,
+): error is BadRequestError => {
+  return (error as BadRequestError).error_description !== undefined;
+};

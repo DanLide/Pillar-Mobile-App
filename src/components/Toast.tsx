@@ -51,6 +51,7 @@ const icons: Record<
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
+  [ToastType.Retry]: SVGs.ListErrorIcon
 };
 
 export const Toast: React.FC<Props> = ({
