@@ -833,6 +833,17 @@ export const ErrorLinedIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ReceiveBackorderIcon = memo((props: SvgProps) => (
+  <Svg width={20} height={14} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M.833 13.875h18.334V.125H.833v13.75Zm1.25-1.25h15.834V1.376H2.083v11.25Zm1.25-8.75h13.334V2.628H3.333v1.249Zm10 2.5h3.334v-1.25h-3.334v1.25Zm-6.25 0h5v-1.25h-5v1.25Zm-3.75 0h2.5v-1.25h-2.5v1.25Zm10 2.5h3.334v-1.25h-3.334v1.25Zm-6.25 0h5v-1.25h-5v1.25Zm-3.75 0h2.5v-1.25h-2.5v1.25Zm10 2.5h3.334v-1.25h-3.334v1.25Zm-6.25 0h5v-1.25h-5v1.25Zm-3.75 0h2.5v-1.249h-2.5v1.25Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },

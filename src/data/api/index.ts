@@ -6,10 +6,11 @@ import {
   removeProductAPI,
   RemoveProductResponse,
   returnProductAPI,
-  getFetchProductByFacilityIdAPI
+  getFetchProductByFacilityIdAPI,
 } from './productsAPI';
 import { getFetchJobsAPI } from './jobsAPI';
 import { createInvoiceAPI } from './createInvoiceAPI';
+import { getOrdersAPI, GetOrdersAPIResponse } from './orders';
 
 export {
   getRoleManagerAPI,
@@ -21,5 +22,6 @@ export {
   returnProductAPI,
   createInvoiceAPI,
   getFetchProductByFacilityIdAPI,
+  getOrdersAPI,
 };
-export type { LoginAPIParams, RemoveProductResponse };
+export type { LoginAPIParams, RemoveProductResponse, GetOrdersAPIResponse };

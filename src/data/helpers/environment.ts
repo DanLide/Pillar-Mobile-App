@@ -30,5 +30,8 @@ export const environment = {
     inventory: {
       apiUri: `${Config.API_URL}/inventory`,
     },
+    order: {
+      apiUri: `${Config.API_URL}/order`,
+    },
   },
 };
