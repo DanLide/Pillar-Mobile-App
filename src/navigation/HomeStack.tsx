@@ -21,7 +21,7 @@ import { RemoveStack } from './RemoveStack';
 import { ManageProductsStack } from './ManageProductsStack';
 import { DrawerContent } from './components';
 import { CreateInvoiceStack } from './CreateInvoiceStack';
-import { OrdersStack } from './Orders';
+import { OrdersStack } from './OrdersStack';
 
 const getInitialScreen = (
   authStore: AuthStore,
