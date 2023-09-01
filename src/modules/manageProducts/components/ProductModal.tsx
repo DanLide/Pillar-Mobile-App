@@ -25,6 +25,7 @@ import { manageProductsStore } from '../stores';
 import { permissionProvider } from '../../../data/providers';
 import { ViewProduct } from './ViewProduct';
 import { ToastType } from '../../../contexts/types';
+import AlertWrapper from '../../../contexts/AlertWrapper';
 
 export enum ProductModalErrors {
   UpcUpdateError = 'UpcUpdateError',
@@ -56,6 +57,19 @@ const getErrorMessage = (error: unknown) => {
   }
 };
 
+interface AlertParams {
+  isVisible: boolean;
+  shouldCloseModal: boolean;
+}
+
+const INIT_ALERT_PARAMS: AlertParams = {
+  isVisible: false,
+  shouldCloseModal: false,
+};
+
+const alertMessage =
+  'Are you sure you want to exit without saving? Your edits will not be saved.';
+
 export const ProductModal = observer(
   ({
     product,
@@ -75,6 +89,8 @@ export const ProductModal = observer(
 
     const [isLoading, setIsLoading] = useState(false);
     const [upcError, setUpcError] = useState<string | undefined>();
+    const [alertParams, setAlertParams] =
+      useState<AlertParams>(INIT_ALERT_PARAMS);
 
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
@@ -93,10 +109,20 @@ export const ProductModal = observer(
 
     const clearProductModalStoreOnClose = useCallback(() => {
       scrollTo(modalCollapsedOffset);
+      setAlertParams(INIT_ALERT_PARAMS);
       setUpcError(undefined);
       onCancelPress?.();
       onClose();
     }, [scrollTo, modalCollapsedOffset, onCancelPress, onClose]);
+
+    const handleModalClose = useCallback(() => {
+      if (store.isProductChanged) {
+        setAlertParams({ isVisible: true, shouldCloseModal: true });
+        return;
+      }
+
+      clearProductModalStoreOnClose();
+    }, [clearProductModalStoreOnClose, store.isProductChanged]);
 
     const handleError = useCallback((error: unknown) => {
       const message = getErrorMessage(error);
@@ -128,15 +154,25 @@ export const ProductModal = observer(
       }
     }, [handleSubmit, onEditPress, toastType]);
 
-    const handleEdit = useCallback(() => {
+    const handleEditPress = useCallback(() => {
       store.setUpdatedProduct(product);
       onEditPress?.();
     }, [onEditPress, product, store]);
 
     const handleCancel = useCallback(() => {
+      setAlertParams(INIT_ALERT_PARAMS);
       setUpcError(undefined);
       onCancelPress?.();
     }, [onCancelPress]);
+
+    const handleCancelPress = useCallback(() => {
+      if (store.isProductChanged) {
+        setAlertParams({ isVisible: true, shouldCloseModal: false });
+        return;
+      }
+
+      handleCancel();
+    }, [handleCancel, store.isProductChanged]);
 
     const handleUpcChange = useCallback(() => {
       setUpcError(undefined);
@@ -170,74 +206,98 @@ export const ProductModal = observer(
       [],
     );
 
+    const handleAlertPrimaryPress = useCallback(
+      () =>
+        alertParams.shouldCloseModal
+          ? clearProductModalStoreOnClose()
+          : handleCancel(),
+      [
+        alertParams.shouldCloseModal,
+        clearProductModalStoreOnClose,
+        handleCancel,
+      ],
+    );
+
+    const handleAlertSecondaryPress = useCallback(
+      () => setAlertParams(INIT_ALERT_PARAMS),
+      [],
+    );
+
     return (
       <Modal
         isVisible={type !== ProductModalType.Hidden}
-        onClose={clearProductModalStoreOnClose}
+        onClose={handleModalClose}
         title={stockName}
         titleContainerStyle={styles.titleContainer}
         topOffset={topOffset}
-        semiTitle="View Product"
+        semiTitle={isEdit ? 'Edit Product' : 'View Product'}
       >
-        <ToastContextProvider disableSafeArea duration={0} offset={35}>
-          <KeyboardAvoidingView
-            keyboardVerticalOffset={85}
-            behavior="padding"
-            style={styles.keyboardAvoidingView}
-          >
-            <Animated.ScrollView
-              onScroll={scrollHandler}
-              stickyHeaderIndices={[0]}
-              contentContainerStyle={styles.contentContainer}
-              bounces={false}
-              ref={scrollViewRef}
-              nestedScrollEnabled
+        <AlertWrapper
+          visible={alertParams.isVisible}
+          message={alertMessage}
+          onPressPrimary={handleAlertPrimaryPress}
+          onPressSecondary={handleAlertSecondaryPress}
+        >
+          <ToastContextProvider disableSafeArea duration={0} offset={35}>
+            <KeyboardAvoidingView
+              keyboardVerticalOffset={85}
+              behavior="padding"
+              style={styles.keyboardAvoidingView}
             >
-              <Description product={product} topOffset={topOffset} />
-              <View style={styles.settings}>
-                {isEdit ? (
-                  <EditProduct
-                    product={product}
-                    onHand={onHand}
-                    maxValue={maxValue}
-                    toastType={toastType}
-                    stockName={stockName}
-                    upcError={upcError}
-                    onUpcChange={handleUpcChange}
-                    onToastAction={handleToastAction}
-                  />
-                ) : (
-                  <ViewProduct
-                    product={product}
-                    onHand={onHand}
-                    maxValue={maxValue}
-                    toastType={toastType}
-                    onToastAction={handleToastAction}
-                    onChangeProductQuantity={setEditableProductQuantity}
+              <Animated.ScrollView
+                onScroll={scrollHandler}
+                stickyHeaderIndices={[0]}
+                contentContainerStyle={styles.contentContainer}
+                bounces={false}
+                ref={scrollViewRef}
+                nestedScrollEnabled
+              >
+                <Description product={product} topOffset={topOffset} />
+                <View style={styles.settings}>
+                  {isEdit ? (
+                    <EditProduct
+                      product={product}
+                      onHand={onHand}
+                      maxValue={maxValue}
+                      toastType={toastType}
+                      stockName={stockName}
+                      upcError={upcError}
+                      onUpcChange={handleUpcChange}
+                      onToastAction={handleToastAction}
+                    />
+                  ) : (
+                    <ViewProduct
+                      product={product}
+                      onHand={onHand}
+                      maxValue={maxValue}
+                      toastType={toastType}
+                      onToastAction={handleToastAction}
+                      onChangeProductQuantity={setEditableProductQuantity}
+                    />
+                  )}
+                </View>
+              </Animated.ScrollView>
+              <View style={styles.buttons}>
+                {canEditProduct && (
+                  <Button
+                    title={isEdit ? 'Cancel' : 'Edit'}
+                    type={ButtonType.secondary}
+                    disabled={isLoading}
+                    buttonStyle={styles.buttonContainer}
+                    onPress={isEdit ? handleCancelPress : handleEditPress}
                   />
                 )}
-              </View>
-            </Animated.ScrollView>
-            <View style={styles.buttons}>
-              {canEditProduct && (
                 <Button
-                  title={isEdit ? 'Cancel' : 'Edit'}
-                  type={ButtonType.secondary}
-                  disabled={isLoading}
+                  title={isEdit ? 'Save' : 'Done'}
+                  type={ButtonType.primary}
+                  isLoading={isLoading}
                   buttonStyle={styles.buttonContainer}
-                  onPress={isEdit ? handleCancel : handleEdit}
+                  onPress={handleSubmit}
                 />
-              )}
-              <Button
-                title={isEdit ? 'Save' : 'Done'}
-                type={ButtonType.primary}
-                isLoading={isLoading}
-                buttonStyle={styles.buttonContainer}
-                onPress={handleSubmit}
-              />
-            </View>
-          </KeyboardAvoidingView>
-        </ToastContextProvider>
+              </View>
+            </KeyboardAvoidingView>
+          </ToastContextProvider>
+        </AlertWrapper>
       </Modal>
     );
   },
