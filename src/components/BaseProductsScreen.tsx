@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
 
@@ -31,7 +32,6 @@ import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
-import { SvgProps } from 'react-native-svg';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -52,6 +52,7 @@ interface Props {
   tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
   primaryButtonTitle?: string;
+  disableAlert?: boolean;
   onComplete?: () => void;
 }
 
@@ -79,6 +80,7 @@ export const BaseProductsScreen = observer(
     tooltipTitle,
     ListComponent,
     primaryButtonTitle,
+    disableAlert,
     onComplete,
   }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -96,6 +98,8 @@ export const BaseProductsScreen = observer(
         : ButtonType.secondary;
 
     useEffect(() => {
+      if (disableAlert) return;
+
       autorun(() => {
         navigation.addListener('beforeRemove', e => {
           if (!store.getNotSyncedProducts.length) {
@@ -109,7 +113,12 @@ export const BaseProductsScreen = observer(
           setAlertVisible(true);
         });
       });
-    }, [navigation, alertVisible, store.getNotSyncedProducts.length]);
+    }, [
+      navigation,
+      alertVisible,
+      store.getNotSyncedProducts.length,
+      disableAlert,
+    ]);
 
     const onPressScan = async () => {
       const result = await check(PERMISSIONS.IOS.CAMERA);
