@@ -70,7 +70,7 @@ const ScannerScreen = observer(() => {
 
   const validateUpc = useCallback(
     (upc?: string) => {
-      if (!modalParams.isEdit) return;
+      if (!modalParams.isEdit || !upc) return;
 
       const upcLengthValidation = !!upc && [12, 13].includes(upc.length);
 
