@@ -41,7 +41,6 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   disabled?: boolean;
   hideCount?: boolean;
   error?: boolean;
-  isEdit?: boolean;
 
   onRemove?: () => void;
   onChange: (quantity: number) => void;
@@ -204,7 +203,11 @@ export const EditQuantity = memo(
         contentSize: { width },
       },
     }: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => {
-      if (!layoutInputRef.current?.width || !width || contentRef.current === displayValue) {
+      if (
+        !layoutInputRef.current?.width ||
+        !width ||
+        contentRef.current === displayValue
+      ) {
         return;
       }
       contentRef.current = displayValue;
@@ -219,14 +222,12 @@ export const EditQuantity = memo(
         return;
       }
       const increasedFontSize = PixelRatio.roundToNearestPixel(
-        (fontSize * layoutInputRef.current?.width) / width * 0.9,
+        ((fontSize * layoutInputRef.current?.width) / width) * 0.9,
       );
       const increasedWidth = (width * increasedFontSize) / fontSize;
       if (layoutInputRef.current?.width >= increasedWidth) {
         setFontSize(
-          increasedFontSize > initFontSize
-            ? initFontSize
-            : increasedFontSize,
+          increasedFontSize > initFontSize ? initFontSize : increasedFontSize,
         );
       }
     };

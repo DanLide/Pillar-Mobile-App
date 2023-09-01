@@ -16,6 +16,7 @@ import {
   Description,
   ProductModalProps,
   ProductModalType,
+  ProductQuantity,
 } from '../../productModal';
 
 import { colors } from '../../../theme';
@@ -195,6 +196,18 @@ export const ProductModal = observer(
             >
               <Description product={product} topOffset={topOffset} />
               <View style={styles.settings}>
+                <ProductQuantity
+                  isEdit={isEdit}
+                  type={ProductModalType.ManageProduct}
+                  product={product}
+                  onChangeProductQuantity={setEditableProductQuantity}
+                  toastType={toastType}
+                  maxValue={maxValue ?? 0}
+                  minValue={0}
+                  onHand={onHand}
+                  disabled={!canEditProduct}
+                  onToastAction={handleToastAction}
+                />
                 {isEdit ? (
                   <EditProduct
                     product={product}

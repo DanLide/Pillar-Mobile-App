@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
 
@@ -24,14 +25,10 @@ import {
 } from '../../../components';
 import { InventoryUseType } from '../../../constants/common.enum';
 import { colors, fonts, SVGs } from '../../../theme';
-import {
-  EditQuantity,
-  ProductQuantity,
-} from '../../productModal/components/quantityTab';
+import { EditQuantity } from '../../productModal/components/quantityTab';
 import { getProductStepQty } from '../../../data/helpers';
 import { manageProductsStore } from '../stores';
-import { SvgProps } from 'react-native-svg';
-import { ProductModalProps, ProductModalType } from '../../productModal';
+import { ProductModalProps } from '../../productModal';
 import { UpcScanner } from './UpcScanner';
 
 const inventoryTypes = [
@@ -50,27 +47,13 @@ const SCAN_ICON_PROPS: SvgProps = {
   width: 32,
 };
 
-interface Props
-  extends Pick<
-    ProductModalProps,
-    'product' | 'onHand' | 'maxValue' | 'toastType' | 'stockName'
-  > {
+interface Props extends Pick<ProductModalProps, 'product' | 'stockName'> {
   upcError?: string;
   onUpcChange?: (upc: string) => void;
-  onToastAction?: () => void;
 }
 
 export const EditProduct = observer(
-  ({
-    product,
-    onHand,
-    maxValue,
-    toastType,
-    stockName,
-    upcError,
-    onUpcChange,
-    onToastAction,
-  }: Props) => {
+  ({ product, stockName, upcError, onUpcChange }: Props) => {
     const store = useRef(manageProductsStore).current;
     const inputRef = useRef<TextInput | null>(null);
 
@@ -180,16 +163,6 @@ export const EditProduct = observer(
 
     return (
       <>
-        <ProductQuantity
-          type={ProductModalType.ManageProduct}
-          product={product}
-          onChangeProductQuantity={quantity => store.setOnHand(quantity)}
-          maxValue={maxValue ?? 0}
-          minValue={0}
-          onHand={onHand}
-          toastType={toastType}
-          onToastAction={onToastAction}
-        />
         <Dropdown
           label="Remove By"
           data={inventoryTypes}
