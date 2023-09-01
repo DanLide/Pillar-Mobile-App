@@ -14,7 +14,6 @@ export const onUpdateProduct = async (
   manageProductsStore: ManageProductsStore,
 ) => {
   try {
-    await new UpdateProductTask(manageProductsStore).run();
     await new TaskExecutor([
       new UpdateProductTask(manageProductsStore),
       new SaveUpdateProductToStore(manageProductsStore),
