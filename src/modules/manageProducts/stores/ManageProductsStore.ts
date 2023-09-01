@@ -1,8 +1,9 @@
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
-import { action, makeObservable, observable, override } from 'mobx';
+import { action, computed, makeObservable, observable, override } from 'mobx';
 import { ProductModel } from '../../../stores/types';
 import { v1 as uuid } from 'uuid';
 import { addProductToList } from '../helpers';
+import { equals } from 'ramda';
 
 const PRODUCT_MAX_COUNT = 9999;
 
@@ -30,8 +31,27 @@ export class ManageProductsStore extends BaseProductsStore {
     this.products = addProductToList(scannedProduct, this.products);
   }
 
+  @override clear() {
+    this.currentStock = undefined;
+    this.products = [];
+    this.currentProduct = undefined;
+    this.updatedProduct = undefined;
+  }
+
+  @computed get isProductChanged(): boolean {
+    return (
+      this.currentProduct?.reservedCount !== this.currentProduct?.onHand ||
+      (!!this.updatedProduct &&
+        !equals(this.updatedProduct, this.currentProduct))
+    );
+  }
+
   @action setUpdatedProduct(product?: ProductModel) {
     this.updatedProduct = product;
+  }
+
+  @action removeUpdatedProduct() {
+    this.updatedProduct = undefined;
   }
 
   @action setOnHand(reservedCount: number) {

@@ -53,7 +53,8 @@ const ScannerScreen = observer(() => {
 
   const closeModal = useCallback(() => {
     setModalParams(initModalParams);
-  }, []);
+    store.removeUpdatedProduct();
+  }, [store]);
 
   const fetchProduct = useCallback(
     (code: string) => fetchProductDetails(store, btoa(code)),
@@ -72,7 +73,7 @@ const ScannerScreen = observer(() => {
     (upc?: string) => {
       if (!modalParams.isEdit || !upc) return;
 
-      const upcLengthValidation = !!upc && [12, 13].includes(upc.length);
+      const upcLengthValidation = [12, 13].includes(upc.length);
 
       if (!upcLengthValidation) return ProductModalErrors.UpcLengthError;
 
@@ -94,6 +95,8 @@ const ScannerScreen = observer(() => {
     async (product: ProductModel) => {
       setModalParams(assoc('toastType', undefined));
 
+      if (!store.isProductChanged) return;
+
       const validationError = validateUpc(product.upc);
 
       if (validationError) return validationError;
@@ -109,17 +112,15 @@ const ScannerScreen = observer(() => {
         return error;
       }
 
-      if (modalParams.isEdit) {
-        handleCancelPress();
-        setModalParams(assoc('toastType', ToastType.ProductUpdateSuccess));
-        return;
-      }
-
       store.addProduct(product);
 
-      showToast('Product Updated', { type: ToastType.ProductUpdateSuccess });
+      if (modalParams.isEdit) {
+        setModalParams(assoc('toastType', ToastType.ProductUpdateSuccess));
+      } else {
+        showToast('Product Updated', { type: ToastType.ProductUpdateSuccess });
+      }
     },
-    [handleCancelPress, modalParams.isEdit, showToast, store, validateUpc],
+    [modalParams.isEdit, showToast, store, validateUpc],
   );
 
   return (
