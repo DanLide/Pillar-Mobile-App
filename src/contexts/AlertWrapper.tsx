@@ -9,9 +9,9 @@ type AlertWrapper = {
   children: React.ReactNode;
   visible: boolean;
   message: string;
-  title: string;
   onPressPrimary: () => void;
   onPressSecondary: () => void;
+  title?: string;
   primaryTitle?: string;
   secondaryTitle?: string;
   testID?: string;
@@ -34,7 +34,7 @@ const AlertWrapper: React.FC<AlertWrapper> = ({
       <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
         <View style={styles.container}>
           <View style={styles.alertContainer}>
-            <Text style={styles.titleText}>{title}</Text>
+            {title ? <Text style={styles.titleText}>{title}</Text> : null}
             <Text style={styles.messageText}>{message}</Text>
             <View style={styles.buttonsContainer}>
               <Button

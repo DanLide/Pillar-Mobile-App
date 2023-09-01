@@ -63,11 +63,13 @@ const ScannerScreen = observer(() => {
 
   const handleEditPress = useCallback(() => {
     setModalParams(mergeLeft({ isEdit: true, toastType: undefined }));
-  }, []);
+    store.setUpdatedProduct(store.getCurrentProduct);
+  }, [store]);
 
   const handleCancelPress = useCallback(() => {
     setModalParams(mergeLeft({ isEdit: false, toastType: undefined }));
-  }, []);
+    store.setUpdatedProduct(store.getCurrentProduct);
+  }, [store]);
 
   const validateUpc = useCallback(
     (upc?: string) => {
