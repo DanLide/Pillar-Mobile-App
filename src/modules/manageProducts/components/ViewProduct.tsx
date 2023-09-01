@@ -114,7 +114,7 @@ export const ViewProduct = observer(
           <InfoBadge
             type={BadgeType.Medium}
             title="UPC"
-            subtitle={product?.upc}
+            subtitle={product?.upc || '-'}
           />
           <InfoBadge
             type={BadgeType.Medium}

@@ -41,6 +41,7 @@ export const ManageProductsScreen = memo(({ navigation }: Props) => {
 
   return (
     <BaseProductsScreen
+      disableAlert
       modalType={ProductModalType.ManageProduct}
       navigation={navigation}
       store={store}
