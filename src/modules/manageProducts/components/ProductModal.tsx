@@ -16,6 +16,7 @@ import {
   Description,
   ProductModalProps,
   ProductModalType,
+  ProductQuantity,
 } from '../../productModal';
 
 import { colors } from '../../../theme';
@@ -135,6 +136,11 @@ export const ProductModal = observer(
       }
     }, []);
 
+    const handleCancel = useCallback(() => {
+      setUpcError(undefined);
+      onCancelPress?.();
+    }, [onCancelPress]);
+
     const handleSubmit = useCallback(async () => {
       if (!product) return;
 
@@ -144,9 +150,16 @@ export const ProductModal = observer(
 
       if (error) return handleError(error);
 
-      if (!isEdit) clearProductModalStoreOnClose();
-      else setUpcError(undefined);
-    }, [clearProductModalStoreOnClose, handleError, isEdit, onSubmit, product]);
+      if (isEdit) handleCancel();
+      else clearProductModalStoreOnClose();
+    }, [
+      clearProductModalStoreOnClose,
+      handleCancel,
+      handleError,
+      isEdit,
+      onSubmit,
+      product,
+    ]);
 
     const handleToastAction = useCallback(() => {
       switch (toastType) {
@@ -163,12 +176,6 @@ export const ProductModal = observer(
       onEditPress?.();
     }, [onEditPress, product, store]);
 
-    const handleCancel = useCallback(() => {
-      setAlertParams(INIT_ALERT_PARAMS);
-      setUpcError(undefined);
-      onCancelPress?.();
-    }, [onCancelPress]);
-
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {
         setAlertParams({ isVisible: true, shouldCloseModal: false });
@@ -183,10 +190,11 @@ export const ProductModal = observer(
     }, []);
 
     const setEditableProductQuantity = useCallback(
-      (quantity: number) => {
-        store.setEditableProductQuantity(quantity);
-      },
-      [store],
+      (quantity: number) =>
+        isEdit
+          ? store.setOnHand(quantity)
+          : store.setEditableProductQuantity(quantity),
+      [isEdit, store],
     );
 
     const scrollHandler = useAnimatedScrollHandler(
@@ -258,26 +266,27 @@ export const ProductModal = observer(
               >
                 <Description product={product} topOffset={topOffset} />
                 <View style={styles.settings}>
+                  <ProductQuantity
+                    isEdit={isEdit}
+                    type={ProductModalType.ManageProduct}
+                    product={product}
+                    onChangeProductQuantity={setEditableProductQuantity}
+                    toastType={toastType}
+                    maxValue={maxValue ?? 0}
+                    minValue={0}
+                    onHand={onHand}
+                    disabled={!canEditProduct}
+                    onToastAction={handleToastAction}
+                  />
                   {isEdit ? (
                     <EditProduct
                       product={product}
-                      onHand={onHand}
-                      maxValue={maxValue}
-                      toastType={toastType}
                       stockName={stockName}
                       upcError={upcError}
                       onUpcChange={handleUpcChange}
-                      onToastAction={handleToastAction}
                     />
                   ) : (
-                    <ViewProduct
-                      product={product}
-                      onHand={onHand}
-                      maxValue={maxValue}
-                      toastType={toastType}
-                      onToastAction={handleToastAction}
-                      onChangeProductQuantity={setEditableProductQuantity}
-                    />
+                    <ViewProduct product={product} />
                   )}
                 </View>
               </Animated.ScrollView>

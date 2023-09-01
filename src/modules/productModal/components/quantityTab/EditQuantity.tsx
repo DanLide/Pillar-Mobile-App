@@ -41,7 +41,6 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   disabled?: boolean;
   hideCount?: boolean;
   error?: boolean;
-  isEdit?: boolean;
 
   onRemove?: () => void;
   onChange: (quantity: number) => void;

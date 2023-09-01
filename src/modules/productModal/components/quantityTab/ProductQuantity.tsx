@@ -150,7 +150,6 @@ export const ProductQuantity = memo(
         )}
         <View>
           <EditQuantity
-            isEdit={isEdit && type !== ProductModalType.ManageProduct}
             currentValue={reservedCount}
             maxValue={maxValue}
             minValue={minValue ?? stepQty}
