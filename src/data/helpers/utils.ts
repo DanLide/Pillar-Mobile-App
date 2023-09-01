@@ -46,5 +46,5 @@ export class Utils {
 export const isBadRequestError = (
   error: RequestError | BadRequestError | void,
 ): error is BadRequestError => {
-  return (error as BadRequestError).error_description !== undefined;
+  return (error as BadRequestError)?.error_description !== undefined;
 };

@@ -93,17 +93,21 @@ export const ProductModal = observer(
     );
 
     const clearProductModalStoreOnClose = useCallback(() => {
-      scrollTo(modalCollapsedOffset);
       setUpcError(undefined);
-      onCancelPress?.();
-      onClose();
-    }, [scrollTo, modalCollapsedOffset, onCancelPress, onClose]);
+      scrollViewRef.current?.scrollTo({ y: 0 });
+
+      setTimeout(() => onClose());
+    }, [onClose]);
 
     const handleError = useCallback((error: unknown) => {
-      const message = getErrorMessage(error);
-
-      setUpcError(message);
-      scrollViewRef.current?.scrollToEnd({ animated: true });
+      switch (error) {
+        case ProductModalErrors.UpcFormatError:
+        case ProductModalErrors.UpcLengthError:
+        case ProductModalErrors.UpcUpdateError:
+          setUpcError(getErrorMessage(error));
+          scrollViewRef.current?.scrollToEnd({ animated: true });
+          break;
+      }
     }, []);
 
     const handleCancel = useCallback(() => {

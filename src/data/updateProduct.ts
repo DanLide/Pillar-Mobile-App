@@ -7,7 +7,7 @@ import {
   updateProductSettingsAPI,
 } from './api/productsAPI';
 import { ssoStore } from '../stores';
-import { difference, isEmpty } from 'ramda';
+import { equals } from 'ramda';
 import { stocksStore } from '../modules/stocksList/stores';
 
 export const onUpdateProduct = async (
@@ -41,7 +41,7 @@ export class UpdateProductTask extends Task {
     const shouldUpdateQuantity =
       updatedProduct?.reservedCount !== updatedProduct?.onHand;
 
-    const shouldUpdateSettings = difference(
+    const shouldUpdateSettings = !equals(
       [
         updatedProduct?.upc,
         updatedProduct?.inventoryUseTypeId,
@@ -60,7 +60,7 @@ export class UpdateProductTask extends Task {
       ],
     );
 
-    const shouldUpdateAreaSettings = difference(
+    const shouldUpdateAreaSettings = !equals(
       [
         updatedProduct?.min,
         updatedProduct?.max,
@@ -80,15 +80,17 @@ export class UpdateProductTask extends Task {
       await updateProductOrderMultipleAPI(updatedProduct);
     }
 
+    if (shouldUpdateSettings) {
+      await updateProductSettingsAPI(updatedProduct);
+    }
+
     await Promise.all([
       shouldUpdateQuantity &&
         updateProductQuantityAPI(
           updatedProduct,
           this.manageProductsStore.currentStock,
         ),
-      !isEmpty(shouldUpdateSettings) &&
-        updateProductSettingsAPI(updatedProduct),
-      !isEmpty(shouldUpdateAreaSettings) &&
+      shouldUpdateAreaSettings &&
         updateProductAreaSettingsAPI(updatedProduct, stockId, facilityId),
     ]);
   }

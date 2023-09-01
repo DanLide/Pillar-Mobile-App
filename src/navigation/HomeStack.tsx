@@ -27,9 +27,9 @@ const getInitialScreen = (
   authStore: AuthStore,
   ssoStore: SSOStore,
 ): keyof HomeStackParamList => {
-  if (!authStore.isLanguageSelected) {
-    return AppNavigator.LanguageSelectScreen;
-  }
+  // if (!authStore.isLanguageSelected) {
+  //   return AppNavigator.LanguageSelectScreen;
+  // }
   if (!authStore.isTnCSelected) {
     return AppNavigator.TermsScreen;
   }

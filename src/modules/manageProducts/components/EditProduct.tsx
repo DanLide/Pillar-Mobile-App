@@ -285,7 +285,6 @@ export const EditProduct = observer(
               type={InputType.Primary}
               value={product?.upc}
               label="UPC Number"
-              placeholder="Unassigned"
               error={upcError}
               ref={inputRef}
               containerStyle={styles.upcInput}

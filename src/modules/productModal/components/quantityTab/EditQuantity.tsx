@@ -93,7 +93,10 @@ export const EditQuantity = memo(
     }, [currentValue, displayCurrentValue, displayValue]);
 
     const containerStyle = useMemo<StyleProp<ViewStyle>>(
-      () => [styles.container, { flexDirection: vertical ? 'column' : 'row' }],
+      () => [
+        styles.container,
+        { flexDirection: vertical ? 'column-reverse' : 'row' },
+      ],
       [vertical],
     );
 
