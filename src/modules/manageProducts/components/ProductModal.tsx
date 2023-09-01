@@ -172,9 +172,8 @@ export const ProductModal = observer(
     }, [handleSubmit, onEditPress, toastType]);
 
     const handleEditPress = useCallback(() => {
-      store.setUpdatedProduct(product);
       onEditPress?.();
-    }, [onEditPress, product, store]);
+    }, [onEditPress]);
 
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {
@@ -218,17 +217,19 @@ export const ProductModal = observer(
       [],
     );
 
-    const handleAlertPrimaryPress = useCallback(
-      () =>
-        alertParams.shouldCloseModal
-          ? clearProductModalStoreOnClose()
-          : handleCancel(),
-      [
-        alertParams.shouldCloseModal,
-        clearProductModalStoreOnClose,
-        handleCancel,
-      ],
-    );
+    const handleAlertPrimaryPress = useCallback(() => {
+      if (alertParams.shouldCloseModal) {
+        clearProductModalStoreOnClose();
+        return;
+      }
+
+      handleCancel();
+      setAlertParams(INIT_ALERT_PARAMS);
+    }, [
+      alertParams.shouldCloseModal,
+      clearProductModalStoreOnClose,
+      handleCancel,
+    ]);
 
     const handleAlertSecondaryPress = useCallback(
       () => setAlertParams(INIT_ALERT_PARAMS),
