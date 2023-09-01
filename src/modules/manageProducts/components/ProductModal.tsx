@@ -106,6 +106,11 @@ export const ProductModal = observer(
       scrollViewRef.current?.scrollToEnd({ animated: true });
     }, []);
 
+    const handleCancel = useCallback(() => {
+      setUpcError(undefined);
+      onCancelPress?.();
+    }, [onCancelPress]);
+
     const handleSubmit = useCallback(async () => {
       if (!product) return;
 
@@ -115,9 +120,16 @@ export const ProductModal = observer(
 
       if (error) return handleError(error);
 
-      if (!isEdit) clearProductModalStoreOnClose();
-      else setUpcError(undefined);
-    }, [clearProductModalStoreOnClose, handleError, isEdit, onSubmit, product]);
+      if (isEdit) handleCancel();
+      else clearProductModalStoreOnClose();
+    }, [
+      clearProductModalStoreOnClose,
+      handleCancel,
+      handleError,
+      isEdit,
+      onSubmit,
+      product,
+    ]);
 
     const handleToastAction = useCallback(() => {
       switch (toastType) {
@@ -134,20 +146,16 @@ export const ProductModal = observer(
       onEditPress?.();
     }, [onEditPress, product, store]);
 
-    const handleCancel = useCallback(() => {
-      setUpcError(undefined);
-      onCancelPress?.();
-    }, [onCancelPress]);
-
     const handleUpcChange = useCallback(() => {
       setUpcError(undefined);
     }, []);
 
     const setEditableProductQuantity = useCallback(
-      (quantity: number) => {
-        store.setEditableProductQuantity(quantity);
-      },
-      [store],
+      (quantity: number) =>
+        isEdit
+          ? store.setOnHand(quantity)
+          : store.setEditableProductQuantity(quantity),
+      [isEdit, store],
     );
 
     const scrollHandler = useAnimatedScrollHandler(
@@ -211,23 +219,12 @@ export const ProductModal = observer(
                 {isEdit ? (
                   <EditProduct
                     product={product}
-                    onHand={onHand}
-                    maxValue={maxValue}
-                    toastType={toastType}
                     stockName={stockName}
                     upcError={upcError}
                     onUpcChange={handleUpcChange}
-                    onToastAction={handleToastAction}
                   />
                 ) : (
-                  <ViewProduct
-                    product={product}
-                    onHand={onHand}
-                    maxValue={maxValue}
-                    toastType={toastType}
-                    onToastAction={handleToastAction}
-                    onChangeProductQuantity={setEditableProductQuantity}
-                  />
+                  <ViewProduct product={product} />
                 )}
               </View>
             </Animated.ScrollView>

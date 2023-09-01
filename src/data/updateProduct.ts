@@ -103,14 +103,15 @@ export class SaveUpdateProductToStore extends Task {
   }
 
   async run() {
-    const updatedProduct = this.manageProductsStore.updatedProduct;
+    if (!this.manageProductsStore.updatedProduct) return;
 
-    this.manageProductsStore.setCurrentProduct(
-      this.manageProductsStore.updatedProduct,
-    );
+    const updatedProduct = {
+      ...this.manageProductsStore.updatedProduct,
+      onHand: this.manageProductsStore.updatedProduct.reservedCount,
+    };
 
-    if (updatedProduct) {
-      stocksStore.updateFacilityProduct(updatedProduct);
-    }
+    stocksStore.updateFacilityProduct(updatedProduct);
+    this.manageProductsStore.setCurrentProduct(updatedProduct);
+    this.manageProductsStore.setUpdatedProduct(updatedProduct);
   }
 }

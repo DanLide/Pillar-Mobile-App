@@ -31,6 +31,13 @@ export class ManageProductsStore extends BaseProductsStore {
     this.products = addProductToList(scannedProduct, this.products);
   }
 
+  @override clear() {
+    this.currentStock = undefined;
+    this.products = [];
+    this.currentProduct = undefined;
+    this.updatedProduct = undefined;
+  }
+
   @computed get isProductChanged(): boolean {
     return (
       this.currentProduct?.reservedCount !== this.currentProduct?.onHand ||
@@ -41,6 +48,10 @@ export class ManageProductsStore extends BaseProductsStore {
 
   @action setUpdatedProduct(product?: ProductModel) {
     this.updatedProduct = product;
+  }
+
+  @action removeUpdatedProduct() {
+    this.updatedProduct = undefined;
   }
 
   @action setOnHand(reservedCount: number) {
