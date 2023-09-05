@@ -8,8 +8,7 @@ import { OrderStatusType } from '../../../constants/common.enum';
 import { colors } from '../../../theme';
 
 interface Props {
-  orderStatusType: OrderStatusType | string;
-  isString?: boolean;
+  orderStatusType: OrderStatusType;
 }
 
 export const OrderTitleByStatusType = {
@@ -23,33 +22,12 @@ export const OrderTitleByStatusType = {
   [OrderStatusType.CANCELLED]: 'Cancelled',
 };
 
-export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
-  const label = isString
-    ? orderStatusType
-    : OrderTitleByStatusType[orderStatusType]
+export const StatusBadge: React.FC<Props> = ({ orderStatusType }) => {
+  const label = OrderTitleByStatusType[orderStatusType]
     ? OrderTitleByStatusType[orderStatusType]
     : undefined;
 
   const badgeStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    if (isString) {
-      switch (orderStatusType) {
-        case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
-        case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
-        case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
-        case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
-        case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
-        case OrderTitleByStatusType[OrderStatusType.TRANSMITTED]:
-          return { backgroundColor: colors.magnolia, color: colors.purple };
-        case OrderTitleByStatusType[OrderStatusType.CLOSED]:
-        case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
-          return {
-            backgroundColor: colors.background,
-            color: colors.grayDark2,
-          };
-        default:
-          return undefined;
-      }
-    }
     switch (orderStatusType) {
       case OrderStatusType.APPROVAL:
       case OrderStatusType.POREQUIRED:
@@ -64,7 +42,7 @@ export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
       default:
         return undefined;
     }
-  }, [isString, orderStatusType]);
+  }, [orderStatusType]);
 
   return (
     <View style={styles.container}>

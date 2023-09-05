@@ -10,12 +10,7 @@ import {
 } from './productsAPI';
 import { getFetchJobsAPI } from './jobsAPI';
 import { createInvoiceAPI } from './createInvoiceAPI';
-import {
-  getOrdersAPI,
-  GetOrdersAPIResponse,
-  GetOrderDetailsResponse,
-  getOrderDetails,
-} from './orders';
+import { getOrdersAPI, GetOrdersAPIResponse } from './orders';
 
 export {
   getRoleManagerAPI,
@@ -28,11 +23,5 @@ export {
   createInvoiceAPI,
   getFetchProductByFacilityIdAPI,
   getOrdersAPI,
-  getOrderDetails,
 };
-export type {
-  LoginAPIParams,
-  RemoveProductResponse,
-  GetOrdersAPIResponse,
-  GetOrderDetailsResponse,
-};
+export type { LoginAPIParams, RemoveProductResponse, GetOrdersAPIResponse };
