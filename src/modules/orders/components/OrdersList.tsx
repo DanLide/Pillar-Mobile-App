@@ -25,7 +25,7 @@ export const OrdersList: React.FC<Props> = ({ orders }) => {
       <FlatList
         style={styles.container}
         data={orders}
-        renderItem={OrdersListItem}
+        renderItem={item => <OrdersListItem {...item} />}
         ItemSeparatorComponent={ItemSeparator}
       />
       <Pressable style={styles.backorderContainer}>

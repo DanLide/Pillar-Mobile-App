@@ -6,15 +6,23 @@ import {
   StyleSheet,
   ListRenderItemInfo,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { StatusBadge } from './StatusBadge';
 import { GetOrdersAPIResponse } from '../../../data/api';
 import { colors, fonts } from '../../../theme';
+import { AppNavigator } from '../../../navigation/types';
 
 type Props = ListRenderItemInfo<GetOrdersAPIResponse>;
 
 export const OrdersListItem = ({ item }: Props) => {
-  const onPress = () => {};
+  const navigation = useNavigation();
+
+  const onPress = () => {
+    navigation.navigate(AppNavigator.OrderDetailsScreen, {
+      orderId: item.orderId,
+    });
+  };
 
   return (
     <Pressable style={styles.container} onPress={onPress}>

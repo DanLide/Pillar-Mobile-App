@@ -222,4 +222,11 @@ export class URLProvider {
       `${this.currentEnv.modules.order.apiUri}/api/Order/${facilityId}`,
     );
   }
+
+  getOrderDetails(orderId: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    return new URL(
+      `https://api.repairstack-uat.3m.com/order/api/Order/OrderSummaryDetailsByProduct/${orderId}/${facilityId}`,
+    );
+  }
 }
