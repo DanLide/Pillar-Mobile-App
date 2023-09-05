@@ -5,6 +5,7 @@ import { getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, OrdersParamsList } from './types';
 
 import { OrdersScreen } from '../modules/orders/OrdersScreen';
+import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -16,6 +17,14 @@ export const OrdersStack: React.FC = () => {
         component={OrdersScreen}
         options={getScreenOptions({
           title: 'Manage Orders',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.OrderDetailsScreen}
+        component={OrderDetailsScreen}
+        options={getScreenOptions({
+          title: 'View Order',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
