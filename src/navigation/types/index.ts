@@ -43,6 +43,7 @@ export enum AppNavigator {
   // Orders
   OrdersStack = 'OrdersStack',
   OrdersScreen = 'OrdersScreen',
+  OrderDetailsScreen = 'OrderDetailsScreen',
 }
 
 type CameraPermissionScreenParams = {
@@ -111,8 +112,11 @@ export type CreateInvoiceParamList = {
   [AppNavigator.HowToScanScreen]: undefined;
 };
 
+export type OrderDetailsScreenParams = { orderId: string };
+
 export type OrdersParamsList = {
   [AppNavigator.OrdersScreen]: undefined;
+  [AppNavigator.OrderDetailsScreen]: OrderDetailsScreenParams;
 };
 
 export enum LeftBarType {

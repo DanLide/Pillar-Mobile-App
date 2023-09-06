@@ -75,9 +75,64 @@ export interface GetOrdersAPIResponse {
   supplierID: number;
 }
 
+export interface OrderProductResponse {
+  id: number;
+  product: string;
+  productId: number;
+  manufactureCode: string;
+  partNo: string;
+  size: string;
+  name: string;
+  cost: number;
+  jobPrice: number;
+  onHand: number;
+  onOrder: number;
+  consignmentQty: number;
+  lastActivityDate: null;
+  extQty: number;
+  unitsPer: number;
+  quantityOnHand: number;
+  extCost: number;
+  shippedQty: number;
+  orderedQty: number;
+  receivedQty: number;
+  isTaxable: boolean;
+  isInvoiceable: null;
+  markup: number;
+  tax: number;
+  storageAreaId: number;
+  inventoryUseTypeId: number;
+  isNonStock: number;
+  receivableQty: number;
+  min: number;
+  max: number;
+  isPoRequired: string;
+  crimpCategories: null;
+  dimension: null;
+  is3m: boolean;
+  isEnabled: boolean;
+  invoiceUnit: null;
+  invoiceSize: null;
+  inventoryAssignmentTypeId: number;
+  stockLocationId: number;
+}
+
+export interface GetOrderDetailsResponse {
+  order: GetOrdersAPIResponse;
+  productList: OrderProductResponse[];
+}
+
 export const getOrdersAPI = () => {
   const url = new URLProvider().getOrders();
   return tryAuthFetch<GetOrdersAPIResponse[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getOrderDetails = (orderId: string) => {
+  const url = new URLProvider().getOrderDetails(orderId);
+  return tryAuthFetch<GetOrderDetailsResponse>({
     url,
     request: { method: 'GET' },
   });

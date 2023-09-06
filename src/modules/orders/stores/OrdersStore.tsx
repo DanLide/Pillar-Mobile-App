@@ -1,8 +1,12 @@
 import { action, makeObservable, observable, computed } from 'mobx';
 
-import { GetOrdersAPIResponse } from '../../../data/api';
+import {
+  GetOrderDetailsResponse,
+  GetOrdersAPIResponse,
+} from '../../../data/api';
 
 export class OrdersStore {
+  @observable currentOrder?: GetOrderDetailsResponse;
   @observable orders?: GetOrdersAPIResponse[];
 
   constructor() {
@@ -12,6 +16,14 @@ export class OrdersStore {
 
   @computed get getOrders() {
     return this.orders;
+  }
+
+  @computed get getCurrentOrder() {
+    return this.currentOrder;
+  }
+
+  @action setCurrentOrder(orderDetails: GetOrderDetailsResponse) {
+    this.currentOrder = orderDetails;
   }
 
   @action setOrders(orders: GetOrdersAPIResponse[]) {
