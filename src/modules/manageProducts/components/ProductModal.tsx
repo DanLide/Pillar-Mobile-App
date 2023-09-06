@@ -251,7 +251,7 @@ export const ProductModal = observer(
           onPressPrimary={handleAlertPrimaryPress}
           onPressSecondary={handleAlertSecondaryPress}
         >
-          <ToastContextProvider disableSafeArea duration={0} offset={35}>
+          <ToastContextProvider disableSafeArea offset={35}>
             <KeyboardAvoidingView
               keyboardVerticalOffset={85}
               behavior="padding"
