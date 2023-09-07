@@ -19,6 +19,7 @@ import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 import { useSingleToast } from '../../../../hooks';
+import { getToastDuration } from '../../../../contexts';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -83,6 +84,7 @@ export const ProductQuantity = memo(
         showToast(toastMessages[toastType], {
           type: toastType,
           onPress: onToastAction,
+          duration: getToastDuration(toastType),
         });
     }, [onToastAction, showToast, toastType]);
 
