@@ -2,18 +2,16 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
 import {
+  CategoryModel,
   FacilityProductModel,
   StockModel,
-  StockStore,
-} from '../modules/stocksList/stores/StocksStore';
-import { CategoryModel } from '../stores/CategoriesStore';
-import { SupplierModel } from '../stores/SuppliersStore';
+  StockStore, SupplierModel
+} from "../modules/stocksList/stores/StocksStore";
 import {
   getCategoriesByFacilityIdAPI,
   getFacilityProducts,
   getSupplierListByFacilityIdAPI,
 } from './api/productsAPI';
-import { categoriesStore, suppliersStore } from '../stores';
 
 interface FetchStocksContext {
   stocks: StockModel[];
@@ -78,7 +76,7 @@ export class SaveStocksToStore extends Task {
 
     this.stocksStore.setStocks(stocks);
     this.stocksStore.setFacilityProducts(facilityProducts);
-    categoriesStore.setCategories(categories);
-    suppliersStore.setSuppliers(suppliers);
+    this.stocksStore.setCategories(categories);
+    this.stocksStore.setSuppliers(suppliers);
   }
 }
