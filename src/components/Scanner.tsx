@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, memo } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -21,6 +21,7 @@ import {
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera';
+import { useIsFocused } from '@react-navigation/native';
 
 export interface ScannerProps extends Partial<CameraProps> {
   isUPC?: boolean;
@@ -42,6 +43,8 @@ const Scanner: React.FC<ScannerProps> = ({
   ...props
 }) => {
   const devices = useCameraDevices();
+  const isFocused = useIsFocused();
+
   const device = devices.back;
   const cameraRef = useRef<Camera | null>(null);
   const format = useRef<CameraDeviceFormat | null>(null);
@@ -119,7 +122,7 @@ const Scanner: React.FC<ScannerProps> = ({
   return (
     <View onLayout={handleLayout} style={{ flex: 1 }}>
       <Camera
-        isActive={isActive}
+        isActive={isActive && isFocused}
         ref={cameraRef}
         frameProcessor={frameProcessor}
         audio={false}
@@ -136,4 +139,4 @@ const Scanner: React.FC<ScannerProps> = ({
 
 Scanner.displayName = 'Scanner';
 
-export default React.memo(Scanner);
+export default memo(Scanner);
