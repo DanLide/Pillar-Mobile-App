@@ -12,6 +12,9 @@ import { colors, fonts } from '../../../theme';
 type Props = Pick<ProductModalProps, 'product'>;
 
 export const ViewProduct = observer(({ product }: Props) => {
+  const isSpecialOrder =
+    product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
   const category = useMemo(
     () =>
       find(whereEq({ id: product?.categoryId }), categoriesStore.categories),
@@ -39,19 +42,21 @@ export const ViewProduct = observer(({ product }: Props) => {
   return (
     <>
       <Text style={styles.category}>{category?.description}</Text>
-      <View style={styles.minMaxContainer}>
-        <InfoBadge
-          type={BadgeType.Large}
-          title="Minimum Quantity"
-          subtitle={product?.min}
-        />
-        <Text style={styles.slash}>/</Text>
-        <InfoBadge
-          type={BadgeType.Large}
-          title="Maximum Quantity"
-          subtitle={product?.max}
-        />
-      </View>
+      {!isSpecialOrder && (
+        <View style={styles.minMaxContainer}>
+          <InfoBadge
+            type={BadgeType.Large}
+            title="Minimum Quantity"
+            subtitle={product?.min}
+          />
+          <Text style={styles.slash}>/</Text>
+          <InfoBadge
+            type={BadgeType.Large}
+            title="Maximum Quantity"
+            subtitle={product?.max}
+          />
+        </View>
+      )}
       <View style={styles.orderSettings}>
         {product?.inventoryUseTypeId === InventoryUseType.Each && (
           <InfoBadge
@@ -60,11 +65,13 @@ export const ViewProduct = observer(({ product }: Props) => {
             subtitle={product?.unitsPerContainer}
           />
         )}
-        <InfoBadge
-          title="Shipment"
-          titleWithNewLine="Quantity"
-          subtitle={product?.orderMultiple ?? '-'}
-        />
+        {!isSpecialOrder && (
+          <InfoBadge
+            title="Shipment"
+            titleWithNewLine="Quantity"
+            subtitle={product?.orderMultiple ?? '-'}
+          />
+        )}
         <InfoBadge title="On Order" subtitle={product?.onOrder} />
       </View>
       <View style={styles.bottomInfo}>
@@ -73,15 +80,17 @@ export const ViewProduct = observer(({ product }: Props) => {
           title="Distributor"
           subtitle={supplier?.name}
         />
-        <InfoBadge
-          type={BadgeType.Medium}
-          title="Restock From"
-          subtitle={restockFrom?.name}
-        />
+        {!isSpecialOrder && (
+          <InfoBadge
+            type={BadgeType.Medium}
+            title="Restock From"
+            subtitle={restockFrom?.name}
+          />
+        )}
         <InfoBadge
           type={BadgeType.Medium}
           title="UPC"
-          subtitle={product?.upc}
+          subtitle={product?.upc || '-'}
         />
         <InfoBadge
           type={BadgeType.Medium}

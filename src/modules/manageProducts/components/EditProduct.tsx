@@ -66,6 +66,9 @@ export const EditProduct = observer(
         ? 'decimal-pad'
         : 'number-pad';
 
+    const isSpecialOrder =
+      product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
     const categories = useMemo<DropdownItem[]>(
       () =>
         categoriesStore.categories.map(item => ({
@@ -179,76 +182,80 @@ export const EditProduct = observer(
           onSelect={item => store.setCategory(+item.value)}
         />
         <View style={styles.orderSection}>
-          <View style={styles.orderSettings}>
-            <View style={styles.minMaxContainer}>
-              <Text style={styles.orderSettingsLabel}>Order Settings</Text>
-              <View style={styles.minMaxRow}>
+          <View style={styles.orderSettingsContainer}>
+            <Text style={styles.orderSettingsLabel}>Order Settings</Text>
+            <View style={styles.orderSettings}>
+              {!isSpecialOrder && (
+                <View style={styles.minMaxRow}>
+                  <EditQuantity
+                    vertical
+                    label="Minimum"
+                    currentValue={product?.min ?? 0}
+                    maxValue={MAX_VALUE}
+                    minValue={minQty}
+                    stepValue={minQty}
+                    initFontSize={28}
+                    keyboardType={keyboardType}
+                    onChange={value => store.setMinValue(value)}
+                  />
+                  <Text style={styles.slash}>/</Text>
+                  <EditQuantity
+                    vertical
+                    label="Maximum"
+                    currentValue={product?.max ?? 0}
+                    maxValue={MAX_VALUE}
+                    minValue={minQty}
+                    stepValue={minQty}
+                    initFontSize={28}
+                    keyboardType={keyboardType}
+                    onChange={value => store.setMaxValue(value)}
+                  />
+                </View>
+              )}
+              <View style={styles.orderQuantities}>
+                {product?.inventoryUseTypeId === InventoryUseType.Each && (
+                  <EditQuantity
+                    vertical
+                    label="Pieces Per"
+                    labelWithNewLine="Container"
+                    currentValue={product?.unitsPerContainer ?? 0}
+                    maxValue={MAX_VALUE}
+                    minValue={MIN_VALUE}
+                    stepValue={STEP_VALUE}
+                    initFontSize={28}
+                    keyboardType="number-pad"
+                    onChange={value => store.setUnitsPerContainer(value)}
+                  />
+                )}
+                {!isSpecialOrder && (
+                  <EditQuantity
+                    vertical
+                    label="Shipment"
+                    labelWithNewLine="Quantity"
+                    currentValue={product?.orderMultiple ?? 0}
+                    maxValue={MAX_VALUE}
+                    minValue={MIN_VALUE}
+                    stepValue={STEP_VALUE}
+                    initFontSize={28}
+                    keyboardType="number-pad"
+                    onChange={value => store.setOrderMultiple(value)}
+                  />
+                )}
                 <EditQuantity
+                  disabled
+                  hideCount
                   vertical
-                  label="Minimum"
-                  currentValue={product?.min ?? 0}
-                  maxValue={MAX_VALUE}
-                  minValue={minQty}
-                  stepValue={minQty}
-                  initFontSize={28}
-                  keyboardType={keyboardType}
-                  onChange={value => store.setMinValue(value)}
-                />
-                <Text style={styles.slash}>/</Text>
-                <EditQuantity
-                  vertical
-                  label="Maximum"
-                  currentValue={product?.max ?? 0}
-                  maxValue={MAX_VALUE}
-                  minValue={minQty}
-                  stepValue={minQty}
-                  initFontSize={28}
-                  keyboardType={keyboardType}
-                  onChange={value => store.setMaxValue(value)}
-                />
-              </View>
-            </View>
-            <View style={styles.orderQuantities}>
-              {product?.inventoryUseTypeId === InventoryUseType.Each && (
-                <EditQuantity
-                  vertical
-                  label="Pieces Per"
-                  labelWithNewLine="Container"
-                  currentValue={product?.unitsPerContainer ?? 0}
+                  label="On order"
+                  labelContainerStyle={styles.onOrderLabel}
+                  currentValue={product?.onOrder ?? 0}
                   maxValue={MAX_VALUE}
                   minValue={MIN_VALUE}
                   stepValue={STEP_VALUE}
                   initFontSize={28}
                   keyboardType="number-pad"
-                  onChange={value => store.setUnitsPerContainer(value)}
+                  onChange={value => store.setOnOrder(value)}
                 />
-              )}
-              <EditQuantity
-                vertical
-                label="Shipment"
-                labelWithNewLine="Quantity"
-                currentValue={product?.orderMultiple ?? 0}
-                maxValue={MAX_VALUE}
-                minValue={MIN_VALUE}
-                stepValue={STEP_VALUE}
-                initFontSize={28}
-                keyboardType="number-pad"
-                onChange={value => store.setOrderMultiple(value)}
-              />
-              <EditQuantity
-                disabled
-                hideCount
-                vertical
-                label="On order"
-                labelContainerStyle={styles.onOrderLabel}
-                currentValue={product?.onOrder ?? 0}
-                maxValue={MAX_VALUE}
-                minValue={MIN_VALUE}
-                stepValue={STEP_VALUE}
-                initFontSize={28}
-                keyboardType="number-pad"
-                onChange={value => store.setOnOrder(value)}
-              />
+              </View>
             </View>
           </View>
           <Tooltip
@@ -267,18 +274,20 @@ export const EditProduct = observer(
             selectedItem={supplier}
             onSelect={item => store.setSupplier(+item.value)}
           />
-          <View style={styles.spaceBetweenContainer}>
-            <Dropdown
-              label="Restock From"
-              data={enabledSuppliers}
-              selectedItem={enabledSupplier}
-              style={styles.restockFromDropdown}
-              onSelect={item => store.setRestockFrom(+item.value)}
-            />
-            <View style={styles.infoIconContainer}>
-              <Tooltip message={restockFromTooltip} />
+          {!isSpecialOrder && (
+            <View style={styles.spaceBetweenContainer}>
+              <Dropdown
+                label="Restock From"
+                data={enabledSuppliers}
+                selectedItem={enabledSupplier}
+                style={styles.restockFromDropdown}
+                onSelect={item => store.setRestockFrom(+item.value)}
+              />
+              <View style={styles.infoIconContainer}>
+                <Tooltip message={restockFromTooltip} />
+              </View>
             </View>
-          </View>
+          )}
           <View style={styles.spaceBetweenContainer}>
             <Input
               keyboardType="number-pad"
@@ -357,6 +366,9 @@ const styles = StyleSheet.create({
   },
   orderSettings: {
     gap: 48,
+  },
+  orderSettingsContainer: {
+    gap: 24,
     paddingHorizontal: 16,
   },
   orderSettingsLabel: {
@@ -365,9 +377,6 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     fontSize: 16,
     lineHeight: 20,
-  },
-  minMaxContainer: {
-    gap: 24,
   },
   minMaxRow: {
     alignItems: 'center',
