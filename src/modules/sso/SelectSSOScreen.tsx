@@ -27,6 +27,7 @@ import { SSOList, SSOListProps } from './components';
 import { getScreenOptions } from '../../navigation/helpers';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
+import { stocksStore } from '../stocksList/stores';
 
 type Props = NativeStackScreenProps<
   HomeStackParamList,
@@ -62,6 +63,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(
 
     const onPressSubmit = () => {
       if (store.preselectedSSO) {
+        stocksStore.clear();
         store.setCurrentSSO();
         navigation.reset({
           routes: [{ name: AppNavigator.Drawer }],
