@@ -6,6 +6,7 @@ import { AppNavigator, LeftBarType, OrdersParamsList } from './types';
 
 import { OrdersScreen } from '../modules/orders/OrdersScreen';
 import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
+import { OrderByStockLocationScreen } from '../modules/orders/OrderByStockLocationScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -25,6 +26,14 @@ export const OrdersStack: React.FC = () => {
         component={OrderDetailsScreen}
         options={getScreenOptions({
           title: 'View Order',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.OrderByStockLocationScreen}
+        component={OrderByStockLocationScreen}
+        options={getScreenOptions({
+          title: '',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
