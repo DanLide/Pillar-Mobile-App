@@ -41,6 +41,10 @@ export class Utils {
 
     return `${truncatedFirstHalf}...${truncatedSecondHalf}`;
   }
+
+  static isNetworkError(error: RequestError) {
+    return error.message === 'Network request failed';
+  }
 }
 
 export const isBadRequestError = (
