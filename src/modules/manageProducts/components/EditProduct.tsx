@@ -10,7 +10,7 @@ import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
 
-import { categoriesStore, suppliersStore } from '../../../stores';
+import { stocksStore } from '../../stocksList/stores';
 import {
   Button,
   ButtonType,
@@ -71,7 +71,7 @@ export const EditProduct = observer(
 
     const categories = useMemo<DropdownItem[]>(
       () =>
-        categoriesStore.categories.map(item => ({
+        stocksStore.categories.map(item => ({
           label: item.description,
           value: item.id,
         })),
@@ -85,7 +85,7 @@ export const EditProduct = observer(
 
     const suppliers = useMemo<DropdownItem[]>(
       () =>
-        suppliersStore.suppliers.map(item => ({
+        stocksStore.suppliers.map(item => ({
           label: item.name,
           value: item.partyRoleId,
         })),
@@ -99,7 +99,7 @@ export const EditProduct = observer(
 
     const enabledSuppliers = useMemo<DropdownItem[]>(
       () =>
-        suppliersStore.enabledSuppliers.map(item => ({
+        stocksStore.enabledSuppliers.map(item => ({
           label: item.name,
           value: item.partyRoleId,
         })),

@@ -2,18 +2,18 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
 import {
+  CategoryModel,
   FacilityProductModel,
   StockModel,
   StockStore,
+  SupplierModel,
 } from '../modules/stocksList/stores/StocksStore';
-import { CategoryModel } from '../stores/CategoriesStore';
-import { SupplierModel } from '../stores/SuppliersStore';
 import {
   getCategoriesByFacilityIdAPI,
   getFacilityProducts,
   getSupplierListByFacilityIdAPI,
 } from './api/productsAPI';
-import { categoriesStore, suppliersStore } from '../stores';
+import { any, isEmpty } from 'ramda';
 
 interface FetchStocksContext {
   stocks: StockModel[];
@@ -29,7 +29,14 @@ export const fetchManageProductsStocks = async (stocksStore: StockStore) => {
     suppliers: [],
     facilityProducts: [],
   };
-  if (!stocksStore.stocks.length) {
+  if (
+    any(isEmpty, [
+      stocksStore.stocks,
+      stocksStore.categories,
+      stocksStore.suppliers,
+      stocksStore.facilityProducts,
+    ])
+  ) {
     return new TaskExecutor([
       new FetchManageProductStocksTask(stocksContext),
       new SaveStocksToStore(stocksContext, stocksStore),
@@ -78,7 +85,7 @@ export class SaveStocksToStore extends Task {
 
     this.stocksStore.setStocks(stocks);
     this.stocksStore.setFacilityProducts(facilityProducts);
-    categoriesStore.setCategories(categories);
-    suppliersStore.setSuppliers(suppliers);
+    this.stocksStore.setCategories(categories);
+    this.stocksStore.setSuppliers(suppliers);
   }
 }

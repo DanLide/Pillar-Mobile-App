@@ -14,10 +14,9 @@ import {
   ProductModel,
   StockProductStoreType,
 } from '../stores/types';
-import { SupplierModel } from '../stores/SuppliersStore';
-import { suppliersStore } from '../stores';
 import { find, pipe, prop, whereEq } from 'ramda';
 import { stocksStore } from '../modules/stocksList/stores';
+import { SupplierModel } from '../modules/stocksList/stores/StocksStore';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
@@ -105,7 +104,7 @@ export class SaveProductToStoreTask extends Task {
   async run(): Promise<void> {
     const { product, enabledSuppliers } = this.productContext;
 
-    suppliersStore.setEnabledSuppliers(enabledSuppliers);
+    stocksStore.setEnabledSuppliers(enabledSuppliers);
 
     this.currentProductStore.setCurrentProduct(
       product && this.mapProductResponse(product),

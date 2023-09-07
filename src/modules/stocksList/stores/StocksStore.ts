@@ -1,13 +1,19 @@
 import { action, makeObservable, observable } from 'mobx';
-import { FacilityProductResponse } from '../../../data/api/productsAPI';
+import { CategoryResponse, FacilityProductResponse, SupplierResponse } from "../../../data/api/productsAPI";
 
 export class StockStore {
   @observable stocks: StockModel[];
   @observable facilityProducts: FacilityProductModel[];
+  @observable categories: CategoryModel[];
+  @observable suppliers: SupplierModel[];
+  @observable enabledSuppliers: SupplierModel[];
 
   constructor() {
     this.stocks = [];
     this.facilityProducts = [];
+    this.categories = [];
+    this.suppliers = [];
+    this.enabledSuppliers = [];
 
     makeObservable(this);
   }
@@ -28,9 +34,24 @@ export class StockStore {
     );
   }
 
+  @action setCategories(categories: CategoryModel[]) {
+    this.categories = categories;
+  }
+
+  @action setSuppliers(suppliers: SupplierModel[]) {
+    this.suppliers = suppliers;
+  }
+
+  @action setEnabledSuppliers(enabledSuppliers: SupplierModel[]) {
+    this.enabledSuppliers = enabledSuppliers;
+  }
+
   public clear() {
     this.stocks = [];
     this.facilityProducts = [];
+    this.categories = [];
+    this.suppliers = [];
+    this.enabledSuppliers = [];
   }
 }
 
@@ -52,3 +73,5 @@ export interface StockModel {
 }
 
 export type FacilityProductModel = FacilityProductResponse;
+export type CategoryModel = CategoryResponse;
+export type SupplierModel = SupplierResponse;

@@ -6,7 +6,7 @@ import { find, whereEq } from 'ramda';
 import { ProductModalProps } from '../../productModal';
 import { BadgeType, InfoBadge } from './InfoBadge';
 import { InventoryUseType } from '../../../constants/common.enum';
-import { categoriesStore, suppliersStore } from '../../../stores';
+import { stocksStore } from '../../stocksList/stores';
 import { colors, fonts } from '../../../theme';
 
 type Props = Pick<ProductModalProps, 'product'>;
@@ -16,8 +16,7 @@ export const ViewProduct = observer(({ product }: Props) => {
     product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
   const category = useMemo(
-    () =>
-      find(whereEq({ id: product?.categoryId }), categoriesStore.categories),
+    () => find(whereEq({ id: product?.categoryId }), stocksStore.categories),
     [product?.categoryId],
   );
 
@@ -25,7 +24,7 @@ export const ViewProduct = observer(({ product }: Props) => {
     () =>
       find(
         whereEq({ partyRoleId: product?.supplierPartyRoleId }),
-        suppliersStore.suppliers,
+        stocksStore.suppliers,
       ),
     [product?.supplierPartyRoleId],
   );
@@ -34,7 +33,7 @@ export const ViewProduct = observer(({ product }: Props) => {
     () =>
       find(
         whereEq({ partyRoleId: product?.replenishedFormId }),
-        suppliersStore.enabledSuppliers,
+        stocksStore.enabledSuppliers,
       ),
     [product?.replenishedFormId],
   );
