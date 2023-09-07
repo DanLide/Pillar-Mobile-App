@@ -30,6 +30,7 @@ type StoreModel = ScannerModalStoreType &
 export enum ScannerScreenError {
   ProductNotFound,
   ProductNotAssignedToStock,
+  NetworkRequestFailed,
 }
 
 interface Props {
@@ -50,6 +51,8 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
     'This product cannot be found in our product database',
   [ScannerScreenError.ProductNotAssignedToStock]:
     'This product is not assigned to this stock location',
+  [ScannerScreenError.NetworkRequestFailed]:
+    'Please check your internet connection and retry',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -89,9 +92,13 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           ? await onFetchProduct(code)
           : await fetchProductByScannedCode(store, btoa(code));
 
-        // TODO: Handle Network errors
-        if (networkError)
-          return onScanError?.(ScannerScreenError.ProductNotFound);
+        if (networkError) {
+          return onScanError?.(
+            Utils.isNetworkError(networkError)
+              ? ScannerScreenError.NetworkRequestFailed
+              : ScannerScreenError.ProductNotFound,
+          );
+        }
 
         const product = store.getCurrentProduct;
 
@@ -156,7 +163,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         onCloseModal?.();
         store.removeCurrentProduct();
       }, 350);
-     
     };
 
     return (
