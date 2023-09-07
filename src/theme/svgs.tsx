@@ -844,6 +844,18 @@ export const ReceiveBackorderIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const DashedLine = memo((props: SvgProps) => (
+  <Svg width={158} height={1} fill="none" {...props}>
+    <Path
+      stroke={props.color}
+      strokeDasharray="1 5"
+      strokeLinecap="round"
+      strokeWidth={0.5}
+      d="M.25.75h157.5"
+    />
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },

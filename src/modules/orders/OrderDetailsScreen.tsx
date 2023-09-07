@@ -22,7 +22,7 @@ type Props = NativeStackScreenProps<
   AppNavigator.OrderDetailsScreen
 >;
 
-export const OrderDetailsScreen = observer(({ route }: Props) => {
+export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
@@ -41,6 +41,10 @@ export const OrderDetailsScreen = observer(({ route }: Props) => {
   useEffect(() => {
     fetchOrder();
   }, [fetchOrder]);
+
+  const onNavigateToOrderByStockLocation = () => {
+    navigation.navigate(AppNavigator.OrderByStockLocationScreen);
+  };
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
@@ -93,16 +97,26 @@ export const OrderDetailsScreen = observer(({ route }: Props) => {
               </Text>
               {currentOrder.productList.map(product => (
                 <View style={styles.productDetails} key={product.productId}>
-                  <Text
-                    style={[styles.productName, styles.productText]}
-                    ellipsizeMode="clip"
-                    numberOfLines={1}
-                  >
-                    {product.name}
-                  </Text>
+                  <View style={styles.productNameContainer}>
+                    <Text
+                      style={[styles.productText, styles.productName]}
+                      ellipsizeMode="clip"
+                      numberOfLines={1}
+                    >
+                      {product.name}
+                      <SVGs.DashedLine
+                        style={styles.dashedLine}
+                        color={colors.neutral40}
+                      />
+                      <SVGs.DashedLine
+                        style={styles.dashedLine}
+                        color={colors.neutral40}
+                      />
+                    </Text>
+                  </View>
                   <Text style={styles.productText}>
                     <Text style={styles.productDetailsBold}>
-                      {product.shippedQty}
+                      {product.receivedQty}
                     </Text>
                     /{product.orderedQty}
                   </Text>
@@ -113,7 +127,10 @@ export const OrderDetailsScreen = observer(({ route }: Props) => {
 
           <View>
             <View style={styles.headerPlaceholder} />
-            <Pressable style={styles.button}>
+            <Pressable
+              style={styles.button}
+              onPress={onNavigateToOrderByStockLocation}
+            >
               <Text style={styles.buttonText}>Receive</Text>
               <SVGs.ChevronIcon color={colors.purpleDark} />
             </Pressable>
@@ -129,12 +146,13 @@ export const OrderDetailsScreen = observer(({ route }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.grayLight,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 16,
+    backgroundColor: colors.white,
   },
   title: {
     fontSize: 24,
@@ -164,6 +182,8 @@ const styles = StyleSheet.create({
   },
   product: {
     flexDirection: 'row',
+    backgroundColor: colors.white,
+    paddingBottom: 8,
   },
   headerPlaceholder: {
     height: 26,
@@ -223,8 +243,7 @@ const styles = StyleSheet.create({
     color: colors.grayDark,
   },
   productName: {
-    flex: 1,
-    marginRight: 0,
+    paddingRight: 24,
   },
   loading: {
     padding: 16,
@@ -245,5 +264,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     color: colors.blackSemiLight,
     textAlign: 'center',
+  },
+  dashedLine: {
+    alignSelf: 'flex-end',
+  },
+  productNameContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    overflow: 'hidden',
   },
 });
