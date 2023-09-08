@@ -1,4 +1,10 @@
-import React, { useEffect, useCallback, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+} from 'react';
 import {
   View,
   Text,
@@ -16,6 +22,7 @@ import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { fetchOrderDetails } from '../../data/fetchOrderDetails';
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
+import { OrderProductResponse } from '../../data/api/orders';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -45,6 +52,40 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const onNavigateToOrderByStockLocation = () => {
     navigation.navigate(AppNavigator.OrderByStockLocationScreen);
   };
+
+  const renderProduct = useCallback(
+    (product: OrderProductResponse) => (
+      <View style={styles.productDetails} key={product.productId}>
+        <View style={styles.productNameContainer}>
+          <Text
+            style={[styles.productText, styles.productName]}
+            ellipsizeMode="clip"
+            numberOfLines={1}
+          >
+            {product.name}
+            <SVGs.DashedLine
+              style={styles.dashedLine}
+              color={colors.neutral40}
+            />
+            <SVGs.DashedLine
+              style={styles.dashedLine}
+              color={colors.neutral40}
+            />
+          </Text>
+        </View>
+        <Text style={styles.productText}>
+          <Text style={styles.productDetailsBold}>{product.receivedQty}</Text>/
+          {product.orderedQty}
+        </Text>
+      </View>
+    ),
+    [],
+  );
+
+  const OrderProducts = useMemo(
+    () => currentOrder?.productList.map(renderProduct),
+    [currentOrder?.productList, renderProduct],
+  );
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
@@ -95,33 +136,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
               <Text style={styles.stockName}>
                 {currentOrder.order.orderArea}
               </Text>
-              {currentOrder.productList.map(product => (
-                <View style={styles.productDetails} key={product.productId}>
-                  <View style={styles.productNameContainer}>
-                    <Text
-                      style={[styles.productText, styles.productName]}
-                      ellipsizeMode="clip"
-                      numberOfLines={1}
-                    >
-                      {product.name}
-                      <SVGs.DashedLine
-                        style={styles.dashedLine}
-                        color={colors.neutral40}
-                      />
-                      <SVGs.DashedLine
-                        style={styles.dashedLine}
-                        color={colors.neutral40}
-                      />
-                    </Text>
-                  </View>
-                  <Text style={styles.productText}>
-                    <Text style={styles.productDetailsBold}>
-                      {product.receivedQty}
-                    </Text>
-                    /{product.orderedQty}
-                  </Text>
-                </View>
-              ))}
+              {OrderProducts}
             </View>
           </View>
 
