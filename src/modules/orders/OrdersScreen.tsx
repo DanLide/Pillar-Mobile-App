@@ -13,8 +13,17 @@ import { ordersStore } from './stores';
 import { fetchOrders } from '../../data/fetchOrders';
 import { Button, ButtonType, Input } from '../../components';
 import { SVGs, colors, fonts } from '../../theme';
+import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
+import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 
-export const OrdersScreen = observer(() => {
+interface Props {
+  navigation: NativeStackNavigationProp<
+    OrdersParamsList,
+    AppNavigator.OrdersScreen
+  >;
+}
+
+export const OrdersScreen = observer(({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -37,6 +46,11 @@ export const OrdersScreen = observer(() => {
         item.orderId.toString().includes(filterValue.toLowerCase()),
       ),
     [filterValue, ordersStoreRef.getOrders],
+  );
+
+  const openCreateOrder = useCallback(
+    () => navigation.navigate(AppNavigator.SelectStockScreen),
+    [navigation],
   );
 
   if (isLoading) {
@@ -74,7 +88,7 @@ export const OrdersScreen = observer(() => {
           value={filterValue}
         />
       </View>
-      <OrdersList orders={filteredOrders} />
+      <OrdersList orders={filteredOrders} onPrimaryPress={openCreateOrder} />
     </View>
   );
 });
