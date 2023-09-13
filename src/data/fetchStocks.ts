@@ -1,3 +1,5 @@
+import { isEmpty } from 'ramda';
+
 import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
@@ -14,12 +16,12 @@ export const fetchStocks = async (stocksStore: StockStore) => {
   const stocksContext: FetchStocksContext = {
     stocks: [],
   };
-  const result = await new TaskExecutor([
-    new FetchStocksTask(stocksContext),
-    new SaveStocksToStore(stocksContext, stocksStore),
-  ]).execute();
-
-  return result;
+  if (isEmpty(stocksStore.stocks)) {
+    return new TaskExecutor([
+      new FetchStocksTask(stocksContext),
+      new SaveStocksToStore(stocksContext, stocksStore),
+    ]).execute();
+  }
 };
 
 export class FetchStocksTask extends Task {
