@@ -15,7 +15,13 @@ import {
 } from './api/ssoAPI';
 import { jobsStore } from '../modules/jobsList/stores';
 
-export interface LoginFlowContext {
+export interface TokenData {
+  token?: string;
+  refreshToken?: string;
+  tokenExpiresIn?: number;
+}
+
+export interface LoginFlowContext extends TokenData {
   token?: string;
   isTnC?: boolean;
   isLanguage?: boolean;
@@ -61,6 +67,8 @@ class LoginTask extends Task {
   async run(): Promise<void> {
     const response = await loginAPI(this.params);
     this.loginFlowContext.token = response.access_token;
+    this.loginFlowContext.refreshToken = response.refresh_token;
+    this.loginFlowContext.tokenExpiresIn = response.expires_in;
   }
 }
 
@@ -270,10 +278,12 @@ class SaveAuthDataTask extends Task {
       permissionSet1,
       permissionSet2,
       roleTypeDescription,
+      refreshToken,
+      tokenExpiresIn,
     } = this.loginFlowContext;
 
     if (this.isLoginContextValid()) {
-      this.authStore.setToken(token);
+      this.authStore.setToken(token, refreshToken, tokenExpiresIn);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguage(isLanguage);
       this.authStore.setRoleTypeDescription(roleTypeDescription);
