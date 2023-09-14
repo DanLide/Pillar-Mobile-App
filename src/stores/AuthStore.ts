@@ -90,9 +90,9 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   }
 
   @action setToken(
-    token: string,
-    refresh_token: string,
-    tokenExpiresIn: number,
+    token?: string,
+    refresh_token?: string,
+    tokenExpiresIn?: number,
   ) {
     this.token = token;
     this.refreshToken = refresh_token;

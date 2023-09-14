@@ -15,7 +15,7 @@ describe('tryAuthFetch', () => {
     const authStoreSpy = new AuthStore();
     const mockedFetchAuth = mockAuthFetch(mockedResponse);
 
-    authStoreSpy.setToken('token');
+    authStoreSpy.setToken('token', 'refreshToken', 300);
 
     const params = assoc('authToken', authStoreSpy, TRY_FETCH_PARAMS);
 
@@ -28,6 +28,7 @@ describe('tryAuthFetch', () => {
     const mockedResponse = {};
     const authStoreSpy = new AuthStore();
     const mockedFetchAuth = mockAuthFetch(mockedResponse);
+    authStoreSpy.setToken(undefined, 'refreshToken', 300);
 
     const params = assoc('authToken', authStoreSpy, TRY_FETCH_PARAMS);
 
