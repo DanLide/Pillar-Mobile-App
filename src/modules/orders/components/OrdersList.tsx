@@ -8,9 +8,10 @@ import { Button, ButtonType } from '../../../components';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
+  onPrimaryPress?: () => void;
 }
 
-export const OrdersList: React.FC<Props> = ({ orders }) => {
+export const OrdersList: React.FC<Props> = ({ orders, onPrimaryPress }) => {
   const ItemSeparator = () => <View style={styles.separator} />;
 
   return (
@@ -47,6 +48,7 @@ export const OrdersList: React.FC<Props> = ({ orders }) => {
           title="Create Order"
           buttonStyle={[styles.button, styles.createButton]}
           textStyle={styles.buttonText}
+          onPress={onPrimaryPress}
         />
       </View>
     </View>

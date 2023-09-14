@@ -4,12 +4,15 @@ import {
   GetOrderDetailsResponse,
   GetOrdersAPIResponse,
 } from '../../../data/api';
+import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 
-export class OrdersStore {
+export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: GetOrderDetailsResponse;
   @observable orders?: GetOrdersAPIResponse[];
 
   constructor() {
+    super();
+
     this.orders = undefined;
     makeObservable(this);
   }
