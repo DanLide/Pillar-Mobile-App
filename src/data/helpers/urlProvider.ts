@@ -229,4 +229,13 @@ export class URLProvider {
       `${this.currentEnv.modules.order.apiUri}/api/Order/OrderSummaryDetailsByProduct/${orderId}/${facilityId}`,
     );
   }
+
+  refreshToken() {
+    const url = new URL(`${this.currentEnv.b2c.authority}/oauth2/v2.0/token`);
+    url.searchParams.set('grant_type', 'refresh_token');
+    url.searchParams.set('client_id', this.currentEnv.b2c.clientId);
+    url.searchParams.set('refresh_token', authStore.getRefreshToken || '');
+
+    return `${url}&scope=openid+${this.currentEnv.b2c.clientId}+offline_access`;
+  }
 }

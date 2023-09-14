@@ -1,4 +1,6 @@
 import { action, makeObservable, observable, computed } from 'mobx';
+import { add, differenceInMilliseconds } from 'date-fns';
+
 import { LogoutListener } from '../data/helpers/tryFetch';
 import { stocksStore } from '../modules/stocksList/stores';
 import { Utils } from '../data/helpers/utils';
@@ -20,6 +22,8 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private permissionSet?: bigint[];
   private msoID?: number;
   private facilityID?: string;
+  private refreshToken?: string;
+  private tokenExpiresOn?: Date;
 
   constructor() {
     this.token = undefined;
@@ -34,6 +38,12 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @computed
   get getToken() {
     return this.token;
+  }
+
+  @computed get isTokenExpired() {
+    return this.tokenExpiresOn
+      ? differenceInMilliseconds(new Date(), this.tokenExpiresOn) >= 0
+      : true;
   }
 
   @computed
@@ -67,6 +77,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     return this.roleTypeDescription || '';
   }
 
+  @computed get getRefreshToken() {
+    return this.refreshToken;
+  }
+
   onServerLogout() {
     this.logOut();
   }
@@ -75,8 +89,18 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.logOut();
   }
 
-  @action setToken(token: string) {
+  @action setToken(
+    token?: string,
+    refresh_token?: string,
+    tokenExpiresIn?: number,
+  ) {
     this.token = token;
+    this.refreshToken = refresh_token;
+    if (tokenExpiresIn) {
+      this.tokenExpiresOn = add(new Date(), {
+        seconds: tokenExpiresIn - 30,
+      });
+    }
   }
 
   @action setIsTnC(isTnC: boolean) {
@@ -123,7 +147,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.roleTypeDescription = value;
   }
 
-
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
@@ -131,7 +154,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.permissionSet = undefined;
     this.isLoggedIn = false;
     stocksStore.clear();
-    removeProductsStore.clear()
+    removeProductsStore.clear();
     ssoStore.clear();
   }
 }

@@ -16,6 +16,7 @@ import {
   GetOrderDetailsResponse,
   getOrderDetails,
 } from './orders';
+import { refreshTokenAPI } from './refreshToken';
 
 export {
   getRoleManagerAPI,
@@ -29,6 +30,7 @@ export {
   getFetchProductByFacilityIdAPI,
   getOrdersAPI,
   getOrderDetails,
+  refreshTokenAPI,
 };
 export type {
   LoginAPIParams,
