@@ -96,9 +96,11 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   ) {
     this.token = token;
     this.refreshToken = refresh_token;
-    this.tokenExpiresOn = add(new Date(), {
-      seconds: tokenExpiresIn,
-    });
+    if (tokenExpiresIn) {
+      this.tokenExpiresOn = add(new Date(), {
+        seconds: tokenExpiresIn - 30,
+      });
+    }
   }
 
   @action setIsTnC(isTnC: boolean) {
