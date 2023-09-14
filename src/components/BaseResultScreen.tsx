@@ -173,9 +173,9 @@ const BaseResultScreen: React.FC<Props> = observer(
       [Header, contextBody, contextTitle, stockName],
     );
 
-    const renderNotSyncedProduct = () => {
+    const renderNotSyncedProduct = useMemo(() => {
       if (!notSyncedProducts.length) {
-        return null
+        return null;
       }
 
       const List = groupByJob ? (
@@ -190,26 +190,34 @@ const BaseResultScreen: React.FC<Props> = observer(
           renderItem={renderItem}
           ListHeaderComponent={renderSectionHeader}
         />
-      )
+      );
 
       return (
         <View style={styles.errorContainer}>
           <View style={styles.errorTitleContainer}>
             <SVGs.ErrorProduct />
             <View style={styles.errorTitleWrapper}>
-              <Text style={[styles.errorListTitle]}>{errorListTitle}
-                {
-                  !!errorListTitlePartBolt && <Text style={[styles.errorListTitle, styles.boltText]}>
+              <Text style={[styles.errorListTitle]}>
+                {errorListTitle}
+                {!!errorListTitlePartBolt && (
+                  <Text style={[styles.errorListTitle, styles.boltText]}>
                     {errorListTitlePartBolt}
                   </Text>
-                }
+                )}
               </Text>
             </View>
           </View>
           {List}
         </View>
-      )
-    }
+      );
+    }, [
+      errorListTitle,
+      errorListTitlePartBolt,
+      groupByJob,
+      notSyncedProducts,
+      renderItem,
+      renderSectionHeader,
+    ]);
 
     return (
       <>
@@ -221,7 +229,7 @@ const BaseResultScreen: React.FC<Props> = observer(
             {_renderHeader}
             {SyncedProductsList}
             {_renderSyncedSectionFooter}
-            {renderNotSyncedProduct()}
+            {renderNotSyncedProduct}
           </View>
 
           <View style={styles.buttonsContainer}>
