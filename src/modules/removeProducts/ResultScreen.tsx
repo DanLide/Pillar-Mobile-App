@@ -25,7 +25,8 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
       store={store}
       contextTitle="Remove Complete"
       contextBody="You have successfully removed the following items from"
-      errorListTitle="The following products were not removed"
+      errorListTitle="The following products were "
+      errorListTitlePartBolt="not removed"
       errorToastMessage="Sorry, some of the products on your list were not removed from inventory"
     />
   );

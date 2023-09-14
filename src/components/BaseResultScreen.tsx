@@ -23,7 +23,7 @@ import { BaseResultScreenNavigationProp } from '../navigation/types';
 import { groupProductsByJobId } from '../modules/removeProducts/helpers';
 import { ToastType } from '../contexts/types';
 import { authStore } from '../stores';
-import { colors, fonts } from '../theme';
+import { colors, fonts, SVGs } from '../theme';
 import { ResultProductsListItem } from './ResultProductsListItem';
 import { OTHER_JOB_ID } from '../constants';
 import { Tooltip } from './Tooltip';
@@ -38,6 +38,7 @@ interface Props {
   contextTitle?: string;
   contextBody: string;
   errorListTitle: string;
+  errorListTitlePartBolt?: string;
   errorToastMessage: string;
   groupByJob?: boolean;
   SyncedSectionFooter?: JSX.Element;
@@ -55,6 +56,7 @@ const BaseResultScreen: React.FC<Props> = observer(
     errorToastMessage,
     groupByJob,
     SyncedSectionFooter,
+    errorListTitlePartBolt,
     title,
     Header,
   }) => {
@@ -130,39 +132,17 @@ const BaseResultScreen: React.FC<Props> = observer(
         groupByJob ? (
           <SectionList
             sections={groupProductsByJobId(syncedProducts)}
-            style={styles.list}
             renderSectionHeader={renderSectionHeader}
             renderItem={renderItem}
           />
         ) : (
           <FlatList
             data={syncedProducts}
-            style={styles.list}
             renderItem={renderItem}
             ListHeaderComponent={renderSectionHeader}
           />
         ),
       [groupByJob, renderItem, renderSectionHeader, syncedProducts],
-    );
-
-    const NotSyncedProductsList = useMemo<JSX.Element>(
-      () =>
-        groupByJob ? (
-          <SectionList
-            sections={groupProductsByJobId(notSyncedProducts)}
-            style={styles.list}
-            renderSectionHeader={renderSectionHeader}
-            renderItem={renderItem}
-          />
-        ) : (
-          <FlatList
-            data={notSyncedProducts}
-            style={styles.list}
-            renderItem={renderItem}
-            ListHeaderComponent={renderSectionHeader}
-          />
-        ),
-      [groupByJob, notSyncedProducts, renderItem, renderSectionHeader],
     );
 
     const _renderSyncedSectionFooter = useMemo<JSX.Element | null>(
@@ -193,6 +173,52 @@ const BaseResultScreen: React.FC<Props> = observer(
       [Header, contextBody, contextTitle, stockName],
     );
 
+    const renderNotSyncedProduct = useMemo(() => {
+      if (!notSyncedProducts.length) {
+        return null;
+      }
+
+      const List = groupByJob ? (
+        <SectionList
+          sections={groupProductsByJobId(notSyncedProducts)}
+          renderSectionHeader={renderSectionHeader}
+          renderItem={renderItem}
+        />
+      ) : (
+        <FlatList
+          data={notSyncedProducts}
+          renderItem={renderItem}
+          ListHeaderComponent={renderSectionHeader}
+        />
+      );
+
+      return (
+        <View style={styles.errorContainer}>
+          <View style={styles.errorTitleContainer}>
+            <SVGs.ErrorProduct />
+            <View style={styles.errorTitleWrapper}>
+              <Text style={[styles.errorListTitle]}>
+                {errorListTitle}
+                {!!errorListTitlePartBolt && (
+                  <Text style={[styles.errorListTitle, styles.boltText]}>
+                    {errorListTitlePartBolt}
+                  </Text>
+                )}
+              </Text>
+            </View>
+          </View>
+          {List}
+        </View>
+      );
+    }, [
+      errorListTitle,
+      errorListTitlePartBolt,
+      groupByJob,
+      notSyncedProducts,
+      renderItem,
+      renderSectionHeader,
+    ]);
+
     return (
       <>
         <View style={styles.cabinetContainer}>
@@ -203,12 +229,7 @@ const BaseResultScreen: React.FC<Props> = observer(
             {_renderHeader}
             {SyncedProductsList}
             {_renderSyncedSectionFooter}
-            {notSyncedProducts.length > 0 ? (
-              <>
-                <Text style={styles.errorListTitle}>{errorListTitle}</Text>
-                {NotSyncedProductsList}
-              </>
-            ) : null}
+            {renderNotSyncedProduct}
           </View>
 
           <View style={styles.buttonsContainer}>
@@ -260,7 +281,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    alignItems: 'center',
     marginBottom: 8,
   },
   contextTitle: {
@@ -284,12 +304,24 @@ const styles = StyleSheet.create({
   contextBodyBold: {
     fontFamily: fonts.TT_Bold,
   },
-  list: {
-    width: '100%',
-    height: '100%',
+  errorContainer: {
+    flex: 1,
     borderRadius: 6,
     borderWidth: 1,
     borderColor: colors.gray,
+  },
+  errorTitleContainer: {
+    flexDirection: 'row',
+    backgroundColor: colors.background,
+    alignItems: 'center',
+  },
+  errorTitleWrapper: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  boltText: {
+    fontFamily: fonts.TT_Bold,
   },
   sectionTitleContainer: {
     flexDirection: 'row',
@@ -315,9 +347,9 @@ const styles = StyleSheet.create({
     paddingRight: 30,
   },
   errorListTitle: {
-    fontSize: 11,
-    fontFamily: fonts.TT_Bold,
-    lineHeight: 13.5,
+    fontSize: 14,
+    fontFamily: fonts.TT_Regular,
+    lineHeight: 17.5,
     color: colors.black,
     paddingVertical: 8,
   },
