@@ -148,6 +148,12 @@ const oneBarcodeToolTipText = 'Point camera at product code';
 const multipleBarcodeToolTipText = 'Tap the code you want to scan';
 const upcToolTipText = 'Scan UPC for product editing';
 
+const soundAndVibrate = async () => {
+  await VolumeManager.setVolume(1);
+  Vibration.vibrate();
+  TrackPlayer.play();
+}
+
 const ScanProduct: React.FC<ScanProductProps> = ({
   onScan,
   isActive,
@@ -234,13 +240,9 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     [],
   );
 
-  const scanBarcode = async (code?: string) => {
+  const scanBarcode = (code?: string) => {
     if (!code) return;
-
-    await VolumeManager.setVolume(1);
-    Vibration.vibrate();
-    TrackPlayer.play();
-
+    soundAndVibrate();
     onScan(code);
     setIsBlinkOn(true);
   };
