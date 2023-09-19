@@ -24,7 +24,7 @@ export interface ProductResponse extends ProductSettingsResponse {
   size: string;
   partNo: string;
   manufactureCode: string;
-  nameDetails: string;
+  nameDetails?: string;
   unitPer: number;
   inventoryClassificationTypeId: string;
   inventoryAssignmentId?: number;

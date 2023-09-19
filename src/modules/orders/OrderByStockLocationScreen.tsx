@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   FlatList,
   Text,
   StyleSheet,
   ListRenderItemInfo,
+  Pressable,
 } from 'react-native';
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
@@ -23,12 +24,32 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { getScreenOptions } from '../../navigation/helpers';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
 import { OrderProductResponse } from '../../data/api/orders';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalType,
+} from '../productModal';
+import { MissingItemsModal } from './components/MissingItemsModal';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
   AppNavigator.OrderByStockLocationScreen
 >;
+
+interface OrderProductModal extends ProductModalParams {
+  currentProduct?: OrderProductResponse;
+}
+
+const initModalParams: OrderProductModal = {
+  type: ProductModalType.Hidden,
+  maxValue: undefined,
+};
+
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
+  const [modalParams, setModalParams] =
+    useState<OrderProductModal>(initModalParams);
+  const [isProductsMissingModal, setIsProductsMissingModal] =
+    useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
   const { currentOrder } = ordersStoreRef;
 
@@ -45,7 +66,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   };
 
   const renderItem = ({ item }: ListRenderItemInfo<OrderProductResponse>) => (
-    <View style={styles.item}>
+    <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
       <View style={styles.description}>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemName}>
           {item.name}
@@ -61,9 +82,8 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       <Text style={styles.itemReceiving}>
         +{item.receivedQty > 0 ? item.receivedQty : item.shippedQty}
       </Text>
-    </View>
+    </Pressable>
   );
-
   useEffect(() => {
     if (currentOrder?.order.orderId) {
       navigation.setOptions(
@@ -75,8 +95,47 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     }
   }, [currentOrder, navigation]);
 
+  const onSelectProduct = (item: OrderProductResponse) => {
+    setModalParams({
+      type: ProductModalType.ReceiveOrder,
+      maxValue: item.orderedQty,
+      onHand: item.receivedQty,
+      currentProduct: item,
+    });
+  };
+
   const onReceive = () => {
-    // open modal
+    if (ordersStoreRef.isProductItemsMissing) {
+      setIsProductsMissingModal(true);
+    } else {
+      onUpdateOrder();
+    }
+  };
+
+  const onUpdateOrder = () => {
+    if (isProductsMissingModal) setIsProductsMissingModal(false);
+
+    navigation.navigate(AppNavigator.ResultScreen);
+  };
+
+  const onSubmitProduct = () => {
+    if (modalParams.currentProduct) {
+      ordersStoreRef.updateCurrentOrderProduct(modalParams.currentProduct);
+    }
+    setModalParams(initModalParams);
+  };
+
+  const onCloseModal = () => {
+    setModalParams(initModalParams);
+  };
+
+  const onChangeProductQuantity = (quantity: number) => {
+    const product = { ...modalParams.currentProduct };
+    product.receivedQty = quantity;
+    setModalParams({
+      ...modalParams,
+      currentProduct: product as OrderProductResponse,
+    });
   };
 
   return (
@@ -95,6 +154,19 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       <View style={styles.button}>
         <Button type={ButtonType.primary} title="Receive" onPress={onReceive} />
       </View>
+      <ProductModal
+        {...modalParams}
+        stockName={currentOrder?.order.orderArea}
+        product={modalParams.currentProduct}
+        onSubmit={onSubmitProduct}
+        onClose={onCloseModal}
+        onChangeProductQuantity={onChangeProductQuantity}
+      />
+      <MissingItemsModal
+        onSubmit={onUpdateOrder}
+        isVisible={isProductsMissingModal}
+        onClose={() => setIsProductsMissingModal(false)}
+      />
     </View>
   );
 };

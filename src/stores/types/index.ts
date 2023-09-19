@@ -15,6 +15,11 @@ export interface ProductModel
   categoryId?: number;
   unitsPerContainer?: number;
   job?: JobModel;
+  product?: string;
+  unitsPer?: number;
+  shippedQty?: number;
+  cost?: number;
+  receivedQty?: number;
 }
 
 export interface ClearStoreType {
