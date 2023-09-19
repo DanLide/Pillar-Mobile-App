@@ -10,38 +10,46 @@ import {
 
 import { colors, fonts, SVGs } from '../theme';
 
-export const ProductEmptyList = memo(({ style }: ViewProps) => {
-  const containerStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.container, style],
-    [style],
-  );
+interface Props extends ViewProps {
+  title?: string;
+  subtitle?: string;
+  hideTitle?: boolean;
+}
 
-  return (
-    <View style={containerStyle}>
-      <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Nothing here</Text>
+export const ProductEmptyList = memo(
+  ({
+    title = 'Nothing here',
+    subtitle = 'Start Scanning',
+    hideTitle,
+    style,
+  }: Props) => {
+    const containerStyle = useMemo<StyleProp<ViewStyle>>(
+      () => [styles.container, style],
+      [style],
+    );
+
+    return (
+      <View style={containerStyle}>
+        {!hideTitle && <Text style={styles.emptyText}>{title}</Text>}
         <SVGs.CodeIcon color={colors.black} style={styles.emptyContainerIcon} />
-        <Text style={styles.emptyText}>Start Scanning</Text>
+        <Text style={styles.emptyText}>{subtitle}</Text>
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    opacity: 0.125,
   },
   emptyText: {
     fontSize: 20,
     fontFamily: fonts.TT_Bold,
     lineHeight: 30,
     color: colors.black,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.125,
   },
   emptyContainerIcon: {
     marginVertical: 16,

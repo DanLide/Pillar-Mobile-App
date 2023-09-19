@@ -14,11 +14,13 @@ interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
 export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: CurrentOrder;
   @observable orders?: GetOrdersAPIResponse[];
+  @observable supplierId?: number;
 
   constructor() {
     super();
 
     this.orders = undefined;
+    this.supplierId = undefined;
     makeObservable(this);
   }
 
@@ -32,7 +34,7 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
-      if ((item.orderedQty - item.receivedQty) !== 0) acc = true;
+      if (item.orderedQty - item.receivedQty !== 0) acc = true;
       return acc;
     }, false);
     return !!isMissing;
@@ -62,5 +64,9 @@ export class OrdersStore extends BaseProductsStore {
     if (this.currentOrder && products) {
       this.currentOrder.productList = products;
     }
+  }
+
+  @action setSupplier(supplierId?: number) {
+    this.supplierId = supplierId;
   }
 }

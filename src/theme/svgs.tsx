@@ -285,6 +285,17 @@ c386 -4 1194 -9 1796 -12z"
   </Svg>
 ));
 
+export const ScanIcon = memo((props: SvgProps) => (
+  <Svg width={33} height={32} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M4.75 4v5.333h2V6h3.333V4H4.75Zm18.667 0v2h3.332v3.333h2.002V4h-5.334ZM4.75 28v-5.333h2V26h3.333v2.002H4.75Zm22-5.333V26h-3.332v2.002h5.332v-5.334h-2ZM13.417 16a3.336 3.336 0 0 0 3.333 3.333A3.336 3.336 0 0 0 20.083 16a3.336 3.336 0 0 0-3.333-3.333A3.336 3.336 0 0 0 13.417 16Zm-2 0a5.334 5.334 0 1 1 10.667 0 5.334 5.334 0 0 1-10.667 0Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const CaptureIcon = memo((props: SvgProps) => (
   <Svg width="33" height="32" viewBox="0 0 33 32" {...props}>
     <Path
@@ -452,6 +463,17 @@ export const ProductIcon = memo((props: SvgProps) => (
       fill={props.color}
       fillRule="evenodd"
       d="M12 3 2 6.611v11.734l10 3.612 10-3.612V6.611L12 3ZM4.958 7.137 12 4.596l2.417.872L7.376 8.01l-2.418-.873Zm4.626 1.671 7.04-2.544 2.419.873L12 9.681l-2.416-.873Zm3.166 2.197 7.751-2.799v9.087L12.75 20.09v-9.085ZM3.5 17.293V8.206l7.75 2.799v9.085L3.5 17.293Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
+export const ProductSmallIcon = memo((props: SvgProps) => (
+  <Svg width={21} height={20} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M10.5 2.5 2.167 5.51v9.777l8.333 3.01 8.334-3.01V5.51L10.5 2.5ZM4.632 5.947 10.5 3.83l2.014.727-5.867 2.118-2.015-.728ZM8.487 7.34l5.867-2.12 2.015.728-5.869 2.12-2.013-.728Zm2.638 1.83 6.46-2.332v7.573l-6.46 2.33v-7.57Zm-7.708 5.24V6.839l6.458 2.333v7.57l-6.458-2.33Z"
       clipRule="evenodd"
     />
   </Svg>

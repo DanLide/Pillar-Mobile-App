@@ -32,6 +32,7 @@ export interface DropdownItem {
 interface Props<T> extends ViewProps {
   data: Array<T>;
   label: string;
+  placeholder?: string;
   selectedItem?: T;
   bottomOffset?: number;
   maxHeight?: number;
@@ -50,6 +51,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
   data,
   selectedItem,
   label,
+  placeholder,
   bottomOffset = TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   maxHeight = 200,
   renderItem,
@@ -114,8 +116,8 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
       );
     }
 
-    return null;
-  }, [selectedItem, renderItem]);
+    return <Text style={styles.optionLabel}>{placeholder}</Text>;
+  }, [selectedItem, renderItem, placeholder]);
 
   const openDropdown = useCallback(async () => {
     const { x, y, width, height } = await new Promise<LayoutRectangle>(

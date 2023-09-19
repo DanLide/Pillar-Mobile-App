@@ -75,13 +75,13 @@ const Button: React.FC<ExtendedButtonProps> = ({
     ({ pressed }) => {
       switch (type) {
         case ButtonType.primary:
-          return colors.white;
+          return iconProps?.color ?? colors.white;
         case ButtonType.secondary:
           if (isDisabled) return colors.grayDark;
-          return pressed ? colors.white : colors.black;
+          return pressed ? colors.white : iconProps?.color ?? colors.black;
       }
     },
-    [isDisabled, type],
+    [iconProps?.color, isDisabled, type],
   );
 
   const buttonMergedStyle = useCallback<
@@ -142,7 +142,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
             style={styles.buttonContainer}
             testID={testIds.idContent(testID)}
           >
-            {Icon && <Icon color={iconColor(state)} {...iconProps} />}
+            {Icon && <Icon {...iconProps} color={iconColor(state)} />}
             <Text
               {...props}
               style={textMergedStyle(state)}
