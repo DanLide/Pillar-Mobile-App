@@ -15,7 +15,6 @@ import {
 import { SVGs, colors, fonts } from '../../theme';
 
 import { ordersStore } from './stores';
-import { OrderProductResponse } from '../../data/api/orders';
 import { getScreenOptions } from '../../navigation/helpers';
 import {
   AppNavigator,
@@ -24,6 +23,7 @@ import {
 } from '../../navigation/types';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
+import { ProductModel } from '../../stores/types';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -33,8 +33,13 @@ type Props = NativeStackScreenProps<
 export const ResultScreen = ({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
-  const renderItem = ({ item }: ListRenderItemInfo<OrderProductResponse>) => {
-    if (item.orderedQty - item.receivedQty === 0) return null;
+  const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => {
+    if (
+      !item.orderedQty ||
+      !item.receivedQty ||
+      item.orderedQty - item.receivedQty === 0
+    )
+      return null;
     return (
       <View style={styles.item}>
         <View style={styles.description}>

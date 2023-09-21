@@ -48,6 +48,7 @@ const initModalParams: OrderProductModal = {
 };
 
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [modalParams, setModalParams] =
     useState<OrderProductModal>(initModalParams);
   const [isProductsMissingModal, setIsProductsMissingModal] =
@@ -116,10 +117,12 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
 
   const onUpdateOrder = async () => {
     if (isProductsMissingModal) setIsProductsMissingModal(false);
+    setIsLoading(true);
     const result = await receiveOrder(ordersStoreRef);
+    setIsLoading(false);
 
     if (result) {
-      Alert.alert('Request Failed!');
+      Alert.alert('Order confirmation was not successful. Please retry.');
     } else {
       navigation.navigate(AppNavigator.ResultScreen);
     }
@@ -137,11 +140,13 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   };
 
   const onChangeProductQuantity = (quantity: number) => {
-    const product = { ...modalParams.currentProduct };
-    product.receivedQty = quantity;
+    if (!modalParams.currentProduct) return;
+
+    const product = { ...modalParams.currentProduct, receivedQty: quantity };
+
     setModalParams({
       ...modalParams,
-      currentProduct: product as ProductModel,
+      currentProduct: product,
     });
   };
 
@@ -159,7 +164,12 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
       <View style={styles.button}>
-        <Button type={ButtonType.primary} title="Receive" onPress={onReceive} />
+        <Button
+          type={ButtonType.primary}
+          title="Receive"
+          onPress={onReceive}
+          isLoading={isLoading}
+        />
       </View>
       <ProductModal
         {...modalParams}

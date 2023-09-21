@@ -7,7 +7,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import ramda from 'ramda';
+import { clone } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
@@ -195,7 +195,7 @@ export const ProductQuantity = memo(
     const getMinValue = () => {
       switch (type) {
         case ProductModalType.ReceiveOrder:
-          return ramda.clone(product.receivedQty) ?? stepQty;
+          return clone(product.receivedQty) ?? stepQty;
         default:
           return minValue ?? stepQty;
       }

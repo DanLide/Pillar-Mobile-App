@@ -23,7 +23,7 @@ import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { fetchOrderDetails } from '../../data/fetchOrderDetails';
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { OrderProductResponse } from '../../data/api/orders';
+import { ProductModel } from '../../stores/types';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -58,7 +58,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   };
 
   const renderProduct = useCallback(
-    (product: OrderProductResponse) => (
+    (product: ProductModel) => (
       <View style={styles.productDetails} key={product.productId}>
         <View style={styles.productNameContainer}>
           <Text
