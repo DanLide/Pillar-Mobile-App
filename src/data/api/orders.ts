@@ -1,4 +1,5 @@
 import { OrderStatusType } from '../../constants/common.enum';
+import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
 
 export interface GetOrdersAPIResponse {
@@ -76,7 +77,7 @@ export interface GetOrdersAPIResponse {
 }
 
 export interface OrderProductResponse {
-  id: number;
+  // id: number;
   product: string;
   productId: number;
   manufactureCode: string;
@@ -84,11 +85,9 @@ export interface OrderProductResponse {
   size: string;
   name: string;
   cost: number;
-  jobPrice: number;
   onHand: number;
   onOrder: number;
   consignmentQty: number;
-  lastActivityDate: null;
   extQty: number;
   unitsPer: number;
   quantityOnHand: number;
@@ -97,29 +96,42 @@ export interface OrderProductResponse {
   orderedQty: number;
   receivedQty: number;
   isTaxable: boolean;
-  isInvoiceable: null;
   markup: number;
   tax: number;
-  storageAreaId: number;
   inventoryUseTypeId: number;
-  isNonStock: number;
   receivableQty: number;
   min: number;
   max: number;
-  isPoRequired: string;
-  crimpCategories: null;
-  dimension: null;
-  is3m: boolean;
-  isEnabled: boolean;
-  invoiceUnit: null;
-  invoiceSize: null;
   inventoryAssignmentTypeId: number;
-  stockLocationId: number;
+}
+
+export interface GetOrderSummaryProduct extends OrderProductResponse {
+  orderDetailId: number;
+  storageAreaId: number;
+}
+
+export interface GetOrderSummaryAPIResponse {
+  order: GetOrdersAPIResponse;
+  productList: GetOrderSummaryProduct[];
 }
 
 export interface GetOrderDetailsResponse {
   order: GetOrdersAPIResponse;
   productList: OrderProductResponse[];
+}
+
+export interface GetOrderStorageAreaResponse {
+  partyRoleId: number;
+}
+
+export interface ReceiveOrderRequestProduct {
+  number: string;
+  orderDetailId: number;
+  partyRoleId: number;
+  productId: number;
+  transactionTypeId: number;
+  unitCost: number;
+  quantityReceived: number;
 }
 
 export const getOrdersAPI = () => {
@@ -135,5 +147,39 @@ export const getOrderDetails = (orderId: string) => {
   return tryAuthFetch<GetOrderDetailsResponse>({
     url,
     request: { method: 'GET' },
+  });
+};
+
+export const getOrderSummaryDetailsAPI = (
+  orderId: number,
+  partyRoleId: number,
+) => {
+  const url = new URLProvider().getOrderSummaryDetailsAPI(orderId, partyRoleId);
+  return tryAuthFetch<GetOrderSummaryAPIResponse>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getOrderStorageAreaAPI = (orderId: number) => {
+  const url = new URLProvider().getOrderStorageAreaAPI(orderId);
+  return tryAuthFetch<GetOrderStorageAreaResponse[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const receiveOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
+  const url = new URLProvider().receiveOrder();
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      body: JSON.stringify(products),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   });
 };

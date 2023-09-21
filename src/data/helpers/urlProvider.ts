@@ -238,4 +238,24 @@ export class URLProvider {
 
     return `${url}&scope=openid+${this.currentEnv.b2c.clientId}+offline_access`;
   }
+
+  getOrderSummaryDetailsAPI(orderId: number, customPONumber: number) {
+    const url = new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/OrderSummaryDetails/${orderId}/${customPONumber}`,
+    );
+    return url;
+  }
+
+  getOrderStorageAreaAPI(orderId: number) {
+    const url = new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/StorageArea/${orderId}`,
+    );
+    return url;
+  }
+
+  receiveOrder() {
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/Receive/null`,
+    );
+  }
 }

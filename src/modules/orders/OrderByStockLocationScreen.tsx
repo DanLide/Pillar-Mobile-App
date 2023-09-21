@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ListRenderItemInfo,
   Pressable,
+  Alert,
 } from 'react-native';
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
@@ -23,13 +24,14 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { getScreenOptions } from '../../navigation/helpers';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
-import { OrderProductResponse } from '../../data/api/orders';
 import {
   ProductModal,
   ProductModalParams,
   ProductModalType,
 } from '../productModal';
 import { MissingItemsModal } from './components/MissingItemsModal';
+import { ProductModel } from '../../stores/types';
+import { receiveOrder } from '../../data/receiveOrder';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -37,7 +39,7 @@ type Props = NativeStackScreenProps<
 >;
 
 interface OrderProductModal extends ProductModalParams {
-  currentProduct?: OrderProductResponse;
+  currentProduct?: ProductModel;
 }
 
 const initModalParams: OrderProductModal = {
@@ -65,7 +67,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     );
   };
 
-  const renderItem = ({ item }: ListRenderItemInfo<OrderProductResponse>) => (
+  const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => (
     <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
       <View style={styles.description}>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemName}>
@@ -80,7 +82,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         {item.orderedQty}
       </Text>
       <Text style={styles.itemReceiving}>
-        +{item.receivedQty > 0 ? item.receivedQty : item.shippedQty}
+        +{(item.receivedQty || 0) > 0 ? item.receivedQty : item.shippedQty}
       </Text>
     </Pressable>
   );
@@ -95,7 +97,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     }
   }, [currentOrder, navigation]);
 
-  const onSelectProduct = (item: OrderProductResponse) => {
+  const onSelectProduct = (item: ProductModel) => {
     setModalParams({
       type: ProductModalType.ReceiveOrder,
       maxValue: item.orderedQty,
@@ -112,10 +114,15 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     }
   };
 
-  const onUpdateOrder = () => {
+  const onUpdateOrder = async () => {
     if (isProductsMissingModal) setIsProductsMissingModal(false);
+    const result = await receiveOrder(ordersStoreRef);
 
-    navigation.navigate(AppNavigator.ResultScreen);
+    if (result) {
+      Alert.alert('Request Failed!');
+    } else {
+      navigation.navigate(AppNavigator.ResultScreen);
+    }
   };
 
   const onSubmitProduct = () => {
@@ -134,7 +141,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     product.receivedQty = quantity;
     setModalParams({
       ...modalParams,
-      currentProduct: product as OrderProductResponse,
+      currentProduct: product as ProductModel,
     });
   };
 

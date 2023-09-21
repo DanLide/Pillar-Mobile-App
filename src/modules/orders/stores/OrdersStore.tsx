@@ -5,10 +5,14 @@ import {
   GetOrdersAPIResponse,
 } from '../../../data/api';
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
-import { OrderProductResponse } from '../../../data/api/orders';
+import { ProductModel } from '../../../stores/types';
+
+interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
+  productList: ProductModel[];
+}
 
 export class OrdersStore extends BaseProductsStore {
-  @observable currentOrder?: GetOrderDetailsResponse;
+  @observable currentOrder?: CurrentOrder;
   @observable orders?: GetOrdersAPIResponse[];
 
   constructor() {
@@ -34,7 +38,7 @@ export class OrdersStore extends BaseProductsStore {
     return !!isMissing;
   }
 
-  @action setCurrentOrder(orderDetails: GetOrderDetailsResponse) {
+  @action setCurrentOrder(orderDetails: CurrentOrder) {
     this.currentOrder = orderDetails;
   }
 
@@ -42,7 +46,13 @@ export class OrdersStore extends BaseProductsStore {
     this.orders = orders;
   }
 
-  @action updateCurrentOrderProduct(product: OrderProductResponse) {
+  @action setCurrentOrderProducts(products: ProductModel[]) {
+    if (this.currentOrder) {
+      this.currentOrder.productList = products;
+    }
+  }
+
+  @action updateCurrentOrderProduct(product: ProductModel) {
     const products = this.currentOrder?.productList.map(currentProduct => {
       if (product.productId === currentProduct.productId) {
         return product;

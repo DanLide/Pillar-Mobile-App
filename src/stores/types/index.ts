@@ -9,7 +9,7 @@ export interface ProductModel
   > {
   uuid: string;
   isRemoved: boolean;
-  reservedCount: number;
+  reservedCount?: number;
   nameDetails: string;
   isRecoverable: boolean;
   categoryId?: number;
@@ -20,6 +20,17 @@ export interface ProductModel
   shippedQty?: number;
   cost?: number;
   receivedQty?: number;
+  orderedQty?: number;
+  extQty?: number;
+  quantityOnHand?: number;
+  extCost?: number;
+  isTaxable?: boolean;
+  receivableQty?: number;
+  markup?: number;
+  inventoryAssignmentTypeId?: number;
+  consignmentQty?: number;
+  tax?: number;
+  storageAreaId?: number;
 }
 
 export interface ClearStoreType {
