@@ -5,9 +5,14 @@ import {
   GetOrdersAPIResponse,
 } from '../../../data/api';
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
+import { ProductModel } from '../../../stores/types';
+
+interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
+  productList: ProductModel[];
+}
 
 export class OrdersStore extends BaseProductsStore {
-  @observable currentOrder?: GetOrderDetailsResponse;
+  @observable currentOrder?: CurrentOrder;
   @observable orders?: GetOrdersAPIResponse[];
 
   constructor() {
@@ -25,11 +30,37 @@ export class OrdersStore extends BaseProductsStore {
     return this.currentOrder;
   }
 
-  @action setCurrentOrder(orderDetails: GetOrderDetailsResponse) {
+  @computed get isProductItemsMissing() {
+    const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
+      if ((item.orderedQty - item.receivedQty) !== 0) acc = true;
+      return acc;
+    }, false);
+    return !!isMissing;
+  }
+
+  @action setCurrentOrder(orderDetails: CurrentOrder) {
     this.currentOrder = orderDetails;
   }
 
   @action setOrders(orders: GetOrdersAPIResponse[]) {
     this.orders = orders;
+  }
+
+  @action setCurrentOrderProducts(products: ProductModel[]) {
+    if (this.currentOrder) {
+      this.currentOrder.productList = products;
+    }
+  }
+
+  @action updateCurrentOrderProduct(product: ProductModel) {
+    const products = this.currentOrder?.productList.map(currentProduct => {
+      if (product.productId === currentProduct.productId) {
+        return product;
+      }
+      return currentProduct;
+    });
+    if (this.currentOrder && products) {
+      this.currentOrder.productList = products;
+    }
   }
 }

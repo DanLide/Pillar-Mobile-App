@@ -2,6 +2,8 @@ import { Task, TaskExecutor } from './helpers';
 import { getOrderDetails, GetOrderDetailsResponse } from './api';
 
 import { ordersStore } from '../modules/orders/stores';
+import { OrderProductResponse } from './api/orders';
+import { ProductModel } from '../stores/types';
 
 interface GetOrderDetailsContext {
   orderDetails?: GetOrderDetailsResponse;
@@ -45,7 +47,25 @@ export class SaveOrdersToStoreTask extends Task {
 
   async run(): Promise<void> {
     if (this.getOrderDetailsContext.orderDetails) {
-      ordersStore.setCurrentOrder(this.getOrderDetailsContext.orderDetails);
+      ordersStore.setCurrentOrder({
+        order: this.getOrderDetailsContext.orderDetails.order,
+        productList: this.mapResponse(
+          this.getOrderDetailsContext.orderDetails.productList,
+        ),
+      });
     }
+  }
+
+  mapResponse(orderProducts: OrderProductResponse[]) {
+    return orderProducts.map(orderProduct => {
+      return {
+        ...orderProduct,
+        uuid: 'someStrign',
+        isRemoved: false,
+        reservedCount: undefined,
+        nameDetails: '',
+        isRecoverable: false,
+      } as ProductModel;
+    });
   }
 }

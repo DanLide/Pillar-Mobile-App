@@ -9,6 +9,7 @@ import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
 import { OrderByStockLocationScreen } from '../modules/orders/OrderByStockLocationScreen';
 import { SelectStockScreen } from '../modules/orders/SelectStockScreen';
 import { CreateOrderScreen } from '../modules/orders/CreateOrderScreen';
+import { ResultScreen } from '../modules/orders/ResultScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -52,6 +53,14 @@ export const OrdersStack: React.FC = () => {
         component={CreateOrderScreen}
         options={getScreenOptions({
           title: 'Create Order',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ResultScreen}
+        component={ResultScreen}
+        options={getScreenOptions({
+          title: 'Result screen',
           leftBarButtonType: LeftBarType.Back,
         })}
       />

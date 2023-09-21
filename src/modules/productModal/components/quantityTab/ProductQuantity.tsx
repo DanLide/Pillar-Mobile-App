@@ -7,6 +7,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import { clone } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
@@ -90,7 +91,11 @@ export const ProductQuantity = memo(
 
     if (!product) return null;
 
-    const { isRecoverable, inventoryUseTypeId, reservedCount } = product;
+    const {
+      isRecoverable,
+      inventoryUseTypeId,
+      reservedCount = product.receivedQty,
+    } = product;
 
     const stepQty = getProductStepQty(inventoryUseTypeId);
 
@@ -145,16 +150,65 @@ export const ProductQuantity = memo(
       );
     };
 
+    const renderDescription = () => {
+      switch (type) {
+        case ProductModalType.ManageProduct:
+          return <Description product={product} />;
+        case ProductModalType.ReceiveOrder:
+          return (
+            <Text style={styles.description} ellipsizeMode="middle">
+              {product.name}
+            </Text>
+          );
+        default:
+          return null;
+      }
+    };
+
+    const renderCostOfProduct = () => {
+      switch (type) {
+        case ProductModalType.ReceiveOrder:
+          return (
+            <View>
+              <View style={styles.quantity}>
+                <View>
+                  <Text style={styles.quantityTitle}>Minimum Quantity</Text>
+                  <Text style={styles.quantityValue}>{product.min}</Text>
+                </View>
+                <Text style={styles.divider}>/</Text>
+                <View>
+                  <Text style={styles.quantityTitle}>Maximum Quantity</Text>
+                  <Text style={styles.quantityValue}>{product.max}</Text>
+                </View>
+              </View>
+              <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
+              <Text style={styles.totalCost}>
+                Total Cost: ${(product.cost || 0) * (product.receivedQty || 0)}
+              </Text>
+            </View>
+          );
+        default:
+          return null;
+      }
+    };
+
+    const getMinValue = () => {
+      switch (type) {
+        case ProductModalType.ReceiveOrder:
+          return clone(product.receivedQty) ?? stepQty;
+        default:
+          return minValue ?? stepQty;
+      }
+    };
+
     return (
       <View style={[styles.container, style]}>
-        {type !== ProductModalType.ManageProduct && (
-          <Description product={product} />
-        )}
+        {renderDescription()}
         <View>
           <EditQuantity
             currentValue={reservedCount}
             maxValue={maxValue}
-            minValue={minValue ?? stepQty}
+            minValue={getMinValue()}
             stepValue={stepQty}
             disabled={disabled}
             hideCount={hideCount}
@@ -165,6 +219,7 @@ export const ProductQuantity = memo(
           />
           {type === ProductModalType.ManageProduct && isEdit ? null : (
             <FooterDescription
+              type={type}
               hideOnHandCount={
                 type === ProductModalType.CreateInvoice ||
                 type === ProductModalType.ManageProduct
@@ -193,6 +248,7 @@ export const ProductQuantity = memo(
             ) : null}
           </View>
         )}
+        {renderCostOfProduct()}
         {renderBottomButton()}
       </View>
     );
@@ -204,7 +260,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    // paddingHorizontal: 16,
   },
   continueButton: {
     width: 135,
@@ -250,5 +306,57 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: fonts.TT_Bold,
     marginLeft: 15,
+  },
+  description: {
+    fontSize: 17,
+    fontFamily: fonts.TT_Regular,
+    lineHeight: 25,
+    color: colors.grayDark2,
+    textAlign: 'center',
+  },
+  quantity: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  quantityTitle: {
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: fonts.TT_Regular,
+    color: colors.grayDark2,
+  },
+  quantityValue: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Bold,
+    color: colors.grayDark3,
+    textAlign: 'center',
+  },
+  divider: {
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Bold,
+    color: colors.grayDark3,
+    textAlign: 'center',
+    margin: 16,
+  },
+  cost: {
+    width: '100%',
+    padding: 8,
+    fontSize: 12,
+    lineHeight: 11,
+    fontFamily: fonts.TT_Regular,
+    color: colors.grayDark2,
+    backgroundColor: colors.background,
+    textAlign: 'center',
+  },
+  totalCost: {
+    width: '100%',
+    padding: 8,
+    fontSize: 20,
+    lineHeight: 24,
+    fontFamily: fonts.TT_Bold,
+    color: colors.white,
+    backgroundColor: colors.purpleDark2,
+    textAlign: 'center',
   },
 });

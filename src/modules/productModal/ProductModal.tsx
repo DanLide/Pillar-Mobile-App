@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
 
@@ -10,7 +10,7 @@ import {
 } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
-import { colors } from '../../theme';
+import { colors, fonts } from '../../theme';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -24,6 +24,7 @@ export enum ProductModalType {
   Return,
   CreateInvoice,
   ManageProduct,
+  ReceiveOrder,
   Hidden,
 }
 
@@ -58,6 +59,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
   switch (type) {
     case ProductModalType.Return:
     case ProductModalType.CreateInvoice:
+    case ProductModalType.ReceiveOrder:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -178,16 +180,24 @@ export const ProductModal = memo(
       ],
     );
 
-    const title = useMemo<string>(() => {
+    const title = useMemo<string | JSX.Element>(() => {
       switch (selectedTab) {
-        case Tabs.EditQuantity:
+        case Tabs.EditQuantity: {
+          if (type === ProductModalType.ReceiveOrder) {
+            return (
+              <Text style={styles.title} ellipsizeMode="middle">
+                {product?.product}
+              </Text>
+            );
+          }
           return 'Adjust Quantity';
+        }
         case Tabs.LinkJob:
           return 'Link to Job Number';
         default:
           return '';
       }
-    }, [selectedTab]);
+    }, [selectedTab, type, product]);
 
     return (
       <Modal
@@ -227,5 +237,11 @@ const styles = StyleSheet.create({
   },
   productQuantityContainer: {
     paddingTop: 16,
+  },
+  title: {
+    fontSize: 17,
+    fontFamily: fonts.TT_Bold,
+    lineHeight: 20,
+    color: colors.grayDark3,
   },
 });

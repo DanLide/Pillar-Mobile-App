@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   FlatList,
   Text,
   StyleSheet,
   ListRenderItemInfo,
+  Pressable,
+  Alert,
 } from 'react-native';
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
@@ -22,13 +24,35 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { getScreenOptions } from '../../navigation/helpers';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
-import { OrderProductResponse } from '../../data/api/orders';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalType,
+} from '../productModal';
+import { MissingItemsModal } from './components/MissingItemsModal';
+import { ProductModel } from '../../stores/types';
+import { receiveOrder } from '../../data/receiveOrder';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
   AppNavigator.OrderByStockLocationScreen
 >;
+
+interface OrderProductModal extends ProductModalParams {
+  currentProduct?: ProductModel;
+}
+
+const initModalParams: OrderProductModal = {
+  type: ProductModalType.Hidden,
+  maxValue: undefined,
+};
+
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [modalParams, setModalParams] =
+    useState<OrderProductModal>(initModalParams);
+  const [isProductsMissingModal, setIsProductsMissingModal] =
+    useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
   const { currentOrder } = ordersStoreRef;
 
@@ -44,8 +68,8 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     );
   };
 
-  const renderItem = ({ item }: ListRenderItemInfo<OrderProductResponse>) => (
-    <View style={styles.item}>
+  const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => (
+    <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
       <View style={styles.description}>
         <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemName}>
           {item.name}
@@ -59,11 +83,10 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         {item.orderedQty}
       </Text>
       <Text style={styles.itemReceiving}>
-        +{item.receivedQty > 0 ? item.receivedQty : item.shippedQty}
+        +{(item.receivedQty || 0) > 0 ? item.receivedQty : item.shippedQty}
       </Text>
-    </View>
+    </Pressable>
   );
-
   useEffect(() => {
     if (currentOrder?.order.orderId) {
       navigation.setOptions(
@@ -75,8 +98,56 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     }
   }, [currentOrder, navigation]);
 
+  const onSelectProduct = (item: ProductModel) => {
+    setModalParams({
+      type: ProductModalType.ReceiveOrder,
+      maxValue: item.orderedQty,
+      onHand: item.receivedQty,
+      currentProduct: item,
+    });
+  };
+
   const onReceive = () => {
-    // open modal
+    if (ordersStoreRef.isProductItemsMissing) {
+      setIsProductsMissingModal(true);
+    } else {
+      onUpdateOrder();
+    }
+  };
+
+  const onUpdateOrder = async () => {
+    if (isProductsMissingModal) setIsProductsMissingModal(false);
+    setIsLoading(true);
+    const result = await receiveOrder(ordersStoreRef);
+    setIsLoading(false);
+
+    if (result) {
+      Alert.alert('Order confirmation was not successful. Please retry.');
+    } else {
+      navigation.navigate(AppNavigator.ResultScreen);
+    }
+  };
+
+  const onSubmitProduct = () => {
+    if (modalParams.currentProduct) {
+      ordersStoreRef.updateCurrentOrderProduct(modalParams.currentProduct);
+    }
+    setModalParams(initModalParams);
+  };
+
+  const onCloseModal = () => {
+    setModalParams(initModalParams);
+  };
+
+  const onChangeProductQuantity = (quantity: number) => {
+    if (!modalParams.currentProduct) return;
+
+    const product = { ...modalParams.currentProduct, receivedQty: quantity };
+
+    setModalParams({
+      ...modalParams,
+      currentProduct: product,
+    });
   };
 
   return (
@@ -93,8 +164,26 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
       <View style={styles.button}>
-        <Button type={ButtonType.primary} title="Receive" onPress={onReceive} />
+        <Button
+          type={ButtonType.primary}
+          title="Receive"
+          onPress={onReceive}
+          isLoading={isLoading}
+        />
       </View>
+      <ProductModal
+        {...modalParams}
+        stockName={currentOrder?.order.orderArea}
+        product={modalParams.currentProduct}
+        onSubmit={onSubmitProduct}
+        onClose={onCloseModal}
+        onChangeProductQuantity={onChangeProductQuantity}
+      />
+      <MissingItemsModal
+        onSubmit={onUpdateOrder}
+        isVisible={isProductsMissingModal}
+        onClose={() => setIsProductsMissingModal(false)}
+      />
     </View>
   );
 };

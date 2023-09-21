@@ -15,6 +15,9 @@ import {
   GetOrdersAPIResponse,
   GetOrderDetailsResponse,
   getOrderDetails,
+  receiveOrderAPI,
+  getOrderSummaryDetailsAPI,
+  getOrderStorageAreaAPI,
 } from './orders';
 import { refreshTokenAPI } from './refreshToken';
 
@@ -31,6 +34,9 @@ export {
   getOrdersAPI,
   getOrderDetails,
   refreshTokenAPI,
+  receiveOrderAPI,
+  getOrderSummaryDetailsAPI,
+  getOrderStorageAreaAPI,
 };
 export type {
   LoginAPIParams,

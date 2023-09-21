@@ -22,10 +22,11 @@ interface Props {
   isVisible: boolean;
   title?: string;
   titleContainerStyle?: StyleProp<ViewStyle>;
-  semiTitle?: string;
+  semiTitle?: string | JSX.Element;
   children?: React.ReactNode;
   topOffset?: SharedValue<number>;
   testID?: string;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 
   onClose: () => void;
 }
@@ -40,6 +41,7 @@ export const Modal: React.FC<Props> = ({
   titleContainerStyle,
   semiTitle,
   testID = 'modal',
+  contentContainerStyle,
   onClose,
 }) => {
   const animatedStyles = useAnimatedStyle<ViewStyle>(() => ({
@@ -55,7 +57,7 @@ export const Modal: React.FC<Props> = ({
     >
       <View style={styles.container}>
         <Animated.View
-          style={[styles.background, animatedStyles]}
+          style={[styles.background, animatedStyles, contentContainerStyle]}
           testID={testIds.idContent(testID)}
         >
           <InfoTitleBar

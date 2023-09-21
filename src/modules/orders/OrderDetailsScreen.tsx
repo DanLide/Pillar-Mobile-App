@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { observer } from 'mobx-react';
+import { useIsFocused } from '@react-navigation/native';
 
 import { ordersStore } from './stores';
 import { StatusBadge } from './components/StatusBadge';
@@ -22,7 +23,7 @@ import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { fetchOrderDetails } from '../../data/fetchOrderDetails';
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { OrderProductResponse } from '../../data/api/orders';
+import { ProductModel } from '../../stores/types';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -30,6 +31,7 @@ type Props = NativeStackScreenProps<
 >;
 
 export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
+  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
@@ -46,15 +48,17 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   }, [route.params.orderId]);
 
   useEffect(() => {
-    fetchOrder();
-  }, [fetchOrder]);
+    if (isFocused) {
+      fetchOrder();
+    }
+  }, [fetchOrder, isFocused]);
 
   const onNavigateToOrderByStockLocation = () => {
     navigation.navigate(AppNavigator.OrderByStockLocationScreen);
   };
 
   const renderProduct = useCallback(
-    (product: OrderProductResponse) => (
+    (product: ProductModel) => (
       <View style={styles.productDetails} key={product.productId}>
         <View style={styles.productNameContainer}>
           <Text

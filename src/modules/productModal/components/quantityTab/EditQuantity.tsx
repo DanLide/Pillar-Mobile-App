@@ -27,7 +27,7 @@ import { equals, ifElse, pipe, replace } from 'ramda';
 import { colors, fonts, SVGs } from '../../../../theme';
 
 interface Props extends Pick<TextInputProps, 'keyboardType'> {
-  currentValue: number;
+  currentValue?: number;
   maxValue: number;
   minValue: number;
   stepValue: number;
@@ -58,7 +58,7 @@ const INITIAL_FONT_SIZE = 78;
 
 export const EditQuantity = memo(
   ({
-    currentValue,
+    currentValue = 0,
     maxValue,
     minValue,
     stepValue,

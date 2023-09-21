@@ -40,6 +40,12 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
     onFetchOrders();
   }, [onFetchOrders]);
 
+  const onRightIconPress = () => {
+    if (filterValue) {
+      setFilterValue('');
+    }
+  };
+
   const filteredOrders = useMemo(
     () =>
       ordersStoreRef.getOrders?.filter(item =>
@@ -83,9 +89,10 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
           containerStyle={styles.inputContainer}
           style={styles.input}
           placeholder="Search by order or product number"
-          rightIcon={SVGs.SearchIcon}
+          rightIcon={filterValue ? SVGs.CloseIcon : SVGs.SearchIcon}
           onChangeText={setFilterValue}
           value={filterValue}
+          onRightIconPress={onRightIconPress}
         />
       </View>
       <OrdersList orders={filteredOrders} onPrimaryPress={openCreateOrder} />
