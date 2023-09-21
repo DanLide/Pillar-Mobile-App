@@ -171,7 +171,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   const [barcodesLength, setBarcodesLength] = useState(0);
   const [autoScanDone, setAutoScanDone] = useState(false);
   const [isBlinkOn, setIsBlinkOn] = useState(false);
-
+  const forceDisableScanner = useRef(false);
   const barcodesSharedValue = useSharedValue<Coordinate[]>([]);
 
   const scanSquareLayout = useRef<LayoutRectangle | null>(null);
@@ -182,6 +182,12 @@ const ScanProduct: React.FC<ScanProductProps> = ({
       setAutoScanDone(false);
     }
   }, [isActive, autoScanDone]);
+
+  useEffect(() => {
+    if (isActive && forceDisableScanner.current) {
+      forceDisableScanner.current = false;
+    }
+  }, [isActive, forceDisableScanner])
 
   useEffect(() => {
     if (isBlinkOn) {
@@ -242,6 +248,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
 
   const scanBarcode = (code?: string) => {
     if (!code) return;
+    forceDisableScanner.current = true;
     soundAndVibrate();
     onScan(code);
     setIsBlinkOn(true);
@@ -251,7 +258,8 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (
       !frame ||
       !scannerLayoutRef.current ||
-      (barcodes.length === 0 && barcodesState.current.length === 0)
+      (barcodes.length === 0 && barcodesState.current.length === 0) ||
+      forceDisableScanner.current
     ) {
       !barcodesLength && setBarcodesLength(0);
       return;
