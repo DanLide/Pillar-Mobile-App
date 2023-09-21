@@ -54,7 +54,7 @@ const Scanner: React.FC<ScannerProps> = ({
   const frameProcessor = useFrameProcessor(
     frame => {
       'worklet';
-      if(!isActive) return
+      if(!isActive || !onRead || !isFocused) return
 
       const barcodes = scanBarcodes(
         frame,
@@ -72,9 +72,9 @@ const Scanner: React.FC<ScannerProps> = ({
           ) === index
         );
       });
-      onRead && runOnJS(onRead)(filtered, frame);
+      runOnJS(onRead)(filtered, frame);
     },
-    [onRead],
+    [onRead, isActive, isFocused],
   );
 
   const [hasPermission, setHasPermission] = React.useState(false);
