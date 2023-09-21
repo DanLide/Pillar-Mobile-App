@@ -13,14 +13,12 @@ export const fetchJobs = async (jobsStore: JobsStore) => {
   const fetchJobsContext: FetchJobsContext = {
     jobs: [],
   };
-  if (!jobsStore.jobs.length) {
-    const result = await new TaskExecutor([
-      new FetchJobsTask(fetchJobsContext),
-      new SaveJobsToStoreTask(fetchJobsContext, jobsStore),
-    ]).execute();
+  const result = await new TaskExecutor([
+    new FetchJobsTask(fetchJobsContext),
+    new SaveJobsToStoreTask(fetchJobsContext, jobsStore),
+  ]).execute();
 
-    return result;
-  }
+  return result;
 };
 
 export class FetchJobsTask extends Task {
