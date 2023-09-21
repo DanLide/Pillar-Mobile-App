@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 
 import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { ClearStoreType, StockProductStoreType } from '../../stores/types';
-import { StockModel } from '../stocksList/stores/StocksStore';
+import { StockModel, StockStore } from '../stocksList/stores/StocksStore';
 import { StocksList } from '../stocksList/components/StocksList';
 import { ordersStore } from './stores';
+import { fetchOrdersStocks } from '../../data/fetchOrdersStocks';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -33,9 +34,14 @@ export const SelectStockScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate(AppNavigator.CreateOrderScreen);
   };
 
+  const fetchStocks = useCallback(
+    (store: StockStore) => fetchOrdersStocks(store),
+    [],
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <StocksList onPressItem={onItemPress} />
+      <StocksList onFetchStocks={fetchStocks} onPressItem={onItemPress} />
     </SafeAreaView>
   );
 };

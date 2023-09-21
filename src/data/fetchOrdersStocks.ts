@@ -2,41 +2,24 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
 import {
-  CategoryModel,
-  FacilityProductModel,
   StockModel,
   StockStore,
   SupplierModel,
 } from '../modules/stocksList/stores/StocksStore';
-import {
-  getCategoriesByFacilityIdAPI,
-  getFacilityProducts,
-  getSupplierListByFacilityIdAPI,
-} from './api/productsAPI';
+import { getSupplierListByFacilityIdAPI } from './api/productsAPI';
 import { any, isEmpty } from 'ramda';
 
 interface FetchStocksContext {
   stocks: StockModel[];
-  categories: CategoryModel[];
   suppliers: SupplierModel[];
-  facilityProducts: FacilityProductModel[];
 }
 
-export const fetchManageProductsStocks = async (stocksStore: StockStore) => {
+export const fetchOrdersStocks = async (stocksStore: StockStore) => {
   const stocksContext: FetchStocksContext = {
     stocks: [],
-    categories: [],
     suppliers: [],
-    facilityProducts: [],
   };
-  if (
-    any(isEmpty, [
-      stocksStore.stocks,
-      stocksStore.categories,
-      stocksStore.suppliers,
-      stocksStore.facilityProducts,
-    ])
-  ) {
+  if (any(isEmpty, [stocksStore.stocks, stocksStore.suppliers])) {
     return new TaskExecutor([
       new FetchManageProductStocksTask(stocksContext),
       new SaveStocksToStore(stocksContext, stocksStore),
@@ -53,19 +36,13 @@ export class FetchManageProductStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const [stocks, categories, suppliers, facilityProducts] = await Promise.all(
-      [
-        getFetchStockAPI(),
-        getCategoriesByFacilityIdAPI(),
-        getSupplierListByFacilityIdAPI(),
-        getFacilityProducts(),
-      ],
-    );
+    const [stocks, suppliers] = await Promise.all([
+      getFetchStockAPI(),
+      getSupplierListByFacilityIdAPI(),
+    ]);
 
     this.fetchStocksContext.stocks = stocks ?? [];
-    this.fetchStocksContext.categories = categories ?? [];
     this.fetchStocksContext.suppliers = suppliers ?? [];
-    this.fetchStocksContext.facilityProducts = facilityProducts ?? [];
   }
 }
 
@@ -80,12 +57,9 @@ export class SaveStocksToStore extends Task {
   }
 
   async run() {
-    const { stocks, facilityProducts, categories, suppliers } =
-      this.fetchStocksContext;
+    const { stocks, suppliers } = this.fetchStocksContext;
 
     this.stocksStore.setStocks(stocks);
-    this.stocksStore.setFacilityProducts(facilityProducts);
-    this.stocksStore.setCategories(categories);
     this.stocksStore.setSuppliers(suppliers);
   }
 }
