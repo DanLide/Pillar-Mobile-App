@@ -19,7 +19,6 @@ import {
   getOrderSummaryDetailsAPI,
   getOrderStorageAreaAPI,
 } from './orders';
-import { refreshTokenAPI } from './refreshToken';
 
 export {
   getRoleManagerAPI,
@@ -33,7 +32,6 @@ export {
   getFetchProductByFacilityIdAPI,
   getOrdersAPI,
   getOrderDetails,
-  refreshTokenAPI,
   receiveOrderAPI,
   getOrderSummaryDetailsAPI,
   getOrderStorageAreaAPI,
