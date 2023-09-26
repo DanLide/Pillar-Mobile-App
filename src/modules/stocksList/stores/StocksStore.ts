@@ -1,5 +1,10 @@
 import { action, makeObservable, observable } from 'mobx';
-import { CategoryResponse, FacilityProductResponse, SupplierResponse } from "../../../data/api/productsAPI";
+import {
+  CategoryResponse,
+  FacilityProductResponse,
+  SupplierResponse,
+} from '../../../data/api/productsAPI';
+import masterLockStore from '../../../stores/MasterLockStore';
 
 export class StockStore {
   @observable stocks: StockModel[];
@@ -68,6 +73,8 @@ export interface StockModel {
   partyRoleId: number;
   roleTypeId: number;
   leanTecSerialNo?: string;
+  accessProfile: string;
+  firmwareVersion: number;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }

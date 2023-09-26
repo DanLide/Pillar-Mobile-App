@@ -9,6 +9,7 @@ import { ScannerScreen } from '../modules/removeProducts/ScannerScreen';
 import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
+import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 
 const Stack = createStackNavigator<RemoveStackParamList>();
 
@@ -22,6 +23,18 @@ export const RemoveStack: React.FC = () => {
           title: 'Remove Products',
           leftBarButtonType: LeftBarType.Back,
         })}
+      />
+      <Stack.Screen
+        name={AppNavigator.BaseUnlockScreen}
+        component={BaseUnlockScreen}
+        options={({ route }) => getScreenOptions({
+          title: route.params?.title || '',
+          leftBarButtonType: LeftBarType.Back,
+          style: {
+            shadowColor: 'transparent',
+          }
+        })}
+        initialParams={{ nextScreen: AppNavigator.RemoveProductsScreen }}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}

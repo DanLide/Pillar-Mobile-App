@@ -154,33 +154,37 @@ RCT_EXPORT_METHOD(writeRelockTime:(NSString *)deviceId
 - (void)product:(MLProduct *)product didChange:(LockState *)state {
   switch(state.visibility){
     case VisibilityVisible:
-      [self sendEventWithName:visibilityStatusChannel body:visibilityStatus_Visible];
+      [self sendEvent:product channel:visibilityStatusChannel status:visibilityStatus_Visible];
       break;
     default : /* Optional */
-      [self sendEventWithName:visibilityStatusChannel body:visibilityStatus_Unknown];
+      [self sendEvent:product channel:visibilityStatusChannel status:visibilityStatus_Unknown];
   }
 
   if (state.primaryMechanism.getState == MechanismStateUnknown) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_Unknown];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_Unknown];
     
   } else if (state.primaryMechanism.getState == MechanismStateLocked) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_Locked];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_Locked];
     
   } else if (state.primaryMechanism.getState == MechanismStatePendingUnlock) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_PendingUnlock];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_PendingUnlock];
     
   } else if (state.primaryMechanism.getState == MechanismStatePendingRelock) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_PendingRelock];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_PendingRelock];
     
   } else if (state.primaryMechanism.getState == MechanismStateUnlocked) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_Unlocked];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_Unlocked];
     
   } else if (state.primaryMechanism.getState == MechanismStateOpen) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_Open];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_Open];
     
   } else if (state.primaryMechanism.getState == MechanismStateOpenLocked) {
-    [self sendEventWithName:lockStatusChannel body:lockStatus_OpenLocked];
+    [self sendEvent:product channel:lockStatusChannel status:lockStatus_OpenLocked];
   }
+}
+
+- (void)sendEvent:(MLProduct *)product channel:(NSString *)channel status:(NSString *)status {
+  [self sendEventWithName:channel body:[NSString stringWithFormat:@"%@/%@", [product deviceId], status]];
 }
 
 - (void)product:(MLProduct *)product didChangeState:(enum MLBroadcastState)state {}
