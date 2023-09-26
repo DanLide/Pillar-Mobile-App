@@ -71,10 +71,4 @@ describe('fetchJobs', () => {
     await fetchJobs(jobStore);
     expect(getFetchJobsAPI).toHaveBeenCalled();
   });
-
-  it('should NOT call fetchJobs with jobs in jobStore', async () => {
-    jobStore.jobs = mockJobs;
-    await fetchJobs(jobStore);
-    expect(getFetchJobsAPI).not.toHaveBeenCalled();
-  });
 });

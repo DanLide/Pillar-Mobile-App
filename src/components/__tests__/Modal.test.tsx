@@ -22,7 +22,10 @@ describe('Modal', () => {
       <Modal isVisible onClose={mockOnClose} topOffset={mockTopOffset} />,
     );
     const content = getByTestId(testIds.idContent('modal'));
-    expect(content).toHaveAnimatedStyle({ marginTop: mockTopOffset.value });
+    expect(content.props.style[1]).toHaveProperty(
+      'marginTop',
+      mockTopOffset.value,
+    );
   });
 
   it('render child', () => {
