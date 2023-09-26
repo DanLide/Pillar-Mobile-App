@@ -12,4 +12,7 @@ export enum ToastType {
   ProductUpdateSuccess = 'ProductUpdateSuccess',
 
   Retry = 'Retry',
+
+  BluetoothEnabled = 'BluetoothEnabled',
+  BluetoothDisabled = 'BluetoothDisabled',
 }

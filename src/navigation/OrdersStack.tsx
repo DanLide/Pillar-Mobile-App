@@ -11,6 +11,7 @@ import { SelectStockScreen } from '../modules/orders/SelectStockScreen';
 import { CreateOrderScreen } from '../modules/orders/CreateOrderScreen';
 import { ResultScreen } from '../modules/orders/ResultScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
+import { BluetoothPermissionScreen } from '../modules/permissions';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -32,6 +33,15 @@ export const OrdersStack: React.FC = () => {
           title: 'View Order',
           leftBarButtonType: LeftBarType.Back,
         })}
+      />
+      <Stack.Screen
+        name={AppNavigator.BluetoothPermissionScreen}
+        component={BluetoothPermissionScreen}
+        options={getScreenOptions({
+          title: 'Bluetooth Connection',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+        initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
       />
       <Stack.Screen
         name={AppNavigator.OrderByStockLocationScreen}

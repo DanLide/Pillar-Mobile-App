@@ -14,7 +14,7 @@ import { ScannerScreen } from '../modules/createInvoice/ScannerScreen';
 import { ResultScreen } from '../modules/createInvoice/ResultScreen';
 import { ProductsScreen } from '../modules/createInvoice/ProductsScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
-import { CameraPermissionScreen } from '../modules/cameraPermission';
+import { CameraPermissionScreen } from '../modules/permissions';
 
 const Stack = createStackNavigator<CreateInvoiceParamList>();
 

@@ -59,4 +59,14 @@ export const toastColors: Record<
     secondary: colors.greenLight,
     action: colors.green4,
   },
+  [ToastType.BluetoothEnabled]: {
+    primary: colors.green3,
+    secondary: colors.white3,
+    action: colors.green4,
+  },
+  [ToastType.BluetoothDisabled]: {
+    primary: colors.green3,
+    secondary: colors.white3,
+    action: colors.green4,
+  },
 };

@@ -26,6 +26,7 @@ export const getToastDuration = (type: ToastType) => {
     case ToastType.ProductQuantityError:
     case ToastType.ProductUpdateError:
     case ToastType.UpcUpdateError:
+    case ToastType.BluetoothDisabled:
       return 0;
     default:
       return TOAST_DURATION_MS;
@@ -107,6 +108,20 @@ export const ToastContextProvider: React.FC<Props> = ({
           {...toast}
           type={ToastType.Error}
           actionType={ToastActionType.Retry}
+        />
+      ),
+      [ToastType.BluetoothEnabled]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.BluetoothEnabled}
+          actionType={ToastActionType.Close}
+        />
+      ),
+      [ToastType.BluetoothDisabled]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.BluetoothDisabled}
+          actionType={ToastActionType.OpenSettings}
         />
       ),
     }),
