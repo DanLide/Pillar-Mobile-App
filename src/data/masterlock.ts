@@ -1,28 +1,24 @@
-import {
-  EmitterSubscription,
-  NativeEventEmitter,
-  NativeModules,
-} from 'react-native';
+import { NativeEventEmitter } from "react-native";
+import { EmitterSubscription, NativeModules } from "react-native";
 
-const { MasterLockModule } = NativeModules;
-// temp
-import {
-  observable,
-  runInAction,
-  reaction,
-  action,
-  makeAutoObservable,
-} from 'mobx';
+const {MasterLockModule} = NativeModules;
+export const MasterLockStateListener = new NativeEventEmitter(MasterLockModule);
+ 
+interface MasterLockInterface {
+    configure(license: string): Promise<string>;
+    deinit(): Promise<string>;
+    initLock(deviceId: string, accessProfile: string, firmwareVersion: number): Promise<string>;
+    readRelockTime(deviceId: string): Promise<string>;
+    writeRelockTime(deviceId: string, time: number): Promise<string>; // time range is 4..60
+    unlock(deviceId: string): Promise<string>;
+}
+export default MasterLockModule as MasterLockInterface;
+
 
 export enum LockVisibility {
   VISIBLE = 'VISIBLE',
   UNKNOWN = 'UNKNOWN',
 }
-
-export type StockState = {
-  visibility: LockVisibility;
-  status: LockStatus;
-};
 
 export enum LockStatus {
   UNKNOWN = 'UNKNOWN',
@@ -34,242 +30,253 @@ export enum LockStatus {
   PENDING_RELOCK = 'PENDING_RELOCK',
 }
 
-type listenerType = 'visibilityStatus' | 'lockStatus';
+// // temp
+// import {
+//   observable,
+//   runInAction,
+//   reaction,
+//   action,
+//   makeAutoObservable,
+// } from 'mobx';
 
-export interface MasterLockInterface {
-  configure(license: string): Promise<string>;
-  deinit(): Promise<string>;
-  initLock(
-    deviceId: string,
-    accessProfile: string,
-    firmwareVersion: number,
-  ): Promise<string>;
-  readRelockTime(deviceId: string): Promise<string>;
-  writeRelockTime(deviceId: string, time: number): Promise<string>; // time range is 4..60
-  unlock(deviceId: string): Promise<string>;
 
-  addListener(
-    eventType: string,
-    listener: (event: any) => void,
-    context?: Object,
-  ): EmitterSubscription;
-  removeAllListeners(eventType: string): void;
-}
 
-// temp mock
-function getRandomValueFromArrayAfterDelay<T>(arr: T[]): Promise<T> {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * arr.length);
-      const randomValue = arr[randomIndex];
-      resolve(randomValue);
-    }, 1000); // 1000 milliseconds = 1 second
-  });
-}
+// type listenerType = 'visibilityStatus' | 'lockStatus';
 
-function compareObjectsAndCallback(
-  obj1,
-  obj2,
-  callback: (changedField: string) => void,
-) {
-  for (const key in obj1) {
-    if (obj1[key] !== obj2[key]) {
-      callback(`${key}/${obj1[key]}`);
-    }
-  }
-}
+// export interface MasterLockInterface {
+//   configure(license: string): Promise<string>;
+//   deinit(): Promise<string>;
+//   initLock(
+//     deviceId: string,
+//     accessProfile: string,
+//     firmwareVersion: number,
+//   ): Promise<string>;
+//   readRelockTime(deviceId: string): Promise<string>;
+//   writeRelockTime(deviceId: string, time: number): Promise<string>; // time range is 4..60
+//   unlock(deviceId: string): Promise<string>;
 
-const initRandomVisibility = [
-  LockVisibility.VISIBLE,
-  // LockVisibility.UNKNOWN
-];
+//   addListener(
+//     eventType: string,
+//     listener: (event: any) => void,
+//     context?: Object,
+//   ): EmitterSubscription;
+//   removeAllListeners(eventType: string): void;
+// }
 
-const initRandomValue = [
-  // LockStatus.UNKNOWN,
-  LockStatus.LOCKED,
-  // LockStatus.UNLOCKED,
-  LockStatus.OPEN,
-  // LockStatus.OPEN_LOCKED,
-  // LockStatus.PENDING_UNLOCK,
-  LockStatus.PENDING_RELOCK,
-];
+// // temp mock
+// function getRandomValueFromArrayAfterDelay<T>(arr: T[]): Promise<T> {
+//   return new Promise(resolve => {
+//     setTimeout(() => {
+//       const randomIndex = Math.floor(Math.random() * arr.length);
+//       const randomValue = arr[randomIndex];
+//       resolve(randomValue);
+//     }, 1000); // 1000 milliseconds = 1 second
+//   });
+// }
 
-const unlockRandomValue = [
-  LockStatus.UNKNOWN,
-  // LockStatus.UNLOCKED,
-  LockStatus.OPEN,
-  // LockStatus.PENDING_UNLOCK,
-  LockStatus.PENDING_RELOCK,
-];
+// function compareObjectsAndCallback(
+//   obj1,
+//   obj2,
+//   callback: (changedField: string) => void,
+// ) {
+//   for (const key in obj1) {
+//     if (obj1[key] !== obj2[key]) {
+//       callback(`${key}/${obj1[key]}`);
+//     }
+//   }
+// }
 
-const afterPendingRandomValue = [
-  LockStatus.UNKNOWN,
-  LockStatus.OPEN,
-  LockStatus.LOCKED,
-];
+// const initRandomVisibility = [
+//   LockVisibility.VISIBLE,
+//   // LockVisibility.UNKNOWN
+// ];
 
-class MasterLockModuleMock implements MasterLockInterface {
-  @observable private isConfigured: boolean;
-  @observable private isInited: boolean;
-  @observable private locksVisibility: Record<string, LockVisibility>;
-  @observable private locksStatus: Record<string, LockStatus>;
-  @observable callbackVisibilityStatus: null | ((event: string) => void);
-  @observable callbackLockStatus: null | ((event: string) => void);
+// const initRandomValue = [
+//   // LockStatus.UNKNOWN,
+//   LockStatus.LOCKED,
+//   // LockStatus.UNLOCKED,
+//   LockStatus.OPEN,
+//   // LockStatus.OPEN_LOCKED,
+//   // LockStatus.PENDING_UNLOCK,
+//   LockStatus.PENDING_RELOCK,
+// ];
 
-  constructor() {
-    makeAutoObservable(this);
+// const unlockRandomValue = [
+//   LockStatus.UNKNOWN,
+//   // LockStatus.UNLOCKED,
+//   LockStatus.OPEN,
+//   // LockStatus.PENDING_UNLOCK,
+//   LockStatus.PENDING_RELOCK,
+// ];
 
-    this.isConfigured = false;
-    this.isInited = false;
-    this.locksVisibility = {};
-    this.locksStatus = {};
+// const afterPendingRandomValue = [
+//   LockStatus.UNKNOWN,
+//   LockStatus.OPEN,
+//   LockStatus.LOCKED,
+// ];
 
-    this.callbackVisibilityStatus = null;
-    this.callbackLockStatus = null;
+// class MasterLockModuleMock implements MasterLockInterface {
+//   @observable private isConfigured: boolean;
+//   @observable private isInited: boolean;
+//   @observable private locksVisibility: Record<string, LockVisibility>;
+//   @observable private locksStatus: Record<string, LockStatus>;
+//   @observable callbackVisibilityStatus: null | ((event: string) => void);
+//   @observable callbackLockStatus: null | ((event: string) => void);
 
-    reaction(
-      () => this.locksVisibility,
-      (value, prevValue) => {
-        if (this.callbackVisibilityStatus) {
-          compareObjectsAndCallback(
-            value,
-            prevValue,
-            this.callbackVisibilityStatus,
-          );
-        }
-      },
-    );
+//   constructor() {
+//     makeAutoObservable(this);
 
-    reaction(
-      () => this.locksStatus,
-      (value, prevValue) => {
-        if (this.callbackLockStatus) {
-          compareObjectsAndCallback(value, prevValue, this.callbackLockStatus);
-        }
-      },
-    );
-  }
+//     this.isConfigured = false;
+//     this.isInited = false;
+//     this.locksVisibility = {};
+//     this.locksStatus = {};
 
-  @action configure(license: string) {
-    return new Promise<string>(resolve => {
-      this.isConfigured = !!license;
-      resolve('success');
-    });
-  }
+//     this.callbackVisibilityStatus = null;
+//     this.callbackLockStatus = null;
 
-  @action initLock(
-    lockId: string,
-    accessProfile: string,
-    firmwareVersion: number,
-  ) {
-    return new Promise<string>(resolve => {
-      (async () => {
-        const randVisibility = await getRandomValueFromArrayAfterDelay(
-          initRandomVisibility,
-        );
-        if (randVisibility === LockVisibility.UNKNOWN) {
-          runInAction(() => {
-            this.locksVisibility = {
-              ...this.locksVisibility,
-              [lockId]: LockVisibility.UNKNOWN,
-            };
-            this.locksStatus = {
-              ...this.locksStatus,
-              [lockId]: LockStatus.UNKNOWN,
-            };
-          });
-          return resolve('success');
-        }
+//     reaction(
+//       () => this.locksVisibility,
+//       (value, prevValue) => {
+//         if (this.callbackVisibilityStatus) {
+//           compareObjectsAndCallback(
+//             value,
+//             prevValue,
+//             this.callbackVisibilityStatus,
+//           );
+//         }
+//       },
+//     );
 
-        const randStatus = await getRandomValueFromArrayAfterDelay(
-          initRandomValue,
-        );
-        runInAction(() => {
-          this.locksVisibility = {
-            ...this.locksVisibility,
-            [lockId]: randVisibility,
-          };
-          this.locksStatus = {
-            ...this.locksStatus,
-            [lockId]: randStatus,
-          };
-        });
-        resolve('success');
-      })();
-    });
-  }
+//     reaction(
+//       () => this.locksStatus,
+//       (value, prevValue) => {
+//         if (this.callbackLockStatus) {
+//           compareObjectsAndCallback(value, prevValue, this.callbackLockStatus);
+//         }
+//       },
+//     );
+//   }
 
-  @action deinit() {
-    return new Promise<string>(resolve => {
-      resolve('success');
-    });
-  }
+//   @action configure(license: string) {
+//     return new Promise<string>(resolve => {
+//       this.isConfigured = !!license;
+//       resolve('success');
+//     });
+//   }
 
-  @action writeRelockTime(deviceId: string) {
-    return new Promise<string>(resolve => {
-      resolve('success');
-    });
-  }
+//   @action initLock(
+//     lockId: string,
+//     accessProfile: string,
+//     firmwareVersion: number,
+//   ) {
+//     return new Promise<string>(resolve => {
+//       (async () => {
+//         const randVisibility = await getRandomValueFromArrayAfterDelay(
+//           initRandomVisibility,
+//         );
+//         if (randVisibility === LockVisibility.UNKNOWN) {
+//           runInAction(() => {
+//             this.locksVisibility = {
+//               ...this.locksVisibility,
+//               [lockId]: LockVisibility.UNKNOWN,
+//             };
+//             this.locksStatus = {
+//               ...this.locksStatus,
+//               [lockId]: LockStatus.UNKNOWN,
+//             };
+//           });
+//           return resolve('success');
+//         }
 
-  @action readRelockTime(deviceId: string) {
-    return new Promise<string>(resolve => {
-      resolve('success');
-    });
-  }
+//         const randStatus = await getRandomValueFromArrayAfterDelay(
+//           initRandomValue,
+//         );
+//         runInAction(() => {
+//           this.locksVisibility = {
+//             ...this.locksVisibility,
+//             [lockId]: randVisibility,
+//           };
+//           this.locksStatus = {
+//             ...this.locksStatus,
+//             [lockId]: randStatus,
+//           };
+//         });
+//         resolve('success');
+//       })();
+//     });
+//   }
 
-  @action unlock(lockId: string) {
-    return new Promise<string>(resolve => {
-      (async () => {
-        const randStatus = await getRandomValueFromArrayAfterDelay(
-          unlockRandomValue,
-        );
-        runInAction(() => {
-          this.locksStatus = {
-            ...this.locksStatus,
-            [lockId]: randStatus,
-          };
-        });
+//   @action deinit() {
+//     return new Promise<string>(resolve => {
+//       resolve('success');
+//     });
+//   }
 
-        if (randStatus === LockStatus.PENDING_RELOCK) {
-          setTimeout(async () => {
-            const randStatus = await getRandomValueFromArrayAfterDelay(
-              afterPendingRandomValue,
-            );
+//   @action writeRelockTime(deviceId: string) {
+//     return new Promise<string>(resolve => {
+//       resolve('success');
+//     });
+//   }
 
-            runInAction(() => {
-              this.locksStatus = {
-                ...this.locksStatus,
-                [lockId]: randStatus,
-              };
-            });
-          }, 5000);
-        }
-        resolve('success');
-      })();
-    });
-  }
+//   @action readRelockTime(deviceId: string) {
+//     return new Promise<string>(resolve => {
+//       resolve('success');
+//     });
+//   }
 
-  @action addListener(
-    type: listenerType,
-    callback: (value: string) => void,
-  ): EmitterSubscription {
-    if (type === 'lockStatus') {
-      this.callbackLockStatus = callback;
-    } else {
-      this.callbackVisibilityStatus = callback;
-    }
-    return {
-      remove: () => {
-        if (type === 'lockStatus') {
-          this.callbackLockStatus = null;
-        } else {
-          this.callbackVisibilityStatus = null;
-        }
-      },
-      listener: () => {},
-    };
-  }
-}
+//   @action unlock(lockId: string) {
+//     return new Promise<string>(resolve => {
+//       (async () => {
+//         const randStatus = await getRandomValueFromArrayAfterDelay(
+//           unlockRandomValue,
+//         );
+//         runInAction(() => {
+//           this.locksStatus = {
+//             ...this.locksStatus,
+//             [lockId]: randStatus,
+//           };
+//         });
 
-// export default MasterLockModule as MasterLockInterface;
-export default new MasterLockModuleMock() as MasterLockInterface;
+//         if (randStatus === LockStatus.PENDING_RELOCK) {
+//           setTimeout(async () => {
+//             const randStatus = await getRandomValueFromArrayAfterDelay(
+//               afterPendingRandomValue,
+//             );
+
+//             runInAction(() => {
+//               this.locksStatus = {
+//                 ...this.locksStatus,
+//                 [lockId]: randStatus,
+//               };
+//             });
+//           }, 5000);
+//         }
+//         resolve('success');
+//       })();
+//     });
+//   }
+
+//   @action addListener(
+//     type: listenerType,
+//     callback: (value: string) => void,
+//   ): EmitterSubscription {
+//     if (type === 'lockStatus') {
+//       this.callbackLockStatus = callback;
+//     } else {
+//       this.callbackVisibilityStatus = callback;
+//     }
+//     return {
+//       remove: () => {
+//         if (type === 'lockStatus') {
+//           this.callbackLockStatus = null;
+//         } else {
+//           this.callbackVisibilityStatus = null;
+//         }
+//       },
+//       listener: () => {},
+//     };
+//   }
+// }
+
+// // export default MasterLockModule as MasterLockInterface;
+// export default new MasterLockModuleMock() as MasterLockInterface;
