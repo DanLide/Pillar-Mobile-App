@@ -60,6 +60,7 @@ export class StockStore {
   }
 }
 
+// !!!!!!!!!!!! TODO rename deviceId, accessProfile, firmwareVersion due to the API changes. And remove this comment afterall
 export interface StockModel {
   organizationName: string;
   // isRelationshipExists: string;
@@ -71,6 +72,7 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
+  deviceId: string; 
   roleTypeId: number;
   leanTecSerialNo?: string;
   accessProfile: string;

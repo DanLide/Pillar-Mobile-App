@@ -43,7 +43,7 @@ class MasterLockStore {
 
   @action initMasterLockForStocks(stockItem: StockModel): Promise<string> {
     return this.masterLock.initLock(
-      stockItem.partyRoleId + '', // change this after backend be done
+      stockItem.deviceId,
       stockItem.accessProfile,
       stockItem.firmwareVersion,
     );
