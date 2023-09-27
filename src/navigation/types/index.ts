@@ -21,6 +21,7 @@ export enum AppNavigator {
   CameraPermissionScreen = 'CameraPermissionScreen',
   ScannerScreen = 'ScannerScreen',
   ResultScreen = 'ResultScreen',
+  BaseUnlockScreen = 'BaseUnlockScreen',
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
@@ -56,6 +57,12 @@ type SelectSSOScreenParams = {
   isUpdating?: boolean;
 };
 
+type UnlockStockScreenParams = {
+  title?: string;
+  masterlockId: string;
+  nextScreen?: AppNavigator.ReturnProductsScreen | AppNavigator.RemoveProductsScreen | AppNavigator.CreateOrderScreen | AppNavigator.ManageProductsScreen
+};
+
 export type AppStackParamList = {
   [AppNavigator.UnauthStack]: undefined;
   [AppNavigator.HomeStack]: undefined;
@@ -86,6 +93,7 @@ export type RemoveStackParamList = {
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ReturnStackParamList = {
@@ -95,6 +103,7 @@ export type ReturnStackParamList = {
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ManageProductsStackParamList = {
@@ -103,6 +112,7 @@ export type ManageProductsStackParamList = {
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type CreateInvoiceParamList = {
@@ -123,6 +133,7 @@ export type OrdersParamsList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.CreateOrderScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export enum LeftBarType {

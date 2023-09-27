@@ -13,6 +13,7 @@ import { ManageProductsScreen } from '../modules/manageProducts/ManageProductsSc
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CameraPermissionScreen } from '../modules/cameraPermission';
 import ScannerScreen from '../modules/manageProducts/ScannerScreen';
+import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 
 const Stack = createStackNavigator<ManageProductsStackParamList>();
 
@@ -34,6 +35,18 @@ export const ManageProductsStack: React.FC = () => {
           title: 'Manage Products',
           leftBarButtonType: LeftBarType.Back,
         })}
+      />
+       <Stack.Screen
+        name={AppNavigator.BaseUnlockScreen}
+        component={BaseUnlockScreen}
+        options={({ route }) => getScreenOptions({
+          title: route.params?.title || '',
+          leftBarButtonType: LeftBarType.Back,
+          style: {
+            shadowColor: 'transparent',
+          }
+        })}
+        initialParams={{ nextScreen: AppNavigator.ManageProductsScreen }}
       />
       <Stack.Screen
         name={AppNavigator.HowToScanScreen}

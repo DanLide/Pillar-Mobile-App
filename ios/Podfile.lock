@@ -2,6 +2,8 @@ PODS:
   - AzureAuth (1.8.8):
     - React
   - boost (1.76.0)
+  - BVLinearGradient (2.8.3):
+    - React-Core
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.71.6)
   - FBReactNativeSpec (0.71.6):
@@ -529,6 +531,7 @@ PODS:
 DEPENDENCIES:
   - AzureAuth (from `../node_modules/react-native-azure-auth`)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
@@ -616,6 +619,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-azure-auth"
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
+  BVLinearGradient:
+    :path: "../node_modules/react-native-linear-gradient"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -724,6 +729,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AzureAuth: 8a16f087eed7da3ccd89f2c52093127086f659e8
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
+  BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: a83ceaa8a8581003a623facdb3c44f6d4f342ac5
   FBReactNativeSpec: 85eee79837cb797ab6176f0243a2b40511c09158
@@ -803,4 +809,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 680fcae3bf001b37cf5b3d0d0e6fee218e540979
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.12.1
