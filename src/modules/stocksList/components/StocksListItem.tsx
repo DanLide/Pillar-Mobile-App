@@ -19,8 +19,8 @@ export const StocksListItem: React.FC<Props> = observer(({ item, onPressItem }) 
   const { organizationName, roleTypeId } = item;
 
   const navigation = useNavigation();
-  const lockStatus = masterLockStore.stocksState[item.partyRoleId]?.status;
-  const isVisible = masterLockStore.stocksState[item.partyRoleId]?.visibility === LockVisibility.VISIBLE;
+  const lockStatus = masterLockStore.stocksState[item.deviceId]?.status;
+  const isVisible = masterLockStore.stocksState[item.deviceId]?.visibility === LockVisibility.VISIBLE;
 
   const isLocked = roleTypeId === RoleType.Cabinet &&
     lockStatus === LockStatus.LOCKED &&
@@ -29,8 +29,8 @@ export const StocksListItem: React.FC<Props> = observer(({ item, onPressItem }) 
 
   const handlePress = () => {
     if (isLocked) {
-      masterLockStore.unlock(item.partyRoleId + '')
-      return navigation.navigate(AppNavigator.BaseUnlockScreen, { title: organizationName, masterlockId: item.partyRoleId + ''})
+      masterLockStore.unlock(item.deviceId)
+      return navigation.navigate(AppNavigator.BaseUnlockScreen, { title: organizationName, masterlockId: item.deviceId})
     }
     onPressItem(item)
   };
