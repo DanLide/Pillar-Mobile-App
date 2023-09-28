@@ -15,6 +15,9 @@ import { Button, ButtonType, Input } from '../../components';
 import { SVGs, colors, fonts } from '../../theme';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { AppNavigator, OrdersParamsList } from '../../navigation/types';
+import { getScreenName } from '../../navigation/helpers/getScreenName';
+import permissionStore from '../permissions/stores/PermissionStore';
+
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -54,10 +57,10 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
     [filterValue, ordersStoreRef.getOrders],
   );
 
-  const openCreateOrder = useCallback(
-    () => navigation.navigate(AppNavigator.SelectStockScreen),
-    [navigation],
-  );
+  const openCreateOrder = () => {
+    const navigateToScreen = getScreenName(permissionStore);
+    navigation.navigate(navigateToScreen);
+  }
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;

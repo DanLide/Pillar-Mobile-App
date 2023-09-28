@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { observer } from 'mobx-react';
 
 import { AppNavigator, LeftBarType, RightBarType, RemoveStackParamList } from './types';
 import { SelectStockScreen } from '../modules/removeProducts/SelectStockScreen';
@@ -8,14 +9,20 @@ import { RemoveProductsScreen } from '../modules/removeProducts/RemoveProductsSc
 import { ScannerScreen } from '../modules/removeProducts/ScannerScreen';
 import { ResultScreen } from '../modules/removeProducts/ResultScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
-import { CameraPermissionScreen } from '../modules/cameraPermission';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
+import {
+  CameraPermissionScreen, BluetoothPermissionScreen
+} from '../modules/permissions';
+import permissionStore from '../modules/permissions/stores/PermissionStore';
+
+
+import { getScreenName } from './helpers/getScreenName';
 
 const Stack = createStackNavigator<RemoveStackParamList>();
 
-export const RemoveStack: React.FC = () => {
+export const RemoveStack: React.FC = observer(() => {
   return (
-    <Stack.Navigator initialRouteName={AppNavigator.SelectStockScreen}>
+    <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
@@ -61,6 +68,15 @@ export const RemoveStack: React.FC = () => {
         })}
       />
       <Stack.Screen
+        name={AppNavigator.BluetoothPermissionScreen}
+        component={BluetoothPermissionScreen}
+        options={getScreenOptions({
+          title: 'Bluetooth Connection',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+        initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
+      />
+      <Stack.Screen
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
@@ -79,4 +95,4 @@ export const RemoveStack: React.FC = () => {
       />
     </Stack.Navigator>
   );
-};
+});
