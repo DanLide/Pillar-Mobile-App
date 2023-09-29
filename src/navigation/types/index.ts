@@ -123,6 +123,7 @@ export type OrdersParamsList = {
   [AppNavigator.SelectStockScreen]: undefined;
   [AppNavigator.CreateOrderScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.ScannerScreen]: undefined;
 };
 
 export enum LeftBarType {

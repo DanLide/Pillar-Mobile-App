@@ -58,7 +58,7 @@ export interface RemoveProductResponse {
 export interface ProductByFacilityIdResponse {
   pisaId: number;
   pillarID: string;
-  supplierID: number;
+  supplierId: number;
   partNumber: string;
   manufacturer: string;
   description: string;

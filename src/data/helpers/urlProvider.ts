@@ -1,7 +1,7 @@
 import { environment } from './environment';
 import { AuthStore } from '../../stores/AuthStore';
 import { authStore, ssoStore } from '../../stores';
-import { PartyRelationshipType } from '../../constants/common.enum';
+import { OrderType, PartyRelationshipType } from '../../constants/common.enum';
 import { SSOStore } from '../../stores/SSOStore';
 import {
   RemoveProductsStore,
@@ -119,6 +119,19 @@ export class URLProvider {
     );
   }
 
+  getProductByOrderTypeAndSupplier(
+    scanCode: string,
+    supplierId: number,
+    stockId = 0,
+    orderType = OrderType.Purchase,
+  ) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductByOrderTypeAndSupplier/${facilityId}/${supplierId}/${scanCode}/${orderType}/${stockId}`,
+    );
+  }
+
   getCategoriesByFacilityId() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
@@ -157,7 +170,7 @@ export class URLProvider {
     );
   }
 
-  removeProduct(productId: number, quantity: number, jobId?: number | null) {
+  removeProduct(productId: number, quantity?: number, jobId?: number | null) {
     const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
 
     if (typeof jobId === 'number') {
@@ -170,7 +183,7 @@ export class URLProvider {
     );
   }
 
-  returnProduct(productId: number, quantity: number) {
+  returnProduct(productId: number, quantity?: number) {
     const partyRoleID = this.returnProductsStore.currentStock?.partyRoleId;
 
     return new URL(

@@ -65,7 +65,7 @@ export class SaveOrdersToStoreTask extends Task {
         reservedCount: undefined,
         nameDetails: '',
         isRecoverable: false,
-      } as ProductModel;
+      };
     });
   }
 }

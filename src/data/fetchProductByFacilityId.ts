@@ -42,7 +42,7 @@ export class FetchProductByFacilityIdTask extends Task {
 
   async run(): Promise<void> {
     const response = await getFetchProductByFacilityIdAPI(this.scanCode);
-    this.productContext.product = response[0];
+    this.productContext.product = response?.[0];
   }
 }
 

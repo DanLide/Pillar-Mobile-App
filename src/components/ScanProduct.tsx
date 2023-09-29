@@ -149,10 +149,10 @@ const multipleBarcodeToolTipText = 'Tap the code you want to scan';
 const upcToolTipText = 'Scan UPC for product editing';
 
 const soundAndVibrate = async () => {
-  await VolumeManager.setVolume(1);
+  // await VolumeManager.setVolume(1);
   Vibration.vibrate();
-  TrackPlayer.play();
-}
+  // TrackPlayer.play();
+};
 
 const ScanProduct: React.FC<ScanProductProps> = ({
   onScan,
@@ -187,7 +187,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (isActive && forceDisableScanner.current) {
       forceDisableScanner.current = false;
     }
-  }, [isActive, forceDisableScanner])
+  }, [isActive, forceDisableScanner]);
 
   useEffect(() => {
     if (isBlinkOn) {

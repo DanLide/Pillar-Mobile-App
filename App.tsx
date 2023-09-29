@@ -14,13 +14,14 @@ import {
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import { getVersion } from 'react-native-device-info';
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
 
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
-
-import autoLogoutService, { AUTO_LOGOUT_TIMEOUT } from "./src/data/helpers/autologoutService";
+import autoLogoutService, {
+  AUTO_LOGOUT_TIMEOUT,
+} from './src/data/helpers/autologoutService';
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
@@ -33,7 +34,7 @@ const { width, height } = Dimensions.get('window');
 const backgroundImageSize = {
   width,
   height,
-}
+};
 const version = `Version ${getVersion()}`;
 
 const App = (initialProps: InitialProps) => {
@@ -47,31 +48,31 @@ const App = (initialProps: InitialProps) => {
         await addTracks();
       }
     }
-    setup();
+    // setup();
   }, []);
 
   console.log(initialProps['rntoken']);
 
   const [appState, setAppState] = useState('active');
 
-  useEffect(() => {
-    const subscription = AppState.addEventListener("change", nextAppState => {
-      if (!autoLogoutService.lastTouchTimeStamp) {
-        return
-      }
-      const delayNeed = nextAppState === 'active' &&
-      new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
-
-      delayNeed ? setTimeout(() => {
-        // need to logout animation be done
-        setAppState(nextAppState);
-      }, 350) : setAppState(nextAppState);
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [])
+  // useEffect(() => {
+  //   const subscription = AppState.addEventListener("change", nextAppState => {
+  //     if (!autoLogoutService.lastTouchTimeStamp) {
+  //       return
+  //     }
+  //     const delayNeed = nextAppState === 'active' &&
+  //     new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
+  //
+  //     delayNeed ? setTimeout(() => {
+  //       // need to logout animation be done
+  //       setAppState(nextAppState);
+  //     }, 350) : setAppState(nextAppState);
+  //   });
+  //
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, [])
 
   const renderSplashScreen = () => {
     if (appState === 'active') {
@@ -79,27 +80,19 @@ const App = (initialProps: InitialProps) => {
     }
 
     return (
-      <View style={[
-        backgroundImageSize,
-        styles.splashContainer,
-      ]}>
+      <View style={[backgroundImageSize, styles.splashContainer]}>
+        <Image source={splashScreenBackground} style={backgroundImageSize} />
         <Image
-          source={splashScreenBackground}
-          style={backgroundImageSize}
-        />
-        <Image
-          resizeMode='contain'
+          resizeMode="contain"
           source={splashScreenLogo}
           style={styles.splashImageBackground}
         />
         <SafeAreaView style={styles.versionContainer}>
-          <Text style={styles.versionText}>
-            {version}
-          </Text>
+          <Text style={styles.versionText}>{version}</Text>
         </SafeAreaView>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <ScrollView
@@ -115,10 +108,10 @@ const App = (initialProps: InitialProps) => {
           styles.container,
           appState !== 'active' && styles.mainContainerHidden,
         ]}
-        onStartShouldSetResponderCapture={() => {
-          autoLogoutService.onTouch();
-          return false;
-        }}
+        // onStartShouldSetResponderCapture={() => {
+        //   autoLogoutService.onTouch();
+        //   return false;
+        // }}
       >
         <SafeAreaProvider>
           <NavigationContainer>
@@ -156,7 +149,7 @@ const styles = StyleSheet.create({
   },
   splashContainer: {
     position: 'absolute',
-  }
+  },
 });
 
 export default App;

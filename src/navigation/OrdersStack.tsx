@@ -2,7 +2,12 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { getScreenOptions } from './helpers';
-import { AppNavigator, LeftBarType, OrdersParamsList } from './types';
+import {
+  AppNavigator,
+  LeftBarType,
+  OrdersParamsList,
+  RightBarType,
+} from './types';
 
 import { OrdersScreen } from '../modules/orders/OrdersScreen';
 import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
@@ -10,6 +15,7 @@ import { OrderByStockLocationScreen } from '../modules/orders/OrderByStockLocati
 import { SelectStockScreen } from '../modules/orders/SelectStockScreen';
 import { CreateOrderScreen } from '../modules/orders/CreateOrderScreen';
 import { ResultScreen } from '../modules/orders/ResultScreen';
+import { ScannerScreen } from '../modules/orders/ScannerScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -62,6 +68,15 @@ export const OrdersStack: React.FC = () => {
         options={getScreenOptions({
           title: 'Result screen',
           leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ScannerScreen}
+        component={ScannerScreen}
+        options={getScreenOptions({
+          title: 'Create Order',
+          leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.QuestionMark,
         })}
       />
     </Stack.Navigator>

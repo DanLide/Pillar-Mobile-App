@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, computed } from 'mobx';
+import { action, makeObservable, observable, computed, override } from 'mobx';
 
 import {
   GetOrderDetailsResponse,
@@ -34,7 +34,7 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
-      if (item.orderedQty - item.receivedQty !== 0) acc = true;
+      if ((item.orderedQty ?? 0) - (item.receivedQty ?? 0) !== 0) acc = true;
       return acc;
     }, false);
     return !!isMissing;
@@ -68,5 +68,9 @@ export class OrdersStore extends BaseProductsStore {
 
   @action setSupplier(supplierId?: number) {
     this.supplierId = supplierId;
+  }
+
+  @override clear() {
+    this.supplierId = undefined;
   }
 }
