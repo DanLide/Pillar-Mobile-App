@@ -44,7 +44,7 @@ class MasterLockStore {
   }
 
   @action initMasterLockForStocks(stockItem: StockModel): Promise<string> {
-    return MasterLockModule.initLock(
+    return stockItem.deviceId && MasterLockModule.initLock(
       stockItem.deviceId,
       stockItem.accessProfile,
       stockItem.firmwareVersion,

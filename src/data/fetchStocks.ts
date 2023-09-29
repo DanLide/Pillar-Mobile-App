@@ -58,7 +58,7 @@ export class SaveStocksToStore extends Task {
 }
 
 // TODO remove mocking
-const mock2Locks = (original: StockModel[] | undefined) => {
+export const mock2Locks = (original: StockModel[] | undefined) => {
   const dmytrosStock: StockModel = {
     organizationName: "Dmytro's lock",
     partyRoleId: 123,
