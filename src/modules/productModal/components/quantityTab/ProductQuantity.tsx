@@ -153,7 +153,7 @@ export const ProductQuantity = memo(
     const renderDescription = () => {
       switch (type) {
         case ProductModalType.ManageProduct:
-          return <Description product={product} />;
+          return null;
         case ProductModalType.ReceiveOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
@@ -161,7 +161,7 @@ export const ProductQuantity = memo(
             </Text>
           );
         default:
-          return null;
+          return <Description product={product} />;
       }
     };
 
