@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 import { Button, ButtonType } from '../../components';
 import Logo from '../../../assets/images/logo.png';
 import { colors, fonts, SVGs } from '../../theme';
 import { AppNavigator, UnauthStackParamsList } from '../../navigation/types';
-import { ssoLogin } from '../../data/ssoLogin';
+import { ssoLogin } from '$src/data/ssoLogin';
 import { SvgProps } from 'react-native-svg';
 
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
 }
 
 const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
+const isDeviceConfigured = false;
 
 export const WelcomeScreen = ({ navigation }: Props) => {
   const onPressContinue = () => {
@@ -26,17 +27,53 @@ export const WelcomeScreen = ({ navigation }: Props) => {
   const onPressSSOLogin = async () => {
     await ssoLogin();
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.continueContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <Text style={styles.text}>Welcome to RepairStack!</Text>
-        <Button
-          type={ButtonType.primary}
-          buttonStyle={styles.continueButton}
-          title="Continue"
-          onPress={onPressContinue}
-        />
+        {isDeviceConfigured ? (
+          <View>
+            <Text style={styles.locationText}>Location</Text>
+            <TouchableOpacity onPress={() => console.log('Update Location')}>
+              <Text style={styles.updateLocationBtn}>Update Location</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <Text style={styles.locationText}>(Location not set)</Text>
+        )}
+        {isDeviceConfigured ? (
+          <>
+            <Button
+              type={ButtonType.primary}
+              buttonStyle={styles.continueButton}
+              title="Continue"
+              onPress={onPressContinue}
+            />
+            <Button
+              type={ButtonType.secondary}
+              buttonStyle={styles.secondaryBtn}
+              title="Login with Username"
+              onPress={() => console.log('Login with Username')}
+            />
+          </>
+        ) : (
+          <>
+            <Button
+              type={ButtonType.primary}
+              buttonStyle={styles.continueButton}
+              title="Configure shop device"
+              onPress={() => console.log('Configure shop device')}
+            />
+            <Button
+              type={ButtonType.secondary}
+              buttonStyle={styles.secondaryBtn}
+              title="Admin device login"
+              onPress={() => console.log('Admin device login')}
+            />
+          </>
+        )}
       </View>
       <View style={styles.ssoLoginContainer}>
         <Text style={styles.text}>3M Employee ?</Text>
@@ -93,5 +130,24 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontFamily: fonts.TT_Bold,
     color: colors.black,
+  },
+  locationText: {
+    paddingTop: 4,
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Bold,
+    color: colors.grayText,
+    textAlign: 'center',
+  },
+  secondaryBtn: {
+    marginTop: 24,
+    width: '90%',
+  },
+  updateLocationBtn: {
+    textAlign: 'center',
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Regular,
+    color: colors.purpleDark,
   },
 });
