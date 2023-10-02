@@ -3,6 +3,13 @@
   "extends": "@tsconfig/react-native/tsconfig.json",     /* Recommended React Native TSConfig base */
   "compilerOptions": {
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "$src/*": ["src/*"],
+      "$root/*": ["./*"]
+    },
     "jsx": "react",
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 

@@ -5,6 +5,15 @@ module.exports = {
     '@babel/plugin-transform-flow-strip-types',
     ['@babel/plugin-transform-private-methods', { loose: true }],
     [
+      'module-resolver',
+      {
+        alias: {
+          $src: './src',
+          $root: './',
+        },
+      },
+    ],
+    [
       'react-native-reanimated/plugin',
       {
         globals: ['__scanCodes'],
