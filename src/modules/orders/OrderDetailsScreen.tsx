@@ -1,29 +1,22 @@
-import React, {
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  ActivityIndicator,
-  ScrollView,
-} from 'react-native';
+import React, { useEffect, useCallback, useRef, useState } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
+import { groupBy } from 'ramda';
 
 import { ordersStore } from './stores';
-import { StatusBadge } from './components/StatusBadge';
+import {
+  OrderTitleByStatusType,
+  StatusBadge,
+  getBadgeStyleByStatusType,
+} from './components/StatusBadge';
 import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { fetchOrderDetails } from '../../data/fetchOrderDetails';
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { ProductModel } from '../../stores/types';
+import { OrderStatusType } from '../../constants/common.enum';
+import { OrdersDetailsStockList } from './components/OrdersDetailsStockList';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -36,6 +29,20 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
   const { currentOrder } = ordersStoreRef;
+  const orderProductsByStockName = groupBy(
+    product => product.stockLocationName || '',
+    currentOrder?.productList || [],
+  );
+  const [selectedStock, setSelectedStock] = useState<string | undefined>(
+    undefined,
+  );
+
+  const onSelectProducts: (currentStockNames: string) => void = useCallback(
+    (currentStockNames: string) => {
+      setSelectedStock(currentStockNames);
+    },
+    [],
+  );
 
   const fetchOrder = useCallback(async () => {
     setIsLoading(true);
@@ -53,43 +60,12 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     }
   }, [fetchOrder, isFocused]);
 
-  const onNavigateToOrderByStockLocation = () => {
-    navigation.navigate(AppNavigator.OrderByStockLocationScreen);
-  };
-
-  const renderProduct = useCallback(
-    (product: ProductModel) => (
-      <View style={styles.productDetails} key={product.productId}>
-        <View style={styles.productNameContainer}>
-          <Text
-            style={[styles.productText, styles.productName]}
-            ellipsizeMode="clip"
-            numberOfLines={1}
-          >
-            {product.name}
-            <SVGs.DashedLine
-              style={styles.dashedLine}
-              color={colors.neutral40}
-            />
-            <SVGs.DashedLine
-              style={styles.dashedLine}
-              color={colors.neutral40}
-            />
-          </Text>
-        </View>
-        <Text style={styles.productText}>
-          <Text style={styles.productDetailsBold}>{product.receivedQty}</Text>/
-          {product.orderedQty}
-        </Text>
-      </View>
-    ),
-    [],
-  );
-
-  const OrderProducts = useMemo(
-    () => currentOrder?.productList.map(renderProduct),
-    [currentOrder?.productList, renderProduct],
-  );
+  const onNavigateToOrderByStockLocation = useCallback(() => {
+    if (selectedStock) {
+      ordersStoreRef.setSelectedProductsByStock(selectedStock);
+      navigation.navigate(AppNavigator.OrderByStockLocationScreen);
+    }
+  }, [navigation, ordersStoreRef, selectedStock]);
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
@@ -115,47 +91,124 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   }
 
   if (currentOrder) {
+    const OrderDetailsScree = () => {
+      switch (currentOrder.order.status) {
+        case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
+          return 'This order is waiting for a PO to be sent to the Distributor.';
+        case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
+          return 'This order is submitted and pending';
+        case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
+          return 'This order has been shipped to the shop.';
+        case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
+          return 'Before this order can be received, Manager approval is needed.';
+        case OrderTitleByStatusType[OrderStatusType.CLOSED]:
+          return 'This order is closed. All items have been received.';
+        case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
+          return 'This order was cancelled.';
+        case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+          return 'Some items in this order have not been received.';
+        default:
+          return null;
+      }
+    };
+
+    const renderButton = () => {
+      switch (currentOrder.order.status) {
+        case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
+          return (
+            <Button
+              disabled={!selectedStock}
+              type={ButtonType.primary}
+              title="Unlock and Receive"
+              onPress={onNavigateToOrderByStockLocation}
+            />
+          );
+        case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
+          return (
+            <Button
+              disabled={!selectedStock}
+              type={ButtonType.primary}
+              title="Receive"
+              onPress={onNavigateToOrderByStockLocation}
+            />
+          );
+        case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+          return (
+            <Button
+              disabled={!selectedStock}
+              type={ButtonType.primary}
+              title="Unlock and Receive"
+              onPress={onNavigateToOrderByStockLocation}
+            />
+          );
+        case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
+        case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
+        case OrderTitleByStatusType[OrderStatusType.CLOSED]:
+        case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
+        default:
+          return null;
+      }
+    };
+
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
+        <View
+          style={[
+            {
+              flexDirection: 'row',
+              padding: 8,
+              alignItems: 'center',
+            },
+            getBadgeStyleByStatusType(currentOrder.order.status),
+          ]}
+        >
+          <StatusBadge orderStatusType={currentOrder.order.status} isString />
+          <Text
+            style={{
+              flex: 1,
+              paddingLeft: 8,
+              fontSize: 12,
+              lineHeight: 18,
+              fontFamily: fonts.TT_Regular,
+              color: colors.grayDark2,
+            }}
+          >
+            {OrderDetailsScree()}
+          </Text>
+        </View>
+
         <View style={styles.header}>
           <View>
             <Text style={styles.title}>Order {currentOrder.order.orderId}</Text>
-            <Text style={styles.titleDistributor}>Distributor</Text>
-            <Text style={styles.distributor}>
+            <Text style={styles.titleDistributor}>
               {currentOrder.order.supplierName}
             </Text>
           </View>
-          <View>
-            <StatusBadge orderStatusType={currentOrder.order.status} isString />
-          </View>
         </View>
 
-        <View style={styles.product}>
-          <View style={styles.stock}>
-            <View style={styles.stockHeader}>
-              <Text style={styles.headerText}>Stock Location</Text>
-              <Text style={styles.headerText}>Received/Ordered</Text>
-            </View>
-            <View style={styles.products}>
-              <Text style={styles.stockName}>
-                {currentOrder.order.orderArea}
-              </Text>
-              {OrderProducts}
-            </View>
+        <View style={styles.table}>
+          <View style={styles.stockHeader}>
+            <Text style={styles.headerText}>Stock Location</Text>
+            <Text style={styles.headerText}>Received/Ordered</Text>
           </View>
-
-          <View>
-            <View style={styles.headerPlaceholder} />
-            <Pressable
-              style={styles.button}
-              onPress={onNavigateToOrderByStockLocation}
-            >
-              <Text style={styles.buttonText}>Receive</Text>
-              <SVGs.ChevronIcon color={colors.purpleDark} />
-            </Pressable>
-          </View>
+          <OrdersDetailsStockList
+            productsByStockName={orderProductsByStockName}
+            selectedStock={selectedStock}
+            onSelectProducts={onSelectProducts}
+          />
         </View>
-      </ScrollView>
+        {renderButton() ? (
+          <View
+            style={{
+              backgroundColor: colors.white,
+              padding: 16,
+              marginTop: 'auto',
+            }}
+          >
+            {renderButton()}
+          </View>
+        ) : null}
+      </View>
     );
   }
 
@@ -185,38 +238,16 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     paddingBottom: 4,
   },
-  distributor: {
-    fontSize: 14,
-    lineHeight: 18,
-    fontFamily: fonts.TT_Bold,
-  },
-  products: {
-    paddingLeft: 16,
-  },
-  stockName: {
-    fontSize: 15,
-    lineHeight: 20,
-    fontFamily: fonts.TT_Bold,
-    paddingVertical: 8,
-  },
-  product: {
-    flexDirection: 'row',
+  table: {
     backgroundColor: colors.white,
     paddingBottom: 8,
   },
   headerPlaceholder: {
     height: 26,
-    backgroundColor: colors.grayLight,
-    borderBottomColor: colors.gray,
-    borderBottomWidth: 1,
-    borderTopColor: colors.gray,
-    borderTopWidth: 1,
-  },
-  stock: {
-    flex: 1,
+    width: '15%',
   },
   stockHeader: {
-    paddingLeft: 16,
+    paddingHorizontal: 36,
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: colors.grayLight,
@@ -236,7 +267,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    flex: 1,
+    width: '30%',
   },
   buttonText: {
     fontSize: 15,
@@ -245,24 +276,6 @@ const styles = StyleSheet.create({
     paddingBottom: 3,
     paddingRight: 8,
     color: colors.purpleDark,
-  },
-  productDetails: {
-    flexDirection: 'row',
-    paddingVertical: 2,
-  },
-  productDetailsBold: {
-    fontFamily: fonts.TT_Bold,
-    color: colors.black,
-    fontSize: 14,
-  },
-  productText: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontFamily: fonts.TT_Regular,
-    color: colors.grayDark,
-  },
-  productName: {
-    paddingRight: 24,
   },
   loading: {
     padding: 16,
@@ -283,13 +296,5 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     color: colors.blackSemiLight,
     textAlign: 'center',
-  },
-  dashedLine: {
-    alignSelf: 'flex-end',
-  },
-  productNameContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    overflow: 'hidden',
   },
 });

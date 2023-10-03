@@ -108,6 +108,7 @@ export interface OrderProductResponse {
 export interface GetOrderSummaryProduct extends OrderProductResponse {
   orderDetailId: number;
   storageAreaId: number;
+  storageAreaName: string;
 }
 
 export interface GetOrderSummaryAPIResponse {
@@ -125,7 +126,7 @@ export interface GetOrderStorageAreaResponse {
 }
 
 export interface ReceiveOrderRequestProduct {
-  number: string;
+  number?: string;
   orderDetailId: number;
   partyRoleId: number;
   productId: number;

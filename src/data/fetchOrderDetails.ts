@@ -1,3 +1,5 @@
+import { v1 as uuid } from 'uuid';
+
 import { Task, TaskExecutor } from './helpers';
 import { getOrderDetails, GetOrderDetailsResponse } from './api';
 
@@ -60,9 +62,12 @@ export class SaveOrdersToStoreTask extends Task {
     return orderProducts.map(orderProduct => {
       return {
         ...orderProduct,
-        uuid: 'someStrign',
+        uuid: uuid(),
         isRemoved: false,
-        reservedCount: undefined,
+        reservedCount:
+          orderProduct.shippedQty !== 0 && orderProduct.orderedQty === 0
+            ? orderProduct.shippedQty
+            : orderProduct.orderedQty - orderProduct.receivedQty,
         nameDetails: '',
         isRecoverable: false,
       } as ProductModel;

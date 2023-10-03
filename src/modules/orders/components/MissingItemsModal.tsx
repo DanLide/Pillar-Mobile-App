@@ -7,11 +7,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import { SharedValue } from 'react-native-reanimated';
+import { isNil } from 'ramda';
 
 import { ordersStore } from '../stores';
 import { Modal, Button, ButtonType } from '../../../components';
-import { OrderProductResponse } from '../../../data/api/orders';
 import { SVGs, colors, fonts } from '../../../theme';
+import { ProductModel } from '../../../stores/types';
 
 interface Props {
   isVisible: boolean;
@@ -26,8 +27,19 @@ export const MissingItemsModal: React.FC<Props> = ({
 }) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
-  const renderItem = ({ item }: ListRenderItemInfo<OrderProductResponse>) => {
-    if ((item.orderedQty - item.receivedQty) === 0) return null;
+  const renderItem = ({
+    item,
+  }: ListRenderItemInfo<NonNullable<ProductModel>>) => {
+    if (
+      isNil(item.orderedQty) ||
+      isNil(item.receivedQty) ||
+      isNil(item.reservedCount)
+    )
+      return null;
+
+    if (item.orderedQty - (item.receivedQty + item.reservedCount) === 0)
+      return null;
+
     return (
       <View style={styles.item}>
         <View style={styles.description}>
@@ -36,7 +48,7 @@ export const MissingItemsModal: React.FC<Props> = ({
         </View>
         <View>
           <Text style={styles.itemName}>
-            {item.orderedQty - item.receivedQty}
+            {item.orderedQty - (item.receivedQty + item.reservedCount)}
           </Text>
         </View>
       </View>
@@ -77,7 +89,7 @@ export const MissingItemsModal: React.FC<Props> = ({
       <Button
         type={ButtonType.primary}
         title="I still want these items"
-        buttonStyle={{ margin: 16, marginTop: 24 }}
+        buttonStyle={styles.button}
         onPress={onSubmit}
       />
     </Modal>
@@ -183,4 +195,5 @@ const styles = StyleSheet.create({
     color: colors.grayDark3,
     textAlign: 'center',
   },
+  button: { margin: 16, marginTop: 24 },
 });

@@ -183,21 +183,13 @@ export const ProductQuantity = memo(
               </View>
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
-                Total Cost: ${(product.cost || 0) * (product.receivedQty || 0)}
+                Total Cost: $
+                {(product.cost || 0) * (product.reservedCount || 0)}
               </Text>
             </View>
           );
         default:
           return null;
-      }
-    };
-
-    const getMinValue = () => {
-      switch (type) {
-        case ProductModalType.ReceiveOrder:
-          return clone(product.receivedQty) ?? stepQty;
-        default:
-          return minValue ?? stepQty;
       }
     };
 
@@ -208,7 +200,7 @@ export const ProductQuantity = memo(
           <EditQuantity
             currentValue={reservedCount}
             maxValue={maxValue}
-            minValue={getMinValue()}
+            minValue={minValue ?? stepQty}
             stepValue={stepQty}
             disabled={disabled}
             hideCount={hideCount}
