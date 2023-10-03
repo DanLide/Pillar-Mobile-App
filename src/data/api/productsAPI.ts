@@ -37,7 +37,7 @@ export interface ProductResponse extends ProductSettingsResponse {
 
 export type FacilityProductResponse = Pick<
   ProductResponse,
-  'productId' | 'upc' | 'orderMultiple'
+  'productId' | 'upc' | 'orderMultiple' | 'supplierPartyRoleId'
 >;
 
 export interface CategoryResponse {

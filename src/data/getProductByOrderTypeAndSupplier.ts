@@ -8,13 +8,16 @@ import {
   getProductByOrderTypeAndSupplierAPI,
 } from './api/orders';
 import { getFetchProductByFacilityIdAPI } from './api';
+import { BadRequestError } from './helpers/tryFetch';
+import { stocksStore } from '../modules/stocksList/stores';
 
 interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
 }
 
 enum ProductByOrderTypeAndSupplierError {
-  NotAssignedToDistributor,
+  NotAssignedToDistributor = 'NotAssignedToDistributor',
+  NotAssignedToStock = 'NotAssignedToStock',
 }
 
 export const getProductByOrderTypeAndSupplier = async (
@@ -30,10 +33,12 @@ export const getProductByOrderTypeAndSupplier = async (
   ]).execute();
 };
 
-const fetchProductSupplier = async (code: string) => {
-  const product = await getFetchProductByFacilityIdAPI(code.replace('~~', ''));
+const getProductSupplier = async (code: string) => {
+  const supplierId = stocksStore.getSupplierIdByUpc(code);
 
-  console.log('\nproduct by facility\n', product);
+  if (supplierId) return supplierId;
+
+  const product = await getFetchProductByFacilityIdAPI(code.replace('~~', ''));
 
   return product?.[0].supplierId;
 };
@@ -55,19 +60,34 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   }
 
   async run(): Promise<void> {
-    const selectedSupplier = this.store.supplierId;
+    const productSupplier = await getProductSupplier(this.scanCode);
 
-    const productSupplier =
-      selectedSupplier || (await fetchProductSupplier(this.scanCode));
+    const selectedSupplier = this.store.supplierId || productSupplier;
 
-    console.log('\nproduct supplier\n', productSupplier);
+    if (!productSupplier) return;
 
-    if (productSupplier) {
-      this.productContext.product = await getProductByOrderTypeAndSupplierAPI(
-        this.scanCode,
-        productSupplier,
+    if (selectedSupplier !== productSupplier) {
+      const supplierName = stocksStore.getSupplierNameById(productSupplier);
+
+      throw new BadRequestError(
+        ProductByOrderTypeAndSupplierError.NotAssignedToDistributor,
+        supplierName,
       );
     }
+
+    const product = await getProductByOrderTypeAndSupplierAPI(
+      this.scanCode,
+      productSupplier,
+    );
+
+    if (product?.storageAreaId !== this.store.currentStock?.partyRoleId) {
+      throw new BadRequestError(
+        ProductByOrderTypeAndSupplierError.NotAssignedToStock,
+        product?.storageAreaName,
+      );
+    }
+
+    this.productContext.product = product;
   }
 }
 

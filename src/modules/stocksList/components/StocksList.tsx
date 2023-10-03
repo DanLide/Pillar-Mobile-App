@@ -15,13 +15,13 @@ import { fetchStocks } from '../../../data/fetchStocks';
 import { StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
-import { AuthError, BadRequestError } from '../../../data/helpers/tryFetch';
+import { AuthError, IBadRequestError } from '../../../data/helpers/tryFetch';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
   onFetchStocks?: (
     store: StockStore,
-  ) => Promise<void | BadRequestError | AuthError>;
+  ) => Promise<void | IBadRequestError | AuthError>;
 }
 
 const keyExtractor = (item: StockModel) => String(item.partyRoleId);

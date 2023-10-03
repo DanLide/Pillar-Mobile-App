@@ -11,6 +11,8 @@ import {
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { ordersStore } from './stores';
 import { getProductByOrderTypeAndSupplier } from '../../data/getProductByOrderTypeAndSupplier';
+import { Alert } from 'react-native';
+import { isBadRequestError } from '../../data/helpers/utils';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -24,7 +26,12 @@ export const ScannerScreen: React.FC = observer(() => {
   const store = useRef(ordersStore).current;
 
   const fetchProduct = useCallback(
-    (code: string) => getProductByOrderTypeAndSupplier(store, code),
+    async (code: string) => {
+      const error = await getProductByOrderTypeAndSupplier(store, code);
+
+      if (isBadRequestError(error) && error.error)
+        Alert.alert(error.error, error.error_description);
+    },
     [store],
   );
 

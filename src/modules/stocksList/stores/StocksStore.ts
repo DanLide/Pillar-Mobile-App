@@ -1,5 +1,11 @@
-import { action, makeObservable, observable } from 'mobx';
-import { CategoryResponse, FacilityProductResponse, SupplierResponse } from "../../../data/api/productsAPI";
+import { action, computed, makeObservable, observable } from 'mobx';
+
+import {
+  CategoryResponse,
+  FacilityProductResponse,
+  SupplierResponse,
+} from '../../../data/api/productsAPI';
+import { find, pipe, prop, propEq, whereEq } from 'ramda';
 
 export class StockStore {
   @observable stocks: StockModel[];
@@ -16,6 +22,22 @@ export class StockStore {
     this.enabledSuppliers = [];
 
     makeObservable(this);
+  }
+
+  @computed get getSupplierNameById() {
+    return (supplierId: number): string | undefined =>
+      pipe(
+        find(propEq('partyRoleId', supplierId)),
+        prop('name'),
+      )(this.suppliers);
+  }
+
+  @computed get getSupplierIdByUpc() {
+    return (upc: string) =>
+      pipe(
+        find(whereEq({ upc })),
+        prop('supplierPartyRoleId'),
+      )(this.facilityProducts);
   }
 
   @action setStocks(stocks: StockModel[]) {

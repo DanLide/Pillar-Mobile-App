@@ -2,10 +2,22 @@ import { is } from 'ramda';
 
 import { getLogoutListener } from './getLogoutListener';
 
-export interface BadRequestError {
+export interface IBadRequestError {
   error?: string;
   error_description?: string;
   message?: string;
+}
+
+export class BadRequestError extends Error implements IBadRequestError {
+  error: string;
+  error_description?: string;
+
+  constructor(error: string, error_description?: string) {
+    super(error);
+
+    this.error = error;
+    this.error_description = error_description;
+  }
 }
 
 export class AuthError extends Error {}
@@ -15,7 +27,7 @@ export interface LogoutListener {
   onAutoLogout: () => void;
 }
 
-export type RequestError = BadRequestError | AuthError | Error;
+export type RequestError = IBadRequestError | AuthError | Error;
 
 export interface TryFetchParams {
   url: string | URL;
@@ -44,7 +56,7 @@ export const tryFetch = async <ResponseType>({
       logoutListener.onServerLogout();
       throw new AuthError(data?.message || 'Unauthorized');
     } else if (response.status === 400) {
-      throw data as BadRequestError;
+      throw data as IBadRequestError;
     } else {
       throw Error(`Error with ${response.status} code!`);
     }
