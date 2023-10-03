@@ -16,6 +16,9 @@ import { StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
 import { AuthError, IBadRequestError } from '../../../data/helpers/tryFetch';
+import masterLockStore from '../../../stores/MasterLockStore';
+import { autorun } from 'mobx';
+import { RoleType } from '../../../constants/common.enum';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
@@ -33,14 +36,26 @@ export const StocksList: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
 
+    useEffect(() => {
+      autorun(() => {
+        const initAllStocks = async () => {
+          await Promise.all(stocksStore.stocks.filter((stock) => {
+            if (stock.roleTypeId === RoleType.Cabinet) {
+              return masterLockStore.initMasterLockForStocks(stock)
+            }
+          }))
+          setIsLoading(false)
+        }
+        initAllStocks()
+      })
+    }, [])
+
     const handleFetchStocks = useCallback(async () => {
       setIsLoading(true);
 
       const fetchStocksFunction = onFetchStocks ? onFetchStocks : fetchStocks;
 
       const error = await fetchStocksFunction(stocksStore);
-
-      setIsLoading(false);
 
       if (error) {
         setIsError(true);

@@ -21,6 +21,8 @@ export enum AppNavigator {
   CameraPermissionScreen = 'CameraPermissionScreen',
   ScannerScreen = 'ScannerScreen',
   ResultScreen = 'ResultScreen',
+  BaseUnlockScreen = 'BaseUnlockScreen',
+  BluetoothPermissionScreen = 'BluetoothPermissionScreen',
 
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
@@ -52,8 +54,20 @@ type CameraPermissionScreenParams = {
   nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
 };
 
+type BluetoothPermissionScreenParams = {
+  nextRoute: AppNavigator.SelectStockScreen;
+};
+
+type StockLocationParams = { succeedBluetooth?: boolean };
+
 type SelectSSOScreenParams = {
   isUpdating?: boolean;
+};
+
+type UnlockStockScreenParams = {
+  title?: string;
+  masterlockId: string;
+  nextScreen?: AppNavigator.ReturnProductsScreen | AppNavigator.RemoveProductsScreen | AppNavigator.CreateOrderScreen | AppNavigator.ManageProductsScreen
 };
 
 export type AppStackParamList = {
@@ -80,29 +94,35 @@ export type HomeStackParamList = {
 };
 
 export type RemoveStackParamList = {
-  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.SelectStockScreen]: StockLocationParams;
   [AppNavigator.RemoveProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ReturnStackParamList = {
-  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.SelectStockScreen]: StockLocationParams;
   [AppNavigator.ReturnProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ManageProductsStackParamList = {
-  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.SelectStockScreen]: StockLocationParams;
   [AppNavigator.ManageProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type CreateInvoiceParamList = {
@@ -119,10 +139,12 @@ export type OrderDetailsScreenParams = { orderId: string };
 export type OrdersParamsList = {
   [AppNavigator.OrdersScreen]: undefined;
   [AppNavigator.OrderDetailsScreen]: OrderDetailsScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
   [AppNavigator.OrderByStockLocationScreen]: undefined;
-  [AppNavigator.SelectStockScreen]: undefined;
+  [AppNavigator.SelectStockScreen]: StockLocationParams;
   [AppNavigator.CreateOrderScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
 };
 

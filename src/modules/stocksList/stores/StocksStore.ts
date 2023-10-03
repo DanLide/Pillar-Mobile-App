@@ -1,11 +1,12 @@
 import { action, computed, makeObservable, observable } from 'mobx';
+import { find, pipe, prop, propEq, whereEq } from 'ramda';
 
 import {
   CategoryResponse,
   FacilityProductResponse,
   SupplierResponse,
 } from '../../../data/api/productsAPI';
-import { find, pipe, prop, propEq, whereEq } from 'ramda';
+import masterLockStore from '../../../stores/MasterLockStore';
 
 export class StockStore {
   @observable stocks: StockModel[];
@@ -77,6 +78,7 @@ export class StockStore {
   }
 }
 
+// !!!!!!!!!!!! TODO rename deviceId, accessProfile, firmwareVersion due to the API changes. And remove this comment afterall
 export interface StockModel {
   organizationName: string;
   // isRelationshipExists: string;
@@ -88,8 +90,11 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
+  deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
+  accessProfile: string;
+  firmwareVersion: number;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }

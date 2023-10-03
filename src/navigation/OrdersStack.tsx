@@ -15,6 +15,8 @@ import { OrderByStockLocationScreen } from '../modules/orders/OrderByStockLocati
 import { SelectStockScreen } from '../modules/orders/SelectStockScreen';
 import { CreateOrderScreen } from '../modules/orders/CreateOrderScreen';
 import { ResultScreen } from '../modules/orders/ResultScreen';
+import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
+import { BluetoothPermissionScreen } from '../modules/permissions';
 import { ScannerScreen } from '../modules/orders/ScannerScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
@@ -39,6 +41,15 @@ export const OrdersStack: React.FC = () => {
         })}
       />
       <Stack.Screen
+        name={AppNavigator.BluetoothPermissionScreen}
+        component={BluetoothPermissionScreen}
+        options={getScreenOptions({
+          title: 'Bluetooth Connection',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+        initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
+      />
+      <Stack.Screen
         name={AppNavigator.OrderByStockLocationScreen}
         component={OrderByStockLocationScreen}
         options={getScreenOptions({
@@ -53,6 +64,18 @@ export const OrdersStack: React.FC = () => {
           title: 'Create Order',
           leftBarButtonType: LeftBarType.Back,
         })}
+      />
+        <Stack.Screen
+        name={AppNavigator.BaseUnlockScreen}
+        component={BaseUnlockScreen}
+        options={({ route }) => getScreenOptions({
+          title: route.params?.title || '',
+          leftBarButtonType: LeftBarType.Back,
+          style: {
+            shadowColor: 'transparent',
+          }
+        })}
+        initialParams={{ nextScreen: AppNavigator.CreateOrderScreen }}
       />
       <Stack.Screen
         name={AppNavigator.CreateOrderScreen}

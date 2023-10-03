@@ -1,6 +1,7 @@
 import {
   fetchStocks,
   FetchStocksTask,
+  mock2Locks,
   SaveStocksToStore,
 } from '../fetchStocks';
 
@@ -13,14 +14,14 @@ import {
 
 jest.mock('../api/stocksAPI');
 
-const mockStockResponse: StockModel[] = [
-  {
-    organizationName: 'organizationName',
-    partyRoleId: 1,
-    roleTypeId: 1,
-    leanTecSerialNo: 'leanTecSerialNo',
-  },
-];
+const mockStockResponse: StockModel[] = [{
+  organizationName: 'organizationName',
+  partyRoleId: 1,
+  roleTypeId: 1,
+  leanTecSerialNo: 'leanTecSerialNo',
+}];
+
+const mockExpected = mock2Locks(mockStockResponse)
 
 const mockSetStock = jest.fn();
 
@@ -39,7 +40,7 @@ describe('fetchStocks', () => {
     (getFetchStockAPI as jest.Mock).mockReturnValue(mockStockResponse);
     const fetchStocksTask = new FetchStocksTask({ stocks: [] });
     await expect(fetchStocksTask.run()).resolves.not.toThrow();
-    expect(fetchStocksTask.fetchStocksContext.stocks).toBe(mockStockResponse);
+    expect(fetchStocksTask.fetchStocksContext.stocks).toStrictEqual(mockExpected);
     expect(getFetchStockAPI).toHaveBeenCalled();
   });
 
@@ -58,14 +59,9 @@ describe('fetchStocks', () => {
       mockStockStore,
     );
     expect(saveStocksToStore.run()).resolves.not.toThrow();
-    expect(mockSetStock).toHaveBeenCalledWith([
-      {
-        leanTecSerialNo: 'leanTecSerialNo',
-        organizationName: 'organizationName',
-        partyRoleId: 1,
-        roleTypeId: 1,
-      },
-    ]);
+    expect(mockSetStock).toHaveBeenCalledWith(
+      mockStockResponse,
+    );
   });
 
   it('should call fetchStocks with empty stocks in stocksStore', async () => {

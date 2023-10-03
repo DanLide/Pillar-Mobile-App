@@ -27,6 +27,7 @@ export enum ToastActionType {
   Close = 'Close',
   Retry = 'Retry',
   Undo = 'Undo',
+  OpenSettings = 'OpenSettings',
 }
 
 interface Props
@@ -51,7 +52,10 @@ const icons: Record<
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
-  [ToastType.Retry]: SVGs.ListErrorIcon
+  [ToastType.Retry]: SVGs.ListErrorIcon,
+
+  [ToastType.BluetoothEnabled]: SVGs.BluetoothIconSuccess,
+  [ToastType.BluetoothDisabled]: SVGs.BluetoothIconDisconnected,
 };
 
 export const Toast: React.FC<Props> = ({
@@ -126,6 +130,15 @@ export const Toast: React.FC<Props> = ({
             Undo
           </Text>
         );
+      case ToastActionType.OpenSettings:
+        return (
+          <Text
+            testID={testIds.idSettingsText(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Open Settings
+          </Text>
+        );
       default:
         return null;
     }
@@ -143,6 +156,9 @@ export const Toast: React.FC<Props> = ({
         onHide();
         break;
       case ToastActionType.Undo:
+        onPress?.(id);
+        break;
+      case ToastActionType.OpenSettings:
         onPress?.(id);
         break;
       case ToastActionType.Retry:
