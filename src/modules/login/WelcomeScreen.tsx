@@ -17,7 +17,7 @@ interface Props {
 }
 
 const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
-const isDeviceConfigured = false;
+const isDeviceConfigured = true;
 
 export const WelcomeScreen = ({ navigation }: Props) => {
   const onPressContinue = () => {
