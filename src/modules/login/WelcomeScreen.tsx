@@ -1,13 +1,13 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { SvgProps } from 'react-native-svg';
+import { ssoLogin } from 'src/data/ssoLogin';
 
 import { Button, ButtonType } from '../../components';
 import Logo from '../../../assets/images/logo.png';
 import { colors, fonts, SVGs } from '../../theme';
 import { AppNavigator, UnauthStackParamsList } from '../../navigation/types';
-import { ssoLogin } from '$src/data/ssoLogin';
-import { SvgProps } from 'react-native-svg';
 
 interface Props {
   navigation: StackNavigationProp<

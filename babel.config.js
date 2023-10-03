@@ -8,8 +8,7 @@ module.exports = {
       'module-resolver',
       {
         alias: {
-          $src: './src',
-          $root: './',
+          src: './src',
         },
       },
     ],
