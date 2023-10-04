@@ -85,12 +85,24 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
     const renderStockList = useCallback(
       ({ item }: ListRenderItemInfo<string>) => {
         const products = productsByStockName[item];
+        const isNotAllProductsReceived = products.reduce((acc, product) => {
+          if (product.receivedQty !== product.orderedQty) {
+            acc = false;
+          }
+          return acc;
+        }, true);
+
         return (
           <Pressable
             style={styles.stockContainer}
             onPress={() => onSelectProducts(item)}
+            disabled={isNotAllProductsReceived}
           >
-            {renderSelectedRadioButton(item)}
+            {!isNotAllProductsReceived ? (
+              renderSelectedRadioButton(item)
+            ) : (
+              <View style={styles.radioButtonPlaceholder} />
+            )}
             <View style={styles.products}>
               <Text style={styles.stockName}>{item}</Text>
               {products.map(renderProduct)}

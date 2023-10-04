@@ -45,6 +45,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   );
 
   const fetchOrder = useCallback(async () => {
+    setSelectedStock(undefined);
     setIsLoading(true);
     setIsError(false);
     const result = await fetchOrderDetails(route.params.orderId);
@@ -91,7 +92,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   }
 
   if (currentOrder) {
-    const OrderDetailsScree = () => {
+    const OrderDetailsSubtitle = () => {
       switch (currentOrder.order.status) {
         case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
           return 'This order is waiting for a PO to be sent to the Distributor.';
@@ -154,27 +155,12 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       <View style={styles.container}>
         <View
           style={[
-            {
-              flexDirection: 'row',
-              padding: 8,
-              alignItems: 'center',
-            },
+            styles.titleContainer,
             getBadgeStyleByStatusType(currentOrder.order.status),
           ]}
         >
           <StatusBadge orderStatusType={currentOrder.order.status} isString />
-          <Text
-            style={{
-              flex: 1,
-              paddingLeft: 8,
-              fontSize: 12,
-              lineHeight: 18,
-              fontFamily: fonts.TT_Regular,
-              color: colors.grayDark2,
-            }}
-          >
-            {OrderDetailsScree()}
-          </Text>
+          <Text style={styles.headerSubtitle}>{OrderDetailsSubtitle()}</Text>
         </View>
 
         <View style={styles.header}>
@@ -237,6 +223,19 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     fontFamily: fonts.TT_Regular,
     paddingBottom: 4,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    padding: 8,
+    alignItems: 'center',
+  },
+  headerSubtitle: {
+    flex: 1,
+    paddingLeft: 8,
+    fontSize: 12,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Regular,
+    color: colors.grayDark2,
   },
   table: {
     backgroundColor: colors.white,

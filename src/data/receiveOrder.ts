@@ -91,12 +91,9 @@ class ReceiveProductTask extends Task {
             orderProduct.stockLocationName ===
               this.ordersStore.currentStockName,
         );
-        if (
-          isNil(selectedProduct?.receivedQty) ||
-          isNil(selectedProduct?.reservedCount)
-        )
-          throw Error('Request failed!');
 
+        if (isNil(selectedProduct?.reservedCount))
+          throw Error('Request failed!');
         return {
           number: this.ordersStore.currentOrder?.order.customPONumber,
           orderDetailId: product.orderDetailId,
@@ -104,8 +101,7 @@ class ReceiveProductTask extends Task {
           productId: product.productId,
           transactionTypeId: TransactionType.Order,
           unitCost: product.cost,
-          quantityReceived:
-            selectedProduct.receivedQty + selectedProduct?.reservedCount,
+          quantityReceived: selectedProduct?.reservedCount,
         };
       });
 
