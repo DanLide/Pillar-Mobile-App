@@ -107,8 +107,6 @@ export class SaveProductToStoreTask extends Task {
   async run(): Promise<void> {
     const { product } = this.productContext;
 
-    console.log('\nproduct\n', product);
-
     this.currentProductStore.setCurrentProduct(
       product && this.mapProductResponse(product),
     );
