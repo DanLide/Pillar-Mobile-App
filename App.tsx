@@ -60,7 +60,7 @@ const App = (initialProps: InitialProps) => {
         return
       }
       const delayNeed = nextAppState === 'active' &&
-        new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
+      new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
 
       delayNeed ? setTimeout(() => {
         // need to logout animation be done
