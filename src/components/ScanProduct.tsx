@@ -90,8 +90,8 @@ const QRButton: React.FC<QRButtonProps> = ({
   const CenterIcon = isGreenBorder
     ? SVGs.CheckMark
     : barcodeFormat === BarcodeFormat.QR_CODE
-    ? SVGs.QRIcon
-    : SVGs.BarcodeIcon;
+      ? SVGs.QRIcon
+      : SVGs.BarcodeIcon;
 
   const animatedStyleButton = useAnimatedStyle(() => {
     if (!coordinates?.value?.[index]) return {};
@@ -152,7 +152,7 @@ const soundAndVibrate = async () => {
   await VolumeManager.setVolume(1);
   Vibration.vibrate();
   TrackPlayer.play();
-};
+}
 
 const ScanProduct: React.FC<ScanProductProps> = ({
   onScan,
@@ -187,7 +187,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (isActive && forceDisableScanner.current) {
       forceDisableScanner.current = false;
     }
-  }, [isActive, forceDisableScanner]);
+  }, [isActive, forceDisableScanner])
 
   useEffect(() => {
     if (isBlinkOn) {
@@ -356,7 +356,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (
       singleBarcodeState.timeStampAutoscanFocus &&
       currentDate - singleBarcodeState.timeStampAutoscanFocus >
-        AUTOSCAN_TIMEOUT_MS
+      AUTOSCAN_TIMEOUT_MS
     ) {
       scanBarcode(singleBarcodeState?.rawValue);
       setAutoScanDone(true);
