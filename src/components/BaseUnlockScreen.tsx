@@ -25,7 +25,7 @@ import cabinet from '../../assets/images/cabinetImage.png';
 import { Button, ButtonType } from '../components';
 import { colors, fonts, SVGs } from '../theme';
 import { LockStatus } from '../data/masterlock';
-import masterLockStore from '../stores/MasterLockStore';
+import masterLockStore, { RELOCK_TIME, RELOCK_TIME_SEC } from '../stores/MasterLockStore';
 import {
   AppNavigator,
   RemoveStackParamList,
@@ -52,27 +52,25 @@ type Props = NativeStackScreenProps<
   AppNavigator.BaseUnlockScreen
 >;
 
-const RELOCK_TIME = 50000 ; // msec
-const counter = 50000 / 1000
-
 export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }) => {
   const { params: { masterlockId, nextScreen } } = route;
   const masterLockStatus: LockStatus = masterLockStore.stocksState[masterlockId].status;
+  // const status: ExtendedMasterLockStatuses = LockStatus.UNLOCKED
   const status: ExtendedMasterLockStatuses = masterLockStore.isUnlocking ?
     ExtendedMasterLockStatus.UNLOCKING
     : masterLockStatus;
 
-  const [countDownNumber, setCountDownNumber] = useState(10);
+  const [countDownNumber, setCountDownNumber] = useState(RELOCK_TIME_SEC);
   const intervalID = useRef<NodeJS.Timer | null>(null);
 
   useEffect(() => {
-    if (status !== LockStatus.UNLOCKED && countDownNumber !== counter) {
-      setCountDownNumber(counter);
+    if (status !== LockStatus.UNLOCKED && countDownNumber !== RELOCK_TIME_SEC) {
+      setCountDownNumber(RELOCK_TIME_SEC);
       if (intervalID.current) {
         clearInterval(intervalID.current);
         intervalID.current = null;
       }
-    } else if (status === LockStatus.UNLOCKED && countDownNumber === counter) {
+    } else if (status === LockStatus.UNLOCKED && countDownNumber === RELOCK_TIME_SEC) {
       intervalID.current = setInterval(() => {
         setCountDownNumber((prevCount) => {
           if (prevCount === 1) {
@@ -283,7 +281,7 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 37,
+    paddingTop: '10%',
   },
   titleText: {
     fontSize: 28,
@@ -295,7 +293,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: width,
     height: width,
-    marginVertical: 40,
+    marginVertical: '3%',
   },
   primaryButton: {
     width: '100%',
