@@ -48,31 +48,35 @@ const App = (initialProps: InitialProps) => {
         await addTracks();
       }
     }
-    // setup();
+    setup();
   }, []);
 
   console.log(initialProps['rntoken']);
 
   const [appState, setAppState] = useState('active');
 
-  // useEffect(() => {
-  //   const subscription = AppState.addEventListener("change", nextAppState => {
-  //     if (!autoLogoutService.lastTouchTimeStamp) {
-  //       return
-  //     }
-  //     const delayNeed = nextAppState === 'active' &&
-  //     new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
-  //
-  //     delayNeed ? setTimeout(() => {
-  //       // need to logout animation be done
-  //       setAppState(nextAppState);
-  //     }, 350) : setAppState(nextAppState);
-  //   });
-  //
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, [])
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      if (!autoLogoutService.lastTouchTimeStamp) {
+        return;
+      }
+      const delayNeed =
+        nextAppState === 'active' &&
+        new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() >
+          AUTO_LOGOUT_TIMEOUT;
+
+      delayNeed
+        ? setTimeout(() => {
+            // need to logout animation be done
+            setAppState(nextAppState);
+          }, 350)
+        : setAppState(nextAppState);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const renderSplashScreen = () => {
     if (appState === 'active') {
@@ -108,10 +112,10 @@ const App = (initialProps: InitialProps) => {
           styles.container,
           appState !== 'active' && styles.mainContainerHidden,
         ]}
-        // onStartShouldSetResponderCapture={() => {
-        //   autoLogoutService.onTouch();
-        //   return false;
-        // }}
+        onStartShouldSetResponderCapture={() => {
+          autoLogoutService.onTouch();
+          return false;
+        }}
       >
         <SafeAreaProvider>
           <NavigationContainer>
