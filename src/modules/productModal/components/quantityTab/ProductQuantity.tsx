@@ -166,21 +166,26 @@ export const ProductQuantity = memo(
     };
 
     const renderCostOfProduct = () => {
+      const isSpecialOrder =
+        product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
       switch (type) {
         case ProductModalType.ReceiveOrder:
           return (
-            <View>
-              <View style={styles.quantity}>
-                <View>
-                  <Text style={styles.quantityTitle}>Minimum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.min}</Text>
+            <View style={styles.costOfProduct}>
+              {isSpecialOrder ? null : (
+                <View style={styles.quantity}>
+                  <View>
+                    <Text style={styles.quantityTitle}>Minimum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.min}</Text>
+                  </View>
+                  <Text style={styles.divider}>/</Text>
+                  <View>
+                    <Text style={styles.quantityTitle}>Maximum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.max}</Text>
+                  </View>
                 </View>
-                <Text style={styles.divider}>/</Text>
-                <View>
-                  <Text style={styles.quantityTitle}>Maximum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.max}</Text>
-                </View>
-              </View>
+              )}
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
                 Total Cost: ${(product.cost || 0) * (product.receivedQty || 0)}
@@ -314,9 +319,14 @@ const styles = StyleSheet.create({
     color: colors.grayDark2,
     textAlign: 'center',
   },
+  costOfProduct: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   quantity: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 8,
   },
   quantityTitle: {
     fontSize: 12,
@@ -337,7 +347,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     color: colors.grayDark3,
     textAlign: 'center',
-    margin: 16,
+    marginTop: 16,
+    marginHorizontal: 16,
   },
   cost: {
     width: '100%',
