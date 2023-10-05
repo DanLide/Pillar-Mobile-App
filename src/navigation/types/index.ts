@@ -67,7 +67,11 @@ type SelectSSOScreenParams = {
 type UnlockStockScreenParams = {
   title?: string;
   masterlockId: string;
-  nextScreen?: AppNavigator.ReturnProductsScreen | AppNavigator.RemoveProductsScreen | AppNavigator.CreateOrderScreen | AppNavigator.ManageProductsScreen
+  nextScreen?:
+    | AppNavigator.ReturnProductsScreen
+    | AppNavigator.RemoveProductsScreen
+    | AppNavigator.CreateOrderScreen
+    | AppNavigator.ManageProductsScreen;
 };
 
 export type AppStackParamList = {
@@ -146,6 +150,8 @@ export type OrdersParamsList = {
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
   [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
 };
 
 export enum LeftBarType {
@@ -161,10 +167,14 @@ export enum RightBarType {
 
 export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
   StackNavigationProp<
-    ReturnStackParamList & RemoveStackParamList & ManageProductsStackParamList,
+    ReturnStackParamList &
+      RemoveStackParamList &
+      ManageProductsStackParamList &
+      OrdersParamsList,
     | AppNavigator.RemoveProductsScreen
     | AppNavigator.ReturnProductsScreen
     | AppNavigator.ManageProductsScreen
+    | AppNavigator.CreateOrderScreen
   >,
   StackNavigationProp<HomeStackParamList>
 >;
