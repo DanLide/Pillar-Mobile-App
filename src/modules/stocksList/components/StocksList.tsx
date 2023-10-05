@@ -76,6 +76,25 @@ export const StocksList: React.FC<Props> = observer(
 
     useEffect(() => {
       handleFetchStocks();
+      autorun(() => {
+        const setupMasterLock = async () => {
+          if (!stocksStore.stocks.length) return;
+          const cabinets = stocksStore.stocks.filter(
+            stock => stock.roleTypeId === RoleType.Cabinet,
+          );
+
+          Promise.all(
+            cabinets.map(stock => {
+              if (stock.roleTypeId === RoleType.Cabinet) {
+                return masterLockStore.initMasterLockForStocks(stock);
+              }
+            }),
+          ).finally(() => {
+            setIsLoading(false);
+          });
+        };
+        setupMasterLock();
+      });
     }, [handleFetchStocks]);
 
     if (isLoading) {

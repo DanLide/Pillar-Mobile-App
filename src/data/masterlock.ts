@@ -41,29 +41,29 @@ export enum LockStatus {
 
 
 
-// type listenerType = 'visibilityStatus' | 'lockStatus';
+type listenerType = 'visibilityStatus' | 'lockStatus';
 
-// export interface MasterLockInterface {
-//   configure(license: string): Promise<string>;
-//   deinit(): Promise<string>;
-//   initLock(
-//     deviceId: string,
-//     accessProfile: string,
-//     firmwareVersion: number,
-//   ): Promise<string>;
-//   readRelockTime(deviceId: string): Promise<string>;
-//   writeRelockTime(deviceId: string, time: number): Promise<string>; // time range is 4..60
-//   unlock(deviceId: string): Promise<string>;
+export interface MasterLockInterface {
+  configure(license: string): Promise<string>;
+  deinit(): Promise<string>;
+  initLock(
+    deviceId: string,
+    accessProfile: string,
+    firmwareVersion: number,
+  ): Promise<string>;
+  readRelockTime(deviceId: string): Promise<string>;
+  writeRelockTime(deviceId: string, time: number): Promise<string>; // time range is 4..60
+  unlock(deviceId: string): Promise<string>;
 
-//   addListener(
-//     eventType: string,
-//     listener: (event: any) => void,
-//     context?: Object,
-//   ): EmitterSubscription;
-//   removeAllListeners(eventType: string): void;
-// }
+  addListener(
+    eventType: listenerType,
+    listener: (event: any) => void,
+    context?: Object,
+  ): EmitterSubscription;
+  removeAllListeners(eventType: string): void;
+}
 
-// // temp mock
+// temp mock
 // function getRandomValueFromArrayAfterDelay<T>(arr: T[]): Promise<T> {
 //   return new Promise(resolve => {
 //     setTimeout(() => {
@@ -95,18 +95,18 @@ export enum LockStatus {
 //   // LockStatus.UNKNOWN,
 //   LockStatus.LOCKED,
 //   // LockStatus.UNLOCKED,
-//   LockStatus.OPEN,
+//   // LockStatus.OPEN,
 //   // LockStatus.OPEN_LOCKED,
 //   // LockStatus.PENDING_UNLOCK,
-//   LockStatus.PENDING_RELOCK,
+//   // LockStatus.PENDING_RELOCK,
 // ];
 
 // const unlockRandomValue = [
-//   LockStatus.UNKNOWN,
+//   // LockStatus.UNKNOWN,
 //   // LockStatus.UNLOCKED,
 //   LockStatus.OPEN,
 //   // LockStatus.PENDING_UNLOCK,
-//   LockStatus.PENDING_RELOCK,
+//   // LockStatus.PENDING_RELOCK,
 // ];
 
 // const afterPendingRandomValue = [
@@ -200,8 +200,9 @@ export enum LockStatus {
 //             ...this.locksStatus,
 //             [lockId]: randStatus,
 //           };
+//           resolve('success');
 //         });
-//         resolve('success');
+       
 //       })();
 //     });
 //   }
@@ -212,7 +213,7 @@ export enum LockStatus {
 //     });
 //   }
 
-//   @action writeRelockTime(deviceId: string) {
+//   @action writeRelockTime(deviceId: string, time) {
 //     return new Promise<string>(resolve => {
 //       resolve('success');
 //     });
@@ -220,7 +221,9 @@ export enum LockStatus {
 
 //   @action readRelockTime(deviceId: string) {
 //     return new Promise<string>(resolve => {
-//       resolve('success');
+//       setTimeout(() => {
+//         resolve('5');
+//       }, 10000);
 //     });
 //   }
 
@@ -278,5 +281,4 @@ export enum LockStatus {
 //   }
 // }
 
-// // export default MasterLockModule as MasterLockInterface;
 // export default new MasterLockModuleMock() as MasterLockInterface;
