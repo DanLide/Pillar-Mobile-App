@@ -1,6 +1,6 @@
-import { URLProvider } from './urlProvider';
-import { tryFetch } from './tryFetch';
-import { LoginAPIResponse } from '../api/login';
+import { URLProvider } from '../helpers/urlProvider';
+import { tryFetch } from '../helpers/tryFetch';
+import { LoginAPIResponse } from './login';
 
 export const refreshTokenAPI = () => {
   const url = new URLProvider().refreshToken();

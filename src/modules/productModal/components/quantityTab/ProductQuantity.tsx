@@ -174,7 +174,7 @@ export const ProductQuantity = memo(
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
           return (
-            <View>
+            <View style={styles.costOfProduct}>
               {!isSpecialOrder && (
                 <View style={styles.quantity}>
                   <View>
@@ -322,9 +322,14 @@ const styles = StyleSheet.create({
     color: colors.grayDark2,
     textAlign: 'center',
   },
+  costOfProduct: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   quantity: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 8,
   },
   quantityTitle: {
     fontSize: 12,
@@ -345,7 +350,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     color: colors.grayDark3,
     textAlign: 'center',
-    margin: 16,
+    marginTop: 16,
+    marginHorizontal: 16,
   },
   cost: {
     width: '100%',
