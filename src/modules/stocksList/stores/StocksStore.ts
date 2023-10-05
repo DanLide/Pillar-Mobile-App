@@ -4,7 +4,6 @@ import {
   FacilityProductResponse,
   SupplierResponse,
 } from '../../../data/api/productsAPI';
-import masterLockStore from '../../../stores/MasterLockStore';
 
 export class StockStore {
   @observable stocks: StockModel[];
@@ -72,7 +71,7 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
-  deviceId: string; 
+  deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
   accessProfile: string;
