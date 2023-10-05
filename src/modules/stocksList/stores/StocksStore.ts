@@ -1,10 +1,11 @@
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { find, pipe, prop, propEq, whereEq } from 'ramda';
+
 import {
   CategoryResponse,
   FacilityProductResponse,
   SupplierResponse,
 } from '../../../data/api/productsAPI';
-import masterLockStore from '../../../stores/MasterLockStore';
 
 export class StockStore {
   @observable stocks: StockModel[];
@@ -21,6 +22,22 @@ export class StockStore {
     this.enabledSuppliers = [];
 
     makeObservable(this);
+  }
+
+  @computed get getSupplierNameById() {
+    return (supplierId: number): string | undefined =>
+      pipe(
+        find(propEq('partyRoleId', supplierId)),
+        prop('name'),
+      )(this.suppliers);
+  }
+
+  @computed get getSupplierIdByUpc() {
+    return (upc: string) =>
+      pipe(
+        find(whereEq({ upc })),
+        prop('supplierPartyRoleId'),
+      )(this.facilityProducts);
   }
 
   @action setStocks(stocks: StockModel[]) {
@@ -72,7 +89,7 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
-  deviceId: string; 
+  deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
   accessProfile: string;

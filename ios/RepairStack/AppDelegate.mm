@@ -11,29 +11,36 @@
   [FIRApp configure];
   self.moduleName = @"RepairStack";
   
-  NSString *appIdentifierPrefix =
-  [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppIdentifierPrefix"];
-  NSString *group = [NSString stringWithFormat:@"%@share_keychain", appIdentifierPrefix];
+//  Uncomment this if you want to fetch data from groups.
+//  Add the following group into the XCode settings:
+//  group.globallogic.3m.repairstack.dev
+//
+//  NSString *appIdentifierPrefix =
+//  [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AppIdentifierPrefix"];
+//  NSString *group = [NSString stringWithFormat:@"%@share_keychain", appIdentifierPrefix];
+//
+//  // Read RN Token from the keychain
+//  NSDictionary *dict = @{
+//    (__bridge NSString *)kSecClass : (__bridge NSString *)kSecClassGenericPassword,
+//    (__bridge id)kSecReturnData : (id)kCFBooleanTrue,
+//    (__bridge id)kSecMatchLimit : (__bridge id)kSecMatchLimitOne,
+//    (__bridge NSString *)kSecAttrAccount : @"some_key",
+//    (__bridge id)kSecAttrAccessGroup : group
+//  };
+//
+//  CFTypeRef result = NULL;
+//  OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)dict,&result);
+//  NSString *keychainData = NULL;
+//  if( status != errSecSuccess) {
+//    keychainData = @"";
+//  } else {
+//    keychainData = [[NSString alloc] initWithData:(__bridge NSData *)result encoding:NSUTF8StringEncoding];
+//  }
+//
+//  self.initialProps = @{@"rntoken" : keychainData};
+// Remove the line below
+  self.initialProps = @{@"rntoken" : @""};
   
-  // Read RN Token from the keychain
-  NSDictionary *dict = @{
-    (__bridge NSString *)kSecClass : (__bridge NSString *)kSecClassGenericPassword,
-    (__bridge id)kSecReturnData : (id)kCFBooleanTrue,
-    (__bridge id)kSecMatchLimit : (__bridge id)kSecMatchLimitOne,
-    (__bridge NSString *)kSecAttrAccount : @"some_key",
-    (__bridge id)kSecAttrAccessGroup : group
-  };
-  
-  CFTypeRef result = NULL;
-  OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)dict,&result);
-  NSString *keychainData = NULL;
-  if( status != errSecSuccess) {
-    keychainData = @"";
-  } else {
-    keychainData = [[NSString alloc] initWithData:(__bridge NSData *)result encoding:NSUTF8StringEncoding];
-  }
-  
-  self.initialProps = @{@"rntoken" : keychainData};
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
   [RNSplashScreen show];

@@ -1123,6 +1123,25 @@ export const TransparentWarning = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const CautionSolidIcon = memo((props: SvgProps) => (
+  <Svg width={25} height={24} fill="none" {...props}>
+    <Path
+      fill="#FA9E3C"
+      fillRule="evenodd"
+      d="m12.463 15.952-.309-6.925h1.755l-.292 6.925h-1.154Zm1.6 2.078c0 .577-.477 1.047-1.064 1.047a1.056 1.056 0 1 1 0-2.11c.596 0 1.064.466 1.064 1.063ZM13 2 1.5 22h23L13 2Z"
+      clipRule="evenodd"
+    />
+    <Mask id="a" width={24} height={20} x={1} y={2} maskUnits="userSpaceOnUse">
+      <Path
+        fill="#fff"
+        fillRule="evenodd"
+        d="m12.463 15.952-.309-6.925h1.755l-.292 6.925h-1.154Zm1.6 2.078c0 .577-.477 1.047-1.064 1.047a1.056 1.056 0 1 1 0-2.11c.596 0 1.064.466 1.064 1.063ZM13 2 1.5 22h23L13 2Z"
+        clipRule="evenodd"
+      />
+    </Mask>
+  </Svg>
+));
+
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },
   iconAbsolute: { position: 'absolute', bottom: -3, right: -6 },

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
@@ -16,6 +16,11 @@ import { ordersStore } from './stores';
 import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
 import { find, whereEq } from 'ramda';
+import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import {
+  AppNavigator,
+  BaseProductsScreenNavigationProp,
+} from '../../navigation/types';
 
 const SCAN_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
@@ -25,7 +30,11 @@ const RECOMMENDED_PRODUCTS_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-export const CreateOrderScreen = observer(() => {
+interface Props {
+  navigation: BaseProductsScreenNavigationProp;
+}
+
+export const CreateOrderScreen = observer(({ navigation }: Props) => {
   const store = useRef(ordersStore).current;
 
   const scannedProductsCount = Object.keys(store.getProducts).length;
@@ -43,6 +52,17 @@ export const CreateOrderScreen = observer(() => {
     () => find(whereEq({ value: store.supplierId }), suppliers),
     [store.supplierId, suppliers],
   );
+
+  const onPressScan = useCallback(async () => {
+    const result = await check(PERMISSIONS.IOS.CAMERA);
+    if (result !== RESULTS.GRANTED) {
+      navigation.navigate(AppNavigator.CameraPermissionScreen, {
+        nextRoute: AppNavigator.ScannerScreen,
+      });
+      return;
+    }
+    navigation.navigate(AppNavigator.ScannerScreen);
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -86,6 +106,7 @@ export const CreateOrderScreen = observer(() => {
           textStyle={styles.scanText}
           buttonStyle={styles.buttonContainer}
           title="Scan"
+          onPress={onPressScan}
         />
         <Button
           disabled={!scannedProductsCount}

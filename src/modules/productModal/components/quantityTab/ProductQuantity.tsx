@@ -78,6 +78,9 @@ export const ProductQuantity = memo(
   }: Props) => {
     const jobNumber = product?.job?.jobNumber;
 
+    const isSpecialOrder =
+      product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
     const { showToast } = useSingleToast();
 
     useEffect(() => {
@@ -153,34 +156,38 @@ export const ProductQuantity = memo(
     const renderDescription = () => {
       switch (type) {
         case ProductModalType.ManageProduct:
-          return <Description product={product} />;
+          return null;
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
             </Text>
           );
         default:
-          return null;
+          return <Description product={product} />;
       }
     };
 
     const renderCostOfProduct = () => {
       switch (type) {
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
-            <View>
-              <View style={styles.quantity}>
-                <View>
-                  <Text style={styles.quantityTitle}>Minimum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.min}</Text>
+            <View style={styles.costOfProduct}>
+              {!isSpecialOrder && (
+                <View style={styles.quantity}>
+                  <View>
+                    <Text style={styles.quantityTitle}>Minimum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.min}</Text>
+                  </View>
+                  <Text style={styles.divider}>/</Text>
+                  <View>
+                    <Text style={styles.quantityTitle}>Maximum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.max}</Text>
+                  </View>
                 </View>
-                <Text style={styles.divider}>/</Text>
-                <View>
-                  <Text style={styles.quantityTitle}>Maximum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.max}</Text>
-                </View>
-              </View>
+              )}
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
                 Total Cost: $
@@ -306,9 +313,14 @@ const styles = StyleSheet.create({
     color: colors.grayDark2,
     textAlign: 'center',
   },
+  costOfProduct: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   quantity: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 8,
   },
   quantityTitle: {
     fontSize: 12,
@@ -329,7 +341,8 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     color: colors.grayDark3,
     textAlign: 'center',
-    margin: 16,
+    marginTop: 16,
+    marginHorizontal: 16,
   },
   cost: {
     width: '100%',

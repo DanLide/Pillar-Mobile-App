@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, computed } from 'mobx';
+import { action, makeObservable, observable, computed, override } from 'mobx';
 import { isNil } from 'ramda';
 
 import {
@@ -11,6 +11,8 @@ import { ProductModel } from '../../../stores/types';
 export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
 }
+
+const PRODUCT_MAX_COUNT = 9999;
 
 export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: CurrentOrder;
@@ -30,6 +32,14 @@ export class OrdersStore extends BaseProductsStore {
     return this.currentOrder?.productList.filter(
       product => product.stockLocationName === this.currentStockName,
     );
+  }
+
+  @override get getMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
+
+  @override get getEditableMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
   }
 
   @computed get getOrders() {
@@ -88,5 +98,10 @@ export class OrdersStore extends BaseProductsStore {
 
   @action setSupplier(supplierId?: number) {
     this.supplierId = supplierId;
+  }
+
+  @action clearCreateOrder() {
+    this.supplierId = undefined;
+    this.clear();
   }
 }

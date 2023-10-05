@@ -1,8 +1,8 @@
-import { Task, TaskExecutor } from './helpers';
-import { refreshTokenAPI } from './api';
+import { Task, TaskExecutor } from './helpers/taskExecutor';
 
 import { TokenData } from './login';
 import { authStore } from '../stores';
+import { refreshTokenAPI } from './api/refreshTokenAPI';
 
 export const refreshToken = async () => {
   const refreshTokenContext: TokenData = {};

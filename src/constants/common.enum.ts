@@ -276,12 +276,10 @@ export enum InventoryUseType {
 //   SignOutDuration = 1
 // }
 //
-// export enum OrderType {
-//   Purchase = 1,
-//   Return = 2,
-//
-//
-// }
+export enum OrderType {
+  Purchase = 1,
+  Return = 2,
+}
 //
 // export enum OrderMethodType {
 //   Auto = 1,

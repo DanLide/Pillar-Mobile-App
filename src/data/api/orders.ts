@@ -1,5 +1,4 @@
-import { OrderStatusType } from '../../constants/common.enum';
-import { ProductModel } from '../../stores/types';
+import { OrderStatusType, OrderType } from '../../constants/common.enum';
 import { URLProvider, tryAuthFetch } from '../helpers';
 
 export interface GetOrdersAPIResponse {
@@ -103,6 +102,7 @@ export interface OrderProductResponse {
   min: number;
   max: number;
   inventoryAssignmentTypeId: number;
+  errorMessage?: string;
 }
 
 export interface GetOrderSummaryProduct extends OrderProductResponse {
@@ -182,5 +182,24 @@ export const receiveOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
         'Content-Type': 'application/json',
       },
     },
+  });
+};
+
+export const getProductByOrderTypeAndSupplierAPI = (
+  scanCode: string,
+  supplierId: number,
+  stockId?: number,
+  orderType?: OrderType,
+) => {
+  const url = new URLProvider().getProductByOrderTypeAndSupplier(
+    scanCode,
+    supplierId,
+    stockId,
+    orderType,
+  );
+
+  return tryAuthFetch<GetOrderSummaryProduct>({
+    url,
+    request: { method: 'GET' },
   });
 };

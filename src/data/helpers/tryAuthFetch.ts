@@ -1,8 +1,8 @@
 import { tryFetch, TryFetchParams } from './tryFetch';
 import { GetAuthToken, getAuthToken } from './getAuthToken';
 import { assocPath } from 'ramda';
-import { refreshTokenAPI } from './refreshToken';
 import { getLogoutListener } from './getLogoutListener';
+import { refreshToken } from '../refreshToken';
 
 interface TryAuthFetchParams extends TryFetchParams {
   authToken?: GetAuthToken;
@@ -15,7 +15,7 @@ export const tryAuthFetch = async <ResponseType>({
   logoutListener = getLogoutListener(),
 }: TryAuthFetchParams) => {
   if (authToken.isTokenExpired) {
-    const error = await refreshTokenAPI();
+    const error = await refreshToken();
     if (error) {
       logoutListener.onServerLogout();
       return;

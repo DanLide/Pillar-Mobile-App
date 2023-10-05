@@ -32,6 +32,7 @@ export interface ProductModel
   tax?: number;
   storageAreaId?: number;
   stockLocationName?: string;
+  storageAreaName?: string;
 }
 
 export interface ClearStoreType {
