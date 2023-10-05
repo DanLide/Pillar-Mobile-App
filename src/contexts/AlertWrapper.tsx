@@ -1,5 +1,12 @@
-import React from 'react';
-import { View, Text, Modal, StyleSheet } from 'react-native';
+import React, { useMemo } from 'react';
+import {
+  View,
+  Text,
+  Modal,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 
 import { Button, ButtonType } from '../components';
 import { colors, fonts } from '../theme';
@@ -8,12 +15,14 @@ import { testIds } from '../helpers';
 type AlertWrapper = {
   children: React.ReactNode;
   visible: boolean;
-  message: string;
-  onPressPrimary: () => void;
-  onPressSecondary: () => void;
-  title?: string;
+  message: string | JSX.Element;
+  onPressPrimary?: () => void;
+  onPressSecondary?: () => void;
+  title?: string | JSX.Element;
   primaryTitle?: string;
   secondaryTitle?: string;
+  hideSecondary?: boolean;
+  alertContainerStyle?: StyleProp<ViewStyle>;
   testID?: string;
 };
 
@@ -26,24 +35,41 @@ const AlertWrapper: React.FC<AlertWrapper> = ({
   primaryTitle = 'Continue',
   secondaryTitle = 'Cancel',
   onPressSecondary,
+  hideSecondary,
+  alertContainerStyle,
   testID = 'alertWrapper',
 }) => {
+  const mergedAlertContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.alertContainer, alertContainerStyle],
+    [alertContainerStyle],
+  );
+
   return (
     <>
       {children}
       <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
         <View style={styles.container}>
-          <View style={styles.alertContainer}>
-            {title ? <Text style={styles.titleText}>{title}</Text> : null}
-            <Text style={styles.messageText}>{message}</Text>
+          <View style={mergedAlertContainerStyle}>
+            {typeof title === 'string' ? (
+              <Text style={styles.titleText}>{title}</Text>
+            ) : (
+              title
+            )}
+            {typeof message === 'string' ? (
+              <Text style={styles.messageText}>{message}</Text>
+            ) : (
+              message
+            )}
             <View style={styles.buttonsContainer}>
-              <Button
-                testID={testIds.idSecondaryButton(testID)}
-                type={ButtonType.secondary}
-                title={secondaryTitle}
-                buttonStyle={styles.buttonStyle}
-                onPress={onPressSecondary}
-              />
+              {!hideSecondary && (
+                <Button
+                  testID={testIds.idSecondaryButton(testID)}
+                  type={ButtonType.secondary}
+                  title={secondaryTitle}
+                  buttonStyle={styles.buttonStyle}
+                  onPress={onPressSecondary}
+                />
+              )}
               <Button
                 testID={testIds.idPrimaryButton(testID)}
                 type={ButtonType.primary}
@@ -86,10 +112,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 16,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    gap: 16,
+    justifyContent: 'space-between',
     width: '100%',
   },
   buttonStyle: {
+    flex: 1,
     paddingVertical: 8,
     paddingHorizontal: 16,
   },

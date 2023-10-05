@@ -15,7 +15,7 @@ interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
 }
 
-enum ProductByOrderTypeAndSupplierError {
+export enum ProductByOrderTypeAndSupplierError {
   NotAssignedToDistributor = 'NotAssignedToDistributor',
   NotAssignedToStock = 'NotAssignedToStock',
 }

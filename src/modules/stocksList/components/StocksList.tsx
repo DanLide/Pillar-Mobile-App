@@ -15,7 +15,7 @@ import { fetchStocks } from '../../../data/fetchStocks';
 import { StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
-import { AuthError, IBadRequestError } from '../../../data/helpers/tryFetch';
+import { AuthError, BadRequestError } from '../../../data/helpers/tryFetch';
 import masterLockStore from '../../../stores/MasterLockStore';
 import { autorun } from 'mobx';
 import { RoleType } from '../../../constants/common.enum';
@@ -24,7 +24,7 @@ interface Props {
   onPressItem: (stock: StockModel) => void;
   onFetchStocks?: (
     store: StockStore,
-  ) => Promise<void | IBadRequestError | AuthError>;
+  ) => Promise<void | BadRequestError | AuthError>;
 }
 
 const keyExtractor = (item: StockModel) => String(item.partyRoleId);
@@ -39,16 +39,18 @@ export const StocksList: React.FC<Props> = observer(
     useEffect(() => {
       autorun(() => {
         const initAllStocks = async () => {
-          await Promise.all(stocksStore.stocks.filter((stock) => {
-            if (stock.roleTypeId === RoleType.Cabinet) {
-              return masterLockStore.initMasterLockForStocks(stock)
-            }
-          }))
-          setIsLoading(false)
-        }
-        initAllStocks()
-      })
-    }, [])
+          await Promise.all(
+            stocksStore.stocks.filter(stock => {
+              if (stock.roleTypeId === RoleType.Cabinet) {
+                return masterLockStore.initMasterLockForStocks(stock);
+              }
+            }),
+          );
+          setIsLoading(false);
+        };
+        initAllStocks();
+      });
+    }, []);
 
     const handleFetchStocks = useCallback(async () => {
       setIsLoading(true);

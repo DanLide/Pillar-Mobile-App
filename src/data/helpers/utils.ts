@@ -1,5 +1,5 @@
 import { either, filter, isEmpty, isNil, map, not, pipe } from 'ramda';
-import { IBadRequestError, RequestError } from './tryFetch';
+import { BadRequestError, RequestError } from './tryFetch';
 
 export class Utils {
   static zeroToUndefined<Type>(value: Type) {
@@ -48,7 +48,7 @@ export class Utils {
 }
 
 export const isBadRequestError = (
-  error: RequestError | IBadRequestError | void,
-): error is IBadRequestError => {
-  return (error as IBadRequestError)?.error !== undefined;
+  error: RequestError | BadRequestError | void,
+): error is BadRequestError => {
+  return (error as BadRequestError)?.error !== undefined;
 };

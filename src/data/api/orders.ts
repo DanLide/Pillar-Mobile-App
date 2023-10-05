@@ -198,8 +198,6 @@ export const getProductByOrderTypeAndSupplierAPI = (
     orderType,
   );
 
-  console.log('url: ' + url);
-
   return tryAuthFetch<GetOrderSummaryProduct>({
     url,
     request: { method: 'GET' },

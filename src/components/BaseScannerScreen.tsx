@@ -11,7 +11,7 @@ import {
 } from '../stores/types';
 import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
-import { Utils } from '../data/helpers/utils';
+import { isBadRequestError, Utils } from '../data/helpers/utils';
 import {
   ProductModal,
   ProductModalParams,
@@ -20,7 +20,7 @@ import {
 import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
-import { RequestError } from '../data/helpers/tryFetch';
+import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
 import { useSingleToast } from '../hooks';
 
 type StoreModel = ScannerModalStoreType &
@@ -28,21 +28,23 @@ type StoreModel = ScannerModalStoreType &
   StockProductStoreType;
 
 export enum ScannerScreenError {
-  ProductNotFound,
-  ProductNotAssignedToStock,
-  NetworkRequestFailed,
+  ProductNotFound = 'ProductNotFound',
+  ProductNotAssignedToStock = 'ProductNotAssignedToStock',
+  NetworkRequestFailed = 'NetworkRequestFailed',
 }
 
 interface Props {
   store: StoreModel;
   modalParams: ProductModalParams;
   product?: ProductModel;
+  disableScanner?: boolean;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: (product: ProductModel) => void | unknown;
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;
   onFetchProduct?: (code: string) => Promise<void | RequestError>;
+  onBadRequestError?: (error: BadRequestError) => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
 }
 
@@ -60,12 +62,14 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     store,
     modalParams,
     product = store.getCurrentProduct,
+    disableScanner,
     onProductScan,
     onSubmit,
     onEditPress,
     onCancelPress,
     onCloseModal,
     onFetchProduct,
+    onBadRequestError,
     ProductModalComponent = ProductModal,
   }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
@@ -74,16 +78,20 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
     const scannedProducts = store.getProducts;
 
-    const onScanError = useCallback(
-      (error: ScannerScreenError) => {
+    const handleScanError = useCallback(
+      (error: ScannerScreenError | BadRequestError) => {
         setIsScannerActive(true);
 
-        showToast(scannerErrorMessages[error], {
+        if (typeof error !== 'string') {
+          return onBadRequestError?.(error);
+        }
+
+        return showToast(scannerErrorMessages[error], {
           type: ToastType.ScanError,
           duration: 0,
         });
       },
-      [showToast],
+      [onBadRequestError, showToast],
     );
 
     const fetchProductByCode = useCallback(
@@ -93,9 +101,11 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           : await fetchProductByScannedCode(store, btoa(code));
 
         if (networkError) {
-          return onScanError?.(
+          return handleScanError?.(
             Utils.isNetworkError(networkError)
               ? ScannerScreenError.NetworkRequestFailed
+              : isBadRequestError(networkError)
+              ? networkError
               : ScannerScreenError.ProductNotFound,
           );
         }
@@ -103,13 +113,13 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         const product = store.getCurrentProduct;
 
         if (!product) {
-          onScanError?.(ScannerScreenError.ProductNotAssignedToStock);
+          handleScanError?.(ScannerScreenError.ProductNotAssignedToStock);
           return;
         }
 
         onProductScan?.(product);
       },
-      [onFetchProduct, store, onScanError, onProductScan],
+      [onFetchProduct, store, onProductScan, handleScanError],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onScan']>(
@@ -119,10 +129,10 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         if (typeof code === 'string') {
           await fetchProductByCode(code);
         } else {
-          onScanError?.(ScannerScreenError.ProductNotFound);
+          handleScanError?.(ScannerScreenError.ProductNotFound);
         }
       },
-      [fetchProductByCode, onScanError],
+      [fetchProductByCode, handleScanError],
     );
 
     const onProductSubmit = useCallback(
@@ -173,7 +183,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         />
         <ScanProduct
           onScan={onScanProduct}
-          isActive={isScannerActive}
+          isActive={!disableScanner && isScannerActive}
           scannedProductCount={scannedProducts.length}
         />
         <ProductModalComponent
