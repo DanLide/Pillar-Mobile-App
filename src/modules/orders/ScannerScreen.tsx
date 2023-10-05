@@ -10,7 +10,6 @@ import {
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { ordersStore } from './stores';
-import { isBadRequestError } from '../../data/helpers/utils';
 import AlertWrapper from '../../contexts/AlertWrapper';
 import { BadRequestError } from '../../data/helpers/tryFetch';
 import { colors, fonts, SVGs } from '../../theme';
@@ -87,8 +86,8 @@ export const ScannerScreen: React.FC = observer(() => {
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
       setModalParams({
-        type: ProductModalType.ReceiveOrder,
-        maxValue: store.getMaxValue(product),
+        type: ProductModalType.CreateOrder,
+        maxValue: store.getMaxValue(),
         onHand: store.getOnHand(product),
       }),
     [store],

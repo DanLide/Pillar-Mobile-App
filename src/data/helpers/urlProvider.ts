@@ -140,7 +140,7 @@ export class URLProvider {
     );
   }
 
-  getProductSettingsById(productId: number, currentStock?: StockModel) {
+  getProductSettingsById(productId?: number, currentStock?: StockModel) {
     const partyRoleID = currentStock?.partyRoleId;
 
     return new URL(
@@ -156,7 +156,7 @@ export class URLProvider {
     );
   }
 
-  getEnabledSuppliersByProductId(productId: number) {
+  getEnabledSuppliersByProductId(productId?: number) {
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/GetSupplierListByProductID/${productId}/true`,
     );

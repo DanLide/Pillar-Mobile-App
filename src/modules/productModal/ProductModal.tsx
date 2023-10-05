@@ -25,6 +25,7 @@ export enum ProductModalType {
   CreateInvoice,
   ManageProduct,
   ReceiveOrder,
+  CreateOrder,
   Hidden,
 }
 
@@ -60,6 +61,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
     case ProductModalType.Return:
     case ProductModalType.CreateInvoice:
     case ProductModalType.ReceiveOrder:
+    case ProductModalType.CreateOrder:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -183,7 +185,10 @@ export const ProductModal = memo(
     const title = useMemo<string | JSX.Element>(() => {
       switch (selectedTab) {
         case Tabs.EditQuantity: {
-          if (type === ProductModalType.ReceiveOrder) {
+          if (
+            type === ProductModalType.ReceiveOrder ||
+            type === ProductModalType.CreateOrder
+          ) {
             return (
               <Text style={styles.title} ellipsizeMode="middle">
                 {product?.product}

@@ -11,6 +11,8 @@ interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
 }
 
+const PRODUCT_MAX_COUNT = 9999;
+
 export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: CurrentOrder;
   @observable orders?: GetOrdersAPIResponse[];
@@ -22,6 +24,14 @@ export class OrdersStore extends BaseProductsStore {
     this.orders = undefined;
     this.supplierId = undefined;
     makeObservable(this);
+  }
+
+  @override get getMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
+
+  @override get getEditableMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
   }
 
   @computed get getOrders() {
@@ -70,7 +80,8 @@ export class OrdersStore extends BaseProductsStore {
     this.supplierId = supplierId;
   }
 
-  @override clear() {
+  @action clearCreateOrder() {
     this.supplierId = undefined;
+    this.clear();
   }
 }

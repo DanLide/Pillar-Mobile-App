@@ -58,14 +58,14 @@ export class FetchProductDetails extends Task {
 
     const product = await getFetchProductAPI(this.scanCode, currentStock);
 
+    if (!product) return;
+
     const { productId } = product;
 
-    const [settings, enabledSuppliers] = await Promise.all([
+    const [settings, enabledSuppliers = []] = await Promise.all([
       getProductSettingsByIdAPI(productId, currentStock),
       getEnabledSuppliersByProductIdAPI(productId),
     ]);
-
-    const { max, min, replenishedFormId } = settings;
 
     const orderMultiple = pipe(
       find(whereEq({ productId })),
@@ -73,15 +73,15 @@ export class FetchProductDetails extends Task {
     )(stocksStore.facilityProducts);
 
     const restockFromId =
-      replenishedFormId ||
+      settings?.replenishedFormId ||
       find(whereEq({ name: 'Distributor' }), enabledSuppliers)?.partyRoleId;
 
     this.productContext.enabledSuppliers = enabledSuppliers;
 
     this.productContext.product = {
       ...product,
-      max,
-      min,
+      max: settings?.max,
+      min: settings?.min,
       orderMultiple,
       replenishedFormId: restockFromId,
     };

@@ -151,7 +151,7 @@ export const getCategoriesByFacilityIdAPI = () => {
 };
 
 export const getProductSettingsByIdAPI = (
-  productId: number,
+  productId?: number,
   currentStock?: StockModel,
 ) => {
   const url = new URLProvider().getProductSettingsById(productId, currentStock);
@@ -171,7 +171,7 @@ export const getSupplierListByFacilityIdAPI = () => {
   });
 };
 
-export const getEnabledSuppliersByProductIdAPI = (productId: number) => {
+export const getEnabledSuppliersByProductIdAPI = (productId?: number) => {
   const url = new URLProvider().getEnabledSuppliersByProductId(productId);
 
   return tryAuthFetch<SupplierResponse[]>({

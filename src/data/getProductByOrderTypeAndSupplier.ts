@@ -1,4 +1,5 @@
 import { v1 as uuid } from 'uuid';
+import { encode as btoa } from 'base-64';
 
 import { getProductStepQty, Task, TaskExecutor } from './helpers';
 import { CurrentProductStoreType, ProductModel } from '../stores/types';
@@ -7,9 +8,10 @@ import {
   GetOrderSummaryProduct,
   getProductByOrderTypeAndSupplierAPI,
 } from './api/orders';
-import { getFetchProductByFacilityIdAPI } from './api';
+import { getFetchProductAPI, getFetchProductByFacilityIdAPI } from './api';
 import { BadRequestError } from './helpers/tryFetch';
 import { stocksStore } from '../modules/stocksList/stores';
+import { getProductSettingsByIdAPI } from './api/productsAPI';
 
 interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
@@ -80,14 +82,32 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       productSupplier,
     );
 
-    if (product?.storageAreaId !== this.store.currentStock?.partyRoleId) {
+    if (!product) return;
+
+    const { productId, storageAreaId } = product;
+
+    const currentStock = this.store.currentStock;
+
+    if (storageAreaId !== currentStock?.partyRoleId) {
       throw new BadRequestError(
         ProductByOrderTypeAndSupplierError.NotAssignedToStock,
         product?.storageAreaName,
       );
     }
 
-    this.productContext.product = product;
+    const [productDetails, settings] = await Promise.all([
+      getFetchProductAPI(btoa(this.scanCode), currentStock),
+      getProductSettingsByIdAPI(productId, currentStock),
+    ]);
+
+    this.productContext.product = {
+      ...product,
+      unitsPer: productDetails?.unitPer ?? 0,
+      onHand: productDetails?.onHand ?? 0,
+      onOrder: productDetails?.onOrder ?? 0,
+      max: settings?.max ?? 0,
+      min: settings?.min ?? 0,
+    };
   }
 }
 

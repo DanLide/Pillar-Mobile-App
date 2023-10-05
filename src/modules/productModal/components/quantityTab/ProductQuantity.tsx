@@ -78,6 +78,9 @@ export const ProductQuantity = memo(
   }: Props) => {
     const jobNumber = product?.job?.jobNumber;
 
+    const isSpecialOrder =
+      product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
     const { showToast } = useSingleToast();
 
     useEffect(() => {
@@ -155,6 +158,7 @@ export const ProductQuantity = memo(
         case ProductModalType.ManageProduct:
           return null;
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
@@ -168,22 +172,26 @@ export const ProductQuantity = memo(
     const renderCostOfProduct = () => {
       switch (type) {
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
             <View>
-              <View style={styles.quantity}>
-                <View>
-                  <Text style={styles.quantityTitle}>Minimum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.min}</Text>
+              {!isSpecialOrder && (
+                <View style={styles.quantity}>
+                  <View>
+                    <Text style={styles.quantityTitle}>Minimum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.min}</Text>
+                  </View>
+                  <Text style={styles.divider}>/</Text>
+                  <View>
+                    <Text style={styles.quantityTitle}>Maximum Quantity</Text>
+                    <Text style={styles.quantityValue}>{product.max}</Text>
+                  </View>
                 </View>
-                <Text style={styles.divider}>/</Text>
-                <View>
-                  <Text style={styles.quantityTitle}>Maximum Quantity</Text>
-                  <Text style={styles.quantityValue}>{product.max}</Text>
-                </View>
-              </View>
+              )}
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
-                Total Cost: ${(product.cost || 0) * (product.receivedQty || 0)}
+                Total Cost: $
+                {(product.cost || 0) * (product.reservedCount || 0)}
               </Text>
             </View>
           );
