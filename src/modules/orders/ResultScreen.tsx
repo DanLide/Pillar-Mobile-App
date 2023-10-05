@@ -6,6 +6,8 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
+import { isNil } from 'ramda';
+
 import {
   Button,
   ButtonType,
@@ -34,12 +36,8 @@ export const ResultScreen = ({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => {
-    if (
-      !item.orderedQty ||
-      !item.receivedQty ||
-      item.orderedQty - item.receivedQty === 0
-    )
-      return null;
+    if (isNil(item.receivedQty) || isNil(item.reservedCount)) return null;
+
     return (
       <View style={styles.item}>
         <View style={styles.description}>
@@ -47,7 +45,9 @@ export const ResultScreen = ({ navigation }: Props) => {
           <Text style={styles.itemSize}> {item.size}</Text>
         </View>
         <View style={styles.quantity}>
-          <Text style={styles.itemName}>{item.receivedQty}</Text>
+          <Text style={styles.itemName}>
+            {item.receivedQty + item.reservedCount}
+          </Text>
           <Text style={styles.ordered}>/{item.orderedQty}</Text>
         </View>
       </View>
@@ -79,7 +79,7 @@ export const ResultScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Primary}
-        title={ordersStoreRef.currentOrder?.order.orderArea}
+        title={ordersStoreRef.currentStockName}
       />
 
       <View style={styles.titleContainer}>
@@ -105,7 +105,7 @@ export const ResultScreen = ({ navigation }: Props) => {
         </View>
         <FlatList
           style={styles.flatList}
-          data={ordersStoreRef.currentOrder?.productList}
+          data={ordersStoreRef.getCurrentProductsByStockName}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}

@@ -31,6 +31,7 @@ export interface ProductModel
   consignmentQty?: number;
   tax?: number;
   storageAreaId?: number;
+  stockLocationName?: string;
   storageAreaName?: string;
 }
 

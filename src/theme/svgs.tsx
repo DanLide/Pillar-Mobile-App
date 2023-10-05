@@ -1112,6 +1112,17 @@ export const BluetoothIconDisconnected = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const TransparentWarning = memo((props: SvgProps) => (
+  <Svg width={15} height={14} fill="none" {...props}>
+    <Path
+      fill="#9657D9"
+      fillRule="evenodd"
+      d="M13.414 12.332 7.813 2.591 2.21 12.332h11.203ZM.625 13.25 7.813.75 15 13.25H.625Zm7.574-3.78L8.38 5.14H7.284l.193 4.329H8.2Zm-.387.634a.66.66 0 1 0 0 1.319.66.66 0 1 0 0-1.32Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const CautionSolidIcon = memo((props: SvgProps) => (
   <Svg width={25} height={24} fill="none" {...props}>
     <Path

@@ -126,7 +126,7 @@ export interface GetOrderStorageAreaResponse {
 }
 
 export interface ReceiveOrderRequestProduct {
-  number: string;
+  number?: string;
   orderDetailId: number;
   partyRoleId: number;
   productId: number;

@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16,
     paddingVertical: 16,
+    alignItems: 'center',
   },
   orderNumberContainer: {
     minWidth: '20%',
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
   },
   distributorContainer: {
     flex: 1,
+    paddingRight: 8,
   },
   distributorName: {
     fontSize: 11,
@@ -67,5 +69,7 @@ const styles = StyleSheet.create({
     color: colors.grayDark,
     fontFamily: fonts.TT_Regular,
   },
-  statusContainer: {},
+  statusContainer: {
+    flex: 0,
+  },
 });

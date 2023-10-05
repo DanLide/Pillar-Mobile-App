@@ -8,6 +8,10 @@ import {
   Pressable,
   Alert,
 } from 'react-native';
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
+import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
+import { isNil } from 'ramda';
+
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
 import {
@@ -21,9 +25,7 @@ import {
   LeftBarType,
   OrdersParamsList,
 } from '../../navigation/types';
-import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { getScreenOptions } from '../../navigation/helpers';
-import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
 import {
   ProductModal,
   ProductModalParams,
@@ -54,19 +56,20 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const [isProductsMissingModal, setIsProductsMissingModal] =
     useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
-  const { currentOrder } = ordersStoreRef;
+  const { currentOrder, getCurrentProductsByStockName } = ordersStoreRef;
+  const stockName =
+    getCurrentProductsByStockName &&
+    getCurrentProductsByStockName[0].stockLocationName;
 
-  const renderHeader = () => {
-    return (
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Product</Text>
-        <Text style={[styles.headerText, styles.headerCenter]}>
-          Received/Ordered
-        </Text>
-        <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
-      </View>
-    );
-  };
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <Text style={styles.headerText}>Product</Text>
+      <Text style={[styles.headerText, styles.headerCenter]}>
+        Received/Ordered
+      </Text>
+      <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
+    </View>
+  );
 
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => (
     <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
@@ -82,11 +85,10 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         <Text style={styles.boldText}>{item.receivedQty}</Text>/
         {item.orderedQty}
       </Text>
-      <Text style={styles.itemReceiving}>
-        +{(item.receivedQty || 0) > 0 ? item.receivedQty : item.shippedQty}
-      </Text>
+      <Text style={styles.itemReceiving}>+{item.reservedCount}</Text>
     </Pressable>
   );
+
   useEffect(() => {
     if (currentOrder?.order.orderId) {
       navigation.setOptions(
@@ -99,10 +101,11 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   }, [currentOrder, navigation]);
 
   const onSelectProduct = (item: ProductModel) => {
+    if (isNil(item.orderedQty) || isNil(item.receivedQty)) return;
+
     setModalParams({
       type: ProductModalType.ReceiveOrder,
-      maxValue: item.orderedQty,
-      onHand: item.receivedQty,
+      maxValue: item.orderedQty - item.receivedQty,
       currentProduct: item,
     });
   };
@@ -142,7 +145,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const onChangeProductQuantity = (quantity: number) => {
     if (!modalParams.currentProduct) return;
 
-    const product = { ...modalParams.currentProduct, receivedQty: quantity };
+    const product = { ...modalParams.currentProduct, reservedCount: quantity };
 
     setModalParams({
       ...modalParams,
@@ -152,13 +155,10 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.container}>
-      <InfoTitleBar
-        type={InfoTitleBarType.Primary}
-        title={currentOrder?.order.orderArea}
-      />
+      <InfoTitleBar type={InfoTitleBarType.Primary} title={stockName} />
       {renderHeader()}
       <FlatList
-        data={currentOrder?.productList}
+        data={getCurrentProductsByStockName}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
@@ -173,7 +173,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       </View>
       <ProductModal
         {...modalParams}
-        stockName={currentOrder?.order.orderArea}
+        stockName={stockName}
         product={modalParams.currentProduct}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
@@ -242,9 +242,6 @@ const styles = StyleSheet.create({
     height: 1,
     width: '100%',
     backgroundColor: colors.neutral30,
-  },
-  receivingContainer: {
-    flexDirection: 'row',
   },
   itemOrdered: {
     fontSize: 12,

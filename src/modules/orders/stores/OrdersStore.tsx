@@ -1,4 +1,5 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
+import { isNil } from 'ramda';
 
 import {
   GetOrderDetailsResponse,
@@ -7,7 +8,7 @@ import {
 import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 import { ProductModel } from '../../../stores/types';
 
-interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
+export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
 }
 
@@ -17,6 +18,7 @@ export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: CurrentOrder;
   @observable orders?: GetOrdersAPIResponse[];
   @observable supplierId?: number;
+  @observable currentStockName?: string;
 
   constructor() {
     super();
@@ -24,6 +26,12 @@ export class OrdersStore extends BaseProductsStore {
     this.orders = undefined;
     this.supplierId = undefined;
     makeObservable(this);
+  }
+
+  @computed get getCurrentProductsByStockName() {
+    return this.currentOrder?.productList.filter(
+      product => product.stockLocationName === this.currentStockName,
+    );
   }
 
   @override get getMaxValue() {
@@ -44,7 +52,15 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
-      if ((item.orderedQty ?? 0) - (item.receivedQty ?? 0) !== 0) acc = true;
+      if (
+        isNil(item.orderedQty) ||
+        isNil(item.receivedQty) ||
+        isNil(item.reservedCount)
+      )
+        return acc;
+
+      if (item.orderedQty - (item.receivedQty + item.reservedCount) !== 0)
+        acc = true;
       return acc;
     }, false);
     return !!isMissing;
@@ -62,6 +78,10 @@ export class OrdersStore extends BaseProductsStore {
     if (this.currentOrder) {
       this.currentOrder.productList = products;
     }
+  }
+
+  @action setSelectedProductsByStock(stockName: string) {
+    this.currentStockName = stockName;
   }
 
   @action updateCurrentOrderProduct(product: ProductModel) {

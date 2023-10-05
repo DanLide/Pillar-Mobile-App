@@ -1,4 +1,4 @@
-import { clone } from 'ramda';
+import { clone, isNil } from 'ramda';
 
 import { Task } from './helpers';
 import {
@@ -50,7 +50,12 @@ class FetchOrderSummaryDetails extends Task {
           storage.partyRoleId,
         );
         if (response?.productList) {
-          this.context.orderProductsByArea.push(response.productList);
+          if (
+            response.productList[0].storageAreaName ===
+            this.ordersStore.currentStockName
+          ) {
+            this.context.orderProductsByArea.push(response.productList);
+          }
         } else {
           throw Error('Request failed!');
         }
@@ -76,23 +81,18 @@ class ReceiveProductTask extends Task {
       this.ordersStore.currentOrder?.productList,
     );
     const { orderProductsByArea } = this.context;
-
-    if (
-      !currentOrderProducts?.length ||
-      typeof this.ordersStore.currentOrder?.order.customPONumber !== 'string'
-    )
-      throw Error('Request failed!');
+    if (!currentOrderProducts?.length) throw Error('Request failed!');
 
     for (const products of orderProductsByArea) {
       const requestProduct = products.map((product: GetOrderSummaryProduct) => {
-        const receivedQty = currentOrderProducts.find(
-          orderProduct => orderProduct.productId === product.productId,
+        const selectedProduct = currentOrderProducts.find(
+          orderProduct =>
+            orderProduct.productId === product.productId &&
+            orderProduct.stockLocationName ===
+              this.ordersStore.currentStockName,
         );
 
-        if (
-          typeof receivedQty?.receivedQty !== 'number' ||
-          !this.ordersStore.currentOrder?.order.customPONumber
-        )
+        if (isNil(selectedProduct?.reservedCount))
           throw Error('Request failed!');
         return {
           number: this.ordersStore.currentOrder?.order.customPONumber,
@@ -101,7 +101,7 @@ class ReceiveProductTask extends Task {
           productId: product.productId,
           transactionTypeId: TransactionType.Order,
           unitCost: product.cost,
-          quantityReceived: receivedQty.receivedQty - product.receivedQty,
+          quantityReceived: selectedProduct?.reservedCount,
         };
       });
 
