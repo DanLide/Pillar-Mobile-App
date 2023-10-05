@@ -31,6 +31,7 @@ export interface ProductModel
   consignmentQty?: number;
   tax?: number;
   storageAreaId?: number;
+  storageAreaName?: string;
 }
 
 export interface ClearStoreType {

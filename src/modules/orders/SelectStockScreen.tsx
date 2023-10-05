@@ -7,7 +7,6 @@ import { observer } from 'mobx-react';
 import { RESULTS } from 'react-native-permissions';
 
 import { AppNavigator, OrdersParamsList } from '../../navigation/types';
-import { ClearStoreType, StockProductStoreType } from '../../stores/types';
 import { StockModel, StockStore } from '../stocksList/stores/StocksStore';
 import { StocksList } from '../stocksList/components/StocksList';
 import { ordersStore } from './stores';
@@ -16,76 +15,73 @@ import { useSingleToast } from '../../hooks';
 import { getToastDuration, ToastContextProvider } from '../../contexts';
 import { ToastType } from '../../contexts/types';
 import permissionStore from '../permissions/stores/PermissionStore';
+
 interface Props {
   navigation: NativeStackNavigationProp<
     OrdersParamsList,
     AppNavigator.SelectStockScreen
   >;
-  route: RouteProp<OrdersParamsList, AppNavigator.SelectStockScreen>
+  route: RouteProp<OrdersParamsList, AppNavigator.SelectStockScreen>;
 }
 
-type Store = StockProductStoreType & ClearStoreType;
+const SelectStockScreenBody: React.FC<Props> = observer(
+  ({ navigation, route }) => {
+    const store = useRef(ordersStore).current;
+    const isFocused = useIsFocused();
+    const succeedBluetooth = route.params?.succeedBluetooth;
+    const { showToast } = useSingleToast();
 
-const SelectStockScreenBody: React.FC<Props> = observer(({ navigation, route }) => {
-  const store = useRef<Store>(ordersStore).current;
-  const isFocused = useIsFocused();
-  const succeedBluetooth = route.params?.succeedBluetooth;
-  const { showToast } = useSingleToast();
-
-  useEffect(() => {
-    if (succeedBluetooth) {
-      showToast('Bluetooth successfully connected',
-        { type: ToastType.BluetoothEnabled },
-      )
-      return
-    }
-    autorun(() => {
-      if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
-        showToast('Bluetooth not connected',
-          {
-            type: ToastType.BluetoothDisabled,
-            onPress: () => { permissionStore.openSetting() },
-            duration: getToastDuration(ToastType.BluetoothDisabled),
-          },
-        )
+    useEffect(() => {
+      if (succeedBluetooth) {
+        showToast('Bluetooth successfully connected', {
+          type: ToastType.BluetoothEnabled,
+        });
+        return;
       }
-    })
-  }, [
-    showToast,
-    navigation,
-    succeedBluetooth,
-  ]);
+      autorun(() => {
+        if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
+          showToast('Bluetooth not connected', {
+            type: ToastType.BluetoothDisabled,
+            onPress: () => {
+              permissionStore.openSetting();
+            },
+            duration: getToastDuration(ToastType.BluetoothDisabled),
+          });
+        }
+      });
+    }, [showToast, navigation, succeedBluetooth]);
 
-  useEffect(() => {
-    if (isFocused) {
-      store.clear();
-    }
-  }, [isFocused, store]);
+    useEffect(() => {
+      if (isFocused) {
+        store.clearCreateOrder();
+      }
+    }, [isFocused, store]);
 
-  const onItemPress = (stock: StockModel) => {
-    store.setCurrentStocks(stock);
-    navigation.navigate(AppNavigator.CreateOrderScreen);
-  };
+    const onItemPress = (stock: StockModel) => {
+      store.setCurrentStocks(stock);
+      navigation.navigate(AppNavigator.CreateOrderScreen);
+    };
 
-  const fetchStocks = useCallback(
-    (store: StockStore) => fetchOrdersStocks(store),
-    [],
-  );
+    const fetchStocks = useCallback(
+      (store: StockStore) => fetchOrdersStocks(store),
+      [],
+    );
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <StocksList onFetchStocks={fetchStocks} onPressItem={onItemPress} />
-    </SafeAreaView>
-  );
-});
+    return (
+      <SafeAreaView style={styles.container}>
+        <StocksList onFetchStocks={fetchStocks} onPressItem={onItemPress} />
+      </SafeAreaView>
+    );
+  },
+);
 
-export const SelectStockScreen: React.FC<Props> = (props) => {
+export const SelectStockScreen: React.FC<Props> = props => {
   return (
     <ToastContextProvider>
       <SelectStockScreenBody {...props} />
     </ToastContextProvider>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

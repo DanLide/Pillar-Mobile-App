@@ -78,6 +78,9 @@ export const ProductQuantity = memo(
   }: Props) => {
     const jobNumber = product?.job?.jobNumber;
 
+    const isSpecialOrder =
+      product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
     const { showToast } = useSingleToast();
 
     useEffect(() => {
@@ -155,6 +158,7 @@ export const ProductQuantity = memo(
         case ProductModalType.ManageProduct:
           return null;
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
@@ -166,14 +170,12 @@ export const ProductQuantity = memo(
     };
 
     const renderCostOfProduct = () => {
-      const isSpecialOrder =
-        product?.inventoryUseTypeId === InventoryUseType.NonStock;
-
       switch (type) {
         case ProductModalType.ReceiveOrder:
+        case ProductModalType.CreateOrder:
           return (
             <View style={styles.costOfProduct}>
-              {isSpecialOrder ? null : (
+              {!isSpecialOrder && (
                 <View style={styles.quantity}>
                   <View>
                     <Text style={styles.quantityTitle}>Minimum Quantity</Text>
@@ -188,7 +190,8 @@ export const ProductQuantity = memo(
               )}
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
-                Total Cost: ${(product.cost || 0) * (product.receivedQty || 0)}
+                Total Cost: $
+                {(product.cost || 0) * (product.reservedCount || 0)}
               </Text>
             </View>
           );

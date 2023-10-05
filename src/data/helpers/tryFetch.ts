@@ -2,10 +2,16 @@ import { is } from 'ramda';
 
 import { getLogoutListener } from './getLogoutListener';
 
-export interface BadRequestError {
+export class BadRequestError extends Error {
   error?: string;
   error_description?: string;
-  message?: string;
+
+  constructor(error: string, error_description?: string) {
+    super(error);
+
+    this.error = error;
+    this.error_description = error_description;
+  }
 }
 
 export class AuthError extends Error {}

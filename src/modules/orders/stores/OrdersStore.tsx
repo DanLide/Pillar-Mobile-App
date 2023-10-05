@@ -1,4 +1,4 @@
-import { action, makeObservable, observable, computed } from 'mobx';
+import { action, makeObservable, observable, computed, override } from 'mobx';
 
 import {
   GetOrderDetailsResponse,
@@ -10,6 +10,8 @@ import { ProductModel } from '../../../stores/types';
 interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
 }
+
+const PRODUCT_MAX_COUNT = 9999;
 
 export class OrdersStore extends BaseProductsStore {
   @observable currentOrder?: CurrentOrder;
@@ -24,6 +26,14 @@ export class OrdersStore extends BaseProductsStore {
     makeObservable(this);
   }
 
+  @override get getMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
+
+  @override get getEditableMaxValue() {
+    return () => PRODUCT_MAX_COUNT;
+  }
+
   @computed get getOrders() {
     return this.orders;
   }
@@ -34,7 +44,7 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
-      if (item.orderedQty - item.receivedQty !== 0) acc = true;
+      if ((item.orderedQty ?? 0) - (item.receivedQty ?? 0) !== 0) acc = true;
       return acc;
     }, false);
     return !!isMissing;
@@ -68,5 +78,10 @@ export class OrdersStore extends BaseProductsStore {
 
   @action setSupplier(supplierId?: number) {
     this.supplierId = supplierId;
+  }
+
+  @action clearCreateOrder() {
+    this.supplierId = undefined;
+    this.clear();
   }
 }

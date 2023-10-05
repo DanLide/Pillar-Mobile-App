@@ -36,6 +36,21 @@ export const StocksList: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
 
+    useEffect(() => {
+      autorun(() => {
+        const initAllStocks = async () => {
+          await Promise.all(
+            stocksStore.stocks.filter(stock => {
+              if (stock.roleTypeId === RoleType.Cabinet) {
+                return masterLockStore.initMasterLockForStocks(stock);
+              }
+            }),
+          );
+          setIsLoading(false);
+        };
+        initAllStocks();
+      });
+    }, []);
 
     const handleFetchStocks = useCallback(async () => {
       setIsLoading(true);
@@ -63,19 +78,24 @@ export const StocksList: React.FC<Props> = observer(
       handleFetchStocks();
       autorun(() => {
         const setupMasterLock = async () => {
-          if (!stocksStore.stocks.length) return
-          const cabinets = stocksStore.stocks.filter(stock => stock.roleTypeId === RoleType.Cabinet);
+          if (!stocksStore.stocks.length) return;
+          const cabinets = stocksStore.stocks.filter(
+            stock => stock.roleTypeId === RoleType.Cabinet,
+          );
 
-          Promise.all(cabinets.map((stock) => {
-            if (stock.roleTypeId === RoleType.Cabinet) {
-              return masterLockStore.initMasterLockForStocks(stock)
-            }
-          })).finally(() => { setIsLoading(false) })
-        }
-        setupMasterLock()
-      })
-    }, [handleFetchStocks])
-
+          Promise.all(
+            cabinets.map(stock => {
+              if (stock.roleTypeId === RoleType.Cabinet) {
+                return masterLockStore.initMasterLockForStocks(stock);
+              }
+            }),
+          ).finally(() => {
+            setIsLoading(false);
+          });
+        };
+        setupMasterLock();
+      });
+    }, [handleFetchStocks]);
 
     if (isLoading) {
       return <ActivityIndicator size="large" />;

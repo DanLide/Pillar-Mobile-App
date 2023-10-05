@@ -2,24 +2,36 @@ import { Task, TaskExecutor } from './helpers';
 import { getFetchStockAPI } from './api';
 
 import {
+  FacilityProductModel,
   StockModel,
   StockStore,
   SupplierModel,
 } from '../modules/stocksList/stores/StocksStore';
-import { getSupplierListByFacilityIdAPI } from './api/productsAPI';
+import {
+  getFacilityProducts,
+  getSupplierListByFacilityIdAPI,
+} from './api/productsAPI';
 import { any, isEmpty } from 'ramda';
 
 interface FetchStocksContext {
   stocks: StockModel[];
   suppliers: SupplierModel[];
+  facilityProducts: FacilityProductModel[];
 }
 
 export const fetchOrdersStocks = async (stocksStore: StockStore) => {
   const stocksContext: FetchStocksContext = {
     stocks: [],
     suppliers: [],
+    facilityProducts: [],
   };
-  if (any(isEmpty, [stocksStore.stocks, stocksStore.suppliers])) {
+  if (
+    any(isEmpty, [
+      stocksStore.stocks,
+      stocksStore.suppliers,
+      stocksStore.facilityProducts,
+    ])
+  ) {
     return new TaskExecutor([
       new FetchManageProductStocksTask(stocksContext),
       new SaveStocksToStore(stocksContext, stocksStore),
@@ -36,13 +48,15 @@ export class FetchManageProductStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const [stocks, suppliers] = await Promise.all([
+    const [stocks, suppliers, facilityProducts] = await Promise.all([
       getFetchStockAPI(),
       getSupplierListByFacilityIdAPI(),
+      getFacilityProducts(),
     ]);
 
     this.fetchStocksContext.stocks = stocks ?? [];
     this.fetchStocksContext.suppliers = suppliers ?? [];
+    this.fetchStocksContext.facilityProducts = facilityProducts ?? [];
   }
 }
 
@@ -57,9 +71,10 @@ export class SaveStocksToStore extends Task {
   }
 
   async run() {
-    const { stocks, suppliers } = this.fetchStocksContext;
+    const { stocks, suppliers, facilityProducts } = this.fetchStocksContext;
 
     this.stocksStore.setStocks(stocks);
     this.stocksStore.setSuppliers(suppliers);
+    this.stocksStore.setFacilityProducts(facilityProducts);
   }
 }
