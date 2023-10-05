@@ -6,6 +6,8 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
+import { isNil } from 'ramda';
+
 import {
   Button,
   ButtonType,
@@ -34,6 +36,8 @@ export const ResultScreen = ({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => {
+    if (isNil(item.receivedQty) || isNil(item.reservedCount)) return null;
+
     return (
       <View style={styles.item}>
         <View style={styles.description}>

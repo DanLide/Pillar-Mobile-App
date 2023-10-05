@@ -1,4 +1,5 @@
 import { action, makeObservable, observable, computed } from 'mobx';
+import { isNil } from 'ramda';
 
 import {
   GetOrderDetailsResponse,
@@ -41,6 +42,13 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
+      if (
+        isNil(item.orderedQty) ||
+        isNil(item.receivedQty) ||
+        isNil(item.reservedCount)
+      )
+        return acc;
+
       if (item.orderedQty - (item.receivedQty + item.reservedCount) !== 0)
         acc = true;
       return acc;
