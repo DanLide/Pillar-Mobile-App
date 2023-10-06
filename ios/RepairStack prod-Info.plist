@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -22,6 +24,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -45,6 +49,23 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to read qr codes from gallery</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>3MCircular-Bold.otf</string>
+		<string>3MCircular-BoldItalic.otf</string>
+		<string>3MCircular-Book.otf</string>
+		<string>3MCircular-BookItalic.otf</string>
+		<string>3MCircular-Light.otf</string>
+		<string>3MCircular-LightItalic.otf</string>
+		<string>3MCircularTT-Black.otf</string>
+		<string>3MCircularTT-BlackItalic.otf</string>
+		<string>3MCircularTT-Bold.otf</string>
+		<string>3MCircularTT-BoldItalic.otf</string>
+		<string>3MCircularTT-Italic.otf</string>
+		<string>3MCircularTT-Light.otf</string>
+		<string>3MCircularTT-LightItalic.otf</string>
+		<string>3MCircularTT-Regular.otf</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>bluetooth-central</string>
@@ -68,24 +89,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>3MCircular-Bold.otf</string>
-		<string>3MCircular-BoldItalic.otf</string>
-		<string>3MCircular-Book.otf</string>
-		<string>3MCircular-BookItalic.otf</string>
-		<string>3MCircular-Light.otf</string>
-		<string>3MCircular-LightItalic.otf</string>
-		<string>3MCircularTT-Black.otf</string>
-		<string>3MCircularTT-BlackItalic.otf</string>
-		<string>3MCircularTT-Bold.otf</string>
-		<string>3MCircularTT-BoldItalic.otf</string>
-		<string>3MCircularTT-Italic.otf</string>
-		<string>3MCircularTT-Light.otf</string>
-		<string>3MCircularTT-LightItalic.otf</string>
-		<string>3MCircularTT-Regular.otf</string>
-	</array>
-	<key>AppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
 </dict>
 </plist>
