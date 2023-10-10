@@ -64,7 +64,11 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   async run(): Promise<void> {
     const productSupplier = await getProductSupplier(this.scanCode);
 
-    const selectedSupplier = this.store.supplierId || productSupplier;
+    if (!this.store.supplierId) {
+      this.store.setSupplier(productSupplier);
+    }
+
+    const selectedSupplier = this.store.supplierId;
 
     if (!productSupplier) return;
 
@@ -77,10 +81,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    const product = await getProductByOrderTypeAndSupplierAPI(
-      this.scanCode,
-      productSupplier,
-    );
+    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
 
     if (!product) return;
 

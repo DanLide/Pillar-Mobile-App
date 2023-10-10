@@ -35,7 +35,7 @@ export class FetchSuggestedProductsTask extends Task {
   async run(): Promise<void> {
     const products = await getSuggestedProductsAPI();
 
-    if (!products) throw new Error();
+    if (!products?.length) throw new Error();
 
     this.productContext.products = products;
   }
@@ -57,9 +57,11 @@ export class SaveProductsToStoreTask extends Task {
   async run(): Promise<void> {
     const { products } = this.productContext;
 
-    const mappedProducts = products.map(this.mapProductResponse);
+    const mappedProducts = products.map(product =>
+      this.mapProductResponse(product),
+    );
 
-    mappedProducts.forEach(this.store.addProduct);
+    mappedProducts.forEach(product => this.store.addProduct(product));
   }
 
   private mapProductResponse(product: OrderProductResponse): ProductModel {
