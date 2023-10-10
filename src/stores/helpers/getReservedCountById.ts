@@ -8,6 +8,6 @@ export const getReservedCountById = (
 ): number =>
   pipe<[ProductModel[]], ProductModel[], number[], number>(
     filter(propEq('productId', productId)),
-    map(product => product.reservedCount),
+    map(product => product.reservedCount ?? 0),
     sum,
   )(products);
