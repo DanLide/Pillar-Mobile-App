@@ -84,14 +84,14 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
     if (!product) return;
 
-    const { productId, storageAreaId } = product;
+    const { productId, storageAreaId, storageAreaName } = product;
 
     const currentStock = this.store.currentStock;
 
     if (storageAreaId !== currentStock?.partyRoleId) {
       throw new BadRequestError(
         ProductByOrderTypeAndSupplierError.NotAssignedToStock,
-        product?.storageAreaName,
+        storageAreaName,
       );
     }
 
