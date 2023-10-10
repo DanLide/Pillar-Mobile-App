@@ -64,7 +64,11 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   async run(): Promise<void> {
     const productSupplier = await getProductSupplier(this.scanCode);
 
-    const selectedSupplier = this.store.supplierId || productSupplier;
+    if (!this.store.supplierId) {
+      this.store.setSupplier(productSupplier);
+    }
+
+    const selectedSupplier = this.store.supplierId;
 
     if (!productSupplier) return;
 
