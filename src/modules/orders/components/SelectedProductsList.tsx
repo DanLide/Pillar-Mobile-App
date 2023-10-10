@@ -10,7 +10,7 @@ import {
 import { observer } from 'mobx-react';
 
 import { ProductModel, SyncedProductStoreType } from 'src/stores/types';
-import { ProductEmptyList } from 'src/components';
+import { ProductEmptyList, Separator } from 'src/components';
 import { colors, fonts } from 'src/theme';
 import { ordersStore } from '../stores';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
@@ -21,7 +21,7 @@ interface Props {
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
-const ListEmptyComponent: React.FC = memo(() => (
+const ListEmptyComponent = memo(() => (
   <ProductEmptyList
     hideTitle
     subtitle="No Products added"
@@ -78,6 +78,7 @@ export const SelectedProductsList: React.FC<Props> = observer(
         data={products}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        ItemSeparatorComponent={Separator}
         ListEmptyComponent={ListEmptyComponent}
         ListHeaderComponent={ListHeader}
       />
