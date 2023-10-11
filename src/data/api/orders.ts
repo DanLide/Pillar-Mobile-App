@@ -187,18 +187,23 @@ export const receiveOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
 
 export const getProductByOrderTypeAndSupplierAPI = (
   scanCode: string,
-  supplierId: number,
-  stockId?: number,
   orderType?: OrderType,
 ) => {
   const url = new URLProvider().getProductByOrderTypeAndSupplier(
     scanCode,
-    supplierId,
-    stockId,
     orderType,
   );
 
   return tryAuthFetch<GetOrderSummaryProduct>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getSuggestedProductsAPI = () => {
+  const url = new URLProvider().getSuggestedProductsAPI();
+
+  return tryAuthFetch<OrderProductResponse[]>({
     url,
     request: { method: 'GET' },
   });

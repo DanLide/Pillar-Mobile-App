@@ -61,46 +61,11 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
     [store.supplierId, suppliers],
   );
 
-  const onPressScan = useCallback(async () => {
-    const result = await check(PERMISSIONS.IOS.CAMERA);
-    if (result !== RESULTS.GRANTED) {
-      navigation.navigate(AppNavigator.CameraPermissionScreen, {
-        nextRoute: AppNavigator.ScannerScreen,
-      });
-      return;
-    }
-    navigation.navigate(AppNavigator.ScannerScreen);
-  }, [navigation]);
+  const addSuggestedItems = useCallback(async () => {
+    const error = await fetchSuggestedProducts(store);
 
-  const onEditProduct = useCallback(
-    (product: ProductModel) => {
-      store.setCurrentProduct(product);
-      setModalParams({
-        isEdit: true,
-        maxValue: store.getEditableMaxValue(),
-        onHand: store.getEditableOnHand(product),
-        type: ProductModalType.CreateOrder,
-      });
-    },
-    [store],
-  );
-
-  const onSubmitProduct = useCallback(
-    (product: ProductModel) => store.updateProduct(product),
-    [store],
-  );
-
-  const setEditableProductQuantity = useCallback(
-    (quantity: number) => store.setEditableProductQuantity(quantity),
-    [store],
-  );
-
-  const onRemoveProduct = useCallback(
-    (product: ProductModel) => store.removeProduct(product),
-    [store],
-  );
-
-  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+    if (error) Alert.alert(error.message || 'Darova error');
+  }, [store]);
 
   return (
     <View style={styles.container}>
@@ -121,13 +86,16 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
 
       <View style={styles.productsContainer}>
         <SelectedProductsList onItemPress={onEditProduct} />
+
         <Button
+          disabled={!supplier}
           type={ButtonType.primary}
           title="Add Items Below Inventory Minimum"
           icon={SVGs.ProductSmallIcon}
           iconProps={RECOMMENDED_PRODUCTS_ICON_PROPS}
           buttonStyle={styles.recommendedProductsButton}
           textStyle={styles.recommendedProductsButtonText}
+          onPress={addSuggestedItems}
         />
       </View>
 
@@ -153,6 +121,7 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
           title="Send Order"
         />
       </View>
+
       <ProductModal
         {...modalParams}
         product={store.getCurrentProduct}
