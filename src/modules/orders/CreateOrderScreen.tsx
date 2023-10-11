@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 
@@ -16,17 +16,14 @@ import { ordersStore } from './stores';
 import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
 import { find, whereEq } from 'ramda';
-import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import {
-  AppNavigator,
-  BaseProductsScreenNavigationProp,
-} from 'src/navigation/types';
-import {
-  ProductModal,
-  ProductModalParams,
-  ProductModalType,
-} from 'src/modules/productModal';
-import { ProductModel } from 'src/stores/types';
+import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
+import { ProductModal } from 'src/modules/productModal';
+import { useBaseProductsScreen } from 'src/hooks';
+import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
+
+interface Props {
+  navigation: BaseProductsScreenNavigationProp;
+}
 
 const SCAN_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
@@ -36,22 +33,19 @@ const RECOMMENDED_PRODUCTS_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-interface Props {
-  navigation: BaseProductsScreenNavigationProp;
-}
-
-const initModalParams: ProductModalParams = {
-  type: ProductModalType.Hidden,
-  maxValue: undefined,
-};
-
 export const CreateOrderScreen = observer(({ navigation }: Props) => {
-  const [modalParams, setModalParams] =
-    useState<ProductModalParams>(initModalParams);
-
   const store = useRef(ordersStore).current;
 
-  const scannedProductsCount = Object.keys(store.getProducts).length;
+  const {
+    modalParams,
+    scannedProductsCount,
+    onPressScan,
+    onEditProduct,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+  } = useBaseProductsScreen(store, navigation);
 
   const suppliers = useMemo<DropdownItem[]>(
     () =>

@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
-import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
@@ -18,11 +17,7 @@ import {
   StockProductStoreType,
   SyncedProductStoreType,
 } from '../stores/types';
-import {
-  ProductModal,
-  ProductModalParams,
-  ProductModalType,
-} from '../modules/productModal';
+import { ProductModal, ProductModalType } from '../modules/productModal';
 import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
@@ -32,6 +27,7 @@ import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
+import { useBaseProductsScreen } from 'src/hooks';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -58,11 +54,6 @@ interface Props {
 
 const { width, height } = Dimensions.get('window');
 
-const initModalParams: ProductModalParams = {
-  type: ProductModalType.Hidden,
-  maxValue: undefined,
-};
-
 const SCAN_ICON_PROPS: SvgProps = {
   height: 23.33,
   width: 32,
@@ -84,13 +75,20 @@ export const BaseProductsScreen = observer(
     onComplete,
   }: Props) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [modalParams, setModalParams] =
-      useState<ProductModalParams>(initModalParams);
 
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
 
-    const scannedProductsCount = Object.keys(store.getProducts).length;
+    const {
+      modalParams,
+      scannedProductsCount,
+      onPressScan,
+      onEditProduct,
+      onSubmitProduct,
+      setEditableProductQuantity,
+      onRemoveProduct,
+      onCloseModal,
+    } = useBaseProductsScreen(store, navigation);
 
     const scanButtonType =
       modalType === ProductModalType.ManageProduct && !scannedProductsCount
@@ -120,17 +118,6 @@ export const BaseProductsScreen = observer(
       disableAlert,
     ]);
 
-    const onPressScan = async () => {
-      const result = await check(PERMISSIONS.IOS.CAMERA);
-      if (result !== RESULTS.GRANTED) {
-        navigation.navigate(AppNavigator.CameraPermissionScreen, {
-          nextRoute: AppNavigator.ScannerScreen,
-        });
-        return;
-      }
-      navigation.navigate(AppNavigator.ScannerScreen);
-    };
-
     const onCompleteRemove = useCallback(async () => {
       isNeedNavigateBack.current = true;
 
@@ -150,36 +137,6 @@ export const BaseProductsScreen = observer(
         ],
       });
     }, [modalType, navigation, onComplete]);
-
-    const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
-
-    const onSubmitProduct = useCallback(
-      (product: ProductModel) => store.updateProduct(product),
-      [store],
-    );
-
-    const setEditableProductQuantity = useCallback(
-      (quantity: number) => store.setEditableProductQuantity(quantity),
-      [store],
-    );
-
-    const onEditProduct = useCallback(
-      (product: ProductModel) => {
-        store.setCurrentProduct(product);
-        setModalParams({
-          isEdit: true,
-          maxValue: store.getEditableMaxValue(product),
-          onHand: store.getEditableOnHand(product),
-          type: modalType,
-        });
-      },
-      [modalType, store],
-    );
-
-    const onRemoveProduct = useCallback(
-      (product: ProductModel) => store.removeProduct(product),
-      [store],
-    );
 
     const onPressPrimary = useCallback(() => {
       isNeedNavigateBack.current = true;
