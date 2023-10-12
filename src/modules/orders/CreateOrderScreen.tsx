@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 
@@ -9,6 +9,7 @@ import {
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
+  ToastMessage,
 } from 'src/components';
 import Button from '../../components/Button';
 import { colors, fonts, SVGs } from '../../theme';
@@ -18,8 +19,14 @@ import { stocksStore } from '../stocksList/stores';
 import { find, whereEq } from 'ramda';
 import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
 import { ProductModal } from 'src/modules/productModal';
-import { useBaseProductsScreen } from 'src/hooks';
+import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
 import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from 'src/contexts';
+import { ToastType } from 'src/contexts/types';
+import { getProductsReservedCount } from 'src/modules/orders/helpers';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -33,7 +40,16 @@ const RECOMMENDED_PRODUCTS_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-export const CreateOrderScreen = observer(({ navigation }: Props) => {
+const suggestedItemsSuccessText = (count: number) =>
+  `${count} Recommended items added`;
+
+const suggestedItemsErrorText =
+  "Recommended items weren't loaded. Please try again";
+
+const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
+    useState(false);
+
   const store = useRef(ordersStore).current;
 
   const {
@@ -46,6 +62,8 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
     onRemoveProduct,
     onCloseModal,
   } = useBaseProductsScreen(store, navigation);
+
+  const { showToast } = useSingleToast();
 
   const suppliers = useMemo<DropdownItem[]>(
     () =>
@@ -62,10 +80,28 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
   );
 
   const addSuggestedItems = useCallback(async () => {
-    const error = await fetchSuggestedProducts(store);
+    const reservedCount = getProductsReservedCount(store.getProducts);
 
-    if (error) Alert.alert(error.message || 'Darova error');
-  }, [store]);
+    setIsSuggestedProductsLoading(true);
+    const error = await fetchSuggestedProducts(store);
+    setIsSuggestedProductsLoading(false);
+
+    if (error) {
+      return showToast(suggestedItemsErrorText, {
+        type: ToastType.SuggestedItemsError,
+      });
+    }
+
+    const suggestedItemsAdded =
+      getProductsReservedCount(store.getProducts) - reservedCount;
+
+    showToast(
+      <ToastMessage style={styles.toastSuccessMessage}>
+        {suggestedItemsSuccessText(suggestedItemsAdded)}
+      </ToastMessage>,
+      { type: ToastType.SuggestedItemsSuccess },
+    );
+  }, [showToast, store]);
 
   return (
     <View style={styles.container}>
@@ -85,10 +121,13 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
       </View>
 
       <View style={styles.productsContainer}>
-        <SelectedProductsList onItemPress={onEditProduct} />
+        <SelectedProductsList
+          onItemPress={onEditProduct}
+          isLoading={isSuggestedProductsLoading}
+        />
 
         <Button
-          disabled={!supplier}
+          disabled={!supplier || isSuggestedProductsLoading}
           type={ButtonType.primary}
           title="Add Items Below Inventory Minimum"
           icon={SVGs.ProductSmallIcon}
@@ -115,7 +154,7 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
           onPress={onPressScan}
         />
         <Button
-          disabled={!scannedProductsCount}
+          disabled={!scannedProductsCount || isSuggestedProductsLoading}
           type={ButtonType.primary}
           buttonStyle={styles.buttonContainer}
           title="Send Order"
@@ -173,6 +212,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
+  toastSuccessMessage: {
+    textAlign: 'left',
+  },
   topContainer: {
     paddingHorizontal: 16,
     paddingVertical: 24,
@@ -200,3 +242,12 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
+
+export default (props: Props) => (
+  <ToastContextProvider
+    disableSafeArea
+    offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON * 2 - 12}
+  >
+    <CreateOrderScreen {...props} />
+  </ToastContextProvider>
+);

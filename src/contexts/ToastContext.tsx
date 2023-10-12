@@ -65,6 +65,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.SuggestedItemsError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.SuggestedItemsError}
+          actionType={ToastActionType.Close}
+        />
+      ),
 
       [ToastType.Info]: toast => (
         <Toast
@@ -88,6 +95,14 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.SuggestedItemsSuccess]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.SuggestedItemsSuccess}
+          actionType={ToastActionType.Close}
+        />
+      ),
+
       [ToastType.Retry]: toast => (
         <Toast
           {...toast}
