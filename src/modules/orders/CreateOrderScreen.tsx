@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 
@@ -17,7 +17,10 @@ import { ordersStore } from './stores';
 import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
 import { find, whereEq } from 'ramda';
-import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
+import {
+  AppNavigator,
+  BaseProductsScreenNavigationProp,
+} from 'src/navigation/types';
 import { ProductModal } from 'src/modules/productModal';
 import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
 import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
@@ -27,6 +30,7 @@ import {
 } from 'src/contexts';
 import { ToastType } from 'src/contexts/types';
 import { getProductsReservedCount } from 'src/modules/orders/helpers';
+import { createOrder } from 'src/data/createOrder';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -47,6 +51,7 @@ const suggestedItemsErrorText =
   "Recommended items weren't loaded. Please try again";
 
 const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
   const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
     useState(false);
 
@@ -103,6 +108,18 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     );
   }, [showToast, store]);
 
+  const onCreateOrder = useCallback(async () => {
+    setIsCreateOrderLoading(true);
+    const error = await createOrder(store);
+    setIsCreateOrderLoading(false);
+
+    if (error) {
+      Alert.alert("The order wasn't created. Please try again");
+    } else {
+      navigation.navigate(AppNavigator.ResultScreen);
+    }
+  }, [navigation, store]);
+
   return (
     <View style={styles.container}>
       <InfoTitleBar
@@ -155,9 +172,11 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
         />
         <Button
           disabled={!scannedProductsCount || isSuggestedProductsLoading}
+          isLoading={isCreateOrderLoading}
           type={ButtonType.primary}
           buttonStyle={styles.buttonContainer}
           title="Send Order"
+          onPress={onCreateOrder}
         />
       </View>
 

@@ -285,4 +285,8 @@ export class URLProvider {
       `${this.currentEnv.modules.order.apiUri}/api/Order/SuggestedList/${facilityId}/${supplierId}`,
     );
   }
+
+  createOrder() {
+    return new URL(`${this.currentEnv.modules.order.apiUri}/api/Order/Create`);
+  }
 }

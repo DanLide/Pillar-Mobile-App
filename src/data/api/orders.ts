@@ -1,5 +1,6 @@
-import { OrderStatusType, OrderType } from '../../constants/common.enum';
+import { OrderStatusType, OrderType } from 'src/constants/common.enum';
 import { URLProvider, tryAuthFetch } from '../helpers';
+import { ProductModel } from 'src/stores/types';
 
 export interface GetOrdersAPIResponse {
   orderId: number;
@@ -135,6 +136,28 @@ export interface ReceiveOrderRequestProduct {
   quantityReceived: number;
 }
 
+export interface CreateOrderRequestProduct
+  extends Pick<ProductModel, 'inventoryAssignmentId' | 'orderedQty'> {
+  isTaxable?: number;
+  jobId?: number;
+  price?: number;
+}
+
+export interface CreateOrderRequestPayload {
+  comments: string;
+  customPoNumber: string;
+  orderArea: string;
+  orderDetails: CreateOrderRequestProduct[];
+  orderGroup: string;
+  orderId: number;
+  orderMethodTypeId: number;
+  orderTotal: number;
+  orderTypeId: number;
+  taxStatus: string;
+  repairFacilityId?: number;
+  supplierId?: number;
+}
+
 export const getOrdersAPI = () => {
   const url = new URLProvider().getOrders();
   return tryAuthFetch<GetOrdersAPIResponse[]>({
@@ -206,5 +229,20 @@ export const getSuggestedProductsAPI = () => {
   return tryAuthFetch<OrderProductResponse[]>({
     url,
     request: { method: 'GET' },
+  });
+};
+
+export const createOrderAPI = (payload: CreateOrderRequestPayload) => {
+  const url = new URLProvider().createOrder();
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      body: JSON.stringify(payload),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   });
 };
