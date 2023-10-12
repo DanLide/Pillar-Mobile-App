@@ -144,6 +144,15 @@ export const getFetchProductByFacilityIdAPI = (scanCode: string) => {
   });
 };
 
+export const getFetchProductsByFacilityIdAPI = () => {
+  const url = new URLProvider().getFetchProductsByFacilityId();
+
+  return tryAuthFetch<ProductModel[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
 export const getCategoriesByFacilityIdAPI = () => {
   const url = new URLProvider().getCategoriesByFacilityId();
 
@@ -249,7 +258,7 @@ export const updateProductAreaSettingsAPI = (
     max: product?.max,
     replenishedFormId: product?.replenishedFormId,
     StorageAreaId: stockId,
-    InventoryAssignmentId: product?.inventoryAssignmentId,
+    InventoryAssignmentId: product?.inventoryAssignmentTypeId,
   });
 
   return tryAuthFetch<string>({

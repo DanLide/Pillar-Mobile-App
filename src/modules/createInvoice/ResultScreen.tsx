@@ -14,27 +14,14 @@ interface Props {
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
 
-  const Footer = () => (
-    <View style={styles.footerContainer}>
-      <Text style={styles.footerText}>
-        If the products are associated with a job, you will get an email to
-        download an invoice. You can also retrieve the invoice in RepairStack.{' '}
-        <Text style={styles.bold}>
-          These products will also be sent to the associated job in your
-          management software.
-        </Text>
-      </Text>
-    </View>
-  );
-
   const Header = () => (
     <View style={styles.headerContainer}>
       <View style={styles.contextTitleContainer}>
         <SVGs.RefundIcon color={colors.black} />
-        <Text style={styles.contextTitleText}>Invoice Submitted</Text>
+        <Text style={styles.contextTitleText}>Invoice Created</Text>
       </View>
       <Text style={styles.headerBody}>
-        You have successfully billed the following items to{' '}
+        The following items have been billed to{' '}
         <Text style={styles.bold}>{store.currentJob?.jobNumber}</Text>
       </Text>
     </View>
@@ -48,7 +35,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
       errorListTitle=""
       errorToastMessage=""
       title={store.currentJob?.jobNumber}
-      SyncedSectionFooter={<Footer />}
+      isShowInvoiceTooltip
       Header={<Header />}
     />
   );
@@ -56,7 +43,10 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
 
 const styles = StyleSheet.create({
   headerContainer: {
+    alignSelf: 'center',
+    justifyContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
     width: 260,
   },
   headerBody: {
@@ -67,18 +57,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: fonts.TT_Regular,
     color: colors.black,
-  },
-  footerContainer: {
-    paddingHorizontal: 14,
-    paddingVertical: 16,
-  },
-  footerText: {
-    color: colors.black,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 12,
-    letterSpacing: 0.16,
-    lineHeight: 14.5,
-    textAlign: 'left',
   },
   bold: {
     fontFamily: fonts.TT_Bold,

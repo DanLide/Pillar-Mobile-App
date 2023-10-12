@@ -1,19 +1,18 @@
-import { Task } from './helpers';
+import { Task, TaskExecutor } from './helpers';
 import { createInvoiceAPI } from './api';
 import { CreateInvoiceStore } from '../modules/createInvoice/stores';
 import { clone } from 'ramda';
 import { ProductModel } from '../stores/types';
 import { CreateInvoiceRequestBody } from './api/createInvoiceAPI';
-import { JobModel } from '../modules/jobsList/stores/JobsStore';
 
 export const onCreateInvoice = async (
   createInvoiceStore: CreateInvoiceStore,
 ) => {
-  try {
-    await new CreateInvoiceTask(createInvoiceStore).run();
-  } catch (error) {
-    return error;
-  }
+  const result = await new TaskExecutor([
+    new CreateInvoiceTask(createInvoiceStore),
+  ]).execute();
+
+  return result;
 };
 
 class CreateInvoiceTask extends Task {
@@ -27,9 +26,9 @@ class CreateInvoiceTask extends Task {
     if (job) {
       const products = clone(this.createInvoiceStore.getProducts);
       const invoiceJobs = products.map((product: ProductModel) =>
-        this.mapProductsWithJob(product, job),
+        this.mapProductsWithJob(product),
       );
-      await createInvoiceAPI(invoiceJobs);
+      await createInvoiceAPI(invoiceJobs, job.jobId);
       const syncedProducts = products.map((product: ProductModel) => ({
         ...product,
         isRemoved: true,
@@ -38,15 +37,10 @@ class CreateInvoiceTask extends Task {
     }
   }
 
-  private mapProductsWithJob(
-    product: ProductModel,
-    job: JobModel,
-  ): CreateInvoiceRequestBody {
+  private mapProductsWithJob(product: ProductModel): CreateInvoiceRequestBody {
     return {
-      ...product,
-      jobID: job.jobId,
-      jobNumber: job.jobNumber,
-      qty: product.reservedCount,
+      productId: product.productId,
+      qty: product.reservedCount || 0,
     };
   }
 }
