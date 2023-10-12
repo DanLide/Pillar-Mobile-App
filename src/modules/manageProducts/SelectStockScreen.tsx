@@ -17,12 +17,15 @@ import { StocksList } from '../stocksList/components/StocksList';
 import { manageProductsStore } from './stores';
 import { fetchManageProductsStocks } from '../../data/fetchManageProductStocks';
 import { useSingleToast } from '../../hooks';
-import { getToastDuration, ToastContextProvider } from '../../contexts';
+import { ToastContextProvider } from '../../contexts';
 import { ToastType } from '../../contexts/types';
 import permissionStore from '../permissions/stores/PermissionStore';
 
 interface Props {
-  route: RouteProp<ManageProductsStackParamList, AppNavigator.SelectStockScreen>
+  route: RouteProp<
+    ManageProductsStackParamList,
+    AppNavigator.SelectStockScreen
+  >;
   navigation: NativeStackNavigationProp<
     ManageProductsStackParamList,
     AppNavigator.SelectStockScreen
@@ -39,28 +42,22 @@ const SelectStockScreenBody = observer(({ navigation, route }: Props) => {
 
   useEffect(() => {
     if (succeedBluetooth) {
-      showToast('Bluetooth successfully connected',
-        { type: ToastType.BluetoothEnabled },
-      )
-      return
+      showToast('Bluetooth successfully connected', {
+        type: ToastType.BluetoothEnabled,
+      });
+      return;
     }
     autorun(() => {
       if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
-        showToast('Bluetooth not connected',
-          {
-            type: ToastType.BluetoothDisabled,
-            onPress: () => { permissionStore.openSetting() },
-            duration: getToastDuration(ToastType.BluetoothDisabled),
+        showToast('Bluetooth not connected', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openSetting();
           },
-        )
+        });
       }
-    })
-  }, [
-    showToast,
-    navigation,
-    succeedBluetooth,
-  ]);
-
+    });
+  }, [showToast, navigation, succeedBluetooth]);
 
   useEffect(() => {
     if (isFocused) {
@@ -89,13 +86,13 @@ const SelectStockScreenBody = observer(({ navigation, route }: Props) => {
   );
 });
 
-export const SelectStockScreen: React.FC<Props> = (props) => {
+export const SelectStockScreen: React.FC<Props> = props => {
   return (
     <ToastContextProvider>
       <SelectStockScreenBody {...props} />
     </ToastContextProvider>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1 },

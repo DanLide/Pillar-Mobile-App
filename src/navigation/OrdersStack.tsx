@@ -13,7 +13,7 @@ import { OrdersScreen } from '../modules/orders/OrdersScreen';
 import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
 import { OrderByStockLocationScreen } from '../modules/orders/OrderByStockLocationScreen';
 import { SelectStockScreen } from '../modules/orders/SelectStockScreen';
-import { CreateOrderScreen } from '../modules/orders/CreateOrderScreen';
+import CreateOrderScreen from '../modules/orders/CreateOrderScreen';
 import { ResultScreen } from '../modules/orders/ResultScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 import {

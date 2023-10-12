@@ -6,6 +6,7 @@ import {
   View,
   Text,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
@@ -16,24 +17,17 @@ import { ordersStore } from '../stores';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 
 interface Props {
+  isLoading?: boolean;
   onItemPress?: (item: ProductModel) => void;
 }
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
-const ListEmptyComponent = memo(() => (
-  <ProductEmptyList
-    hideTitle
-    subtitle="No Products added"
-    style={styles.emptyContainer}
-  />
-));
-
 export const SelectedProductsList: React.FC<Props> = observer(
-  ({ onItemPress }) => {
+  ({ isLoading, onItemPress }) => {
     const store = useRef<SyncedProductStoreType>(ordersStore).current;
 
-    const products = store.getNotSyncedProducts;
+    const products = isLoading ? [] : store.getNotSyncedProducts;
 
     const ListHeader = useMemo(
       () => (
@@ -44,6 +38,20 @@ export const SelectedProductsList: React.FC<Props> = observer(
         </View>
       ),
       [],
+    );
+
+    const ListEmptyComponent = useMemo(
+      () =>
+        isLoading ? (
+          <ActivityIndicator size="large" style={{ padding: 16 }} />
+        ) : (
+          <ProductEmptyList
+            hideTitle
+            subtitle="No Products added"
+            style={styles.emptyContainer}
+          />
+        ),
+      [isLoading],
     );
 
     const renderItem = useCallback(

@@ -46,12 +46,15 @@ const icons: Record<
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
+  [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
+  [ToastType.SuggestedItemsSuccess]: SVGs.SuggestedListAffirmativeIcon,
+
   [ToastType.Retry]: SVGs.ListErrorIcon,
 
   [ToastType.BluetoothEnabled]: SVGs.BluetoothIconSuccess,

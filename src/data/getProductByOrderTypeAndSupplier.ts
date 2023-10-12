@@ -81,10 +81,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    const product = await getProductByOrderTypeAndSupplierAPI(
-      this.scanCode,
-      productSupplier,
-    );
+    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
 
     if (!product) return;
 

@@ -1,23 +1,26 @@
 import { environment } from './environment';
-import { AuthStore } from '../../stores/AuthStore';
-import { authStore, ssoStore } from '../../stores';
-import { OrderType, PartyRelationshipType } from '../../constants/common.enum';
-import { SSOStore } from '../../stores/SSOStore';
+import { AuthStore } from 'src/stores/AuthStore';
+import { authStore, ssoStore } from 'src/stores';
+import { OrderType, PartyRelationshipType } from 'src/constants/common.enum';
+import { SSOStore } from 'src/stores/SSOStore';
 import {
   RemoveProductsStore,
   removeProductsStore,
-} from '../../modules/removeProducts/stores';
+} from 'src/modules/removeProducts/stores';
 import {
   ReturnProductsStore,
   returnProductsStore,
-} from '../../modules/returnProducts/stores';
-import { StockModel } from '../../modules/stocksList/stores/StocksStore';
+} from 'src/modules/returnProducts/stores';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
+import { OrdersStore } from 'src/modules/orders/stores/OrdersStore';
+import { ordersStore } from 'src/modules/orders/stores';
 
 export class URLProvider {
   authStore: AuthStore;
   ssoStore: SSOStore;
   removeProductsStore: RemoveProductsStore;
   returnProductsStore: ReturnProductsStore;
+  ordersStore: OrdersStore;
   currentEnv: {
     b2c: { clientId: string; authority: string };
     modules: {
@@ -38,11 +41,13 @@ export class URLProvider {
     sso_store = ssoStore,
     remove_products_store = removeProductsStore,
     return_products_store = returnProductsStore,
+    orders_store = ordersStore,
   ) {
     this.authStore = auth_store;
     this.ssoStore = sso_store;
     this.removeProductsStore = remove_products_store;
     this.returnProductsStore = return_products_store;
+    this.ordersStore = orders_store;
     this.currentEnv = environment;
   }
 
@@ -121,11 +126,11 @@ export class URLProvider {
 
   getProductByOrderTypeAndSupplier(
     scanCode: string,
-    supplierId: number,
-    stockId = 0,
     orderType = OrderType.Purchase,
   ) {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const supplierId = this.ordersStore.supplierId;
+    const stockId = 0;
 
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductByOrderTypeAndSupplier/${facilityId}/${supplierId}/${scanCode}/${orderType}/${stockId}`,
@@ -269,6 +274,15 @@ export class URLProvider {
   receiveOrder() {
     return new URL(
       `${this.currentEnv.modules.order.apiUri}/api/Order/Receive/null`,
+    );
+  }
+
+  getSuggestedProductsAPI() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const supplierId = this.ordersStore.supplierId;
+
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/SuggestedList/${facilityId}/${supplierId}`,
     );
   }
 }
