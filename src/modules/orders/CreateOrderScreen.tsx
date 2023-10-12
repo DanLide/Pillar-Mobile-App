@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
@@ -9,7 +9,7 @@ import {
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
-} from '../../components';
+} from 'src/components';
 import Button from '../../components/Button';
 import { colors, fonts, SVGs } from '../../theme';
 import { ordersStore } from './stores';
@@ -20,7 +20,13 @@ import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
-} from '../../navigation/types';
+} from 'src/navigation/types';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalType,
+} from 'src/modules/productModal';
+import { ProductModel } from 'src/stores/types';
 
 const SCAN_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
@@ -34,7 +40,15 @@ interface Props {
   navigation: BaseProductsScreenNavigationProp;
 }
 
+const initModalParams: ProductModalParams = {
+  type: ProductModalType.Hidden,
+  maxValue: undefined,
+};
+
 export const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [modalParams, setModalParams] =
+    useState<ProductModalParams>(initModalParams);
+
   const store = useRef(ordersStore).current;
 
   const scannedProductsCount = Object.keys(store.getProducts).length;
@@ -64,6 +78,36 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
     navigation.navigate(AppNavigator.ScannerScreen);
   }, [navigation]);
 
+  const onEditProduct = useCallback(
+    (product: ProductModel) => {
+      store.setCurrentProduct(product);
+      setModalParams({
+        isEdit: true,
+        maxValue: store.getEditableMaxValue(),
+        onHand: store.getEditableOnHand(product),
+        type: ProductModalType.CreateOrder,
+      });
+    },
+    [store],
+  );
+
+  const onSubmitProduct = useCallback(
+    (product: ProductModel) => store.updateProduct(product),
+    [store],
+  );
+
+  const setEditableProductQuantity = useCallback(
+    (quantity: number) => store.setEditableProductQuantity(quantity),
+    [store],
+  );
+
+  const onRemoveProduct = useCallback(
+    (product: ProductModel) => store.removeProduct(product),
+    [store],
+  );
+
+  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+
   return (
     <View style={styles.container}>
       <InfoTitleBar
@@ -82,7 +126,7 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
       </View>
 
       <View style={styles.productsContainer}>
-        <SelectedProductsList />
+        <SelectedProductsList onItemPress={onEditProduct} />
         <Button
           type={ButtonType.primary}
           title="Add Items Below Inventory Minimum"
@@ -95,7 +139,7 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
 
       <View style={styles.totalCostContainer}>
         <Text style={styles.totalCostText}>Total Cost: </Text>
-        <Text style={styles.totalCostCount}>$0</Text>
+        <Text style={styles.totalCostCount}>${store.getTotalCost}</Text>
       </View>
 
       <View style={styles.buttons}>
@@ -115,6 +159,15 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
           title="Send Order"
         />
       </View>
+      <ProductModal
+        {...modalParams}
+        product={store.getCurrentProduct}
+        stockName={store.stockName}
+        onSubmit={onSubmitProduct}
+        onClose={onCloseModal}
+        onRemove={onRemoveProduct}
+        onChangeProductQuantity={setEditableProductQuantity}
+      />
     </View>
   );
 });

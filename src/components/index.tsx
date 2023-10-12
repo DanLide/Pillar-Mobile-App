@@ -26,8 +26,10 @@ import BaseResultScreen from './BaseResultScreen';
 import { BaseSelectedProductsList } from './BaseSelectedProductsList';
 import { Dropdown, DropdownItem } from './Dropdown';
 import { InventoryTypeBadge } from './InventoryTypeBadge';
+import { Separator } from './Separator';
 
 export {
+  Separator,
   Scanner,
   Input,
   InputType,
