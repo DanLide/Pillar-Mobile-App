@@ -14,12 +14,10 @@ export const tryAuthFetch = async <ResponseType>({
   authToken = getAuthToken(),
   logoutListener = getLogoutListener(),
 }: TryAuthFetchParams) => {
-  if (authToken.isTokenExpired) {
-    const error = await refreshToken();
-    if (error) {
-      logoutListener.onServerLogout();
-      return;
-    }
+  const error = await refreshToken();
+  if (error) {
+    logoutListener.onServerLogout();
+    return;
   }
   return tryFetch<ResponseType>({
     url,

@@ -90,7 +90,7 @@ export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
     <View style={styles.container}>
       {label ? (
         <ColoredTooltip
-          title={label}
+          title={label === 'Receiving' ? 'Backordered' : label}
           textStyles={badgeStyle}
           icon={renderIcon}
         />
