@@ -14,24 +14,9 @@ interface Props extends PropsWithChildren<ToastProviderProps> {
   testID?: string;
 }
 
-const TOAST_DURATION_MS = 3000;
 const OFFSET_DEFAULT = 16;
 
 export const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
-
-export const getToastDuration = (type: ToastType) => {
-  switch (type) {
-    case ToastType.Error:
-    case ToastType.ScanError:
-    case ToastType.ProductQuantityError:
-    case ToastType.ProductUpdateError:
-    case ToastType.UpcUpdateError:
-    case ToastType.BluetoothDisabled:
-      return 0;
-    default:
-      return TOAST_DURATION_MS;
-  }
-};
 
 export const ToastContextProvider: React.FC<Props> = ({
   children,
@@ -137,7 +122,6 @@ export const ToastContextProvider: React.FC<Props> = ({
     >
       <View style={styles.container}>
         <ToastProvider
-          duration={TOAST_DURATION_MS}
           animationType="zoom-in"
           swipeEnabled={false}
           renderType={renderType}

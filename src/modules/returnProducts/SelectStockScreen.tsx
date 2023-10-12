@@ -13,13 +13,12 @@ import { InfoTitleBar, InfoTitleBarType } from '../../components';
 import { StocksList } from '../stocksList/components/StocksList';
 import { returnProductsStore } from './stores';
 import { useSingleToast } from '../../hooks';
-import { getToastDuration, ToastContextProvider } from '../../contexts';
+import { ToastContextProvider } from '../../contexts';
 import { ToastType } from '../../contexts/types';
 import permissionStore from '../permissions/stores/PermissionStore';
 
-
 interface Props {
-  route: RouteProp<ReturnStackParamList, AppNavigator.SelectStockScreen>
+  route: RouteProp<ReturnStackParamList, AppNavigator.SelectStockScreen>;
   navigation: NativeStackNavigationProp<
     ReturnStackParamList,
     AppNavigator.SelectStockScreen
@@ -28,66 +27,63 @@ interface Props {
 
 type Store = StockProductStoreType & ClearStoreType;
 
-const SelectStockScreenBody: React.FC<Props> = observer(({ navigation, route }) => {
-  const succeedBluetooth = route.params?.succeedBluetooth;
+const SelectStockScreenBody: React.FC<Props> = observer(
+  ({ navigation, route }) => {
+    const succeedBluetooth = route.params?.succeedBluetooth;
 
-  const store = useRef<Store>(returnProductsStore).current;
-  const isFocused = useIsFocused();
-  const { showToast } = useSingleToast();
+    const store = useRef<Store>(returnProductsStore).current;
+    const isFocused = useIsFocused();
+    const { showToast } = useSingleToast();
 
-  useEffect(() => {
-    if (succeedBluetooth) {
-      showToast('Bluetooth successfully connected',
-        { type: ToastType.BluetoothEnabled },
-      )
-      return
-    }
-    autorun(() => {
-      if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
-        showToast('Bluetooth not connected',
-          {
-            type: ToastType.BluetoothDisabled,
-            onPress: () => { permissionStore.openSetting() },
-            duration: getToastDuration(ToastType.BluetoothDisabled),
-          },
-        )
+    useEffect(() => {
+      if (succeedBluetooth) {
+        showToast('Bluetooth successfully connected', {
+          type: ToastType.BluetoothEnabled,
+        });
+        return;
       }
-    })
-  }, [
-    showToast,
-    navigation,
-    succeedBluetooth,
-  ]);
+      autorun(() => {
+        if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
+          showToast('Bluetooth not connected', {
+            type: ToastType.BluetoothDisabled,
+            onPress: () => {
+              permissionStore.openSetting();
+            },
+          });
+        }
+      });
+    }, [showToast, navigation, succeedBluetooth]);
 
-  useEffect(() => {
-    if (isFocused) {
-      store.clear();
-    }
-  }, [isFocused, store]);
+    useEffect(() => {
+      if (isFocused) {
+        store.clear();
+      }
+    }, [isFocused, store]);
 
-  const onItemPress = (stock: StockModel) => {
-    store.setCurrentStocks(stock);
-    navigation.navigate(AppNavigator.ReturnProductsScreen);
-  };
+    const onItemPress = (stock: StockModel) => {
+      store.setCurrentStocks(stock);
+      navigation.navigate(AppNavigator.ReturnProductsScreen);
+    };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <InfoTitleBar
-        type={InfoTitleBarType.Secondary}
-        title="Select a Stock Location"
-      />
-      <StocksList onPressItem={onItemPress} />
-    </SafeAreaView>
-  );
-});
+    return (
+      <SafeAreaView style={styles.container}>
+        <InfoTitleBar
+          type={InfoTitleBarType.Secondary}
+          title="Select a Stock Location"
+        />
+        <StocksList onPressItem={onItemPress} />
+      </SafeAreaView>
+    );
+  },
+);
 
-export const SelectStockScreen: React.FC<Props> = (props) => {
+export const SelectStockScreen: React.FC<Props> = props => {
   return (
     <ToastContextProvider>
       <SelectStockScreenBody {...props} />
     </ToastContextProvider>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
