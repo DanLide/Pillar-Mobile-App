@@ -1,14 +1,25 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { observer } from 'mobx-react';
+import { useIsFocused } from '@react-navigation/native';
 
 import { OrdersList } from './components/OrdersList';
 import { ordersStore } from './stores';
 import { fetchOrders } from '../../data/fetchOrders';
 import { Button, ButtonType, Input } from '../../components';
 import { SVGs, colors, fonts } from '../../theme';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
+import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 
-export const OrdersScreen = observer(() => {
+interface Props {
+  navigation: NativeStackNavigationProp<
+    OrdersParamsList,
+    AppNavigator.OrdersScreen
+  >;
+}
+
+export const OrdersScreen = observer(({ navigation }: Props) => {
+  const isFocused = useIsFocused();
   const ordersStoreRef = useRef(ordersStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -22,8 +33,10 @@ export const OrdersScreen = observer(() => {
   }, []);
 
   useEffect(() => {
-    onFetchOrders();
-  }, [onFetchOrders]);
+    if (isFocused) {
+      onFetchOrders();
+    }
+  }, [onFetchOrders, isFocused]);
 
   const onRightIconPress = () => {
     if (filterValue) {
@@ -72,6 +85,7 @@ export const OrdersScreen = observer(() => {
         isFiltered={!!filterValue}
         orders={ordersStoreRef.getFilteredOrders(filterValue)}
         onPrimaryPress={openCreateOrder}
+        setFetchError={setIsError}
       />
     </View>
   );
