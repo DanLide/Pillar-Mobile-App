@@ -1,3 +1,4 @@
+import { ProductModel } from 'src/stores/types';
 import { OrderStatusType, OrderType } from '../../constants/common.enum';
 import { URLProvider, tryAuthFetch } from '../helpers';
 
@@ -22,8 +23,7 @@ export interface GetOrdersAPIResponse {
   exception: string;
   user: string;
   supplierPartyRoleID: number;
-  // TODO https://dev.azure.com/3M-Bluebird/Pillar/_workitems/edit/117082
-  products: [];
+  products: ProductModel[];
   comments: string;
   unitPrice: number;
   taxStatus: string;

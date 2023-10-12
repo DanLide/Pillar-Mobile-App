@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
-import { isNil } from 'ramda';
+import { includes, isNil } from 'ramda';
 
 import {
   GetOrderDetailsResponse,
@@ -26,6 +26,20 @@ export class OrdersStore extends BaseProductsStore {
     this.orders = undefined;
     this.supplierId = undefined;
     makeObservable(this);
+  }
+
+  @computed get getFilteredOrders() {
+    return (filterValue: string) =>
+      this.orders?.filter(
+        item =>
+          includes(filterValue.toLowerCase(), item.orderId.toString()) ||
+          item.products.find(product =>
+            includes(
+              filterValue.toLowerCase(),
+              product.product?.toLowerCase() || '',
+            ),
+          ),
+      ) || [];
   }
 
   @computed get getCurrentProductsByStockName() {
