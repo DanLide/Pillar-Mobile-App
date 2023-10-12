@@ -3,17 +3,17 @@ import {
   FlatList,
   View,
   StyleSheet,
-  Text,
   Pressable,
   ListRenderItemInfo,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
 import { ProductModel } from '../../../stores/types';
-import { SVGs, colors, fonts } from '../../../theme';
+import { colors, fonts } from '../../../theme';
 import { OrderTitleByStatusType } from './StatusBadge';
 import { OrderStatusType } from '../../../constants/common.enum';
 import { ordersStore } from '../stores';
+import { StockWithProducts } from './StockWithProducts';
 
 interface Props {
   productsByStockName: Record<string, ProductModel[]>;
@@ -28,35 +28,6 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
     const { currentOrder } = ordersStoreRef;
 
     if (!currentOrder) return null;
-
-    const renderProduct = useCallback(
-      (product: ProductModel) => (
-        <View style={styles.productDetails} key={product.productId}>
-          <View style={styles.productNameContainer}>
-            <Text
-              style={[styles.productText, styles.productName]}
-              ellipsizeMode="clip"
-              numberOfLines={1}
-            >
-              {product.name}
-              <SVGs.DashedLine
-                style={styles.dashedLine}
-                color={colors.neutral40}
-              />
-              <SVGs.DashedLine
-                style={styles.dashedLine}
-                color={colors.neutral40}
-              />
-            </Text>
-          </View>
-          <Text style={styles.productText}>
-            <Text style={styles.productDetailsBold}>{product.receivedQty}</Text>
-            /{product.orderedQty}
-          </Text>
-        </View>
-      ),
-      [],
-    );
 
     const renderSelectedRadioButton = useCallback(
       (item: string) => {
@@ -103,17 +74,18 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
             ) : (
               <View style={styles.radioButtonPlaceholder} />
             )}
-            <View style={styles.products}>
-              <Text style={styles.stockName}>{item}</Text>
-              {products.map(renderProduct)}
-            </View>
+            <StockWithProducts
+              stockName={item}
+              products={products}
+              orderId={currentOrder.order.orderId}
+            />
           </Pressable>
         );
       },
       [
+        currentOrder.order.orderId,
         onSelectProducts,
         productsByStockName,
-        renderProduct,
         renderSelectedRadioButton,
       ],
     );

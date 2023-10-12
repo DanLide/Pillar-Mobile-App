@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-  useMemo,
-} from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { observer } from 'mobx-react';
 
@@ -13,20 +7,8 @@ import { ordersStore } from './stores';
 import { fetchOrders } from '../../data/fetchOrders';
 import { Button, ButtonType, Input } from '../../components';
 import { SVGs, colors, fonts } from '../../theme';
-import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
-import { AppNavigator, OrdersParamsList } from '../../navigation/types';
-import { getScreenName } from '../../navigation/helpers/getScreenName';
-import permissionStore from '../permissions/stores/PermissionStore';
 
-
-interface Props {
-  navigation: NativeStackNavigationProp<
-    OrdersParamsList,
-    AppNavigator.OrdersScreen
-  >;
-}
-
-export const OrdersScreen = observer(({ navigation }: Props) => {
+export const OrdersScreen = observer(() => {
   const ordersStoreRef = useRef(ordersStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -49,18 +31,7 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
     }
   };
 
-  const filteredOrders = useMemo(
-    () =>
-      ordersStoreRef.getOrders?.filter(item =>
-        item.orderId.toString().includes(filterValue.toLowerCase()),
-      ),
-    [filterValue, ordersStoreRef.getOrders],
-  );
-
-  const openCreateOrder = () => {
-    const navigateToScreen = getScreenName(permissionStore);
-    navigation.navigate(navigateToScreen);
-  }
+  const openCreateOrder = () => {};
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
@@ -84,7 +55,6 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -98,7 +68,11 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
           onRightIconPress={onRightIconPress}
         />
       </View>
-      <OrdersList orders={filteredOrders} onPrimaryPress={openCreateOrder} />
+      <OrdersList
+        isFiltered={!!filterValue}
+        orders={ordersStoreRef.getFilteredOrders(filterValue)}
+        onPrimaryPress={openCreateOrder}
+      />
     </View>
   );
 });

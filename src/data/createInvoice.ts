@@ -6,7 +6,6 @@ import { ProductModel } from '../stores/types';
 import { CreateInvoiceRequestBody } from './api/createInvoiceAPI';
 import { JobModel } from '../modules/jobsList/stores/JobsStore';
 
-// TODO https://dev.azure.com/3M-Bluebird/Pillar/_workitems/edit/113299
 export const onCreateInvoice = async (
   createInvoiceStore: CreateInvoiceStore,
 ) => {

@@ -1,59 +1,64 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { FlatList, StyleSheet, View, Text, Pressable } from 'react-native';
 
 import { GetOrdersAPIResponse } from '../../../data/api';
 import { OrdersListItem } from './OrdersListItem';
 import { SVGs, colors, fonts } from '../../../theme';
-import { Button, ButtonType } from '../../../components';
+import { Button, ButtonType, Separator } from '../../../components';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
+  isFiltered: boolean;
+
   onPrimaryPress?: () => void;
 }
 
-export const OrdersList: React.FC<Props> = ({ orders, onPrimaryPress }) => {
-  const ItemSeparator = () => <View style={styles.separator} />;
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={[styles.headerOrderId, styles.headerText]}>Order</Text>
-        <Text style={[styles.headerDistributor, styles.headerText]}>
-          Distributor
-        </Text>
-        <Text style={styles.headerText}>Status</Text>
-      </View>
-      <FlatList
-        style={styles.container}
-        data={orders}
-        renderItem={item => <OrdersListItem {...item} />}
-        ItemSeparatorComponent={ItemSeparator}
-      />
-      <Pressable style={styles.backorderContainer}>
-        <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
-        <Text style={styles.backborderText}>
-          Order not Found? Receive Backorder
-        </Text>
-      </Pressable>
-
-      <View style={styles.buttons}>
-        <Button
-          type={ButtonType.secondary}
-          title="Return Order"
-          buttonStyle={[styles.button, styles.returnButton]}
-          textStyle={styles.buttonText}
+export const OrdersList = memo(
+  ({ orders, isFiltered, onPrimaryPress }: Props) => {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={[styles.headerOrderId, styles.headerText]}>Order</Text>
+          <Text style={[styles.headerDistributor, styles.headerText]}>
+            Distributor
+          </Text>
+          <Text style={styles.headerText}>Status</Text>
+        </View>
+        <FlatList
+          style={styles.container}
+          data={orders}
+          keyExtractor={item => item.orderId.toString()}
+          renderItem={item => (
+            <OrdersListItem {...item} isFiltered={isFiltered} />
+          )}
+          ItemSeparatorComponent={Separator}
         />
-        <Button
-          type={ButtonType.primary}
-          title="Create Order"
-          buttonStyle={[styles.button, styles.createButton]}
-          textStyle={styles.buttonText}
-          onPress={onPrimaryPress}
-        />
+        <Pressable style={styles.backorderContainer}>
+          <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
+          <Text style={styles.backborderText}>
+            Order not Found? Receive Backorder
+          </Text>
+        </Pressable>
+
+        <View style={styles.buttons}>
+          <Button
+            type={ButtonType.secondary}
+            title="Return Order"
+            buttonStyle={[styles.button, styles.returnButton]}
+            textStyle={styles.buttonText}
+          />
+          <Button
+            type={ButtonType.primary}
+            title="Create Order"
+            buttonStyle={[styles.button, styles.createButton]}
+            textStyle={styles.buttonText}
+            onPress={onPrimaryPress}
+          />
+        </View>
       </View>
-    </View>
-  );
-};
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -79,11 +84,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: fonts.TT_Bold,
     color: colors.grayDark2,
-  },
-  separator: {
-    width: '100%',
-    height: 1,
-    backgroundColor: colors.gray,
   },
   backorderContainer: {
     backgroundColor: colors.grayLight,
