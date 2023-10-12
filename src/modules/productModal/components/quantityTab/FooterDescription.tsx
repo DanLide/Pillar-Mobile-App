@@ -63,7 +63,7 @@ export const FooterDescription: React.FC<Props> = ({
               <View style={[styles.itemContainer, { margin: 8 }]}>
                 <Text style={styles.title}>Shipment Quantity</Text>
                 <Text style={styles.subtitleInStock}>
-                  {renderValue(product.shippedQty)}
+                  {renderValue(product.orderMultiple)}
                 </Text>
               </View>
 

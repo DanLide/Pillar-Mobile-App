@@ -64,7 +64,11 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   async run(): Promise<void> {
     const productSupplier = await getProductSupplier(this.scanCode);
 
-    const selectedSupplier = this.store.supplierId || productSupplier;
+    if (!this.store.supplierId) {
+      this.store.setSupplier(productSupplier);
+    }
+
+    const selectedSupplier = this.store.supplierId;
 
     if (!productSupplier) return;
 
@@ -84,14 +88,14 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
     if (!product) return;
 
-    const { productId, storageAreaId } = product;
+    const { productId, storageAreaId, storageAreaName } = product;
 
     const currentStock = this.store.currentStock;
 
     if (storageAreaId !== currentStock?.partyRoleId) {
       throw new BadRequestError(
         ProductByOrderTypeAndSupplierError.NotAssignedToStock,
-        product?.storageAreaName,
+        storageAreaName,
       );
     }
 
