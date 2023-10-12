@@ -435,6 +435,17 @@ export const ListIcon = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const SuggestedListIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill={props.color}
+      fillRule="evenodd"
+      d="M4 22h16V2H4v20Zm1.5-1.5h13v-17h-13v17Zm5.75-11.75h5v-1.5h-5v1.5ZM9.75 9h-2V7h2v2Zm1.5 7.75h5v-1.5h-5v1.5Zm-1.5.25h-2v-2h2v2Zm1.5-4.25h5v-1.5h-5v1.5Zm-1.5.25h-2v-2h2v2Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
 export const ProductListIcon = memo((props: SvgProps) => (
   <Svg width={32} height={32} fill="none" {...props}>
     <Path
@@ -683,10 +694,36 @@ export const ListAffirmativeIcon = memo(
   ),
 );
 
+export const SuggestedListAffirmativeIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <SuggestedListIcon color={color} />
+      <AffirmativeIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
+
 export const ListErrorIcon = memo(
   ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
     <View style={styles.iconRelative}>
       <ListIcon color={color} />
+      <ErrorIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
+
+export const SuggestedListErrorIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <SuggestedListIcon color={color} />
       <ErrorIcon
         primaryColor={primaryColor}
         secondaryColor={secondaryColor}

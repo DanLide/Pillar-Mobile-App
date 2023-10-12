@@ -7,7 +7,6 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { clone } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
 import { EditQuantity } from './EditQuantity';
@@ -20,7 +19,7 @@ import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 import { useSingleToast } from '../../../../hooks';
-import { getToastDuration } from '../../../../contexts';
+import { getProductTotalCost } from 'src/modules/orders/helpers';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -88,7 +87,6 @@ export const ProductQuantity = memo(
         showToast(toastMessages[toastType], {
           type: toastType,
           onPress: onToastAction,
-          duration: getToastDuration(toastType),
         });
     }, [onToastAction, showToast, toastType]);
 
@@ -190,8 +188,7 @@ export const ProductQuantity = memo(
               )}
               <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
               <Text style={styles.totalCost}>
-                Total Cost: $
-                {(product.cost || 0) * (product.reservedCount || 0)}
+                Total Cost: ${getProductTotalCost(product)}
               </Text>
             </View>
           );

@@ -94,21 +94,28 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       [onBadRequestError, showToast],
     );
 
+    const handleFetchError = useCallback(
+      (error: RequestError) => {
+        if (Utils.isNetworkError(error)) {
+          return handleScanError?.(ScannerScreenError.NetworkRequestFailed);
+        }
+
+        if (isBadRequestError(error) && error.error_description) {
+          return handleScanError?.(error);
+        }
+
+        return handleScanError?.(ScannerScreenError.ProductNotFound);
+      },
+      [handleScanError],
+    );
+
     const fetchProductByCode = useCallback(
       async (code: string) => {
-        const networkError = onFetchProduct
+        const fetchError = onFetchProduct
           ? await onFetchProduct(code)
           : await fetchProductByScannedCode(store, btoa(code));
 
-        if (networkError) {
-          return handleScanError?.(
-            Utils.isNetworkError(networkError)
-              ? ScannerScreenError.NetworkRequestFailed
-              : isBadRequestError(networkError)
-              ? networkError
-              : ScannerScreenError.ProductNotFound,
-          );
-        }
+        if (fetchError) return handleFetchError(fetchError);
 
         const product = store.getCurrentProduct;
 
@@ -119,7 +126,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
 
         onProductScan?.(product);
       },
-      [onFetchProduct, store, onProductScan, handleScanError],
+      [onFetchProduct, store, handleFetchError, onProductScan, handleScanError],
     );
 
     const onScanProduct = useCallback<ScanProductProps['onScan']>(

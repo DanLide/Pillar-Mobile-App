@@ -12,7 +12,7 @@ import { StocksList } from '../stocksList/components/StocksList';
 import { ordersStore } from './stores';
 import { fetchOrdersStocks } from '../../data/fetchOrdersStocks';
 import { useSingleToast } from '../../hooks';
-import { getToastDuration, ToastContextProvider } from '../../contexts';
+import { ToastContextProvider } from '../../contexts';
 import { ToastType } from '../../contexts/types';
 import permissionStore from '../permissions/stores/PermissionStore';
 
@@ -45,7 +45,6 @@ const SelectStockScreenBody: React.FC<Props> = observer(
             onPress: () => {
               permissionStore.openSetting();
             },
-            duration: getToastDuration(ToastType.BluetoothDisabled),
           });
         }
       });

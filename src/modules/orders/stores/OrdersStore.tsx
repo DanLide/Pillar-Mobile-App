@@ -1,12 +1,10 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
-import { includes, isNil } from 'ramda';
+import { includes, isNil, map, pipe, sum } from 'ramda';
 
-import {
-  GetOrderDetailsResponse,
-  GetOrdersAPIResponse,
-} from '../../../data/api';
-import { BaseProductsStore } from '../../../stores/BaseProductsStore';
-import { ProductModel } from '../../../stores/types';
+import { GetOrderDetailsResponse, GetOrdersAPIResponse } from 'src/data/api';
+import { BaseProductsStore } from 'src/stores/BaseProductsStore';
+import { ProductModel } from 'src/stores/types';
+import { getProductTotalCost } from 'src/modules/orders/helpers';
 
 export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
@@ -78,6 +76,13 @@ export class OrdersStore extends BaseProductsStore {
       return acc;
     }, false);
     return !!isMissing;
+  }
+
+  @computed get getTotalCost() {
+    return pipe<[ProductModel[]], number[], number>(
+      map(getProductTotalCost),
+      sum,
+    )(this.products);
   }
 
   @action setCurrentOrder(orderDetails: CurrentOrder) {

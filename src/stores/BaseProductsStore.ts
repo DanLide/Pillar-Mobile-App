@@ -51,7 +51,7 @@ export class BaseProductsStore implements BaseProductsStoreType {
     return (product: ProductModel) =>
       product.onHand -
       getReservedCountById(this.getProducts, product.productId) +
-      product.reservedCount;
+      (product.reservedCount ?? 0);
   }
 
   @computed get getOnHand() {

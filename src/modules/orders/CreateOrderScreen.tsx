@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
@@ -9,18 +9,28 @@ import {
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
-} from '../../components';
+  ToastMessage,
+} from 'src/components';
 import Button from '../../components/Button';
 import { colors, fonts, SVGs } from '../../theme';
 import { ordersStore } from './stores';
 import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
 import { find, whereEq } from 'ramda';
-import { check, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
+import { ProductModal } from 'src/modules/productModal';
+import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
+import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
 import {
-  AppNavigator,
-  BaseProductsScreenNavigationProp,
-} from '../../navigation/types';
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from 'src/contexts';
+import { ToastType } from 'src/contexts/types';
+import { getProductsReservedCount } from 'src/modules/orders/helpers';
+
+interface Props {
+  navigation: BaseProductsScreenNavigationProp;
+}
 
 const SCAN_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
@@ -30,14 +40,30 @@ const RECOMMENDED_PRODUCTS_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-interface Props {
-  navigation: BaseProductsScreenNavigationProp;
-}
+const suggestedItemsSuccessText = (count: number) =>
+  `${count} Recommended items added`;
 
-export const CreateOrderScreen = observer(({ navigation }: Props) => {
+const suggestedItemsErrorText =
+  "Recommended items weren't loaded. Please try again";
+
+const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
+    useState(false);
+
   const store = useRef(ordersStore).current;
 
-  const scannedProductsCount = Object.keys(store.getProducts).length;
+  const {
+    modalParams,
+    scannedProductsCount,
+    onPressScan,
+    onEditProduct,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+  } = useBaseProductsScreen(store, navigation);
+
+  const { showToast } = useSingleToast();
 
   const suppliers = useMemo<DropdownItem[]>(
     () =>
@@ -53,16 +79,29 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
     [store.supplierId, suppliers],
   );
 
-  const onPressScan = useCallback(async () => {
-    const result = await check(PERMISSIONS.IOS.CAMERA);
-    if (result !== RESULTS.GRANTED) {
-      navigation.navigate(AppNavigator.CameraPermissionScreen, {
-        nextRoute: AppNavigator.ScannerScreen,
+  const addSuggestedItems = useCallback(async () => {
+    const reservedCount = getProductsReservedCount(store.getProducts);
+
+    setIsSuggestedProductsLoading(true);
+    const error = await fetchSuggestedProducts(store);
+    setIsSuggestedProductsLoading(false);
+
+    if (error) {
+      return showToast(suggestedItemsErrorText, {
+        type: ToastType.SuggestedItemsError,
       });
-      return;
     }
-    navigation.navigate(AppNavigator.ScannerScreen);
-  }, [navigation]);
+
+    const suggestedItemsAdded =
+      getProductsReservedCount(store.getProducts) - reservedCount;
+
+    showToast(
+      <ToastMessage style={styles.toastSuccessMessage}>
+        {suggestedItemsSuccessText(suggestedItemsAdded)}
+      </ToastMessage>,
+      { type: ToastType.SuggestedItemsSuccess },
+    );
+  }, [showToast, store]);
 
   return (
     <View style={styles.container}>
@@ -82,20 +121,26 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
       </View>
 
       <View style={styles.productsContainer}>
-        <SelectedProductsList />
+        <SelectedProductsList
+          onItemPress={onEditProduct}
+          isLoading={isSuggestedProductsLoading}
+        />
+
         <Button
+          disabled={!supplier || isSuggestedProductsLoading}
           type={ButtonType.primary}
           title="Add Items Below Inventory Minimum"
           icon={SVGs.ProductSmallIcon}
           iconProps={RECOMMENDED_PRODUCTS_ICON_PROPS}
           buttonStyle={styles.recommendedProductsButton}
           textStyle={styles.recommendedProductsButtonText}
+          onPress={addSuggestedItems}
         />
       </View>
 
       <View style={styles.totalCostContainer}>
         <Text style={styles.totalCostText}>Total Cost: </Text>
-        <Text style={styles.totalCostCount}>$0</Text>
+        <Text style={styles.totalCostCount}>${store.getTotalCost}</Text>
       </View>
 
       <View style={styles.buttons}>
@@ -109,12 +154,22 @@ export const CreateOrderScreen = observer(({ navigation }: Props) => {
           onPress={onPressScan}
         />
         <Button
-          disabled={!scannedProductsCount}
+          disabled={!scannedProductsCount || isSuggestedProductsLoading}
           type={ButtonType.primary}
           buttonStyle={styles.buttonContainer}
           title="Send Order"
         />
       </View>
+
+      <ProductModal
+        {...modalParams}
+        product={store.getCurrentProduct}
+        stockName={store.stockName}
+        onSubmit={onSubmitProduct}
+        onClose={onCloseModal}
+        onRemove={onRemoveProduct}
+        onChangeProductQuantity={setEditableProductQuantity}
+      />
     </View>
   );
 });
@@ -157,6 +212,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
+  toastSuccessMessage: {
+    textAlign: 'left',
+  },
   topContainer: {
     paddingHorizontal: 16,
     paddingVertical: 24,
@@ -184,3 +242,12 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
 });
+
+export default (props: Props) => (
+  <ToastContextProvider
+    disableSafeArea
+    offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON * 2 - 12}
+  >
+    <CreateOrderScreen {...props} />
+  </ToastContextProvider>
+);
