@@ -137,6 +137,14 @@ export class URLProvider {
     );
   }
 
+  getFetchProductsByFacilityId() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/GetAllProduct/${facilityId}`,
+    );
+  }
+
   getCategoriesByFacilityId() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
@@ -197,8 +205,9 @@ export class URLProvider {
   }
 
   createInvoice(jobId: number) {
+    const partyRoleId = this.authStore.getPartyRoleId;
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/SubmitInvoiceCCC/${jobId}`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/SubmitInvoiceCCC/${partyRoleId}/${jobId}`,
     );
   }
 

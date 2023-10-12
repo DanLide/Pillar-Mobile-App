@@ -33,6 +33,7 @@ export interface ProductModel
   storageAreaId?: number;
   stockLocationName?: string;
   storageAreaName?: string;
+  inventoryById?: number;
 }
 
 export interface ClearStoreType {

@@ -7,6 +7,7 @@ import {
   RemoveProductResponse,
   returnProductAPI,
   getFetchProductByFacilityIdAPI,
+  getFetchProductsByFacilityIdAPI,
 } from './productsAPI';
 import { getFetchJobsAPI } from './jobsAPI';
 import { createInvoiceAPI } from './createInvoiceAPI';
@@ -30,6 +31,7 @@ export {
   returnProductAPI,
   createInvoiceAPI,
   getFetchProductByFacilityIdAPI,
+  getFetchProductsByFacilityIdAPI,
   getOrdersAPI,
   getOrderDetails,
   receiveOrderAPI,

@@ -27,7 +27,13 @@ import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
-import { useBaseProductsScreen } from 'src/hooks';
+import { RequestError } from 'src/data/helpers/tryFetch';
+import { ToastType } from 'src/contexts/types';
+import { useSingleToast, useBaseProductsScreen } from 'src/hooks';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from 'src/contexts';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -49,7 +55,8 @@ interface Props {
   ListComponent: React.FC<SelectedProductsListProps>;
   primaryButtonTitle?: string;
   disableAlert?: boolean;
-  onComplete?: () => void;
+  completeErrorMessage?: string;
+  onComplete?: () => Promise<void | RequestError> | void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -62,7 +69,7 @@ const SCAN_ICON_PROPS: SvgProps = {
 const alertMessage =
   'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
 
-export const BaseProductsScreen = observer(
+const BaseProducts = observer(
   ({
     infoTitle,
     modalType,
@@ -74,6 +81,7 @@ export const BaseProductsScreen = observer(
     disableAlert,
     onComplete,
   }: Props) => {
+    const { showToast } = useSingleToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [alertVisible, setAlertVisible] = useState(false);
@@ -122,8 +130,17 @@ export const BaseProductsScreen = observer(
       isNeedNavigateBack.current = true;
 
       setIsLoading(true);
-      await onComplete?.();
+      const error = await onComplete?.();
       setIsLoading(false);
+
+      if (error && modalType === ProductModalType.CreateInvoice) {
+        showToast('The Invoice was not generated. Please try again.', {
+          type: ToastType.Retry,
+          duration: 0,
+          onPress: onCompleteRemove,
+        });
+        return;
+      }
 
       if (modalType === ProductModalType.ManageProduct) return;
 
@@ -136,7 +153,7 @@ export const BaseProductsScreen = observer(
           },
         ],
       });
-    }, [modalType, navigation, onComplete]);
+    }, [modalType, navigation, onComplete, showToast]);
 
     const onPressPrimary = useCallback(() => {
       isNeedNavigateBack.current = true;
@@ -222,6 +239,12 @@ export const BaseProductsScreen = observer(
       </AlertWrapper>
     );
   },
+);
+
+export const BaseProductsScreen = (props: Props) => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <BaseProducts {...props} />
+  </ToastContextProvider>
 );
 
 const styles = StyleSheet.create({

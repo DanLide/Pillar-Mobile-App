@@ -1,7 +1,8 @@
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { observer } from 'mobx-react';
+import { ActivityIndicator, Text, View, StyleSheet } from 'react-native';
 
-import { BaseScannerScreen } from '../../components';
+import { BaseScannerScreen, Button, ButtonType } from '../../components';
 
 import {
   ScannerModalStoreType,
@@ -15,7 +16,6 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
-import { fetchProductByFacilityId } from '../../data/fetchProductByFacilityId';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -44,8 +44,13 @@ export const ScannerScreen: React.FC = observer(() => {
 
   const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
-  const onFetchProduct = async (code: string) =>
-    fetchProductByFacilityId(store, code.replace('~~', ''));
+  const onFetchProduct = async (code: string) => {
+    const currentProduct = createInvoiceStore.getProductById(
+      +code.replace('~~', ''),
+    );
+
+    store.setCurrentProduct(currentProduct);
+  };
 
   return (
     <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>

@@ -44,6 +44,7 @@ interface Props {
   SyncedSectionFooter?: JSX.Element;
   title?: string;
   Header?: JSX.Element;
+  isShowInvoiceTooltip?: boolean;
 }
 
 const BaseResultScreen: React.FC<Props> = observer(
@@ -59,6 +60,7 @@ const BaseResultScreen: React.FC<Props> = observer(
     errorListTitlePartBolt,
     title,
     Header,
+    isShowInvoiceTooltip,
   }) => {
     const { showToast } = useSingleToast();
 
@@ -149,12 +151,12 @@ const BaseResultScreen: React.FC<Props> = observer(
       () =>
         SyncedSectionFooter ? (
           SyncedSectionFooter
-        ) : groupByJob ? (
+        ) : groupByJob || isShowInvoiceTooltip ? (
           <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
             <Text style={styles.contextFooterText}>Where’s my Invoice?</Text>
           </Tooltip>
         ) : null,
-      [SyncedSectionFooter, groupByJob, tooltipMessage],
+      [SyncedSectionFooter, groupByJob, tooltipMessage, isShowInvoiceTooltip],
     );
 
     const _renderHeader = useMemo<JSX.Element>(
