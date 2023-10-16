@@ -98,33 +98,39 @@ export type HomeStackParamList = {
 };
 
 export type RemoveStackParamList = {
-  [AppNavigator.SelectStockScreen]: StockLocationParams;
+  [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
   [AppNavigator.RemoveProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
-  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]:
+    | BluetoothPermissionScreenParams
+    | undefined;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ReturnStackParamList = {
-  [AppNavigator.SelectStockScreen]: StockLocationParams;
+  [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
   [AppNavigator.ReturnProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
-  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]:
+    | BluetoothPermissionScreenParams
+    | undefined;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
 export type ManageProductsStackParamList = {
-  [AppNavigator.SelectStockScreen]: StockLocationParams;
+  [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
   [AppNavigator.ManageProductsScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
-  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]:
+    | BluetoothPermissionScreenParams
+    | undefined;
   [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
@@ -143,9 +149,11 @@ export type OrderDetailsScreenParams = { orderId: string };
 export type OrdersParamsList = {
   [AppNavigator.OrdersScreen]: undefined;
   [AppNavigator.OrderDetailsScreen]: OrderDetailsScreenParams;
-  [AppNavigator.BluetoothPermissionScreen]: BluetoothPermissionScreenParams;
+  [AppNavigator.BluetoothPermissionScreen]:
+    | BluetoothPermissionScreenParams
+    | undefined;
   [AppNavigator.OrderByStockLocationScreen]: undefined;
-  [AppNavigator.SelectStockScreen]: StockLocationParams;
+  [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
   [AppNavigator.CreateOrderScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
