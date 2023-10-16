@@ -5,11 +5,13 @@ import { useIsFocused } from '@react-navigation/native';
 
 import { OrdersList } from './components/OrdersList';
 import { ordersStore } from './stores';
-import { fetchOrders } from '../../data/fetchOrders';
+import { fetchOrders } from 'src/data/fetchOrders';
 import { Button, ButtonType, Input } from '../../components';
 import { SVGs, colors, fonts } from '../../theme';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
 import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
+import { getScreenName } from 'src/navigation/helpers/getScreenName';
+import permissionStore from '../permissions/stores/PermissionStore';
 
 interface Props {
   navigation: NativeStackNavigationProp<
@@ -44,7 +46,10 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
     }
   };
 
-  const openCreateOrder = () => {};
+  const openCreateOrder = () => {
+    const navigateToScreen = getScreenName(permissionStore);
+    navigation.navigate(navigateToScreen);
+  };
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
