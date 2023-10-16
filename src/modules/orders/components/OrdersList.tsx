@@ -74,28 +74,6 @@ export const OrdersList = memo(
             textStyle={styles.buttonText}
             onPress={onPrimaryPress}
           />
-          <Pressable style={styles.backorderContainer}>
-            <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
-            <Text style={styles.backborderText}>
-              Order not Found? Receive Backorder
-            </Text>
-          </Pressable>
-
-          <View style={styles.buttons}>
-            <Button
-              type={ButtonType.secondary}
-              title="Return Order"
-              buttonStyle={[styles.button, styles.returnButton]}
-              textStyle={styles.buttonText}
-            />
-            <Button
-              type={ButtonType.primary}
-              title="Create Order"
-              buttonStyle={[styles.button, styles.createButton]}
-              textStyle={styles.buttonText}
-              onPress={onPrimaryPress}
-            />
-          </View>
         </View>
       </View>
     );
