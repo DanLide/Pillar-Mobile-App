@@ -1,15 +1,15 @@
-import { ProductModel } from '../../stores/types';
 import { URLProvider, tryAuthFetch } from '../helpers';
 
-export interface CreateInvoiceRequestBody extends ProductModel {
+export interface CreateInvoiceRequestBody {
   qty: number;
-  jobID: number;
-  jobNumber: string;
+  productId: number;
 }
 
-export const createInvoiceAPI = (body: CreateInvoiceRequestBody[]) => {
-  const url = new URLProvider().createInvoice(body[0].jobID);
-
+export const createInvoiceAPI = (
+  body: CreateInvoiceRequestBody[],
+  jobId: number,
+) => {
+  const url = new URLProvider().createInvoice(jobId);
   const JSONbody = JSON.stringify(body);
 
   return tryAuthFetch<string[]>({

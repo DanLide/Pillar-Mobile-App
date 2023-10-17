@@ -19,6 +19,7 @@ import {
   ButtonType,
   InfoTitleBar,
   InfoTitleBarType,
+  Separator,
 } from '../../components';
 import {
   AppNavigator,
@@ -161,7 +162,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         data={getCurrentProductsByStockName}
         renderItem={renderItem}
         keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ItemSeparatorComponent={Separator}
       />
       <View style={styles.button}>
         <Button
@@ -237,11 +238,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: fonts.TT_Regular,
     color: colors.grayDark,
-  },
-  separator: {
-    height: 1,
-    width: '100%',
-    backgroundColor: colors.neutral30,
   },
   itemOrdered: {
     fontSize: 12,

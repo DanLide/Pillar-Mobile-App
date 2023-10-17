@@ -23,8 +23,7 @@ export interface GetOrdersAPIResponse {
   exception: string;
   user: string;
   supplierPartyRoleID: number;
-  // TODO https://dev.azure.com/3M-Bluebird/Pillar/_workitems/edit/117082
-  products: [];
+  products: ProductModel[];
   comments: string;
   unitPrice: number;
   taxStatus: string;
