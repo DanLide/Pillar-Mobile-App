@@ -1,78 +1,67 @@
-import { OrderStatusType, OrderType } from 'src/constants/common.enum';
+import {
+  OrderMethodType,
+  OrderStatusType,
+  OrderType,
+} from 'src/constants/common.enum';
 import { URLProvider, tryAuthFetch } from '../helpers';
 import { ProductModel } from 'src/stores/types';
 
 export interface GetOrdersAPIResponse {
+  area: number;
+  inventoryAssignmentId: number;
+  isShipped: number;
+  jobId: number;
+  orderAreaId: number;
+  orderDetailId: number;
+  orderDetails: OrderDetailsProduct[];
+  orderGroupId: number;
   orderId: number;
-  orderDetailID: number;
-  dateTime: string;
-  orderTypeID: string;
-  orderType: string;
-  supplierName: string;
-  orderGroup: string;
-  orderArea: string;
-  status: OrderStatusType;
-  orderStatusTypeID: number;
+  orderMethodTypeId: OrderMethodType;
+  orderStatusTypeId: number;
   orderTotal: number;
+  partyRelationshipId: number;
+  products: ProductModel[];
+  quantityOrdered: number;
+  quantityShipped: number;
   receivedTotal: number;
-  subTotal: number;
   shippedSubTotal: number;
   shippedTax: number;
   shippedTotal: number;
+  subTotal: number;
+  supplierPartyRoleId: number;
   tax: number;
-  exception: string;
-  user: string;
-  supplierPartyRoleID: number;
-  products: ProductModel[];
-  comments: string;
-  unitPrice: number;
-  taxStatus: string;
-  area: number;
-  inventoryAssignmentID: number;
-  quantityOrdered: number;
-  quantityShipped: number;
-  orderDetailList: [
-    {
-      orderID: number;
-      partyRelationshipID: number;
-      area: number;
-      taxStatus: number;
-      orderGroup: number;
-      inventoryAssignmentID: number;
-      basePrice: number;
-      qtyOrdered: number;
-      isTaxable: number;
-      tax: number;
-    },
-  ];
-  partyRelationshipID: number;
-  orderMethodTypeID: number;
-  orderGroupID: number;
-  orderAreaID: number;
   taxRate: number;
-  supplier: string;
-  identifier: string;
   totalCost: string;
-  customPONumber: string;
-  isReceived: string;
-  fromDateTime: string;
-  toDateTime: string;
-  jobID: number;
-  isPORequired: string;
-  isShipped: number;
-  isFromPrimarySupplier: string;
-  orderDetails: [
-    {
-      orderID: number;
-      inventoryAssignmentID: number;
-      price: number;
-      orderQty: number;
-      isTaxable: number;
-      jobID: number;
-    },
-  ];
-  repairFacilityID: number;
-  supplierID: number;
+  unitPrice: number;
+  status: OrderStatusType;
+  orderTypeId?: OrderType;
+  orderType?: string;
+  supplierName?: string;
+  orderGroup?: string;
+  orderArea?: string;
+  exception?: string;
+  user?: string;
+  comments?: string;
+  taxStatus?: string;
+  supplier?: string;
+  identifier?: string;
+  customPONumber?: string;
+  isReceived?: string;
+  dateTime?: string;
+  fromDateTime?: string;
+  toDateTime?: string;
+  isPORequired?: string;
+  isFromPrimarySupplier?: string;
+  repairFacilityId?: number;
+  supplierId?: number;
+}
+
+export interface OrderDetailsProduct {
+  inventoryAssignmentId?: number;
+  price?: number;
+  orderQty?: number;
+  isTaxable?: number;
+  jobId?: number;
 }
 
 export interface OrderProductResponse {
@@ -135,27 +124,22 @@ export interface ReceiveOrderRequestProduct {
   quantityReceived: number;
 }
 
-export interface CreateOrderRequestProduct
-  extends Pick<ProductModel, 'inventoryAssignmentId'> {
-  orderQty?: number;
-  isTaxable?: number;
-  jobId?: number;
-  price?: number;
-}
-
-export interface CreateOrderRequestPayload {
-  comments: string;
+export interface CreateOrderRequestPayload
+  extends Pick<
+    GetOrdersAPIResponse,
+    | 'comments'
+    | 'orderArea'
+    | 'orderDetails'
+    | 'orderGroup'
+    | 'orderId'
+    | 'orderMethodTypeId'
+    | 'orderTotal'
+    | 'orderTypeId'
+    | 'taxStatus'
+    | 'repairFacilityId'
+    | 'supplierId'
+  > {
   customPoNumber: string;
-  orderArea: string;
-  orderDetails: CreateOrderRequestProduct[];
-  orderGroup: string;
-  orderId: number;
-  orderMethodTypeId: number;
-  orderTotal: number;
-  orderTypeId: number;
-  taxStatus: string;
-  repairFacilityId?: number;
-  supplierId?: number;
 }
 
 export const getOrdersAPI = () => {
@@ -235,10 +219,7 @@ export const getSuggestedProductsAPI = () => {
 export const createOrderAPI = (payload: CreateOrderRequestPayload) => {
   const url = new URLProvider().createOrder();
 
-  console.log('url: ', url);
-  console.log('payload: ', payload);
-
-  return tryAuthFetch<string>({
+  return tryAuthFetch<GetOrdersAPIResponse[]>({
     url,
     request: {
       body: JSON.stringify(payload),

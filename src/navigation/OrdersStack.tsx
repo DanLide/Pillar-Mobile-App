@@ -22,6 +22,7 @@ import {
 } from '../modules/permissions';
 import { ScannerScreen } from '../modules/orders/ScannerScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
+import { CreateOrderResultScreen } from 'src/modules/orders/CreateOrderResultScreen';
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -96,6 +97,14 @@ export const OrdersStack: React.FC = () => {
         component={ResultScreen}
         options={getScreenOptions({
           title: 'Result screen',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.CreateOrderResultScreen}
+        component={CreateOrderResultScreen}
+        options={getScreenOptions({
+          title: 'Create Order',
           leftBarButtonType: LeftBarType.Back,
         })}
       />

@@ -7,6 +7,8 @@ import {
   Text,
   Pressable,
   ActivityIndicator,
+  StyleProp,
+  TextStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
@@ -18,13 +20,14 @@ import { getProductTotalCost } from 'src/modules/orders/helpers';
 
 interface Props {
   isLoading?: boolean;
+  itemTitleColor?: string;
   onItemPress?: (item: ProductModel) => void;
 }
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const SelectedProductsList: React.FC<Props> = observer(
-  ({ isLoading, onItemPress }) => {
+  ({ isLoading, itemTitleColor = colors.purpleDark, onItemPress }) => {
     const store = useRef<SyncedProductStoreType>(ordersStore).current;
 
     const products = isLoading ? [] : store.getNotSyncedProducts;
@@ -54,6 +57,11 @@ export const SelectedProductsList: React.FC<Props> = observer(
       [isLoading],
     );
 
+    const itemTitleStyle = useMemo<StyleProp<TextStyle>>(
+      () => [styles.itemTitle, { color: itemTitleColor }],
+      [itemTitleColor],
+    );
+
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<ProductModel>) => {
         const { manufactureCode, partNo, name, reservedCount } = item;
@@ -63,7 +71,7 @@ export const SelectedProductsList: React.FC<Props> = observer(
         return (
           <Pressable style={styles.item} onPress={handlePress}>
             <View style={styles.itemDetails}>
-              <Text numberOfLines={1} style={styles.itemTitle}>
+              <Text numberOfLines={1} style={itemTitleStyle}>
                 {manufactureCode} {partNo}
               </Text>
               <Text numberOfLines={1} style={styles.itemSubtitle}>
@@ -77,7 +85,7 @@ export const SelectedProductsList: React.FC<Props> = observer(
           </Pressable>
         );
       },
-      [onItemPress],
+      [itemTitleStyle, onItemPress],
     );
 
     return (
@@ -157,7 +165,6 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
   itemTitle: {
-    color: colors.purpleDark,
     fontFamily: fonts.TT_Bold,
     fontSize: 15,
     lineHeight: 20,

@@ -48,6 +48,7 @@ export enum AppNavigator {
   OrderDetailsScreen = 'OrderDetailsScreen',
   OrderByStockLocationScreen = 'OrderByStockLocationScreen',
   CreateOrderScreen = 'CreateOrderScreen',
+  CreateOrderResultScreen = 'CreateOrderResultScreen',
 }
 
 type CameraPermissionScreenParams = {
@@ -155,6 +156,7 @@ export type OrdersParamsList = {
   [AppNavigator.OrderByStockLocationScreen]: undefined;
   [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
   [AppNavigator.CreateOrderScreen]: undefined;
+  [AppNavigator.CreateOrderResultScreen]: undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
   [AppNavigator.ScannerScreen]: undefined;

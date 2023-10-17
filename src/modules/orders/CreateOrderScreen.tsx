@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
+import { find, whereEq } from 'ramda';
 
 import {
   ButtonType,
@@ -14,9 +15,7 @@ import {
 import Button from '../../components/Button';
 import { colors, fonts, SVGs } from '../../theme';
 import { ordersStore } from './stores';
-import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
-import { find, whereEq } from 'ramda';
 import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
@@ -31,6 +30,7 @@ import {
 import { ToastType } from 'src/contexts/types';
 import { getProductsReservedCount } from 'src/modules/orders/helpers';
 import { createOrder } from 'src/data/createOrder';
+import { SelectedProductsList, TotalCostBar } from './components';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -49,6 +49,8 @@ const suggestedItemsSuccessText = (count: number) =>
 
 const suggestedItemsErrorText =
   "Recommended items weren't loaded. Please try again";
+
+const createOrderErrorText = "The order wasn't created. Please try again.";
 
 const CreateOrderScreen = observer(({ navigation }: Props) => {
   const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
@@ -113,12 +115,11 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     const error = await createOrder(store);
     setIsCreateOrderLoading(false);
 
-    if (error) {
-      Alert.alert("The order wasn't created. Please try again");
-    } else {
-      navigation.navigate(AppNavigator.ResultScreen);
-    }
-  }, [navigation, store]);
+    if (error)
+      return showToast(createOrderErrorText, { type: ToastType.Error });
+
+    navigation.navigate(AppNavigator.CreateOrderResultScreen);
+  }, [navigation, showToast, store]);
 
   return (
     <View style={styles.container}>
@@ -155,10 +156,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
         />
       </View>
 
-      <View style={styles.totalCostContainer}>
-        <Text style={styles.totalCostText}>Total Cost: </Text>
-        <Text style={styles.totalCostCount}>${store.getTotalCost}</Text>
-      </View>
+      <TotalCostBar />
 
       <View style={styles.buttons}>
         <Button
@@ -237,28 +235,6 @@ const styles = StyleSheet.create({
   topContainer: {
     paddingHorizontal: 16,
     paddingVertical: 24,
-  },
-  totalCostContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.purpleDark2,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 16,
-    minHeight: 48,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  totalCostText: {
-    color: colors.white,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  totalCostCount: {
-    color: colors.white,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 20,
-    lineHeight: 24,
   },
 });
 
