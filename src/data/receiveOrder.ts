@@ -1,4 +1,4 @@
-import { clone, isNil } from 'ramda';
+import { clone } from 'ramda';
 
 import { Task } from './helpers';
 import {
@@ -92,7 +92,7 @@ class ReceiveProductTask extends Task {
               this.ordersStore.currentStockName,
         );
 
-        if (isNil(selectedProduct?.reservedCount))
+        if (selectedProduct?.reservedCount === undefined)
           throw Error('Request failed!');
         return {
           number: this.ordersStore.currentOrder?.order.customPONumber,
