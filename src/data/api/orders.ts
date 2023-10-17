@@ -136,7 +136,8 @@ export interface ReceiveOrderRequestProduct {
 }
 
 export interface CreateOrderRequestProduct
-  extends Pick<ProductModel, 'inventoryAssignmentId' | 'orderedQty'> {
+  extends Pick<ProductModel, 'inventoryAssignmentId'> {
+  orderQty?: number;
   isTaxable?: number;
   jobId?: number;
   price?: number;
@@ -233,6 +234,9 @@ export const getSuggestedProductsAPI = () => {
 
 export const createOrderAPI = (payload: CreateOrderRequestPayload) => {
   const url = new URLProvider().createOrder();
+
+  console.log('url: ', url);
+  console.log('payload: ', payload);
 
   return tryAuthFetch<string>({
     url,

@@ -46,8 +46,8 @@ class CreateOrderTask extends Task {
       ({ inventoryAssignmentId, isTaxable, reservedCount, job, cost }) => {
         return {
           inventoryAssignmentId,
+          orderQty: reservedCount,
           isTaxable: Number(!!isTaxable),
-          orderedQty: reservedCount,
           jobId: job?.jobId ?? 0,
           price: cost,
         };
