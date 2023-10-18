@@ -230,3 +230,20 @@ export const createOrderAPI = (payload: CreateOrderRequestPayload) => {
     },
   });
 };
+
+export const updatePONumberAPI = (orderId: number, CustomPONumber: string) => {
+  const url = new URLProvider().updatePONumber();
+
+  const body = JSON.stringify([{ orderId, CustomPONumber }]);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      body,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};

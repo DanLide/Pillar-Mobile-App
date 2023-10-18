@@ -1160,6 +1160,74 @@ export const TransparentWarning = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const CautionMiddleIcon = memo((props: SvgProps) => (
+  <Svg width={21} height={20} fill="none" {...props}>
+    <Path
+      fill="#F5A111"
+      fillRule="evenodd"
+      d="m10.469 13.294-.258-5.771h1.463l-.243 5.77h-.962Zm1.333 1.731a.88.88 0 0 1-.886.873.88.88 0 1 1 0-1.758c.496 0 .886.388.886.885Zm-.886-13.358L1.333 18.334H20.5L10.916 1.667Z"
+      clipRule="evenodd"
+    />
+    <Mask id="a" width={20} height={18} x={1} y={1} maskUnits="userSpaceOnUse">
+      <Path
+        fill="#fff"
+        fillRule="evenodd"
+        d="m10.469 13.294-.258-5.771h1.463l-.243 5.77h-.962Zm1.333 1.731a.88.88 0 0 1-.886.873.88.88 0 1 1 0-1.758c.496 0 .886.388.886.885Zm-.886-13.358L1.333 18.334H20.5L10.916 1.667Z"
+        clipRule="evenodd"
+      />
+    </Mask>
+  </Svg>
+));
+
+export const CautionSmallIcon = memo(
+  ({ primaryColor, secondaryColor, ...props }: SvgPropsWithColors) => (
+    <Svg width={20} height={18} fill="none" {...props}>
+      <Mask
+        id="a"
+        width={20}
+        height={17}
+        x={0.125}
+        y={0.25}
+        fill="#000"
+        maskUnits="userSpaceOnUse"
+      >
+        <Path fill={secondaryColor} d="M.125.25h20v17h-20z" />
+        <Path
+          fillRule="evenodd"
+          d="m9.977 11.97-.193-4.328h1.097l-.183 4.328h-.721Zm1 1.299a.66.66 0 0 1-.665.654.66.66 0 1 1 0-1.319c.372 0 .665.292.665.665ZM10.312 3.25l-7.187 12.5H17.5l-7.188-12.5Z"
+          clipRule="evenodd"
+        />
+      </Mask>
+      <Path
+        fill={primaryColor}
+        fillRule="evenodd"
+        d="m9.977 11.97-.193-4.328h1.097l-.183 4.328h-.721Zm1 1.299a.66.66 0 0 1-.665.654.66.66 0 1 1 0-1.319c.372 0 .665.292.665.665ZM10.312 3.25l-7.187 12.5H17.5l-7.188-12.5Z"
+        clipRule="evenodd"
+      />
+      <Path
+        fill="#F2F2F5"
+        d="m9.977 11.97-1.299.058.056 1.242h1.243v-1.3Zm-.193-4.328v-1.3h-1.36L8.485 7.7l1.299-.058Zm1.097 0 1.299.055.057-1.355H10.88v1.3Zm-.183 4.328v1.3h1.246l.053-1.245-1.299-.055Zm-.386-8.72 1.128-.648-1.127-1.96-1.127 1.96 1.127.648Zm-7.187 12.5-1.127-.648-1.12 1.948h2.247v-1.3Zm14.375 0v1.3h2.247l-1.12-1.948-1.127.648Zm-6.224-3.838-.194-4.328-2.597.116.193 4.328 2.598-.116Zm-1.492-2.97h1.097v-2.6H9.784v2.6Zm-.202-1.355-.183 4.328 2.598.11.183-4.328-2.598-.11Zm1.116 3.083h-.721v2.6h.721v-2.6Zm-1.021 2.599a.64.64 0 0 1 .635-.646v2.6a1.96 1.96 0 0 0 1.965-1.954h-2.6Zm.635-.646a.64.64 0 0 1 .636.646h-2.6a1.96 1.96 0 0 0 1.964 1.954v-2.6Zm.636.646c0 .344-.29.635-.636.635v-2.6a1.956 1.956 0 0 0-1.964 1.965h2.6Zm-.636.635a.643.643 0 0 1-.635-.635h2.6a1.957 1.957 0 0 0-1.965-1.965v2.6ZM9.186 2.602l-7.188 12.5 2.254 1.296 7.188-12.5-2.254-1.296ZM3.125 17.05H17.5v-2.6H3.125v2.6Zm15.502-1.948-7.187-12.5-2.254 1.296 7.187 12.5 2.254-1.296Z"
+        mask="url(#a)"
+      />
+      <Mask
+        id="b"
+        width={15}
+        height={13}
+        x={3}
+        y={3}
+        maskUnits="userSpaceOnUse"
+      >
+        <Path
+          fill={secondaryColor}
+          fillRule="evenodd"
+          d="m9.977 11.97-.193-4.328h1.097l-.183 4.328h-.721Zm1 1.299a.66.66 0 0 1-.665.654.66.66 0 1 1 0-1.319c.372 0 .665.292.665.665ZM10.312 3.25l-7.187 12.5H17.5l-7.188-12.5Z"
+          clipRule="evenodd"
+        />
+      </Mask>
+    </Svg>
+  ),
+);
+
 export const CautionSolidIcon = memo((props: SvgProps) => (
   <Svg width={25} height={24} fill="none" {...props}>
     <Path
@@ -1178,6 +1246,19 @@ export const CautionSolidIcon = memo((props: SvgProps) => (
     </Mask>
   </Svg>
 ));
+
+export const PONumberCautionIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <SuggestedListIcon color={color} />
+      <CautionSmallIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
 
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },

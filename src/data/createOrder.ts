@@ -1,41 +1,57 @@
 import { Task, TaskExecutor } from './helpers';
 import { OrdersStore } from '../modules/orders/stores/OrdersStore';
-import { createOrderAPI, OrderDetailsProduct } from 'src/data/api/orders';
+import {
+  createOrderAPI,
+  GetOrdersAPIResponse,
+  OrderDetailsProduct,
+} from 'src/data/api/orders';
 import { ProductModel } from 'src/stores/types';
-import { OrderMethodType, OrderType } from 'src/constants/common.enum';
+import {
+  OrderMethodType,
+  OrderStatusType,
+  OrderType,
+} from 'src/constants/common.enum';
 import { SSOStore } from 'src/stores/SSOStore';
 import { ssoStore } from 'src/stores';
 import { assoc, head } from 'ramda';
 import { stocksStore, StockStore } from 'src/modules/stocksList/stores';
 
+interface CreateOrderContext {
+  orderResponse?: GetOrdersAPIResponse;
+}
+
 export const createOrder = async (ordersStore: OrdersStore) => {
-  return new TaskExecutor([new CreateOrderTask(ordersStore)]).execute();
+  const createOrderContext: CreateOrderContext = {};
+
+  return new TaskExecutor([
+    new CreateOrderTask(createOrderContext, ordersStore),
+    new SaveOrderDataTask(createOrderContext, ordersStore),
+  ]).execute();
 };
 
 class CreateOrderTask extends Task {
+  createOrderContext: CreateOrderContext;
   ordersStore: OrdersStore;
   ssoStore: SSOStore;
-  stocksStore: StockStore;
 
   constructor(
+    createOrderContext: CreateOrderContext,
     ordersStore: OrdersStore,
     sso_store = ssoStore,
-    stocks_store = stocksStore,
   ) {
     super();
+    this.createOrderContext = createOrderContext;
     this.ordersStore = ordersStore;
     this.ssoStore = sso_store;
-    this.stocksStore = stocks_store;
   }
 
   async run() {
-    const productList = this.ordersStore.getProducts;
-    const orderDetails = this.mapProducts(productList);
+    const orderDetails = this.mapProducts(this.ordersStore.getProducts);
 
     const repairFacilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
 
-    const order = head(
+    this.createOrderContext.orderResponse = head(
       (await createOrderAPI({
         comments: '',
         customPoNumber: '',
@@ -51,18 +67,6 @@ class CreateOrderTask extends Task {
         taxStatus: '',
       })) ?? [],
     );
-
-    const supplierName = supplierId
-      ? this.stocksStore.getSupplierNameById(supplierId)
-      : undefined;
-
-    this.ordersStore.setCurrentOrder({
-      // TODO: remove ts-ignore after backend fix
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      order: assoc('supplierName', supplierName, order),
-      productList,
-    });
   }
 
   mapProducts(products: ProductModel[]): OrderDetailsProduct[] {
@@ -77,5 +81,46 @@ class CreateOrderTask extends Task {
         };
       },
     );
+  }
+}
+
+class SaveOrderDataTask extends Task {
+  createOrderContext: CreateOrderContext;
+  ordersStore: OrdersStore;
+  stocksStore: StockStore;
+
+  constructor(
+    createOrderContext: CreateOrderContext,
+    ordersStore: OrdersStore,
+    stocks_store = stocksStore,
+  ) {
+    super();
+    this.createOrderContext = createOrderContext;
+    this.ordersStore = ordersStore;
+    this.stocksStore = stocks_store;
+  }
+
+  async run() {
+    const { orderResponse } = this.createOrderContext;
+
+    const productList = this.ordersStore.getProducts;
+    const supplierId = this.ordersStore.supplierId;
+
+    const supplierName = supplierId
+      ? this.stocksStore.getSupplierNameById(supplierId)
+      : undefined;
+
+    // TODO: remove this after backend orderId fix
+    const order =
+      orderResponse &&
+      assoc('status', OrderStatusType.POREQUIRED, orderResponse);
+
+    this.ordersStore.setCurrentOrder({
+      // TODO: remove ts-ignore after backend orderId fix
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      order: assoc('supplierName', supplierName, order),
+      productList,
+    });
   }
 }

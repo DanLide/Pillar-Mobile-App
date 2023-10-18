@@ -1,5 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useCallback, useMemo, useRef } from 'react';
+import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 
 import {
   Button,
@@ -7,13 +7,14 @@ import {
   InfoTitleBar,
   InfoTitleBarType,
 } from '../../components';
-import { SVGs, colors, fonts } from '../../theme';
+import { colors, fonts, SVGs } from '../../theme';
 
 import { ordersStore } from './stores';
 import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { SelectedProductsList } from 'src/modules/orders/components/SelectedProductsList';
 import { TotalCostBar } from 'src/modules/orders/components';
+import { OrderStatusType } from 'src/constants/common.enum';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -23,15 +24,46 @@ type Props = NativeStackScreenProps<
 export const CreateOrderResultScreen = ({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
-  const orderId = ordersStoreRef.currentOrder?.order.orderId;
+  const order = ordersStoreRef.currentOrder?.order;
 
-  const onNavigateToHome = useCallback(
+  const orderId = order?.orderId;
+  const supplierName = order?.supplierName;
+  const status = order?.status;
+  const poNumber = order?.customPONumber;
+
+  const isPORequired = status === OrderStatusType.POREQUIRED;
+  const isOrderNotFinalized = isPORequired && !poNumber;
+
+  const TitleIcon = useMemo(
     () =>
-      navigation.reset({
-        routes: [{ name: AppNavigator.Drawer }],
-      }),
-    [navigation],
+      isOrderNotFinalized ? (
+        <SVGs.CautionMiddleIcon />
+      ) : (
+        <SVGs.CheckMark color={colors.green3} />
+      ),
+    [isOrderNotFinalized],
   );
+
+  const distributorAndPOTextStyle = useMemo<StyleProp<TextStyle>>(
+    () => [styles.distributorAndPOTitle, styles.distributorAndPOText],
+    [],
+  );
+
+  const poTextStyle = useMemo<StyleProp<TextStyle>>(
+    () => [
+      styles.distributorAndPOTitle,
+      styles.distributorAndPOText,
+      styles.poText,
+    ],
+    [],
+  );
+
+  const subtitleLargeStyle = useMemo<StyleProp<TextStyle>>(
+    () => [styles.subtitle, styles.subtitleLarge],
+    [],
+  );
+
+  const onNavigateToHome = useCallback(() => navigation.goBack(), [navigation]);
 
   const onNavigateToOrderView = useCallback(
     () =>
@@ -52,27 +84,61 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
       <View style={styles.infoContainer}>
         <View style={styles.header}>
           <View style={styles.titleContainer}>
-            <SVGs.CheckMark color={colors.green3} />
+            {TitleIcon}
             <Text style={styles.title}>
               Order {orderId && `${orderId} `}Created
             </Text>
           </View>
-          <Text style={styles.subtitle}>
-            You have successfully submitted the following items
-          </Text>
-          <Text style={styles.distributorTitle}>Distributor</Text>
-          <Text style={[styles.distributorTitle, styles.distributorText]}>
-            {ordersStoreRef.currentOrder?.order.supplierName}
-          </Text>
+
+          <View style={styles.subtitleContainer}>
+            {isOrderNotFinalized ? (
+              <>
+                <Text style={subtitleLargeStyle}>
+                  Your order is saved, but not finalized.
+                </Text>
+                <Text style={subtitleLargeStyle}>
+                  Login to{' '}
+                  <Text style={styles.subtitleBoldItalic}>
+                    repairstack.3m.com
+                  </Text>{' '}
+                  to assign{'\n'}PO and release order to you Distributor
+                </Text>
+              </>
+            ) : (
+              <Text style={styles.subtitle}>
+                You have successfully submitted the following items
+              </Text>
+            )}
+          </View>
+
+          <View style={styles.distributorAndPOContainer}>
+            <View>
+              <Text style={styles.distributorAndPOTitle}>Distributor</Text>
+              <Text style={distributorAndPOTextStyle}>{supplierName}</Text>
+            </View>
+            {isPORequired && (
+              <View>
+                <Text style={styles.distributorAndPOTitle}>
+                  Purchase Order Number
+                </Text>
+                <Text style={poTextStyle}>
+                  {poNumber ?? <Text style={styles.poPlaceholder}>---</Text>}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
 
         <View style={styles.table}>
           <SelectedProductsList itemTitleColor={colors.grayDark3} />
         </View>
 
-        <Text style={styles.note}>
-          Your order will be sent via{'\n'}email and/or EDI to your distributor
-        </Text>
+        {!isPORequired && (
+          <Text style={styles.note}>
+            Your order will be sent via{'\n'}email and/or EDI to your
+            distributor
+          </Text>
+        )}
       </View>
 
       <TotalCostBar style={styles.totalCost} />
@@ -117,11 +183,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
   },
-  distributorText: {
+  distributorAndPOContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  distributorAndPOText: {
     fontFamily: fonts.TT_Bold,
     color: colors.textNeutral,
   },
-  distributorTitle: {
+  distributorAndPOTitle: {
     fontSize: 14,
     lineHeight: 18,
     fontFamily: fonts.TT_Regular,
@@ -142,13 +212,29 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
+  poText: {
+    textAlign: 'right',
+  },
+  poPlaceholder: {
+    color: colors.orange,
+  },
   subtitle: {
     color: colors.black,
     fontFamily: fonts.TT_Regular,
     fontSize: 11,
     lineHeight: 14,
-    paddingBottom: 15,
     textAlign: 'center',
+  },
+  subtitleBoldItalic: {
+    fontFamily: fonts.TT_BoldItalic,
+  },
+  subtitleContainer: {
+    gap: 8,
+    paddingBottom: 15,
+  },
+  subtitleLarge: {
+    fontSize: 14,
+    lineHeight: 18,
   },
   table: {
     flex: 1,
@@ -158,10 +244,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: colors.black,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 17,
-    lineHeight: 22,
-    paddingLeft: 6,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 15,
+    paddingLeft: 8,
   },
   titleContainer: {
     alignItems: 'center',
