@@ -49,13 +49,14 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
     [],
   );
 
-  const poTextStyle = useMemo<StyleProp<TextStyle>>(
-    () => [
-      styles.distributorAndPOTitle,
-      styles.distributorAndPOText,
-      styles.poText,
-    ],
+  const poTitleStyle = useMemo<StyleProp<TextStyle>>(
+    () => [styles.distributorAndPOTitle, styles.poTitle],
     [],
+  );
+
+  const poTextStyle = useMemo<StyleProp<TextStyle>>(
+    () => [poTitleStyle, styles.distributorAndPOText],
+    [poTitleStyle],
   );
 
   const subtitleLargeStyle = useMemo<StyleProp<TextStyle>>(
@@ -112,16 +113,16 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
           </View>
 
           <View style={styles.distributorAndPOContainer}>
-            <View>
+            <View style={styles.distributorAndPOContent}>
               <Text style={styles.distributorAndPOTitle}>Distributor</Text>
-              <Text style={distributorAndPOTextStyle}>{supplierName}</Text>
+              <Text numberOfLines={1} style={distributorAndPOTextStyle}>
+                {supplierName}
+              </Text>
             </View>
             {isPORequired && (
-              <View>
-                <Text style={styles.distributorAndPOTitle}>
-                  Purchase Order Number
-                </Text>
-                <Text style={poTextStyle}>
+              <View style={styles.distributorAndPOContent}>
+                <Text style={poTitleStyle}>Purchase Order Number</Text>
+                <Text style={poTextStyle} numberOfLines={1}>
                   {poNumber ?? <Text style={styles.poPlaceholder}>---</Text>}
                 </Text>
               </View>
@@ -185,7 +186,10 @@ const styles = StyleSheet.create({
   },
   distributorAndPOContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    gap: 8,
+  },
+  distributorAndPOContent: {
+    flex: 1,
   },
   distributorAndPOText: {
     fontFamily: fonts.TT_Bold,
@@ -212,7 +216,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
   },
-  poText: {
+  poTitle: {
     textAlign: 'right',
   },
   poPlaceholder: {
