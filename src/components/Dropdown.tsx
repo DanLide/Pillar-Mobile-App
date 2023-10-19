@@ -36,6 +36,7 @@ interface Props<T> extends ViewProps {
   selectedItem?: T;
   bottomOffset?: number;
   maxHeight?: number;
+  disabled?: boolean;
   onSelect?: (item: T) => void;
   renderItem?: (item: T) => JSX.Element;
 }
@@ -54,6 +55,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
   placeholder,
   bottomOffset = TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   maxHeight = 200,
+  disabled,
   renderItem,
   style,
   onSelect,
@@ -80,6 +82,11 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, style],
     [style],
+  );
+
+  const pickerContainerStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.pickerContainer, disabled && styles.pickerContainerDisabled],
+    [disabled],
   );
 
   const dropdownContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -160,8 +167,9 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
   return (
     <View style={containerStyle}>
       <TouchableOpacity
+        disabled={disabled}
         activeOpacity={1}
-        style={styles.pickerContainer}
+        style={pickerContainerStyle}
         onPress={openDropdown}
         ref={pickerRef}
       >
@@ -169,7 +177,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
           <Text style={styles.pickerLabel}>{label}</Text>
         </View>
         {SelectedOption}
-        <SVGs.DownIcon color={colors.black} />
+        {!disabled && <SVGs.DownIcon color={colors.black} />}
       </TouchableOpacity>
 
       {isOpen && (
@@ -251,6 +259,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 12,
     paddingVertical: 8,
+  },
+  pickerContainerDisabled: {
+    borderColor: colors.grayWithOpacity,
+    backgroundColor: colors.grayWithOpacity,
   },
   pickerLabel: {
     color: colors.grayDark2,

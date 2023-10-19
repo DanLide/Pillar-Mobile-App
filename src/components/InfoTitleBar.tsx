@@ -18,7 +18,7 @@ export enum InfoTitleBarType {
 
 interface Props {
   type?: InfoTitleBarType;
-  title?: string;
+  title?: string | JSX.Element;
   containerStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   testID?: string;
@@ -54,14 +54,20 @@ export const InfoTitleBar = memo(
       }
     }, [textStyle, type]);
 
-    return title ? (
+    if (!title) return null;
+
+    return (
       <View
         style={getContainerStyleByType}
         testID={testIds.idContainer(testID)}
       >
-        <Text style={getTextStyleByType}>{title}</Text>
+        {typeof title === 'string' ? (
+          <Text style={getTextStyleByType}>{title}</Text>
+        ) : (
+          title
+        )}
       </View>
-    ) : null;
+    );
   },
 );
 

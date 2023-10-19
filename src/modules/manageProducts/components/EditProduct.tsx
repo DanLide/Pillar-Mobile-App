@@ -23,12 +23,12 @@ import {
   Switch,
   Tooltip,
 } from '../../../components';
-import { InventoryUseType } from '../../../constants/common.enum';
-import { colors, fonts, SVGs } from '../../../theme';
-import { EditQuantity } from '../../productModal/components/quantityTab';
-import { getProductStepQty } from '../../../data/helpers';
+import { InventoryUseType } from 'src/constants/common.enum';
+import { colors, fonts, SVGs } from 'src/theme';
+import { EditQuantity } from 'src/modules/productModal/components/quantityTab';
+import { getProductStepQty } from 'src/data/helpers';
 import { manageProductsStore } from '../stores';
-import { ProductModalProps } from '../../productModal';
+import { ProductModalProps } from 'src/modules/productModal';
 import { UpcScanner } from './UpcScanner';
 
 const inventoryTypes = [
@@ -68,6 +68,8 @@ export const EditProduct = observer(
 
     const isSpecialOrder =
       product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
+    const isOnOrder = (product?.onOrder ?? 0) > 0;
 
     const categories = useMemo<DropdownItem[]>(
       () =>
@@ -168,6 +170,7 @@ export const EditProduct = observer(
       <>
         <Dropdown
           label="Remove By"
+          disabled={isOnOrder}
           data={inventoryTypes}
           selectedItem={product?.inventoryUseTypeId}
           renderItem={renderInventoryType}
@@ -218,6 +221,8 @@ export const EditProduct = observer(
                     vertical
                     label="Pieces Per"
                     labelWithNewLine="Container"
+                    disabled={isOnOrder}
+                    hideCount={isOnOrder}
                     currentValue={product?.unitsPerContainer ?? 0}
                     maxValue={MAX_VALUE}
                     minValue={MIN_VALUE}
@@ -232,6 +237,8 @@ export const EditProduct = observer(
                     vertical
                     label="Shipment"
                     labelWithNewLine="Quantity"
+                    disabled={isOnOrder}
+                    hideCount={isOnOrder}
                     currentValue={product?.orderMultiple ?? 0}
                     maxValue={MAX_VALUE}
                     minValue={MIN_VALUE}
@@ -270,6 +277,7 @@ export const EditProduct = observer(
         <View style={styles.bottomSection}>
           <Dropdown
             label="Distributor"
+            disabled={isOnOrder}
             data={suppliers}
             selectedItem={supplier}
             onSelect={item => store.setSupplier(+item.value)}
@@ -278,6 +286,7 @@ export const EditProduct = observer(
             <View style={styles.spaceBetweenContainer}>
               <Dropdown
                 label="Restock From"
+                disabled={isOnOrder}
                 data={enabledSuppliers}
                 selectedItem={enabledSupplier}
                 style={styles.restockFromDropdown}
