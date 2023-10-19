@@ -292,8 +292,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputHidden: {
+    borderColor: colors.background,
+    backgroundColor: colors.background,
     color: colors.blackSemiLight,
-    backgroundColor: colors.gray,
   },
   inputLabel: {
     color: colors.white,

@@ -1,5 +1,5 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/default
@@ -11,7 +11,13 @@ import Animated, {
 } from 'react-native-reanimated';
 import { observer } from 'mobx-react';
 
-import { Button, ButtonType, Modal } from '../../../components';
+import {
+  Button,
+  ButtonType,
+  InfoTitleBar,
+  InfoTitleBarType,
+  Modal,
+} from '../../../components';
 import {
   Description,
   ProductModalProps,
@@ -19,14 +25,14 @@ import {
   ProductQuantity,
 } from '../../productModal';
 
-import { colors } from '../../../theme';
-import { ToastContextProvider } from '../../../contexts';
+import { colors, fonts } from 'src/theme';
+import { ToastContextProvider } from 'src/contexts';
 import { EditProduct } from './EditProduct';
 import { manageProductsStore } from '../stores';
-import { permissionProvider } from '../../../data/providers';
+import { permissionProvider } from 'src/data/providers';
 import { ViewProduct } from './ViewProduct';
-import { ToastType } from '../../../contexts/types';
-import AlertWrapper from '../../../contexts/AlertWrapper';
+import { ToastType } from 'src/contexts/types';
+import AlertWrapper from 'src/contexts/AlertWrapper';
 
 export enum ProductModalErrors {
   UpcUpdateError = 'UpcUpdateError',
@@ -99,6 +105,18 @@ export const ProductModal = observer(
     const canEditProduct = permissionProvider.canEditProduct();
 
     const topOffset = useSharedValue(modalCollapsedOffset);
+
+    const isOnOrder = (product?.onOrder ?? 0) > 0;
+
+    const onOrderTitle = useMemo(
+      () => (
+        <Text style={styles.onOrderTitle}>
+          <Text style={styles.onOrderTitleBold}>On Order.</Text> Some settings
+          cannot be changed
+        </Text>
+      ),
+      [],
+    );
 
     const scrollTo = useCallback(
       (destination: number) => {
@@ -291,6 +309,12 @@ export const ProductModal = observer(
                   )}
                 </View>
               </Animated.ScrollView>
+              {isEdit && isOnOrder && (
+                <InfoTitleBar
+                  type={InfoTitleBarType.Secondary}
+                  title={onOrderTitle}
+                />
+              )}
               <View style={styles.buttons}>
                 {canEditProduct && (
                   <Button
@@ -335,6 +359,16 @@ const styles = StyleSheet.create({
   },
   keyboardAvoidingView: {
     flex: 1,
+  },
+  onOrderTitle: {
+    fontSize: 15,
+    lineHeight: 20,
+    fontFamily: fonts.TT_Regular,
+    color: colors.blackLight,
+    alignSelf: 'center',
+  },
+  onOrderTitleBold: {
+    fontFamily: fonts.TT_Bold,
   },
   settings: {
     alignItems: 'center',
