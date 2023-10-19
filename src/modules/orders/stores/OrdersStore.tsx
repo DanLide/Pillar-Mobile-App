@@ -119,6 +119,10 @@ export class OrdersStore extends BaseProductsStore {
     this.supplierId = supplierId;
   }
 
+  @action setPONumber(poNumber?: string) {
+    if (this.currentOrder) this.currentOrder.order.customPONumber = poNumber;
+  }
+
   @action clearCreateOrder() {
     this.supplierId = undefined;
     this.clear();

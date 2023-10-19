@@ -7,7 +7,7 @@ import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { Toast, ToastActionType } from './Toast';
 import ToastMessage from './ToastMessage';
 import { Checkbox } from './Checkbox';
-import { Modal } from './Modal';
+import { Modal, ModalProps } from './Modal';
 import { ColoredTooltip } from './ColoredTooltip';
 import { InfoTitleBarType, InfoTitleBar } from './InfoTitleBar';
 import { Tooltip } from './Tooltip';
@@ -62,4 +62,4 @@ export {
   InventoryTypeBadge,
 };
 
-export type { ScanProductProps, DropdownItem };
+export type { ScanProductProps, DropdownItem, ModalProps };

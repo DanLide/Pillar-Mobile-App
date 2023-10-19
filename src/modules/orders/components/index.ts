@@ -2,6 +2,7 @@ import { MissingItemsModal } from './MissingItemsModal';
 import { OrdersDetailsStockList } from './OrdersDetailsStockList';
 import { OrdersList } from './OrdersList';
 import { OrdersListItem } from './OrdersListItem';
+import { PONumberModal } from './PONumberModal';
 import { SelectedProductsList } from './SelectedProductsList';
 import { StatusBadge } from './StatusBadge';
 import { StockWithProducts } from './StockWithProducts';
@@ -16,4 +17,5 @@ export {
   StatusBadge,
   StockWithProducts,
   TotalCostBar,
+  PONumberModal,
 };

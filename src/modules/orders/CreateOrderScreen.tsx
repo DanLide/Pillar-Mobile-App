@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
@@ -30,7 +30,13 @@ import {
 import { ToastType } from 'src/contexts/types';
 import { getProductsReservedCount } from 'src/modules/orders/helpers';
 import { createOrder } from 'src/data/createOrder';
-import { SelectedProductsList, TotalCostBar } from './components';
+import {
+  PONumberModal,
+  SelectedProductsList,
+  TotalCostBar,
+} from './components';
+import { OrderStatusType } from 'src/constants/common.enum';
+import { updatePONumber } from 'src/data/updatePONumber';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -53,11 +59,13 @@ const suggestedItemsErrorText =
 const createOrderErrorText = "The order wasn't created. Please try again.";
 
 const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [isPONumberModalVisible, setIsPONumberModalVisible] = useState(false);
+
   const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
   const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
     useState(false);
 
-  const store = useRef(ordersStore).current;
+  const ordersStoreRef = useRef(ordersStore).current;
 
   const {
     modalParams,
@@ -68,7 +76,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     setEditableProductQuantity,
     onRemoveProduct,
     onCloseModal,
-  } = useBaseProductsScreen(store, navigation);
+  } = useBaseProductsScreen(ordersStoreRef, navigation);
 
   const { showToast } = useSingleToast();
 
@@ -82,15 +90,15 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
   );
 
   const supplier = useMemo<DropdownItem | undefined>(
-    () => find(whereEq({ value: store.supplierId }), suppliers),
-    [store.supplierId, suppliers],
+    () => find(whereEq({ value: ordersStoreRef.supplierId }), suppliers),
+    [ordersStoreRef.supplierId, suppliers],
   );
 
   const addSuggestedItems = useCallback(async () => {
-    const reservedCount = getProductsReservedCount(store.getProducts);
+    const reservedCount = getProductsReservedCount(ordersStoreRef.getProducts);
 
     setIsSuggestedProductsLoading(true);
-    const error = await fetchSuggestedProducts(store);
+    const error = await fetchSuggestedProducts(ordersStoreRef);
     setIsSuggestedProductsLoading(false);
 
     if (error) {
@@ -100,7 +108,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     }
 
     const suggestedItemsAdded =
-      getProductsReservedCount(store.getProducts) - reservedCount;
+      getProductsReservedCount(ordersStoreRef.getProducts) - reservedCount;
 
     showToast(
       <ToastMessage style={styles.toastSuccessMessage}>
@@ -108,24 +116,51 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
       </ToastMessage>,
       { type: ToastType.SuggestedItemsSuccess },
     );
-  }, [showToast, store]);
+  }, [showToast, ordersStoreRef]);
+
+  const openResultScreen = useCallback(
+    () =>
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: AppNavigator.CreateOrderResultScreen,
+            state: { routes: [{ name: AppNavigator.HomeStack }] },
+          },
+        ],
+      }),
+    [navigation],
+  );
 
   const onCreateOrder = useCallback(async () => {
     setIsCreateOrderLoading(true);
-    const error = await createOrder(store);
+    const error = await createOrder(ordersStoreRef);
     setIsCreateOrderLoading(false);
 
     if (error)
       return showToast(createOrderErrorText, { type: ToastType.Error });
 
-    navigation.navigate(AppNavigator.CreateOrderResultScreen);
-  }, [navigation, showToast, store]);
+    const order = ordersStoreRef.currentOrder?.order;
+
+    if (order?.status === OrderStatusType.POREQUIRED)
+      return setIsPONumberModalVisible(true);
+
+    openResultScreen();
+  }, [ordersStoreRef, showToast, openResultScreen]);
+
+  const onSubmitPONumber = useCallback(
+    async (poNumber: string) => {
+      await updatePONumber(poNumber, ordersStoreRef);
+      openResultScreen();
+    },
+    [openResultScreen, ordersStoreRef],
+  );
 
   return (
     <View style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Primary}
-        title={store.currentStock?.organizationName}
+        title={ordersStoreRef.currentStock?.organizationName}
       />
 
       <View style={styles.topContainer}>
@@ -134,7 +169,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
           placeholder="Select a Distributor"
           data={suppliers}
           selectedItem={supplier}
-          onSelect={item => store.setSupplier(+item.value)}
+          onSelect={item => ordersStoreRef.setSupplier(+item.value)}
         />
       </View>
 
@@ -180,12 +215,19 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
 
       <ProductModal
         {...modalParams}
-        product={store.getCurrentProduct}
-        stockName={store.stockName}
+        product={ordersStoreRef.getCurrentProduct}
+        stockName={ordersStoreRef.stockName}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
         onRemove={onRemoveProduct}
         onChangeProductQuantity={setEditableProductQuantity}
+      />
+
+      <PONumberModal
+        isVisible={isPONumberModalVisible}
+        title={ordersStoreRef.stockName}
+        onSkip={openResultScreen}
+        onSubmit={onSubmitPONumber}
       />
     </View>
   );

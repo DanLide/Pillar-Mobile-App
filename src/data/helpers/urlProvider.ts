@@ -298,4 +298,10 @@ export class URLProvider {
   createOrder() {
     return new URL(`${this.currentEnv.modules.order.apiUri}/api/Order/Create`);
   }
+
+  updatePONumber() {
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/PONumber`,
+    );
+  }
 }

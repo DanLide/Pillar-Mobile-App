@@ -109,7 +109,7 @@ export class SaveUpdateProductToStore extends Task {
 
     const updatedProduct = {
       ...this.manageProductsStore.updatedProduct,
-      onHand: this.manageProductsStore.updatedProduct.reservedCount,
+      onHand: this.manageProductsStore.updatedProduct.reservedCount ?? 0,
     };
 
     stocksStore.updateFacilityProduct(updatedProduct);
