@@ -12,7 +12,7 @@ interface Props {
   isString?: boolean;
 }
 
-export const OrderTitleByStatusType = {
+export const OrderTitleByStatusType: Record<string, string> = {
   [OrderStatusType.APPROVAL]: 'Approval',
   [OrderStatusType.POREQUIRED]: 'PO Required',
   [OrderStatusType.SHIPPED]: 'Shipped',

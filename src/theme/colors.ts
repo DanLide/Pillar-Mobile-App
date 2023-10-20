@@ -14,6 +14,7 @@ export const colors = {
   redDark: '#B20E18',
   red: '#E02E3A',
   redSemiLight: '#C95100',
+  orange: '#F5A111',
   redLight: '#FEEFF0',
   black: '#000000',
   blackWidthOpacity: 'rgba(0, 0, 0, 0.3)',

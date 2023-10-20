@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
+import { find, whereEq } from 'ramda';
 
 import {
   ButtonType,
@@ -14,10 +15,11 @@ import {
 import Button from '../../components/Button';
 import { colors, fonts, SVGs } from '../../theme';
 import { ordersStore } from './stores';
-import { SelectedProductsList } from './components/SelectedProductsList';
 import { stocksStore } from '../stocksList/stores';
-import { find, whereEq } from 'ramda';
-import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
+import {
+  AppNavigator,
+  BaseProductsScreenNavigationProp,
+} from 'src/navigation/types';
 import { ProductModal } from 'src/modules/productModal';
 import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
 import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
@@ -27,6 +29,14 @@ import {
 } from 'src/contexts';
 import { ToastType } from 'src/contexts/types';
 import { getProductsReservedCount } from 'src/modules/orders/helpers';
+import { createOrder } from 'src/data/createOrder';
+import {
+  PONumberModal,
+  SelectedProductsList,
+  TotalCostBar,
+} from './components';
+import { OrderStatusType } from 'src/constants/common.enum';
+import { updatePONumber } from 'src/data/updatePONumber';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -46,11 +56,16 @@ const suggestedItemsSuccessText = (count: number) =>
 const suggestedItemsErrorText =
   "Recommended items weren't loaded. Please try again";
 
+const createOrderErrorText = "The order wasn't created. Please try again.";
+
 const CreateOrderScreen = observer(({ navigation }: Props) => {
+  const [isPONumberModalVisible, setIsPONumberModalVisible] = useState(false);
+
+  const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
   const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
     useState(false);
 
-  const store = useRef(ordersStore).current;
+  const ordersStoreRef = useRef(ordersStore).current;
 
   const {
     modalParams,
@@ -61,7 +76,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     setEditableProductQuantity,
     onRemoveProduct,
     onCloseModal,
-  } = useBaseProductsScreen(store, navigation);
+  } = useBaseProductsScreen(ordersStoreRef, navigation);
 
   const { showToast } = useSingleToast();
 
@@ -75,15 +90,15 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
   );
 
   const supplier = useMemo<DropdownItem | undefined>(
-    () => find(whereEq({ value: store.supplierId }), suppliers),
-    [store.supplierId, suppliers],
+    () => find(whereEq({ value: ordersStoreRef.supplierId }), suppliers),
+    [ordersStoreRef.supplierId, suppliers],
   );
 
   const addSuggestedItems = useCallback(async () => {
-    const reservedCount = getProductsReservedCount(store.getProducts);
+    const reservedCount = getProductsReservedCount(ordersStoreRef.getProducts);
 
     setIsSuggestedProductsLoading(true);
-    const error = await fetchSuggestedProducts(store);
+    const error = await fetchSuggestedProducts(ordersStoreRef);
     setIsSuggestedProductsLoading(false);
 
     if (error) {
@@ -93,7 +108,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
     }
 
     const suggestedItemsAdded =
-      getProductsReservedCount(store.getProducts) - reservedCount;
+      getProductsReservedCount(ordersStoreRef.getProducts) - reservedCount;
 
     showToast(
       <ToastMessage style={styles.toastSuccessMessage}>
@@ -101,13 +116,51 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
       </ToastMessage>,
       { type: ToastType.SuggestedItemsSuccess },
     );
-  }, [showToast, store]);
+  }, [showToast, ordersStoreRef]);
+
+  const openResultScreen = useCallback(
+    () =>
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: AppNavigator.CreateOrderResultScreen,
+            state: { routes: [{ name: AppNavigator.HomeStack }] },
+          },
+        ],
+      }),
+    [navigation],
+  );
+
+  const onCreateOrder = useCallback(async () => {
+    setIsCreateOrderLoading(true);
+    const error = await createOrder(ordersStoreRef);
+    setIsCreateOrderLoading(false);
+
+    if (error)
+      return showToast(createOrderErrorText, { type: ToastType.Error });
+
+    const order = ordersStoreRef.currentOrder?.order;
+
+    if (order?.status === OrderStatusType.POREQUIRED)
+      return setIsPONumberModalVisible(true);
+
+    openResultScreen();
+  }, [ordersStoreRef, showToast, openResultScreen]);
+
+  const onSubmitPONumber = useCallback(
+    async (poNumber: string) => {
+      await updatePONumber(poNumber, ordersStoreRef);
+      openResultScreen();
+    },
+    [openResultScreen, ordersStoreRef],
+  );
 
   return (
     <View style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Primary}
-        title={store.currentStock?.organizationName}
+        title={ordersStoreRef.currentStock?.organizationName}
       />
 
       <View style={styles.topContainer}>
@@ -116,7 +169,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
           placeholder="Select a Distributor"
           data={suppliers}
           selectedItem={supplier}
-          onSelect={item => store.setSupplier(+item.value)}
+          onSelect={item => ordersStoreRef.setSupplier(+item.value)}
         />
       </View>
 
@@ -138,10 +191,7 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
         />
       </View>
 
-      <View style={styles.totalCostContainer}>
-        <Text style={styles.totalCostText}>Total Cost: </Text>
-        <Text style={styles.totalCostCount}>${store.getTotalCost}</Text>
-      </View>
+      <TotalCostBar />
 
       <View style={styles.buttons}>
         <Button
@@ -155,20 +205,29 @@ const CreateOrderScreen = observer(({ navigation }: Props) => {
         />
         <Button
           disabled={!scannedProductsCount || isSuggestedProductsLoading}
+          isLoading={isCreateOrderLoading}
           type={ButtonType.primary}
           buttonStyle={styles.buttonContainer}
           title="Send Order"
+          onPress={onCreateOrder}
         />
       </View>
 
       <ProductModal
         {...modalParams}
-        product={store.getCurrentProduct}
-        stockName={store.stockName}
+        product={ordersStoreRef.getCurrentProduct}
+        stockName={ordersStoreRef.stockName}
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
         onRemove={onRemoveProduct}
         onChangeProductQuantity={setEditableProductQuantity}
+      />
+
+      <PONumberModal
+        isVisible={isPONumberModalVisible}
+        title={ordersStoreRef.stockName}
+        onSkip={openResultScreen}
+        onSubmit={onSubmitPONumber}
       />
     </View>
   );
@@ -218,28 +277,6 @@ const styles = StyleSheet.create({
   topContainer: {
     paddingHorizontal: 16,
     paddingVertical: 24,
-  },
-  totalCostContainer: {
-    alignItems: 'center',
-    backgroundColor: colors.purpleDark2,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 16,
-    minHeight: 48,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  totalCostText: {
-    color: colors.white,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 16,
-    lineHeight: 20,
-  },
-  totalCostCount: {
-    color: colors.white,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 20,
-    lineHeight: 24,
   },
 });
 

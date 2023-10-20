@@ -1,78 +1,67 @@
-import { ProductModel } from 'src/stores/types';
-import { OrderStatusType, OrderType } from '../../constants/common.enum';
+import {
+  OrderMethodType,
+  OrderStatusType,
+  OrderType,
+} from 'src/constants/common.enum';
 import { URLProvider, tryAuthFetch } from '../helpers';
+import { ProductModel } from 'src/stores/types';
 
 export interface GetOrdersAPIResponse {
+  area: number;
+  inventoryAssignmentId: number;
+  isShipped: number;
+  jobId: number;
+  orderAreaId: number;
+  orderDetailId: number;
+  orderDetails: OrderDetailsProduct[];
+  orderGroupId: number;
   orderId: number;
-  orderDetailID: number;
-  dateTime: string;
-  orderTypeID: string;
-  orderType: string;
-  supplierName: string;
-  orderGroup: string;
-  orderArea: string;
-  status: OrderStatusType;
-  orderStatusTypeID: number;
+  orderMethodTypeId: OrderMethodType;
+  orderStatusTypeId: number;
   orderTotal: number;
+  partyRelationshipId: number;
+  products: ProductModel[];
+  quantityOrdered: number;
+  quantityShipped: number;
   receivedTotal: number;
-  subTotal: number;
   shippedSubTotal: number;
   shippedTax: number;
   shippedTotal: number;
+  subTotal: number;
+  supplierPartyRoleId: number;
   tax: number;
-  exception: string;
-  user: string;
-  supplierPartyRoleID: number;
-  products: ProductModel[];
-  comments: string;
-  unitPrice: number;
-  taxStatus: string;
-  area: number;
-  inventoryAssignmentID: number;
-  quantityOrdered: number;
-  quantityShipped: number;
-  orderDetailList: [
-    {
-      orderID: number;
-      partyRelationshipID: number;
-      area: number;
-      taxStatus: number;
-      orderGroup: number;
-      inventoryAssignmentID: number;
-      basePrice: number;
-      qtyOrdered: number;
-      isTaxable: number;
-      tax: number;
-    },
-  ];
-  partyRelationshipID: number;
-  orderMethodTypeID: number;
-  orderGroupID: number;
-  orderAreaID: number;
   taxRate: number;
-  supplier: string;
-  identifier: string;
   totalCost: string;
-  customPONumber: string;
-  isReceived: string;
-  fromDateTime: string;
-  toDateTime: string;
-  jobID: number;
-  isPORequired: string;
-  isShipped: number;
-  isFromPrimarySupplier: string;
-  orderDetails: [
-    {
-      orderID: number;
-      inventoryAssignmentID: number;
-      price: number;
-      orderQty: number;
-      isTaxable: number;
-      jobID: number;
-    },
-  ];
-  repairFacilityID: number;
-  supplierID: number;
+  unitPrice: number;
+  status: OrderStatusType;
+  orderTypeId?: OrderType;
+  orderType?: string;
+  supplierName?: string;
+  orderGroup?: string;
+  orderArea?: string;
+  exception?: string;
+  user?: string;
+  comments?: string;
+  taxStatus?: string;
+  supplier?: string;
+  identifier?: string;
+  customPONumber?: string;
+  isReceived?: string;
+  dateTime?: string;
+  fromDateTime?: string;
+  toDateTime?: string;
+  isPORequired?: string;
+  isFromPrimarySupplier?: string;
+  repairFacilityId?: number;
+  supplierId?: number;
+}
+
+export interface OrderDetailsProduct {
+  inventoryAssignmentId?: number;
+  price?: number;
+  orderQty?: number;
+  isTaxable?: number;
+  jobId?: number;
 }
 
 export interface OrderProductResponse {
@@ -133,6 +122,24 @@ export interface ReceiveOrderRequestProduct {
   transactionTypeId: number;
   unitCost: number;
   quantityReceived: number;
+}
+
+export interface CreateOrderRequestPayload
+  extends Pick<
+    GetOrdersAPIResponse,
+    | 'comments'
+    | 'orderArea'
+    | 'orderDetails'
+    | 'orderGroup'
+    | 'orderId'
+    | 'orderMethodTypeId'
+    | 'orderTotal'
+    | 'orderTypeId'
+    | 'taxStatus'
+    | 'repairFacilityId'
+    | 'supplierId'
+  > {
+  customPoNumber: string;
 }
 
 export const getOrdersAPI = () => {
@@ -206,5 +213,37 @@ export const getSuggestedProductsAPI = () => {
   return tryAuthFetch<OrderProductResponse[]>({
     url,
     request: { method: 'GET' },
+  });
+};
+
+export const createOrderAPI = (payload: CreateOrderRequestPayload) => {
+  const url = new URLProvider().createOrder();
+
+  return tryAuthFetch<GetOrdersAPIResponse[]>({
+    url,
+    request: {
+      body: JSON.stringify(payload),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};
+
+export const updatePONumberAPI = (orderId: number, CustomPONumber: string) => {
+  const url = new URLProvider().updatePONumber();
+
+  const body = JSON.stringify([{ orderId, CustomPONumber }]);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      body,
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   });
 };

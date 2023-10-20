@@ -7,6 +7,7 @@ import {
   Pressable,
   StyleProp,
   ViewStyle,
+  TextStyle,
 } from 'react-native';
 
 import { colors, fonts, SVGs } from '../theme';
@@ -18,9 +19,10 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-interface Props {
+export interface ModalProps {
   isVisible: boolean;
   title?: string;
+  titleStyle?: StyleProp<TextStyle>;
   titleContainerStyle?: StyleProp<ViewStyle>;
   semiTitle?: string | JSX.Element;
   children?: React.ReactNode;
@@ -33,11 +35,12 @@ interface Props {
 
 export const DEFAULT_TOP_OFFSET = 169;
 
-export const Modal: React.FC<Props> = ({
+export const Modal: React.FC<ModalProps> = ({
   isVisible,
   title,
   children,
   topOffset,
+  titleStyle,
   titleContainerStyle,
   semiTitle,
   testID = 'modal',
@@ -47,6 +50,11 @@ export const Modal: React.FC<Props> = ({
   const animatedStyles = useAnimatedStyle<ViewStyle>(() => ({
     marginTop: topOffset?.value ?? DEFAULT_TOP_OFFSET,
   }));
+
+  const semiTitleStyle = useMemo<StyleProp<TextStyle>>(
+    () => [styles.title, titleStyle],
+    [titleStyle],
+  );
 
   return (
     <RNModal
@@ -75,7 +83,7 @@ export const Modal: React.FC<Props> = ({
                 <SVGs.CloseIcon color={colors.purpleDark} />
               </Pressable>
             </View>
-            <Text style={styles.title}>{semiTitle}</Text>
+            <Text style={semiTitleStyle}>{semiTitle}</Text>
             <View style={styles.icon} />
           </View>
           {children}

@@ -281,11 +281,11 @@ export enum OrderType {
   Return = 2,
 }
 //
-// export enum OrderMethodType {
-//   Auto = 1,
-//   Manual = 2,
-//   Return = 3
-// }
+export enum OrderMethodType {
+  Auto = 1,
+  Manual = 2,
+  Return = 3,
+}
 //
 // export enum Resource {
 //   Remove = 51,
