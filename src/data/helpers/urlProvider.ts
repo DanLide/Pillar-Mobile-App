@@ -126,6 +126,14 @@ export class URLProvider {
     const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/DeviceByRepairFacilityPartyRoleID/${partyRoleID}`,
+      );
+  }
+
+  getFetchStocksWithCabinetsData() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceName = this.ssoStore.deviceName;
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleIDAndDeviceID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${deviceName}`,
     );
   }
 

@@ -3,7 +3,7 @@ import { getFetchStockAPI } from './api';
 
 import {
   FacilityProductModel,
-  StockModel,
+  StockModelWithMLAccess,
   StockStore,
   SupplierModel,
 } from '../modules/stocksList/stores/StocksStore';
@@ -14,7 +14,7 @@ import {
 import { any, isEmpty } from 'ramda';
 
 interface FetchStocksContext {
-  stocks: StockModel[];
+  stocks: StockModelWithMLAccess[];
   suppliers: SupplierModel[];
   facilityProducts: FacilityProductModel[];
 }

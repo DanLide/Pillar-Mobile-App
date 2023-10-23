@@ -8,7 +8,7 @@ import {
 } from '../../../data/api/productsAPI';
 
 export class StockStore {
-  @observable stocks: StockModel[];
+  @observable stocks: ExtendedStockModel[];
   @observable facilityProducts: FacilityProductModel[];
   @observable categories: CategoryModel[];
   @observable suppliers: SupplierModel[];
@@ -47,7 +47,13 @@ export class StockStore {
   }
 
   @action setStocks(stocks: StockModel[]) {
-    this.stocks = stocks.sort((a, b) =>
+    const mappedStocks = stocks.map((stockItem) => {
+      return {
+        ...stockItem.equipment,
+        ...stockItem.mlAccessData,
+      }
+    });
+    this.stocks = mappedStocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
     );
   }
@@ -95,7 +101,6 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
-  deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
   accessProfile?: string;
@@ -105,6 +110,17 @@ export interface StockModel {
   // roleTypeDescription: string;
   // dateAssigned: string;
 }
+
+export type StockModelWithMLAccess = {
+  equipment: StockModel;
+  mlAccessData: {
+    accessProfile: string;
+    firmwareVersion: number;
+    masterLockId: string;
+  } | null
+}
+
+export type ExtendedStockModel = StockModel & Partial<StockModelWithMLAccess['mlAccessData']>
 
 export type FacilityProductModel = FacilityProductResponse;
 export type CategoryModel = CategoryResponse;

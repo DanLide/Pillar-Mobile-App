@@ -4,7 +4,7 @@ import { getFetchStockAPI } from './api';
 import {
   CategoryModel,
   FacilityProductModel,
-  StockModel,
+  StockModelWithMLAccess,
   StockStore,
   SupplierModel,
 } from '../modules/stocksList/stores/StocksStore';
@@ -17,7 +17,7 @@ import { any, isEmpty } from 'ramda';
 import { mock2Locks } from './fetchStocks';
 
 interface FetchStocksContext {
-  stocks: StockModel[];
+  stocks: StockModelWithMLAccess[];
   categories: CategoryModel[];
   suppliers: SupplierModel[];
   facilityProducts: FacilityProductModel[];

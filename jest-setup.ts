@@ -19,7 +19,7 @@ jest.mock('react-native-vision-camera', () => {});
 jest.mock('react-native-volume-manager', () => {
   return {
     setVolume: jest.fn(),
-  }
+  };
 });
 jest.mock('react-native-track-player', () => {
   return {
@@ -57,19 +57,20 @@ jest.mock('react-native-track-player', () => {
 });
 
 jest.mock('react-native-device-info', () => ({
-  default: jest.fn(),
+  getVersion: jest.fn(),
+  getDeviceName: jest.fn(async () => 'iphone'),
+  getBundleId: jest.fn( () => 'com.bundle'),
 }));
 
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
-RNNativeModules.RNGestureHandlerModule =
-  RNNativeModules.RNGestureHandlerModule || {
-    State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
-    attachGestureHandler: jest.fn(),
-    createGestureHandler: jest.fn(),
-    dropGestureHandler: jest.fn(),
-    updateGestureHandler: jest.fn(),
-  };
+RNNativeModules.RNGestureHandlerModule = RNNativeModules.RNGestureHandlerModule || {
+  State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
+  attachGestureHandler: jest.fn(),
+  createGestureHandler: jest.fn(),
+  dropGestureHandler: jest.fn(),
+  updateGestureHandler: jest.fn(),
+};
 RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
   forceTouchAvailable: false,
 };

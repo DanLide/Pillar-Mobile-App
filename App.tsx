@@ -13,7 +13,6 @@ import {
   AppState,
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
-import { getVersion } from 'react-native-device-info';
 import SplashScreen from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 
@@ -27,14 +26,14 @@ import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
 import { getSSORNToken } from 'src/helpers/localStorage';
-import { ssoStore } from 'src/stores';
+import { deviceInfoStore, ssoStore } from 'src/stores';
 
 const { width, height } = Dimensions.get('window');
 const backgroundImageSize = {
   width,
   height,
 };
-const version = `Version ${getVersion()}`;
+const version = `Version ${deviceInfoStore.version}`;
 
 const App = observer(() => {
   const [appState, setAppState] = useState('active');

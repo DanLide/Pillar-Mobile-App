@@ -2,9 +2,8 @@ import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { getVersion } from 'react-native-device-info';
 
-import { authStore, ssoStore } from '../../stores';
+import { authStore, ssoStore, deviceInfoStore } from '../../stores';
 import { colors, fonts, SVGs } from '../../theme';
 import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
@@ -17,7 +16,7 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   const isNavigationToShopSelectAvailable =
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
-  const version = `Version ${getVersion()}`;
+  const version = `Version ${deviceInfoStore.version}`;
   const onLogout = () => {
     authStore.logOut();
   };
