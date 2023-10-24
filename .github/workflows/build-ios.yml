@@ -69,6 +69,18 @@ jobs:
           echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
           echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
+      - name: Save report
+        # run: mkdir -p path/to/artifact
+        run: echo hello > coverage.txt
+        run: |
+          echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}" > coverage.txt
+          echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}" > coverage.txt
+          echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}" > coverage.txt
+        # uses: actions/upload-artifact@master
+        # with:
+        #   name: my-artifact
+        #   path: path/to/artifact
+
       # - name: Create the badge
       #   # if: github.ref == 'refs/heads/main'
       #   uses: schneegans/dynamic-badges-action@v1.6.0
