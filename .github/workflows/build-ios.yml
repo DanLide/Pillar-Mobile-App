@@ -71,7 +71,7 @@ jobs:
 
       - name: Save report
         # run: mkdir -p path/to/artifact
-        run: echo hello > coverage.txt
+        # run: echo hello > coverage.txt
         run: |
           echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}" > coverage.txt
           echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}" > coverage.txt
