@@ -60,8 +60,6 @@ jobs:
           hide-comment: false
           create-new-comment: false
           hide-summary: false
-          junitxml-title: My JUnit Title
-          junitxml-path: ./coverage/junit.xml
           coverage-title: My Coverage Title
           coverage-path: ./coverage.txt
 
@@ -71,17 +69,17 @@ jobs:
           echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
           echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
-      - name: Create the badge
-        # if: github.ref == 'refs/heads/main'
-        uses: schneegans/dynamic-badges-action@v1.6.0
-        with:
-          auth: ${{ secrets.JEST_COVERAGE_COMMENT }}
-          gistID: 5e90d640f8c212ab7bbac38f72323f80
-          filename: jest-coverage-comment__main.json
-          label: coverage
-          message: ${{ steps.coverageComment.outputs.coverage }}%
-          color: ${{ steps.coverageComment.outputs.color }}
-          namedLogo: javascript
+      # - name: Create the badge
+      #   # if: github.ref == 'refs/heads/main'
+      #   uses: schneegans/dynamic-badges-action@v1.6.0
+      #   with:
+      #     auth: ${{ secrets.JEST_COVERAGE_COMMENT }}
+      #     gistID: 5e90d640f8c212ab7bbac38f72323f80
+      #     filename: jest-coverage-comment__main.json
+      #     label: coverage
+      #     message: ${{ steps.coverageComment.outputs.coverage }}%
+      #     color: ${{ steps.coverageComment.outputs.color }}
+      #     namedLogo: javascript
 
       - name: Update README with Coverage HTML
         # if: github.ref == 'refs/heads/main'
