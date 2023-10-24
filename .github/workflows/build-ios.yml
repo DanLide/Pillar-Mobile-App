@@ -53,15 +53,15 @@ jobs:
         uses: MishaKav/jest-coverage-comment@main
         with:
           # hide-comment: true
-          coverage-summary-path: ./coverage-summary.json
-          title: My Jest Coverage Comment
-          summary-title: My Summary Title
+          # coverage-summary-path: ./coverage-summary.json
+          title: Coverage
+          summary-title: Current coverage
           badge-title: Coverage
           hide-comment: false
           create-new-comment: false
           hide-summary: false
-          coverage-title: My Coverage Title
-          coverage-path: ./coverage.txt
+          coverage-title: Current coverage
+          # coverage-path: ./coverage.txt
 
       - name: Check the output coverage
         run: |
