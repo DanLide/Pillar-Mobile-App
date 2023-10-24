@@ -45,12 +45,14 @@ jobs:
       - name: Install Node dependencies
         run: yarn install --frozen-lockfile
 
-      - uses: ArtiomTr/jest-coverage-report-action@v2
-      
-      - name: Run unit tests
-        run: yarn test
+      - name: Coverage
+        uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           test-script: yarn jest
+
+      - name: Run unit tests
+        run: yarn test
+
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
