@@ -46,7 +46,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn jest --coverage --coverageReporters json-summary
+        run: yarn jest --coverage --coverageReporters json-summary --watchAll
 
       - name: Jest Coverage Comment
         id: coverageComment
@@ -61,7 +61,7 @@ jobs:
           create-new-comment: false
           hide-summary: false
           coverage-title: Current coverage
-          # coverage-path: ./coverage.txt
+          coverage-path: ./coverage.txt
 
       - name: Check the output coverage
         run: |
@@ -69,13 +69,13 @@ jobs:
           echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
           echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
-      - name: Save report
-        # run: mkdir -p path/to/artifact
-        # run: echo hello > coverage.txt
-        run: |
-          echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}" > coverage.txt
-          echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}" > coverage.txt
-          echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}" > coverage.txt
+      # - name: Save report
+      #   # run: mkdir -p path/to/artifact
+      #   # run: echo hello > coverage.txt
+      #   run: |
+      #     echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}" > coverage.txt
+      #     echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}" > coverage.txt
+      #     echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}" > coverage.txt
         # uses: actions/upload-artifact@master
         # with:
         #   name: my-artifact
