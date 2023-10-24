@@ -46,14 +46,24 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn jest --coverage --coverageReporters json-summary | tee ./coverage.txt
+        run: yarn jest --coverage --coverageReporters json-summary
 
       - name: Jest Coverage Comment
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
           # hide-comment: true
-          coverage-summary-path: ./coverage/coverage-summary.json
+          coverage-summary-path: ./coverage-summary.json
+          title: My Jest Coverage Comment
+          summary-title: My Summary Title
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: false
+          hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./coverage/junit.xml
+          coverage-title: My Coverage Title
+          coverage-path: ./coverage.txt
 
       - name: Check the output coverage
         run: |
@@ -62,7 +72,7 @@ jobs:
           echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
       - name: Create the badge
-        if: github.ref == 'refs/heads/main'
+        # if: github.ref == 'refs/heads/main'
         uses: schneegans/dynamic-badges-action@v1.6.0
         with:
           auth: ${{ secrets.JEST_COVERAGE_COMMENT }}
@@ -71,7 +81,19 @@ jobs:
           label: coverage
           message: ${{ steps.coverageComment.outputs.coverage }}%
           color: ${{ steps.coverageComment.outputs.color }}
-          namedLogo: javascript   
+          namedLogo: javascript
+
+      - name: Update README with Coverage HTML
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sed -i '/<!-- Jest Coverage Comment:Begin -->/,/<!-- Jest Coverage Comment:End -->/c\<!-- Jest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.summaryHtml }}\n<!-- Jest Coverage Comment:End -->' ./README.md
+
+      - name: Commit & Push changes in README
+        # if: github.ref == 'refs/heads/test/coverage'
+        uses: actions-js/push@master
+        with:
+          message: Update coverage in README
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
