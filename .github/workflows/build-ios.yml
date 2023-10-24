@@ -48,20 +48,34 @@ jobs:
       - name: Run unit tests
         run: yarn jest --coverage --coverageReporters json-summary --watchAll
 
+      # - name: Jest Coverage Comment
+      #   id: coverageComment
+      #   uses: MishaKav/jest-coverage-comment@main
+      #   with:
+      #     # hide-comment: true
+      #     # coverage-summary-path: ./coverage-summary.json
+      #     coverage-summary-path: ./coverage/coverage-summary.json
+      #     title: Coverage
+      #     summary-title: Current coverage
+      #     badge-title: Coverage
+      #     hide-comment: false
+      #     create-new-comment: false
+      #     hide-summary: false
+      #     coverage-title: Current coverage
+      #     coverage-path: ./coverage.txt`
+      
       - name: Jest Coverage Comment
-        id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          # hide-comment: true
-          # coverage-summary-path: ./coverage-summary.json
-          title: Coverage
-          summary-title: Current coverage
+          coverage-summary-path: ./coverage/coverage-summary.json
+          title: Coverage Comment
+          summary-title: Summary
           badge-title: Coverage
           hide-comment: false
           create-new-comment: false
           hide-summary: false
-          coverage-title: Current coverage
-          coverage-path: ./coverage.txt
+          coverage-title: Coverage
+          coverage-path: ./coverage.txt    
 
       - name: Check the output coverage
         run: |
@@ -69,41 +83,6 @@ jobs:
           echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
           echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
-      # - name: Save report
-      #   # run: mkdir -p path/to/artifact
-      #   # run: echo hello > coverage.txt
-      #   run: |
-      #     echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}" > coverage.txt
-      #     echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}" > coverage.txt
-      #     echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}" > coverage.txt
-        # uses: actions/upload-artifact@master
-        # with:
-        #   name: my-artifact
-        #   path: path/to/artifact
-
-      # - name: Create the badge
-      #   # if: github.ref == 'refs/heads/main'
-      #   uses: schneegans/dynamic-badges-action@v1.6.0
-      #   with:
-      #     auth: ${{ secrets.JEST_COVERAGE_COMMENT }}
-      #     gistID: 5e90d640f8c212ab7bbac38f72323f80
-      #     filename: jest-coverage-comment__main.json
-      #     label: coverage
-      #     message: ${{ steps.coverageComment.outputs.coverage }}%
-      #     color: ${{ steps.coverageComment.outputs.color }}
-      #     namedLogo: javascript
-
-      - name: Update README with Coverage HTML
-        # if: github.ref == 'refs/heads/main'
-        run: |
-          sed -i '/<!-- Jest Coverage Comment:Begin -->/,/<!-- Jest Coverage Comment:End -->/c\<!-- Jest Coverage Comment:Begin -->\n\${{ steps.coverageComment.outputs.summaryHtml }}\n<!-- Jest Coverage Comment:End -->' ./README.md
-
-      - name: Commit & Push changes in README
-        # if: github.ref == 'refs/heads/test/coverage'
-        uses: actions-js/push@master
-        with:
-          message: Update coverage in README
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
