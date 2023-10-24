@@ -101,7 +101,7 @@ export const Toast: React.FC<Props> = ({
 
   const Message = useMemo<JSX.Element>(() => {
     if (typeof message === 'string') {
-      return <ToastMessage style={[messageStyle, {backgroundColor:'red'}]}>{message}</ToastMessage>;
+      return <ToastMessage style={messageStyle}>{message}</ToastMessage>;
     }
 
     return message;
