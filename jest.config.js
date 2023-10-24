@@ -1,6 +1,8 @@
 module.exports = {
   preset: 'react-native',
   resetMocks: false,
+  collectCoverage: true,
+  coverageDirectory: "coverage",
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node', 'd.ts'],
   moduleDirectories: ['node_modules'],
   setupFilesAfterEnv: ['./jest-setup.ts'],
