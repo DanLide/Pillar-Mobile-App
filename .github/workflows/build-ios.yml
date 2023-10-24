@@ -46,7 +46,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn jest --coverage --coverageReporters json-summary
+        run: yarn jest --coverage --coverageReporters json-summary | tee ./coverage.txt
 
       - name: Jest Coverage Comment
         id: coverageComment
@@ -54,7 +54,6 @@ jobs:
         with:
           hide-comment: true
           coverage-path: ./coverage.txt
-          junitxml-path: ./coverage/junit.xml
 
       - name: Check the output coverage
         run: |
