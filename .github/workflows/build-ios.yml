@@ -46,7 +46,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run unit tests
-        run: yarn jest --coverage --coverageReporters json-summary --watchAll
+        run: yarn jest --coverage --coverageReporters json-summary
 
       # - name: Jest Coverage Comment
       #   id: coverageComment
