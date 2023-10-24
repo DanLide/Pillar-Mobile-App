@@ -63,7 +63,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }
   const [countDownNumber, setCountDownNumber] = useState(RELOCK_TIME_SEC);
   const intervalID = useRef<NodeJS.Timer | null>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (status !== LockStatus.UNLOCKED && countDownNumber !== RELOCK_TIME_SEC) {
       setCountDownNumber(RELOCK_TIME_SEC);
       if (intervalID.current) {
@@ -79,7 +79,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }
           }
           return prevCount - 1;
         });
-      }, 1000);
+      }, 900);
     }
   }, [countDownNumber, status])
 
@@ -146,7 +146,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }
           width={animationBorderWidth}
           fill={100}
           tintColor="#E0E0E0"
-          duration={RELOCK_TIME}
+          duration={RELOCK_TIME - 1000}
           onAnimationComplete={() => console.log('onAnimationComplete')}
           backgroundColor="transparent"
           backgroundWidth={0}
