@@ -41,13 +41,13 @@ const SelectStockScreenBody = observer(({ navigation, route }: Props) => {
   const succeedBluetooth = route.params?.succeedBluetooth;
 
   useEffect(() => {
-    if (succeedBluetooth) {
-      showToast('Bluetooth successfully connected', {
-        type: ToastType.BluetoothEnabled,
-      });
-      return;
-    }
     autorun(() => {
+      if (succeedBluetooth && permissionStore.isBluetoothOn) {
+        showToast('Bluetooth successfully connected',
+          { type: ToastType.BluetoothEnabled },
+        )
+        return;
+      }
       if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
         showToast('Bluetooth not connected', {
           type: ToastType.BluetoothDisabled,
@@ -55,6 +55,16 @@ const SelectStockScreenBody = observer(({ navigation, route }: Props) => {
             permissionStore.openSetting();
           },
         });
+        return;
+      }
+      if (!permissionStore.isBluetoothOn) {
+        showToast('Make sure Bluetooth is enabled, bluetooth not connected',
+          {
+            type: ToastType.BluetoothDisabled,
+            onPress: () => { permissionStore.openBluetoothPowerSetting() },
+            style: styles.toastStyle,
+          },
+        )
       }
     });
   }, [showToast, navigation, succeedBluetooth]);
@@ -96,4 +106,7 @@ export const SelectStockScreen: React.FC<Props> = props => {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  toastStyle: {
+    gap: 8,
+  },
 });
