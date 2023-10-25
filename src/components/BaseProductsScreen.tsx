@@ -96,7 +96,7 @@ const BaseProducts = observer(
       setEditableProductQuantity,
       onRemoveProduct,
       onCloseModal,
-    } = useBaseProductsScreen(store, navigation);
+    } = useBaseProductsScreen(store, navigation, modalType);
 
     const scanButtonType =
       modalType === ProductModalType.ManageProduct && !scannedProductsCount
