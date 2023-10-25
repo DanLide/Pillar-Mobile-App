@@ -27,6 +27,7 @@ const initModalParams: ProductModalParams = {
 export const useBaseProductsScreen = (
   store: Store,
   navigation: BaseProductsScreenNavigationProp,
+  type?: ProductModalType,
 ) => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
@@ -51,10 +52,10 @@ export const useBaseProductsScreen = (
         isEdit: true,
         maxValue: store.getEditableMaxValue(product),
         onHand: store.getEditableOnHand(product),
-        type: ProductModalType.CreateOrder,
+        type: type ?? ProductModalType.CreateOrder,
       });
     },
-    [store],
+    [store, type],
   );
 
   const onSubmitProduct = useCallback(

@@ -64,6 +64,7 @@ export const ProductsScreen = memo(({ navigation }: Props) => {
 
   return (
     <BaseProductsScreen
+      disableAlert
       infoTitle={store.currentJob?.jobNumber}
       modalType={ProductModalType.CreateInvoice}
       navigation={navigation}

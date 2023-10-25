@@ -175,8 +175,9 @@ export const EditQuantity = memo(
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
       if (
-        !(currentValue === minValue && minValue === 0) &&
-        currentValue >= minValue
+        !(currentValue === minValue) &&
+        currentValue >= minValue &&
+        minValue !== 0
       ) {
         return (
           <TouchableOpacity

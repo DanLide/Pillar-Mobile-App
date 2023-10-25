@@ -72,23 +72,26 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     </View>
   );
 
-  const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => (
-    <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
-      <View style={styles.description}>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemName}>
-          {item.name}
+  const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) =>
+    !isNil(item.receivedQty) && !isNil(item.reservedCount) ? (
+      <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
+        <View style={styles.description}>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemName}>
+            {item.name}
+          </Text>
+          <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemSize}>
+            {item.size}
+          </Text>
+        </View>
+        <Text style={styles.itemOrdered}>
+          <Text style={styles.boldText}>{item.receivedQty}</Text>/
+          {item.orderedQty}
         </Text>
-        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.itemSize}>
-          {item.size}
+        <Text style={styles.itemReceiving}>
+          +{Math.abs(item.receivedQty - item.reservedCount)}
         </Text>
-      </View>
-      <Text style={styles.itemOrdered}>
-        <Text style={styles.boldText}>{item.receivedQty}</Text>/
-        {item.orderedQty}
-      </Text>
-      <Text style={styles.itemReceiving}>+{item.reservedCount}</Text>
-    </Pressable>
-  );
+      </Pressable>
+    ) : null;
 
   useEffect(() => {
     if (currentOrder?.order.orderId) {
@@ -106,7 +109,8 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
 
     setModalParams({
       type: ProductModalType.ReceiveOrder,
-      maxValue: item.orderedQty - item.receivedQty,
+      maxValue: item.orderedQty,
+      minValue: item.receivedQty,
       currentProduct: item,
     });
   };

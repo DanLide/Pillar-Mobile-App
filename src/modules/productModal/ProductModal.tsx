@@ -35,6 +35,7 @@ export interface ProductModalParams {
   maxValue?: number;
   onHand?: number;
   toastType?: ProductQuantityToastType;
+  minValue?: number;
 }
 
 export interface ProductModalProps extends ProductModalParams {
@@ -78,6 +79,7 @@ export const ProductModal = memo(
     toastType,
     isEdit,
     maxValue = 0,
+    minValue,
     onHand = 0,
     onClose,
     onSubmit,
@@ -143,6 +145,7 @@ export const ProductModal = memo(
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 maxValue={maxValue}
+                minValue={minValue}
                 style={styles.productQuantityContainer}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
@@ -175,6 +178,7 @@ export const ProductModal = memo(
         isEdit,
         toastType,
         maxValue,
+        minValue,
         onHand,
         onJobSelectNavigation,
         onRemoveAlert,
