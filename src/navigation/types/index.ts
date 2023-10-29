@@ -60,13 +60,13 @@ type CameraPermissionScreenParams = {
   nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
 } & ScannerParams;
 
-type BluetoothPermissionScreenParams = {
-  nextRoute: AppNavigator.SelectStockScreen;
-};
-
 type CreateOrderParams = {
   orderType?: OrderType;
 };
+
+type BluetoothPermissionScreenParams = {
+  nextRoute: AppNavigator.SelectStockScreen;
+} & CreateOrderParams;
 
 type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
 
@@ -209,4 +209,12 @@ export type CameraPermissionScreenProps = NativeStackScreenProps<
     ManageProductsStackParamList &
     OrdersParamsList,
   AppNavigator.CameraPermissionScreen
+>;
+
+export type BluetoothPermissionScreenProps = NativeStackScreenProps<
+  RemoveStackParamList &
+    ReturnStackParamList &
+    ManageProductsStackParamList &
+    OrdersParamsList,
+  AppNavigator.BluetoothPermissionScreen
 >;

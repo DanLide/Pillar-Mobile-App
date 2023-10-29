@@ -14,17 +14,22 @@ import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { SelectedProductsList } from 'src/modules/orders/components/SelectedProductsList';
 import { TotalCostBar } from 'src/modules/orders/components';
-import { OrderStatusType } from 'src/constants/common.enum';
+import { OrderStatusType, OrderType } from 'src/constants/common.enum';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
   AppNavigator.CreateOrderResultScreen
 >;
 
-export const CreateOrderResultScreen = ({ navigation }: Props) => {
+export const CreateOrderResultScreen = ({
+  navigation,
+  route: { params },
+}: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
 
   const order = ordersStoreRef.currentOrder?.order;
+  const orderType = params?.orderType;
+  const isPurchaseOrder = orderType === OrderType.Purchase;
 
   const orderId = order?.orderId;
   const supplierName = order?.supplierName;
@@ -33,6 +38,13 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
 
   const isPORequired = status === OrderStatusType.POREQUIRED;
   const isOrderNotFinalized = isPORequired && !poNumber;
+
+  const primaryButtonText = isPurchaseOrder ? 'Home' : 'Manage Orders';
+  const secondaryButtonText = isPurchaseOrder ? 'View Order' : 'Home';
+
+  const title = isPurchaseOrder
+    ? `Order ${orderId ? `${orderId} ` : ''}Created`
+    : 'Return Order Created';
 
   const TitleIcon = useMemo(
     () =>
@@ -64,15 +76,22 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
     [],
   );
 
-  const onNavigateToHome = useCallback(() => navigation.goBack(), [navigation]);
-
-  const onNavigateToOrderView = useCallback(
+  const onPrimaryPress = useCallback(
     () =>
-      orderId &&
-      navigation.navigate(AppNavigator.OrderDetailsScreen, {
-        orderId: orderId.toString(),
-      }),
-    [navigation, orderId],
+      isPurchaseOrder
+        ? navigation.goBack()
+        : navigation.replace(AppNavigator.OrdersScreen),
+    [isPurchaseOrder, navigation],
+  );
+
+  const onSecondaryPress = useCallback(
+    () =>
+      isPurchaseOrder && orderId
+        ? navigation.navigate(AppNavigator.OrderDetailsScreen, {
+            orderId: orderId.toString(),
+          })
+        : navigation.goBack(),
+    [isPurchaseOrder, navigation, orderId],
   );
 
   return (
@@ -86,9 +105,7 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             {TitleIcon}
-            <Text style={styles.title}>
-              Order {orderId && `${orderId} `}Created
-            </Text>
+            <Text style={styles.title}>{title}</Text>
           </View>
 
           <View style={styles.subtitleContainer}>
@@ -134,7 +151,7 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
           <SelectedProductsList itemTitleColor={colors.grayDark3} />
         </View>
 
-        {!isPORequired && (
+        {isPurchaseOrder && !isPORequired && (
           <Text style={styles.note}>
             Your order will be sent via{'\n'}email and/or EDI to your
             distributor
@@ -142,24 +159,24 @@ export const CreateOrderResultScreen = ({ navigation }: Props) => {
         )}
       </View>
 
-      <TotalCostBar style={styles.totalCost} />
+      <TotalCostBar orderType={orderType} style={styles.totalCost} />
 
       <View style={styles.buttons}>
-        {orderId && (
+        {isPurchaseOrder && !orderId ? null : (
           <Button
             type={ButtonType.secondary}
-            title="View Order"
+            title={secondaryButtonText}
             buttonStyle={styles.button}
             textStyle={styles.buttonText}
-            onPress={onNavigateToOrderView}
+            onPress={onSecondaryPress}
           />
         )}
         <Button
           type={ButtonType.primary}
-          title="Home"
+          title={primaryButtonText}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          onPress={onNavigateToHome}
+          onPress={onPrimaryPress}
         />
       </View>
     </View>

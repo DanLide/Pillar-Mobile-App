@@ -73,6 +73,8 @@ const CreateOrderScreen = observer(
 
     const orderType = params?.orderType;
 
+    const isPurchaseOrder = orderType === OrderType.Purchase;
+
     const modalType =
       orderType === OrderType.Purchase
         ? ProductModalType.CreateOrder
@@ -90,6 +92,8 @@ const CreateOrderScreen = observer(
     } = useBaseProductsScreen(ordersStoreRef, navigation, modalType);
 
     const { showToast } = useSingleToast();
+
+    const submitButtonTitle = isPurchaseOrder ? 'Send Order' : 'Complete';
 
     const suppliers = useMemo<DropdownItem[]>(
       () =>
@@ -160,7 +164,7 @@ const CreateOrderScreen = observer(
         return setIsPONumberModalVisible(true);
 
       openResultScreen();
-    }, [ordersStoreRef, showToast, openResultScreen]);
+    }, [ordersStoreRef, orderType, showToast, openResultScreen]);
 
     const onSubmitPONumber = useCallback(
       async (poNumber: string) => {
@@ -193,19 +197,21 @@ const CreateOrderScreen = observer(
             isLoading={isSuggestedProductsLoading}
           />
 
-          <Button
-            disabled={!supplier || isSuggestedProductsLoading}
-            type={ButtonType.primary}
-            title="Add Items Below Inventory Minimum"
-            icon={SVGs.ProductSmallIcon}
-            iconProps={RECOMMENDED_PRODUCTS_ICON_PROPS}
-            buttonStyle={styles.recommendedProductsButton}
-            textStyle={styles.recommendedProductsButtonText}
-            onPress={addSuggestedItems}
-          />
+          {isPurchaseOrder && (
+            <Button
+              disabled={!supplier || isSuggestedProductsLoading}
+              type={ButtonType.primary}
+              title="Add Items Below Inventory Minimum"
+              icon={SVGs.ProductSmallIcon}
+              iconProps={RECOMMENDED_PRODUCTS_ICON_PROPS}
+              buttonStyle={styles.recommendedProductsButton}
+              textStyle={styles.recommendedProductsButtonText}
+              onPress={addSuggestedItems}
+            />
+          )}
         </View>
 
-        <TotalCostBar />
+        <TotalCostBar orderType={orderType} />
 
         <View style={styles.buttons}>
           <Button
@@ -222,7 +228,7 @@ const CreateOrderScreen = observer(
             isLoading={isCreateOrderLoading}
             type={ButtonType.primary}
             buttonStyle={styles.buttonContainer}
-            title="Send Order"
+            title={submitButtonTitle}
             onPress={onCreateOrder}
           />
         </View>

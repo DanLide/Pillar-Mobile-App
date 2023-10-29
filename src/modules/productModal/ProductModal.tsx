@@ -63,6 +63,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
     case ProductModalType.CreateInvoice:
     case ProductModalType.ReceiveOrder:
     case ProductModalType.CreateOrder:
+    case ProductModalType.ReturnOrder:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -188,7 +189,8 @@ export const ProductModal = memo(
         case Tabs.EditQuantity: {
           if (
             type === ProductModalType.ReceiveOrder ||
-            type === ProductModalType.CreateOrder
+            type === ProductModalType.CreateOrder ||
+            type === ProductModalType.ReturnOrder
           ) {
             return (
               <Text style={styles.title} ellipsizeMode="middle">

@@ -39,6 +39,7 @@ export const useBaseProductsScreen = (
     if (result !== RESULTS.GRANTED) {
       navigation.navigate(AppNavigator.CameraPermissionScreen, {
         nextRoute: AppNavigator.ScannerScreen,
+        modalType: type,
       });
       return;
     }
