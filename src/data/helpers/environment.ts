@@ -6,6 +6,9 @@ export const environment = {
     authority: `${Config.AUTH_URL}`,
   },
   modules: {
+    base: {
+      apiUri: `${Config.API_URL}`,
+    },
     pisaUser: {
       apiUri: `${Config.API_URL}/pisauser`,
     },
@@ -32,6 +35,9 @@ export const environment = {
     },
     order: {
       apiUri: `${Config.API_URL}/order`,
+    },
+    shopSetup: {
+      apiUri: `${Config.API_URL}/shopsetup`,
     },
   },
 };

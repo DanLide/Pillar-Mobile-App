@@ -1,38 +1,38 @@
+import { isNil } from 'ramda';
 import React, {
   useCallback,
+  useEffect,
+  useMemo,
   useRef,
   useState,
-  useMemo,
-  useEffect,
 } from 'react';
 import {
-  StyleSheet,
+  Dimensions,
   LayoutChangeEvent,
   LayoutRectangle,
-  Dimensions,
-  View,
   Pressable,
+  StyleSheet,
   TouchableOpacity,
   Vibration,
+  View,
 } from 'react-native';
 import Animated, {
-  FadeOutDown,
   FadeInUp,
+  FadeOutDown,
   Layout,
-  useSharedValue,
-  useAnimatedStyle,
   SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
-import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
-import { Frame } from 'react-native-vision-camera';
 import TrackPlayer from 'react-native-track-player';
+import { Frame } from 'react-native-vision-camera';
 import { VolumeManager } from 'react-native-volume-manager';
-import { isNil } from 'ramda';
+import { Barcode, BarcodeFormat } from 'vision-camera-code-scanner';
 
 import { useSwitchState } from '../hooks';
-import Scanner from './Scanner';
-import ProductListButton from './ProductListButton';
 import { SVGs, colors, fonts } from '../theme';
+import ProductListButton from './ProductListButton';
+import Scanner from './Scanner';
 import { TooltipBar } from './TooltipBar';
 
 const WINDOW_HEIGHT = Dimensions.get('window').height;
@@ -50,6 +50,7 @@ export type ScanProductProps = {
   isActive?: boolean;
   isUPC?: boolean;
   scannedProductCount?: number;
+  tooltipText?: string;
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -152,13 +153,14 @@ const soundAndVibrate = async () => {
   await VolumeManager.setVolume(1);
   Vibration.vibrate();
   TrackPlayer.play();
-}
+};
 
 const ScanProduct: React.FC<ScanProductProps> = ({
   onScan,
   isActive,
   isUPC,
   scannedProductCount,
+  tooltipText,
 }) => {
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
@@ -187,7 +189,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     if (isActive && forceDisableScanner.current) {
       forceDisableScanner.current = false;
     }
-  }, [isActive, forceDisableScanner])
+  }, [isActive, forceDisableScanner]);
 
   useEffect(() => {
     if (isBlinkOn) {
@@ -379,7 +381,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
     setIsZoomToggled();
   };
 
-  const tooltipText = useMemo<string>(() => {
+  const getTooltipText = useMemo<string>(() => {
     if (isUPC) return upcToolTipText;
 
     return barcodesLength > 1
@@ -457,7 +459,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   return (
     <View style={styles.container}>
       <TooltipBar
-        title={tooltipText}
+        title={tooltipText || getTooltipText}
         containerStyle={styles.tooltipContainer}
       />
       {isBlinkOn && (

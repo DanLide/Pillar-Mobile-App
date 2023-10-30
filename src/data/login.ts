@@ -1,24 +1,28 @@
 import jwt_decode from 'jwt-decode';
 
-import { Task, TaskExecutor } from './helpers';
-import { loginAPI, getRoleManagerAPI, LoginAPIParams } from './api';
-import { Utils } from './helpers/utils';
-import { AuthStore } from '../stores/AuthStore';
+import { jobsStore } from '../modules/jobsList/stores';
 import { SSOModel } from '../modules/sso/stores/SelectSSOStore';
 import { ssoStore } from '../stores';
+import { AuthStore } from '../stores/AuthStore';
+import { LoginAPIParams, getRoleManagerAPI, loginAPI } from './api';
 import {
-  singleSSOAPI,
-  multiSSOAPI,
-  adminSSOAPI,
-  SingleSSOAPIResponse,
   MultiSSOAPIResponse,
+  SingleSSOAPIResponse,
+  adminSSOAPI,
+  multiSSOAPI,
+  singleSSOAPI,
 } from './api/ssoAPI';
-import { jobsStore } from '../modules/jobsList/stores';
+import ExtendedError from './error/ExtendedError';
+import { Task, TaskExecutor } from './helpers';
+import { Utils } from './helpers/utils';
+import { permissionProvider } from './providers';
+import { LoginType } from 'src/navigation/types';
 
 export interface TokenData {
   token?: string;
   refreshToken?: string;
   tokenExpiresIn?: number;
+  type?: LoginType;
 }
 
 export interface LoginFlowContext extends TokenData {
@@ -36,11 +40,16 @@ export interface LoginFlowContext extends TokenData {
   roleTypeDescription?: string;
 }
 
-export const onLogin = async (params: LoginAPIParams, authStore: AuthStore) => {
+export const onLogin = async (
+  params: LoginAPIParams,
+  authStore: AuthStore,
+  type?: LoginType,
+) => {
   const loginContext: LoginFlowContext = {
     token: undefined,
     isTnC: undefined,
     isLanguage: undefined,
+    type,
   };
 
   const result = await new TaskExecutor([
@@ -149,6 +158,8 @@ class GetSSOTask extends Task {
   }
 
   async run(): Promise<void> {
+    if (ssoStore.getIsDeviceConfiguredBySSO) return;
+
     ssoStore.clear();
 
     if (!this.loginFlowContext.token) {
@@ -173,7 +184,6 @@ class GetSSOTask extends Task {
     if (this.loginFlowContext.facilityID !== undefined) {
       // is SSO user
       const response: SingleSSOAPIResponse = await singleSSOAPI(
-        this.loginFlowContext.token!,
         this.loginFlowContext.facilityID,
       );
       const res = this.mapSingle(response);
@@ -280,9 +290,37 @@ class SaveAuthDataTask extends Task {
       roleTypeDescription,
       refreshToken,
       tokenExpiresIn,
+      type,
     } = this.loginFlowContext;
 
     if (this.isLoginContextValid()) {
+      this.authStore.setPermissionSets([permissionSet1, permissionSet2]);
+
+      if (
+        type === LoginType.ConfigureShopDevice &&
+        !permissionProvider.canConfigureShop()
+      ) {
+        this.authStore.resetPermissionSet();
+        throw new ExtendedError(
+          'This account doesn’t have permission to configure device.',
+          'no_permission',
+        );
+      }
+
+      switch (type) {
+        case LoginType.LoginShopDevice: {
+          ssoStore.setDeviceConfiguration(true);
+          break;
+        }
+        case LoginType.ConfigureShopDevice: {
+          ssoStore.setDeviceConfiguration(false);
+          break;
+        }
+        default:
+          ssoStore.setDeviceConfiguration(undefined);
+          break;
+      }
+
       this.authStore.setToken(token, refreshToken, tokenExpiresIn);
       this.authStore.setIsTnC(isTnC);
       this.authStore.setIsLanguage(isLanguage);
@@ -291,7 +329,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);
       this.authStore.setCompanyNumber(this.loginFlowContext.companyNumber);
-      this.authStore.setPermissionSets([permissionSet1, permissionSet2]);
+
       this.authStore.setMsoID(this.loginFlowContext.msoID);
       this.authStore.setFacilityID(this.loginFlowContext.facilityID);
       this.authStore.setName(this.loginFlowContext.name);

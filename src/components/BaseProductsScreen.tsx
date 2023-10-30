@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width,
     height,
-    backgroundColor: 'gray',
+    backgroundColor: colors.gray,
     top: 0,
     zIndex: 100,
     opacity: 0.6,

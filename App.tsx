@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import 'react-native-url-polyfill/auto';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -14,29 +14,31 @@ import {
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import { getVersion } from 'react-native-device-info';
-import SplashScreen from 'react-native-splash-screen'
+import SplashScreen from 'react-native-splash-screen';
+import { observer } from 'mobx-react';
 
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
-
-import autoLogoutService, { AUTO_LOGOUT_TIMEOUT } from "./src/data/helpers/autologoutService";
+import autoLogoutService, {
+  AUTO_LOGOUT_TIMEOUT,
+} from './src/data/helpers/autologoutService';
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
-
-interface InitialProps {
-  [key: string]: string;
-}
+import { getSSORNToken } from 'src/helpers/localStorage';
+import { ssoStore } from 'src/stores';
 
 const { width, height } = Dimensions.get('window');
 const backgroundImageSize = {
   width,
   height,
-}
+};
 const version = `Version ${getVersion()}`;
 
-const App = (initialProps: InitialProps) => {
+const App = observer(() => {
+  const [appState, setAppState] = useState('active');
+
   useEffect(() => {
     SplashScreen.hide();
     async function setup() {
@@ -50,28 +52,40 @@ const App = (initialProps: InitialProps) => {
     setup();
   }, []);
 
-  console.log(initialProps['rntoken']);
-
-  const [appState, setAppState] = useState('active');
-
   useEffect(() => {
-    const subscription = AppState.addEventListener("change", nextAppState => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
       if (!autoLogoutService.lastTouchTimeStamp) {
-        return
+        return;
       }
-      const delayNeed = nextAppState === 'active' &&
-      new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() > AUTO_LOGOUT_TIMEOUT;
+      const delayNeed =
+        nextAppState === 'active' &&
+        new Date().getTime() - autoLogoutService.lastTouchTimeStamp.getTime() >
+          AUTO_LOGOUT_TIMEOUT;
 
-      delayNeed ? setTimeout(() => {
-        // need to logout animation be done
-        setAppState(nextAppState);
-      }, 350) : setAppState(nextAppState);
+      delayNeed
+        ? setTimeout(() => {
+            // need to logout animation be done
+            setAppState(nextAppState);
+          }, 350)
+        : setAppState(nextAppState);
     });
 
     return () => {
       subscription.remove();
     };
-  }, [])
+  }, []);
+
+  const getSSORNTokenData = useCallback(async () => {
+    const data = await getSSORNToken();
+    if (data) {
+      ssoStore.setCurrentSSO(data.sso);
+      ssoStore.setDeviceConfiguration(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    getSSORNTokenData();
+  }, [getSSORNTokenData]);
 
   const renderSplashScreen = () => {
     if (appState === 'active') {
@@ -79,27 +93,19 @@ const App = (initialProps: InitialProps) => {
     }
 
     return (
-      <View style={[
-        backgroundImageSize,
-        styles.splashContainer,
-      ]}>
+      <View style={[backgroundImageSize, styles.splashContainer]}>
+        <Image source={splashScreenBackground} style={backgroundImageSize} />
         <Image
-          source={splashScreenBackground}
-          style={backgroundImageSize}
-        />
-        <Image
-          resizeMode='contain'
+          resizeMode="contain"
           source={splashScreenLogo}
           style={styles.splashImageBackground}
         />
         <SafeAreaView style={styles.versionContainer}>
-          <Text style={styles.versionText}>
-            {version}
-          </Text>
+          <Text style={styles.versionText}>{version}</Text>
         </SafeAreaView>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <ScrollView
@@ -128,7 +134,7 @@ const App = (initialProps: InitialProps) => {
       </View>
     </ScrollView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -156,7 +162,7 @@ const styles = StyleSheet.create({
   },
   splashContainer: {
     position: 'absolute',
-  }
+  },
 });
 
 export default App;
