@@ -20,6 +20,7 @@ export enum AppNavigator {
   LanguageSelectScreen = 'LanguageSelectScreen',
   SelectSSOScreen = 'SelectSSOScreen',
   Drawer = 'Drawer',
+  Settings = 'Settings',
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
@@ -126,6 +127,7 @@ export type HomeStackParamList = {
   [AppNavigator.CreateInvoiceStack]: undefined;
   [AppNavigator.OrdersStack]: undefined;
   [AppNavigator.ConfigureDeviceStack]: undefined;
+  [AppNavigator.Settings]: undefined;
 };
 
 export type RemoveStackParamList = {

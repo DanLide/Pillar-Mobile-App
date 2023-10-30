@@ -26,6 +26,10 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
   };
 
+  const onNavigationToSettings = () => {
+    navigation.navigate(AppNavigator.Settings);
+  };
+
   return (
     <SafeAreaView style={styles.drawerContainer}>
       <View style={styles.topContainer}>
@@ -55,6 +59,8 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
         title={'Settings'}
         icon={<SVGs.SettingsIcon />}
         showChevron
+        onPress={onNavigationToSettings}
+        disabled={false}
       />
 
       <View style={styles.bottomContainer}>
