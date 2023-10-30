@@ -24,6 +24,7 @@ import { colors } from '../theme';
 export interface TooltipProps extends PropsWithChildren {
   message: string | JSX.Element;
   contentStyle?: StyleProp<ViewStyle>;
+  type?: ToastType;
 }
 
 const { height: WINDOW_HEIGHT } = Dimensions.get('window');
@@ -32,6 +33,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   children,
   message,
   contentStyle,
+  type,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [infoIconLayout, setInfoIconLayout] = useState({
@@ -96,7 +98,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
               id="tooltip"
               message={message}
               onHide={closeTooltip}
-              type={ToastType.TooltipInfo}
+              type={type ?? ToastType.TooltipInfo}
               actionType={ToastActionType.Close}
               style={messageStyle}
             />

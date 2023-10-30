@@ -2,7 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { getScreenOptions } from './helpers';
-import { 
+import {
   AppNavigator,
   LeftBarType,
   CreateInvoiceParamList,
@@ -43,7 +43,7 @@ export const CreateInvoiceStack: React.FC = () => {
         component={ResultScreen}
         options={getScreenOptions({
           title: 'Create Invoice',
-          leftBarButtonType: LeftBarType.Back,
+          leftBarButtonType: LeftBarType.Close,
         })}
       />
       <Stack.Screen

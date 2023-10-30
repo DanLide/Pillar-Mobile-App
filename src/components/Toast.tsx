@@ -47,9 +47,11 @@ const icons: Record<
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,
+  [ToastType.CreateInvoiceError]: SVGs.RefundErrorIcon,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
+  [ToastType.TooltipCreateInvoice]: SVGs.CreateInvoiceTooltipIcon,
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
@@ -90,6 +92,7 @@ export const Toast: React.FC<Props> = ({
   const messageStyle = useMemo(() => {
     switch (type) {
       case ToastType.ProductUpdateSuccess:
+      case ToastType.CreateInvoiceError:
         return styles.messageLeft;
       default:
         return null;

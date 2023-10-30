@@ -30,15 +30,9 @@ export const MissingItemsModal: React.FC<Props> = ({
   const renderItem = ({
     item,
   }: ListRenderItemInfo<NonNullable<ProductModel>>) => {
-    if (
-      isNil(item.orderedQty) ||
-      isNil(item.receivedQty) ||
-      isNil(item.reservedCount)
-    )
-      return null;
+    if (isNil(item.orderedQty) || isNil(item.reservedCount)) return null;
 
-    if (item.orderedQty - (item.receivedQty + item.reservedCount) === 0)
-      return null;
+    if (item.orderedQty - item.reservedCount === 0) return null;
 
     return (
       <View style={styles.item}>
@@ -48,7 +42,7 @@ export const MissingItemsModal: React.FC<Props> = ({
         </View>
         <View>
           <Text style={styles.itemName}>
-            {item.orderedQty - (item.receivedQty + item.reservedCount)}
+            {item.orderedQty - item.reservedCount}
           </Text>
         </View>
       </View>

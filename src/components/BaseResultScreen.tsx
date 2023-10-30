@@ -133,12 +133,14 @@ const BaseResultScreen: React.FC<Props> = observer(
       () =>
         groupByJob ? (
           <SectionList
+            style={styles.table}
             sections={groupProductsByJobId(syncedProducts)}
             renderSectionHeader={renderSectionHeader}
             renderItem={renderItem}
           />
         ) : (
           <FlatList
+            style={styles.table}
             data={syncedProducts}
             renderItem={renderItem}
             ListHeaderComponent={renderSectionHeader}
@@ -152,7 +154,11 @@ const BaseResultScreen: React.FC<Props> = observer(
         SyncedSectionFooter ? (
           SyncedSectionFooter
         ) : groupByJob || isShowInvoiceTooltip ? (
-          <Tooltip contentStyle={styles.contextFooter} message={tooltipMessage}>
+          <Tooltip
+            type={ToastType.TooltipCreateInvoice}
+            contentStyle={styles.contextFooter}
+            message={tooltipMessage}
+          >
             <Text style={styles.contextFooterText}>Where’s my Invoice?</Text>
           </Tooltip>
         ) : null,
@@ -182,12 +188,14 @@ const BaseResultScreen: React.FC<Props> = observer(
 
       const List = groupByJob ? (
         <SectionList
+          style={styles.table}
           sections={groupProductsByJobId(notSyncedProducts)}
           renderSectionHeader={renderSectionHeader}
           renderItem={renderItem}
         />
       ) : (
         <FlatList
+          style={styles.table}
           data={notSyncedProducts}
           renderItem={renderItem}
           ListHeaderComponent={renderSectionHeader}
@@ -401,6 +409,12 @@ const styles = StyleSheet.create({
   },
   toolTipContainer: {
     flex: 1,
+  },
+  table: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: colors.neutral30,
+    borderRadius: 8,
   },
 });
 
