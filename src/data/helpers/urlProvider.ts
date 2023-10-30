@@ -1,8 +1,8 @@
-import { environment } from './environment';
 import { AuthStore } from 'src/stores/AuthStore';
 import { authStore, ssoStore } from 'src/stores';
 import { OrderType, PartyRelationshipType } from 'src/constants/common.enum';
 import { SSOStore } from 'src/stores/SSOStore';
+import { get3MDeviceName } from 'src/helpers/get3MDeviceName';
 import {
   RemoveProductsStore,
   removeProductsStore,
@@ -11,9 +11,10 @@ import {
   ReturnProductsStore,
   returnProductsStore,
 } from 'src/modules/returnProducts/stores';
-import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { OrdersStore } from 'src/modules/orders/stores/OrdersStore';
 import { ordersStore } from 'src/modules/orders/stores';
+import { StockModel } from '../../modules/stocksList/stores/StocksStore';
+import { environment } from './environment';
 
 export class URLProvider {
   authStore: AuthStore;
@@ -33,6 +34,8 @@ export class URLProvider {
       pisaEquipment: { apiUri: string };
       inventory: { apiUri: string };
       order: { apiUri: string };
+      shopSetup: { apiUri: string };
+      base: { apiUri: string };
     };
   };
 
@@ -104,6 +107,25 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${partyRoleID}/${PartyRelationshipType.UserToStorage}`,
+    );
+  }
+
+  getFetchStockByPartyRoleIdUrl() {
+    const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${partyRoleID}/${PartyRelationshipType.RepairFacilityToStorage}`,
+    );
+  }
+
+  getShopSetupLoginUrl() {
+    return new URL(`${this.currentEnv.modules.shopSetup.apiUri}/api/login`);
+  }
+
+  getDeviceByRepairFacilityIdUrl() {
+    const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/DeviceByRepairFacilityPartyRoleID/${partyRoleID}`,
     );
   }
 
@@ -303,5 +325,27 @@ export class URLProvider {
     return new URL(
       `${this.currentEnv.modules.order.apiUri}/api/Order/PONumber`,
     );
+  }
+
+  resetMasterlock() {
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Device/MasterLock/ResetKeys`,
+    );
+  }
+
+  SSOAssignMobileDevice() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceId = get3MDeviceName();
+
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignDevice/${deviceId}/${facilityId}`,
+    );
+  }
+
+  getRNToken() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceId = this.ssoStore.getCurrentMobileDevice()?.partyRoleId;
+
+    return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }
 }

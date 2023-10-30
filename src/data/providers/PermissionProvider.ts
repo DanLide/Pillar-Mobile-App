@@ -21,6 +21,10 @@ export class PermissionProvider {
     return BigInt(permissionMask & permissionValue) == permissionValue;
   }
 
+  canConfigureShop() {
+    return this.hasPermission(Permission.Administration_Devices_Create);
+  }
+
   canRemoveProduct() {
     return this.hasPermission(
       Permission.InventoryManagement_StockMobile_Remove,

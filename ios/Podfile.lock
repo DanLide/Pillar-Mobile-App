@@ -482,7 +482,7 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNKeychain (8.1.1):
+  - RNKeychain (8.1.2):
     - React-Core
   - RNPermissions (3.8.0):
     - React-Core
@@ -797,7 +797,7 @@ SPEC CHECKSUMS:
   RNFBApp: 81a9593ff681b448d1847f5d5493906310cdebe3
   RNFBCrashlytics: 9193f269c765dba3d1b0f6c5b1a6603f23f75b4c
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
+  RNKeychain: a65256b6ca6ba6976132cc4124b238a5b13b3d9c
   RNPermissions: 2b5a6ae7311982dfa3f2f8d539b7a119cfae605f
   RNReanimated: 29295af754cdd6f8e4428427d4195e02ea8766e0
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f

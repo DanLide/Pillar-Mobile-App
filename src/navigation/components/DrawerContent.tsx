@@ -15,7 +15,8 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
   const isNavigationToShopSelectAvailable =
-    (ssoStore.getSSOList?.length || 0) > 1;
+    (ssoStore.getSSOList?.length || 0) > 1 &&
+    !ssoStore.getIsDeviceConfiguredBySSO;
   const version = `Version ${getVersion()}`;
   const onLogout = () => {
     authStore.logOut();

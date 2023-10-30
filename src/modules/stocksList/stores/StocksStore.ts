@@ -40,6 +40,12 @@ export class StockStore {
       )(this.facilityProducts);
   }
 
+  @computed get getMasterlockStocks() {
+    return this.stocks.filter(
+      stock => stock.controllerSerialNo && stock.controllerType === 'ML',
+    );
+  }
+
   @action setStocks(stocks: StockModel[]) {
     this.stocks = stocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
@@ -92,8 +98,10 @@ export interface StockModel {
   deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
-  accessProfile: string;
-  firmwareVersion: number;
+  accessProfile?: string;
+  firmwareVersion?: number;
+  controllerSerialNo?: string;
+  controllerType?: 'ML' | string;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }

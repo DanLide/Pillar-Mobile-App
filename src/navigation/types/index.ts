@@ -1,5 +1,6 @@
-import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { OrderType } from 'src/constants/common.enum';
 import { ProductModalType } from 'src/modules/productModal';
 import { NativeStackScreenProps } from 'react-native-screens/native-stack';
@@ -9,6 +10,8 @@ export enum AppNavigator {
   UnauthStack = 'UnauthStack',
   WelcomeScreen = 'WelcomeScreen',
   LoginViaCredentialsScreen = 'LoginViaCredentialsScreen',
+  LoginViaPinScreen = 'LoginViaPinScreen',
+  UpdateShopLocationScreen = 'UpdateShopLocationScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -52,12 +55,22 @@ export enum AppNavigator {
   OrderByStockLocationScreen = 'OrderByStockLocationScreen',
   CreateOrderScreen = 'CreateOrderScreen',
   CreateOrderResultScreen = 'CreateOrderResultScreen',
+
+  //Configure device
+  ConfigureDeviceStack = 'ConfigureDeviceStack',
+  BaseShopSetupScreen = 'BaseShopSetupScreen',
+  ScanShopCodeScreen = 'ScanShopCodeScreen',
+  SelectStockLocationsScreen = 'SelectStockLocationsScreen',
+  DeviceConfigCompletedScreen = 'DeviceConfigCompletedScreen',
+  EnterShopCodeScreen = 'EnterShopCodeScreen',
 }
 
 type ScannerParams = { modalType?: ProductModalType };
 
 type CameraPermissionScreenParams = {
-  nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
+  nextRoute: keyof (RemoveStackParamList &
+    ReturnStackParamList &
+    ConfigureDeviceStackParams);
 } & ScannerParams;
 
 type CreateOrderParams = {
@@ -84,6 +97,11 @@ type UnlockStockScreenParams = {
     | AppNavigator.ManageProductsScreen;
 };
 
+export enum LoginType {
+  ConfigureShopDevice,
+  LoginShopDevice,
+}
+
 export type AppStackParamList = {
   [AppNavigator.UnauthStack]: undefined;
   [AppNavigator.HomeStack]: undefined;
@@ -91,7 +109,9 @@ export type AppStackParamList = {
 
 export type UnauthStackParamsList = {
   [AppNavigator.WelcomeScreen]: undefined;
-  [AppNavigator.LoginViaCredentialsScreen]: undefined;
+  [AppNavigator.LoginViaCredentialsScreen]: { type: LoginType } | undefined;
+  [AppNavigator.LoginViaPinScreen]: undefined;
+  [AppNavigator.UpdateShopLocationScreen]: undefined;
 };
 
 export type HomeStackParamList = {
@@ -105,6 +125,7 @@ export type HomeStackParamList = {
   [AppNavigator.ManageProductsStack]: undefined;
   [AppNavigator.CreateInvoiceStack]: undefined;
   [AppNavigator.OrdersStack]: undefined;
+  [AppNavigator.ConfigureDeviceStack]: undefined;
 };
 
 export type RemoveStackParamList = {
@@ -173,6 +194,15 @@ export type OrdersParamsList = {
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
 };
 
+export type ConfigureDeviceStackParams = {
+  [AppNavigator.BaseShopSetupScreen]: undefined;
+  [AppNavigator.ScanShopCodeScreen]: undefined;
+  [AppNavigator.SelectStockLocationsScreen]: undefined;
+  [AppNavigator.DeviceConfigCompletedScreen]: { stocks: StockModel[] };
+  [AppNavigator.EnterShopCodeScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+};
+
 export enum LeftBarType {
   Back,
   Close,
@@ -189,11 +219,13 @@ export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
     ReturnStackParamList &
       RemoveStackParamList &
       ManageProductsStackParamList &
+      ConfigureDeviceStackParams &
       OrdersParamsList,
     | AppNavigator.RemoveProductsScreen
     | AppNavigator.ReturnProductsScreen
     | AppNavigator.ManageProductsScreen
     | AppNavigator.CreateOrderScreen
+    | AppNavigator.BaseShopSetupScreen
   >,
   StackNavigationProp<HomeStackParamList>
 >;
