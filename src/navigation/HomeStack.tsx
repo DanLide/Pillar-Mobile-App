@@ -25,6 +25,7 @@ import {
   LeftBarType,
   RightBarType,
 } from './types';
+import { SettingsScreen } from 'src/modules/settings/SettingsScreen';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -131,6 +132,14 @@ export const HomeStack: React.FC = () => {
         name={AppNavigator.ConfigureDeviceStack}
         component={ConfigureDeviceStack}
         options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.Settings}
+        component={SettingsScreen}
+        options={getScreenOptions({
+          title: 'Settings',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
     </Stack.Navigator>
   );
