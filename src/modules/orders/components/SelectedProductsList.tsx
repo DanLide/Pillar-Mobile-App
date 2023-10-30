@@ -17,20 +17,29 @@ import { ProductEmptyList, Separator } from 'src/components';
 import { colors, fonts } from 'src/theme';
 import { ordersStore } from '../stores';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
+import { OrderType } from 'src/constants/common.enum';
 
 interface Props {
   isLoading?: boolean;
   itemTitleColor?: string;
+  orderType?: OrderType;
   onItemPress?: (item: ProductModel) => void;
 }
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const SelectedProductsList: React.FC<Props> = observer(
-  ({ isLoading, itemTitleColor = colors.purpleDark, onItemPress }) => {
+  ({
+    isLoading,
+    itemTitleColor = colors.purpleDark,
+    orderType,
+    onItemPress,
+  }) => {
     const store = useRef<SyncedProductStoreType>(ordersStore).current;
 
     const products = isLoading ? [] : store.getNotSyncedProducts;
+
+    const isPurchaseOrder = orderType === OrderType.Purchase;
 
     const ListHeader = useMemo(
       () => (
@@ -51,10 +60,10 @@ export const SelectedProductsList: React.FC<Props> = observer(
           <ProductEmptyList
             hideTitle
             subtitle="No Products added"
-            style={styles.emptyContainer}
+            style={isPurchaseOrder && styles.emptyContainer}
           />
         ),
-      [isLoading],
+      [isLoading, isPurchaseOrder],
     );
 
     const itemTitleStyle = useMemo<StyleProp<TextStyle>>(

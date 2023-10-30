@@ -20,27 +20,33 @@ interface CreateOrderContext {
   orderResponse?: GetOrdersAPIResponse;
 }
 
-export const createOrder = async (ordersStore: OrdersStore) => {
+export const createOrder = async (
+  ordersStore: OrdersStore,
+  orderType = OrderType.Purchase,
+) => {
   const createOrderContext: CreateOrderContext = {};
 
   return new TaskExecutor([
-    new CreateOrderTask(createOrderContext, ordersStore),
+    new CreateOrderTask(createOrderContext, orderType, ordersStore),
     new SaveOrderDataTask(createOrderContext, ordersStore),
   ]).execute();
 };
 
 class CreateOrderTask extends Task {
   createOrderContext: CreateOrderContext;
+  orderType: OrderType;
   ordersStore: OrdersStore;
   ssoStore: SSOStore;
 
   constructor(
     createOrderContext: CreateOrderContext,
+    orderType: OrderType,
     ordersStore: OrdersStore,
     sso_store = ssoStore,
   ) {
     super();
     this.createOrderContext = createOrderContext;
+    this.orderType = orderType;
     this.ordersStore = ordersStore;
     this.ssoStore = sso_store;
   }
@@ -61,7 +67,7 @@ class CreateOrderTask extends Task {
         orderId: 0,
         orderMethodTypeId: OrderMethodType.Manual,
         orderTotal: 0,
-        orderTypeId: OrderType.Purchase,
+        orderTypeId: this.orderType,
         repairFacilityId,
         supplierId,
         taxStatus: '',

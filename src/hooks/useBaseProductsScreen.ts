@@ -39,11 +39,12 @@ export const useBaseProductsScreen = (
     if (result !== RESULTS.GRANTED) {
       navigation.navigate(AppNavigator.CameraPermissionScreen, {
         nextRoute: AppNavigator.ScannerScreen,
+        modalType: type,
       });
       return;
     }
-    navigation.navigate(AppNavigator.ScannerScreen);
-  }, [navigation]);
+    navigation.navigate(AppNavigator.ScannerScreen, { modalType: type });
+  }, [navigation, type]);
 
   const onEditProduct = useCallback(
     (product: ProductModel) => {

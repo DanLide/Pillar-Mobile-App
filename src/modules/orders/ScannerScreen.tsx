@@ -1,22 +1,29 @@
-import React, { useRef, useCallback, useState, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
+import { RouteProp } from '@react-navigation/native';
 
-import { BaseScannerScreen } from '../../components';
-import { ProductModel } from '../../stores/types';
+import { BaseScannerScreen } from 'src/components';
+import { ProductModel } from 'src/stores/types';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-} from '../../contexts';
+} from 'src/contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { ordersStore } from './stores';
 import AlertWrapper from '../../contexts/AlertWrapper';
-import { BadRequestError } from '../../data/helpers/tryFetch';
+import { BadRequestError } from 'src/data/helpers/tryFetch';
 import { colors, fonts, SVGs } from '../../theme';
 import {
   getProductByOrderTypeAndSupplier,
   ProductByOrderTypeAndSupplierError,
-} from '../../data/getProductByOrderTypeAndSupplier';
+} from 'src/data/getProductByOrderTypeAndSupplier';
+import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
+import { OrderType } from 'src/constants/common.enum';
+
+interface Props {
+  route: RouteProp<OrdersParamsList, AppNavigator.ScannerScreen>;
+}
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -32,12 +39,19 @@ const getAlertTitle = (error?: string) => {
   }
 };
 
-export const ScannerScreen: React.FC = observer(() => {
+export const ScannerScreen = observer(({ route: { params } }: Props) => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
   const [error, setError] = useState<BadRequestError | null>(null);
 
   const store = useRef(ordersStore).current;
+
+  const modalType = params?.modalType ?? ProductModalType.CreateOrder;
+
+  const orderType =
+    modalType === ProductModalType.CreateOrder
+      ? OrderType.Purchase
+      : OrderType.Return;
 
   const alertTitle = useMemo(() => {
     const title = getAlertTitle(error?.error);
@@ -74,8 +88,8 @@ export const ScannerScreen: React.FC = observer(() => {
   );
 
   const fetchProduct = useCallback(
-    async (code: string) => getProductByOrderTypeAndSupplier(store, code),
-    [store],
+    (code: string) => getProductByOrderTypeAndSupplier(store, code, orderType),
+    [orderType, store],
   );
 
   const onBadRequestError = useCallback(
@@ -86,11 +100,11 @@ export const ScannerScreen: React.FC = observer(() => {
   const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
     async product =>
       setModalParams({
-        type: ProductModalType.CreateOrder,
+        type: modalType,
         maxValue: store.getMaxValue(),
         onHand: store.getOnHand(product),
       }),
-    [store],
+    [modalType, store],
   );
 
   const onCloseModal = useCallback(() => setModalParams(initModalParams), []);

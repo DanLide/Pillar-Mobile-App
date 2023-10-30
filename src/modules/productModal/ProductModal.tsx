@@ -2,22 +2,22 @@ import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
+import { useHeaderHeight } from '@react-navigation/elements';
 
-import { Modal } from '../../components';
+import { Modal } from 'src/components';
 import {
   ProductQuantity,
   ProductQuantityToastType,
 } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
-import { colors, fonts } from '../../theme';
+import { colors, fonts } from 'src/theme';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-} from '../../contexts';
-import { ProductModel } from '../../stores/types';
-import { useHeaderHeight } from '@react-navigation/elements';
+} from 'src/contexts';
+import { ProductModel } from 'src/stores/types';
 
 export enum ProductModalType {
   Remove,
@@ -26,6 +26,7 @@ export enum ProductModalType {
   ManageProduct,
   ReceiveOrder,
   CreateOrder,
+  ReturnOrder,
   Hidden,
 }
 
@@ -63,6 +64,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
     case ProductModalType.CreateInvoice:
     case ProductModalType.ReceiveOrder:
     case ProductModalType.CreateOrder:
+    case ProductModalType.ReturnOrder:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -191,7 +193,8 @@ export const ProductModal = memo(
         case Tabs.EditQuantity: {
           if (
             type === ProductModalType.ReceiveOrder ||
-            type === ProductModalType.CreateOrder
+            type === ProductModalType.CreateOrder ||
+            type === ProductModalType.ReturnOrder
           ) {
             return (
               <Text style={styles.title} ellipsizeMode="middle">

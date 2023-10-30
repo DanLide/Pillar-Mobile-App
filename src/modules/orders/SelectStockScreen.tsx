@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useRef } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
-import { useIsFocused, RouteProp } from '@react-navigation/native';
+import { RouteProp, useIsFocused } from '@react-navigation/native';
 import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import { RESULTS } from 'react-native-permissions';
 
-import { AppNavigator, OrdersParamsList } from '../../navigation/types';
+import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 import { StockModel, StockStore } from '../stocksList/stores/StocksStore';
 import { StocksList } from '../stocksList/components/StocksList';
 import { ordersStore } from './stores';
-import { fetchOrdersStocks } from '../../data/fetchOrdersStocks';
-import { useSingleToast } from '../../hooks';
-import { ToastContextProvider } from '../../contexts';
-import { ToastType } from '../../contexts/types';
+import { fetchOrdersStocks } from 'src/data/fetchOrdersStocks';
+import { useSingleToast } from 'src/hooks';
+import { ToastContextProvider } from 'src/contexts';
+import { ToastType } from 'src/contexts/types';
 import permissionStore from '../permissions/stores/PermissionStore';
 
 interface Props {
@@ -25,11 +25,13 @@ interface Props {
 }
 
 const SelectStockScreenBody: React.FC<Props> = observer(
-  ({ navigation, route }) => {
+  ({ navigation, route: { params } }) => {
     const store = useRef(ordersStore).current;
     const isFocused = useIsFocused();
-    const succeedBluetooth = route.params?.succeedBluetooth;
     const { showToast } = useSingleToast();
+
+    const succeedBluetooth = params?.succeedBluetooth;
+    const orderType = params?.orderType;
 
     useEffect(() => {
       if (succeedBluetooth) {
@@ -58,7 +60,7 @@ const SelectStockScreenBody: React.FC<Props> = observer(
 
     const onItemPress = (stock: StockModel) => {
       store.setCurrentStocks(stock);
-      navigation.navigate(AppNavigator.CreateOrderScreen);
+      navigation.navigate(AppNavigator.CreateOrderScreen, { orderType });
     };
 
     const fetchStocks = useCallback(

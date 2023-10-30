@@ -8,22 +8,29 @@ import {
   RefreshControl,
 } from 'react-native';
 
-import { GetOrdersAPIResponse } from '../../../data/api';
+import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
-import { SVGs, colors, fonts } from '../../../theme';
-import { Button, ButtonType, Separator } from '../../../components';
+import { SVGs, colors, fonts } from 'src/theme';
+import { Button, ButtonType, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
   isFiltered: boolean;
 
-  onPrimaryPress?: () => void;
   setFetchError: (errorStatus: boolean) => void;
+  onPrimaryPress?: () => void;
+  onSecondaryPress?: () => void;
 }
 
 export const OrdersList = memo(
-  ({ orders, onPrimaryPress, setFetchError, isFiltered }: Props) => {
+  ({
+    orders,
+    onPrimaryPress,
+    onSecondaryPress,
+    setFetchError,
+    isFiltered,
+  }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const onFetchOrders = useCallback(async () => {
@@ -66,6 +73,7 @@ export const OrdersList = memo(
             title="Return Order"
             buttonStyle={[styles.button, styles.returnButton]}
             textStyle={styles.buttonText}
+            onPress={onSecondaryPress}
           />
           <Button
             type={ButtonType.primary}
