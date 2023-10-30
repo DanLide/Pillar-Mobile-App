@@ -5,9 +5,11 @@ export enum ToastType {
   ProductUpdateError = 'ProductUpdateError',
   UpcUpdateError = 'UpcUpdateError',
   SuggestedItemsError = 'SuggestedItemsError',
+  CreateInvoiceError = 'CreateInvoiceError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',
+  TooltipCreateInvoice = 'TooltipCreateInvoice',
 
   Success = 'Success',
   ProductUpdateSuccess = 'ProductUpdateSuccess',

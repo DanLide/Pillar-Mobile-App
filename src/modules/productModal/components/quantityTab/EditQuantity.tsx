@@ -105,9 +105,10 @@ export const EditQuantity = memo(
         styles.input,
         vertical && styles.inputVertical,
         isInputHidden && styles.inputHidden,
+        !!label && styles.inputWithLabel,
         { fontSize },
       ],
-      [fontSize, isInputHidden, vertical],
+      [fontSize, isInputHidden, label, vertical],
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -175,8 +176,9 @@ export const EditQuantity = memo(
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
       if (
-        !(currentValue === minValue && minValue === 0) &&
-        currentValue >= minValue
+        !(currentValue === minValue) &&
+        currentValue >= minValue &&
+        minValue !== 0
       ) {
         return (
           <TouchableOpacity
@@ -318,6 +320,10 @@ const styles = StyleSheet.create({
     height: 48,
     maxWidth: 108,
     padding: 8,
+  },
+  inputWithLabel: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   quantityButton: {
     width: 48,

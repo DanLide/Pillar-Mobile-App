@@ -12,6 +12,7 @@ import { getFetchProductAPI, getFetchProductByFacilityIdAPI } from './api';
 import { BadRequestError } from './helpers/tryFetch';
 import { stocksStore } from '../modules/stocksList/stores';
 import { getProductSettingsByIdAPI } from './api/productsAPI';
+import { OrderType } from 'src/constants/common.enum';
 
 interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
@@ -25,12 +26,18 @@ export enum ProductByOrderTypeAndSupplierError {
 export const getProductByOrderTypeAndSupplier = async (
   store: OrdersStore,
   scanCode: string,
+  orderType = OrderType.Purchase,
 ) => {
   const productContext: FetchProductByOrderTypeAndSupplierContext = {
     product: undefined,
   };
   return new TaskExecutor([
-    new FetchProductByOrderTypeAndSupplier(productContext, scanCode, store),
+    new FetchProductByOrderTypeAndSupplier(
+      productContext,
+      scanCode,
+      orderType,
+      store,
+    ),
     new SaveProductToStoreTask(productContext, store),
   ]).execute();
 };
@@ -49,15 +56,18 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   productContext: FetchProductByOrderTypeAndSupplierContext;
   scanCode: string;
   store: OrdersStore;
+  orderType?: OrderType;
 
   constructor(
     productContext: FetchProductByOrderTypeAndSupplierContext,
     scanCode: string,
+    orderType: OrderType,
     store: OrdersStore,
   ) {
     super();
     this.productContext = productContext;
     this.scanCode = scanCode;
+    this.orderType = orderType;
     this.store = store;
   }
 
@@ -81,7 +91,10 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
+    const product = await getProductByOrderTypeAndSupplierAPI(
+      this.scanCode,
+      this.orderType,
+    );
 
     if (!product) return;
 

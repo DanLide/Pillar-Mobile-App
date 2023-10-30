@@ -64,15 +64,9 @@ export class OrdersStore extends BaseProductsStore {
 
   @computed get isProductItemsMissing() {
     const isMissing = this.currentOrder?.productList.reduce((acc, item) => {
-      if (
-        isNil(item.orderedQty) ||
-        isNil(item.receivedQty) ||
-        isNil(item.reservedCount)
-      )
-        return acc;
+      if (isNil(item.orderedQty) || isNil(item.reservedCount)) return acc;
 
-      if (item.orderedQty - (item.receivedQty + item.reservedCount) !== 0)
-        acc = true;
+      if (item.orderedQty - item.reservedCount !== 0) acc = true;
       return acc;
     }, false);
     return !!isMissing;

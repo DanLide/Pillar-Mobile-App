@@ -8,17 +8,17 @@ import {
   ViewProps,
 } from 'react-native';
 
-import { colors, fonts, SVGs } from '../../../../theme';
+import { colors, fonts, SVGs } from 'src/theme';
 import { EditQuantity } from './EditQuantity';
 import { FooterDescription } from './FooterDescription';
-import { ToastType } from '../../../../contexts/types';
-import { getProductStepQty } from '../../../../data/helpers';
-import { InventoryUseType } from '../../../../constants/common.enum';
-import { ProductModel } from '../../../../stores/types';
+import { ToastType } from 'src/contexts/types';
+import { getProductStepQty } from 'src/data/helpers';
+import { InventoryUseType } from 'src/constants/common.enum';
+import { ProductModel } from 'src/stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
-import { useSingleToast } from '../../../../hooks';
+import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 
 export type ProductQuantityToastType =
@@ -54,6 +54,15 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
   [ToastType.UpcUpdateError]:
     'This UPC already exists in the stock location of this product. Please, use another one',
+};
+
+const getEditQuantityLabel = (type?: ProductModalType) => {
+  switch (type) {
+    case ProductModalType.CreateOrder:
+      return 'Order Quantity';
+    case ProductModalType.ReturnOrder:
+      return 'Return Quantity';
+  }
 };
 
 export const ProductQuantity = memo(
@@ -157,6 +166,7 @@ export const ProductQuantity = memo(
           return null;
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
+        case ProductModalType.ReturnOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
@@ -171,6 +181,7 @@ export const ProductQuantity = memo(
       switch (type) {
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
+        case ProductModalType.ReturnOrder:
           return (
             <View style={styles.costOfProduct}>
               {!isSpecialOrder && (
@@ -210,6 +221,7 @@ export const ProductQuantity = memo(
             hideCount={hideCount}
             error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
+            label={getEditQuantityLabel(type)}
             onChange={onChange}
             onRemove={onRemove}
           />

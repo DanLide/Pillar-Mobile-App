@@ -12,6 +12,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.CreateInvoiceError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Error]: {
     primary: colors.red,
     secondary: colors.redLight,
@@ -49,6 +54,11 @@ export const toastColors: Record<
     action: colors.purpleDark,
   },
   [ToastType.TooltipInfo]: {
+    primary: colors.purple,
+    secondary: colors.background,
+    action: colors.purpleDark,
+  },
+  [ToastType.TooltipCreateInvoice]: {
     primary: colors.purple,
     secondary: colors.background,
     action: colors.purpleDark,

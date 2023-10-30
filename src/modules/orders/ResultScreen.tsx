@@ -45,9 +45,7 @@ export const ResultScreen = ({ navigation }: Props) => {
           <Text style={styles.itemSize}> {item.size}</Text>
         </View>
         <View style={styles.quantity}>
-          <Text style={styles.itemName}>
-            {item.receivedQty + item.reservedCount}
-          </Text>
+          <Text style={styles.itemName}>{item.reservedCount}</Text>
           <Text style={styles.ordered}>/{item.orderedQty}</Text>
         </View>
       </View>

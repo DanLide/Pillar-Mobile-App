@@ -3,6 +3,7 @@ import { GetAuthToken, getAuthToken } from './getAuthToken';
 import { assocPath } from 'ramda';
 import { getLogoutListener } from './getLogoutListener';
 import { refreshToken } from '../refreshToken';
+import { Utils } from './utils';
 
 interface TryAuthFetchParams extends TryFetchParams {
   authToken?: GetAuthToken;
@@ -15,7 +16,7 @@ export const tryAuthFetch = async <ResponseType>({
   logoutListener = getLogoutListener(),
 }: TryAuthFetchParams) => {
   const error = await refreshToken();
-  if (error) {
+  if (error && !Utils.isNetworkError(error)) {
     logoutListener.onServerLogout();
     return;
   }

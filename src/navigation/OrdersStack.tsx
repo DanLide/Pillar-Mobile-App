@@ -2,12 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { getScreenOptions } from './helpers';
-import {
-  AppNavigator,
-  LeftBarType,
-  OrdersParamsList,
-  RightBarType,
-} from './types';
+import { AppNavigator, LeftBarType, OrdersParamsList } from './types';
 
 import { OrdersScreen } from '../modules/orders/OrdersScreen';
 import { OrderDetailsScreen } from '../modules/orders/OrderDetailsScreen';
@@ -23,8 +18,21 @@ import {
 import { ScannerScreen } from '../modules/orders/ScannerScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CreateOrderResultScreen } from 'src/modules/orders/CreateOrderResultScreen';
+import { OrderType } from 'src/constants/common.enum';
+import { ProductModalType } from 'src/modules/productModal';
 
 const Stack = createStackNavigator<OrdersParamsList>();
+
+const getsScreenTitleByOrderType = (orderType?: OrderType) => {
+  switch (orderType) {
+    case OrderType.Purchase:
+      return 'Create Order';
+    case OrderType.Return:
+      return 'Return Order';
+    default:
+      return 'Manage Orders';
+  }
+};
 
 export const OrdersStack: React.FC = () => {
   return (
@@ -65,10 +73,12 @@ export const OrdersStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
-        options={getScreenOptions({
-          title: 'Create Order',
-          leftBarButtonType: LeftBarType.Back,
-        })}
+        options={({ route: { params } }) =>
+          getScreenOptions({
+            title: getsScreenTitleByOrderType(params?.orderType),
+            leftBarButtonType: LeftBarType.Back,
+          })
+        }
       />
       <Stack.Screen
         name={AppNavigator.BaseUnlockScreen}
@@ -87,10 +97,12 @@ export const OrdersStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.CreateOrderScreen}
         component={CreateOrderScreen}
-        options={getScreenOptions({
-          title: 'Create Order',
-          leftBarButtonType: LeftBarType.Back,
-        })}
+        options={({ route: { params } }) =>
+          getScreenOptions({
+            title: getsScreenTitleByOrderType(params?.orderType),
+            leftBarButtonType: LeftBarType.Back,
+          })
+        }
       />
       <Stack.Screen
         name={AppNavigator.ResultScreen}
@@ -103,19 +115,25 @@ export const OrdersStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.CreateOrderResultScreen}
         component={CreateOrderResultScreen}
-        options={getScreenOptions({
-          title: 'Create Order',
-          leftBarButtonType: LeftBarType.Back,
-        })}
+        options={({ route: { params } }) =>
+          getScreenOptions({
+            title: getsScreenTitleByOrderType(params?.orderType),
+            leftBarButtonType: LeftBarType.Back,
+          })
+        }
       />
       <Stack.Screen
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
-        options={getScreenOptions({
-          title: 'Create Order',
-          leftBarButtonType: LeftBarType.Back,
-          rightBarButtonType: RightBarType.QuestionMark,
-        })}
+        options={({ route: { params } }) =>
+          getScreenOptions({
+            title:
+              params?.modalType === ProductModalType.CreateOrder
+                ? 'Create Order'
+                : 'Return Order',
+            leftBarButtonType: LeftBarType.Back,
+          })
+        }
       />
       <Stack.Screen
         name={AppNavigator.HowToScanScreen}

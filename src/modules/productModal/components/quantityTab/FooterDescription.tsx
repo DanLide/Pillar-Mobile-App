@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, fonts } from '../../../../theme';
-import { InventoryTypeBadge } from '../../../../components';
-import { ProductModel } from '../../../../stores/types';
+import { colors, fonts } from 'src/theme';
+import { InventoryTypeBadge } from 'src/components';
+import { ProductModel } from 'src/stores/types';
 import { ProductModalType } from '../../ProductModal';
-import { InventoryUseType } from '../../../../constants/common.enum';
+import { InventoryUseType } from 'src/constants/common.enum';
 
 interface Props {
   type?: ProductModalType;
@@ -35,6 +35,7 @@ export const FooterDescription: React.FC<Props> = ({
     switch (type) {
       case ProductModalType.ReceiveOrder:
       case ProductModalType.CreateOrder:
+      case ProductModalType.ReturnOrder:
         return (
           <View style={styles.container}>
             {type === ProductModalType.CreateOrder && isEachPiece && (
@@ -113,8 +114,8 @@ export const FooterDescription: React.FC<Props> = ({
     product.inventoryUseTypeId,
     product.onHand,
     product.onOrder,
+    product.orderMultiple,
     product.reservedCount,
-    product.shippedQty,
     product.unitsPer,
     type,
   ]);

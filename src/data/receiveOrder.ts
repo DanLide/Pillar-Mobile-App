@@ -101,7 +101,9 @@ class ReceiveProductTask extends Task {
           productId: product.productId,
           transactionTypeId: TransactionType.Order,
           unitCost: product.cost,
-          quantityReceived: selectedProduct?.reservedCount,
+          quantityReceived: Math.abs(
+            product.receivedQty - selectedProduct?.reservedCount,
+          ),
         };
       });
 
