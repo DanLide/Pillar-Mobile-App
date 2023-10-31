@@ -32,7 +32,7 @@ export const ConfigureDeviceStack: React.FC = () => {
         component={EnterShopCodeScreen}
         options={getScreenOptions({
           leftBarButtonType: LeftBarType.Back,
-          title: 'Enter your Repair Facility code',
+          title: 'Enter Repair Facility code',
         })}
       />
       <Stack.Screen

@@ -95,18 +95,18 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
           </View>
         ) : null}
         <Text style={styles.formDescription}>
-          Enter your Repair Facility code here
+          This will be in your activation email.
         </Text>
         <View>
           <SecretCodeForm handleConfirm={handleSubmitForm} cellCount={5} />
         </View>
         <View style={styles.footer}>
-          <Text style={styles.text}>QR Code not working?</Text>
+          <Text style={styles.text}>Repair Facility code not working?</Text>
           <Button
             type={ButtonType.primary}
             buttonStyle={styles.shopCodeButton}
             textStyle={styles.shopCodeButtonText}
-            title="Enter 5 character Repair Facility code instead"
+            title="Scan your QR code instead"
             onPress={onPressScanShopCode}
           />
         </View>
