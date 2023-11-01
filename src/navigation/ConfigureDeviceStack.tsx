@@ -4,16 +4,18 @@ import React from 'react';
 import { getScreenOptions } from './helpers';
 import { AppNavigator, ConfigureDeviceStackParams, LeftBarType } from './types';
 
+import { useNavigation } from '@react-navigation/native';
 import { DeviceConfigCompletedScreen } from 'src/modules/configureDevice/DeviceConfigCompletedScreen';
 import EnterShopCodeScreen from 'src/modules/configureDevice/EnterShopCodeScreen';
 import { ScanShopCodeScreen } from 'src/modules/configureDevice/ScanShopCodeScreen';
 import { SelectStockLocationsScreen } from 'src/modules/configureDevice/SelectStockLocationsScreen';
 import { CameraPermissionScreen } from 'src/modules/permissions';
-import { authStore } from 'src/stores';
+import { authStore, ssoStore } from 'src/stores';
 
 const Stack = createStackNavigator<ConfigureDeviceStackParams>();
 
 export const ConfigureDeviceStack: React.FC = () => {
+  const navigation = useNavigation();
   return (
     <Stack.Navigator initialRouteName={AppNavigator.ScanShopCodeScreen}>
       <Stack.Screen
@@ -39,6 +41,10 @@ export const ConfigureDeviceStack: React.FC = () => {
         name={AppNavigator.SelectStockLocationsScreen}
         component={SelectStockLocationsScreen}
         options={getScreenOptions({
+          leftBarButtonAction: () => {
+            ssoStore.clear();
+            navigation.goBack();
+          },
           leftBarButtonType: LeftBarType.Back,
           title: 'Configure Shop Device',
         })}
