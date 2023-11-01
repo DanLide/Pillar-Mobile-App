@@ -13,10 +13,6 @@ import {
 
 export const BluetoothPermissionScreen = observer(
   ({ navigation, route }: BluetoothPermissionScreenProps) => {
-    const [bluetoothPermissionChecked, setBluetoothPermissionChecked] =
-      useState<boolean>(false);
-    console.warn(permissionStore.bluetoothPermission);
-
     const params = route.params;
 
     const onButtonPress = async () => {
@@ -30,14 +26,6 @@ export const BluetoothPermissionScreen = observer(
             succeedBluetooth: true,
           });
         }
-        return setBluetoothPermissionChecked(true);
-      } else if (
-        (permissionStore.bluetoothPermission === RESULTS.BLOCKED ||
-          permissionStore.bluetoothPermission === RESULTS.LIMITED) &&
-        !bluetoothPermissionChecked
-      ) {
-        permissionStore.openSetting();
-        return setBluetoothPermissionChecked(true);
       }
       navigation.navigate(AppNavigator.SelectStockScreen, {
         orderType: params?.orderType,
