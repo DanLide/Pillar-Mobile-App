@@ -1,10 +1,10 @@
+import { ExtendedStockModel } from './../modules/stocksList/stores/StocksStore';
 import { makeAutoObservable, observable, action, runInAction } from 'mobx';
 import MasterLockModule, {
   LockVisibility,
   LockStatus,
   MasterLockStateListener,
 } from '../data/masterlock';
-import { StockModel } from '../modules/stocksList/stores/StocksStore';
 
 type UpdatedLockItem = [string, LockVisibility | LockStatus];
 
@@ -49,20 +49,25 @@ class MasterLockStore {
     });
   }
 
-  @action initMasterLockForStocks(stockItem: StockModel): Promise<string> {
-    return (
-      stockItem.deviceId &&
+  @action initMasterLockForStocks(
+    stockItem: ExtendedStockModel,
+  ): Promise<string> | void {
+    if (
+      stockItem.leanTecSerialNo &&
+      stockItem.accessProfile &&
+      stockItem.firmwareVersion
+    ) {
       MasterLockModule.initLock(
-        stockItem.deviceId,
+        stockItem.leanTecSerialNo,
         stockItem.accessProfile,
         stockItem.firmwareVersion,
-      )
-    );
+      );
+    }
   }
 
   @action async unlock(deviceID: string) {
     this.isUnlocking = true;
-    await this.handleMasterRelockTime(deviceID)
+    await this.handleMasterRelockTime(deviceID);
     MasterLockModule.unlock(deviceID).then(() => {
       runInAction(() => {
         this.isUnlocking = false;
@@ -86,7 +91,7 @@ class MasterLockStore {
         }
       }
     } catch (e) {
-      console.warn('error', e)
+      console.warn('error', e);
     }
   }
 

@@ -1,27 +1,29 @@
+import { StockModelWithMLAccess } from './../../modules/stocksList/stores/StocksStore';
 import {
   fetchStocks,
   FetchStocksTask,
-  mock2Locks,
   SaveStocksToStore,
 } from '../fetchStocks';
 
 import { getFetchStockAPI } from '../api/stocksAPI';
 
 import {
-  StockModel,
   StockStore,
 } from '../../modules/stocksList/stores/StocksStore';
 
 jest.mock('../api/stocksAPI');
 
-const mockStockResponse: StockModel[] = [{
-  organizationName: 'organizationName',
-  partyRoleId: 1,
-  roleTypeId: 1,
-  leanTecSerialNo: 'leanTecSerialNo',
+const mockStockResponse: StockModelWithMLAccess[] = [{
+  equipment:{
+    organizationName: 'organizationName',
+    partyRoleId: 1,
+    roleTypeId: 1,
+    leanTecSerialNo: 'leanTecSerialNo',
+  },
+  mlAccessData: null,
 }];
 
-const mockExpected = mock2Locks(mockStockResponse)
+const mockExpected = mockStockResponse
 
 const mockSetStock = jest.fn();
 

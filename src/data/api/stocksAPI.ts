@@ -1,5 +1,5 @@
 import { URLProvider, tryAuthFetch } from '../helpers';
-import { StockModel } from '../../modules/stocksList/stores/StocksStore';
+import { StockModelWithMLAccess } from '../../modules/stocksList/stores/StocksStore';
 
 interface ResetMasterlockRequest {
   storage: Array<{ deviceIdentifier: string; id: number }>;
@@ -8,9 +8,8 @@ interface ResetMasterlockRequest {
 }
 
 export const getFetchStockAPI = () => {
-  const url = new URLProvider().getFetchStockUrl();
-
-  return tryAuthFetch<StockModel[]>({ url, request: { method: 'GET' } });
+  const url = new URLProvider().getFetchStocksWithCabinetsData();
+  return tryAuthFetch<StockModelWithMLAccess[]>({ url, request: { method: 'GET' } });
 };
 
 export const getFetchStockByPartyRoleIdAPI = () => {
