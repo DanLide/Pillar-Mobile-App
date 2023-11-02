@@ -41,6 +41,7 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   disabled?: boolean;
   hideCount?: boolean;
   error?: boolean;
+  isHideDecreaseButton?: boolean;
 
   onRemove?: () => void;
   onChange: (quantity: number) => void;
@@ -71,6 +72,7 @@ export const EditQuantity = memo(
     hideCount,
     error,
     keyboardType,
+    isHideDecreaseButton,
     onChange,
   }: Props) => {
     const displayCurrentValue = removeLeadingZero(currentValue);
@@ -171,14 +173,13 @@ export const EditQuantity = memo(
 
       setNewValue(displayText);
     }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
-
     const DecreaseButton = useMemo(() => {
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
       if (
-        !(currentValue === minValue) &&
+        !(currentValue === minValue && minValue === 0) &&
         currentValue >= minValue &&
-        minValue !== 0
+        !isHideDecreaseButton
       ) {
         return (
           <TouchableOpacity
@@ -195,6 +196,7 @@ export const EditQuantity = memo(
       isInputDisabled,
       currentValue,
       minValue,
+      isHideDecreaseButton,
       quantityButtonStyle,
       onDecreaseCount,
     ]);
