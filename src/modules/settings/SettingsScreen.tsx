@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { getDeviceNameSync } from 'react-native-device-info';
 import { Separator } from 'src/components';
 import { WidthType } from 'src/components/Separator';
 import { colors, fonts } from 'src/theme';
+import { deviceInfoStore } from 'src/stores';
 
 enum Type {
   Button,
@@ -28,7 +28,7 @@ interface Section {
 }
 
 export const SettingsScreen = () => {
-  const deviceName = getDeviceNameSync();
+  const deviceName = deviceInfoStore.getDeviceName;
 
   const sections: Section[] = [
     {

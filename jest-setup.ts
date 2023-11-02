@@ -59,18 +59,20 @@ jest.mock('react-native-track-player', () => {
 jest.mock('react-native-device-info', () => ({
   getVersion: jest.fn(),
   getDeviceName: jest.fn(async () => 'iphone'),
-  getBundleId: jest.fn( () => 'com.bundle'),
+  getDeviceNameSync: jest.fn(() => '3M-AAD-iphone'),
+  getBundleId: jest.fn(() => 'com.bundle'),
 }));
 
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
-RNNativeModules.RNGestureHandlerModule = RNNativeModules.RNGestureHandlerModule || {
-  State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
-  attachGestureHandler: jest.fn(),
-  createGestureHandler: jest.fn(),
-  dropGestureHandler: jest.fn(),
-  updateGestureHandler: jest.fn(),
-};
+RNNativeModules.RNGestureHandlerModule =
+  RNNativeModules.RNGestureHandlerModule || {
+    State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
+    attachGestureHandler: jest.fn(),
+    createGestureHandler: jest.fn(),
+    dropGestureHandler: jest.fn(),
+    updateGestureHandler: jest.fn(),
+  };
 RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
   forceTouchAvailable: false,
 };

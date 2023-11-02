@@ -1,7 +1,7 @@
 import { Task, TaskExecutor } from './helpers/taskExecutor';
 
 import { TokenData } from './login';
-import { authStore, ssoStore } from '../stores';
+import { authStore, deviceInfoStore, ssoStore } from '../stores';
 import { resetMasterlockAPI } from './api/stocksAPI';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 
@@ -21,7 +21,9 @@ export class ResetMasterlockTask extends Task {
   }
 
   async run(): Promise<void> {
-    const deviceId = ssoStore.getCurrentMobileDevice()?.partyRoleId;
+    const deviceId = ssoStore.getCurrentMobileDevice(
+      deviceInfoStore.getDeviceName,
+    )?.partyRoleId;
     const ssoId = ssoStore.getCurrentSSO?.pisaId;
     if (deviceId && ssoId) {
       const body = {
