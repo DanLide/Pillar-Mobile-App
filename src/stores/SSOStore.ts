@@ -1,5 +1,3 @@
-import { get3MDeviceName } from 'src/helpers/get3MDeviceName';
-
 export class SSOStore {
   private currentSSO?: SSOModel;
   private ssoList?: SSOModel[];
@@ -17,8 +15,7 @@ export class SSOStore {
     return this.ssoMobileDevices;
   }
 
-  public getCurrentMobileDevice() {
-    const deviceName = get3MDeviceName();
+  public getCurrentMobileDevice(deviceName: string) {
     return this.ssoMobileDevices?.find(
       mobileDevice => mobileDevice.leanTecSerialNo === deviceName,
     );

@@ -1,8 +1,7 @@
 import { AuthStore } from 'src/stores/AuthStore';
-import { authStore, ssoStore } from 'src/stores';
+import { authStore, ssoStore, deviceInfoStore } from 'src/stores';
 import { OrderType, PartyRelationshipType } from 'src/constants/common.enum';
 import { SSOStore } from 'src/stores/SSOStore';
-import { get3MDeviceName } from 'src/helpers/get3MDeviceName';
 import {
   RemoveProductsStore,
   removeProductsStore,
@@ -126,12 +125,12 @@ export class URLProvider {
     const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/DeviceByRepairFacilityPartyRoleID/${partyRoleID}`,
-      );
+    );
   }
 
   getFetchStocksWithCabinetsData() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
-    const deviceName = this.ssoStore.deviceName;
+    const deviceName = deviceInfoStore.getDeviceName;
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleIDAndDeviceID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${deviceName}`,
     );
@@ -343,7 +342,7 @@ export class URLProvider {
 
   SSOAssignMobileDevice() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
-    const deviceId = get3MDeviceName();
+    const deviceId = deviceInfoStore.getDeviceName;
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignDevice/${deviceId}/${facilityId}`,
@@ -352,7 +351,9 @@ export class URLProvider {
 
   getRNToken() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
-    const deviceId = this.ssoStore.getCurrentMobileDevice()?.partyRoleId;
+    const deviceId = this.ssoStore.getCurrentMobileDevice(
+      deviceInfoStore.getDeviceName,
+    )?.partyRoleId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }

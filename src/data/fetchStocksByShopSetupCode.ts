@@ -14,8 +14,8 @@ import {
 } from './api/ssoAPI';
 import { getFetchStockByPartyRoleIdAPI } from './api/stocksAPI';
 import { mapSingle } from './helpers/utils';
-import { get3MDeviceName } from 'src/helpers/get3MDeviceName';
 import { setSSORNToken } from 'src/helpers/localStorage';
+import { deviceInfoStore } from 'src/stores';
 
 interface FetchStocksContext {
   shop: SingleSSOAPIResponse;
@@ -101,7 +101,11 @@ export class FetchSSOMobileDevicesTask extends Task {
     const response = await deviceByRepairFacilityIdAPI();
     if (!response) throw Error('Request failed!');
 
-    if (response.find(device => device.leanTecSerialNo === get3MDeviceName())) {
+    if (
+      response.find(
+        device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
+      )
+    ) {
       this.fetchStocksContext.ssoMobileDevices = response;
     } else {
       throw Error('Device not assign to Repair facility!');
