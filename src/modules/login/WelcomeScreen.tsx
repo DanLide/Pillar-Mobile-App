@@ -4,6 +4,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
+import { ssoStore } from 'src/stores';
 import Logo from '../../../assets/images/logo.png';
 import { Button, ButtonType } from '../../components';
 import {
@@ -12,7 +13,6 @@ import {
   UnauthStackParamsList,
 } from '../../navigation/types';
 import { SVGs, colors, fonts } from '../../theme';
-import { ssoStore } from 'src/stores';
 
 interface Props {
   navigation: StackNavigationProp<
