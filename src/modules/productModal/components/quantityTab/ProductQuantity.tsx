@@ -38,6 +38,7 @@ interface Props extends ViewProps {
   product?: ProductModel;
   disabled?: boolean;
   hideCount?: boolean;
+  isHideDecreaseButton?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -78,6 +79,7 @@ export const ProductQuantity = memo(
     disabled,
     hideCount,
     style,
+    isHideDecreaseButton,
     onChangeProductQuantity,
     onPressAddToList,
     onJobSelectNavigation,
@@ -224,6 +226,7 @@ export const ProductQuantity = memo(
             label={getEditQuantityLabel(type)}
             onChange={onChange}
             onRemove={onRemove}
+            isHideDecreaseButton={isHideDecreaseButton}
           />
           {type === ProductModalType.ManageProduct && isEdit ? null : (
             <FooterDescription

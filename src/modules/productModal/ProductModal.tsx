@@ -42,6 +42,7 @@ export interface ProductModalParams {
 export interface ProductModalProps extends ProductModalParams {
   product?: ProductModel;
   stockName?: string;
+  isHideDecreaseButton?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
@@ -83,6 +84,7 @@ export const ProductModal = memo(
     maxValue = 0,
     minValue,
     onHand = 0,
+    isHideDecreaseButton,
     onClose,
     onSubmit,
     onRemove,
@@ -153,6 +155,7 @@ export const ProductModal = memo(
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
+                isHideDecreaseButton={isHideDecreaseButton}
               />
             );
           case Tabs.LinkJob:
@@ -185,6 +188,7 @@ export const ProductModal = memo(
         onJobSelectNavigation,
         onRemoveAlert,
         selectedTab,
+        isHideDecreaseButton,
       ],
     );
 

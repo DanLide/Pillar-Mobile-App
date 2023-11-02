@@ -183,6 +183,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         onSubmit={onSubmitProduct}
         onClose={onCloseModal}
         onChangeProductQuantity={onChangeProductQuantity}
+        isHideDecreaseButton={modalParams.maxValue === modalParams.minValue}
       />
       <MissingItemsModal
         onSubmit={onUpdateOrder}
