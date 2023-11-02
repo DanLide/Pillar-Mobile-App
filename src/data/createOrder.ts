@@ -28,7 +28,7 @@ export const createOrder = async (
 
   return new TaskExecutor([
     new CreateOrderTask(createOrderContext, orderType, ordersStore),
-    new SaveOrderDataTask(createOrderContext, ordersStore),
+    new SaveOrderDataTask(createOrderContext, orderType, ordersStore),
   ]).execute();
 };
 
@@ -92,16 +92,19 @@ class CreateOrderTask extends Task {
 
 class SaveOrderDataTask extends Task {
   createOrderContext: CreateOrderContext;
+  orderType: OrderType;
   ordersStore: OrdersStore;
   stocksStore: StockStore;
 
   constructor(
     createOrderContext: CreateOrderContext,
+    orderType: OrderType,
     ordersStore: OrdersStore,
     stocks_store = stocksStore,
   ) {
     super();
     this.createOrderContext = createOrderContext;
+    this.orderType = orderType;
     this.ordersStore = ordersStore;
     this.stocksStore = stocks_store;
   }
@@ -119,6 +122,7 @@ class SaveOrderDataTask extends Task {
     // TODO: remove this after backend orderId fix
     const order =
       orderResponse &&
+      this.orderType === OrderType.Purchase &&
       assoc('status', OrderStatusType.POREQUIRED, orderResponse);
 
     this.ordersStore.setCurrentOrder({
