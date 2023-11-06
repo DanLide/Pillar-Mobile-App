@@ -65,9 +65,9 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             <Text style={styles.locationText}>
               {ssoStore.getCurrentSSO?.address}
             </Text>
-            <TouchableOpacity onPress={onUpdateLocation}>
+            {/* <TouchableOpacity onPress={onUpdateLocation}>
               <Text style={styles.updateLocationBtn}>Update Location</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ) : (
           <Text style={styles.locationText}>(Location not set)</Text>
