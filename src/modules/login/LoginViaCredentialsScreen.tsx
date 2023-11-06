@@ -2,6 +2,17 @@ import { observer } from 'mobx-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
+import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
+import { SvgProps } from 'react-native-svg';
+import { ssoLogin } from 'src/data/ssoLogin';
+import { getScreenOptions } from 'src/navigation/helpers';
+import {
+  AppNavigator,
+  LeftBarType,
+  LoginType,
+  UnauthStackParamsList,
+} from 'src/navigation/types';
 import {
   Button,
   ButtonType,
@@ -20,15 +31,6 @@ import { useSingleToast } from '../../hooks';
 import { authStore } from '../../stores';
 import { SVGs, colors, fonts } from '../../theme';
 import { LoginFormStore } from './stores/LoginFormStore';
-import {
-  AppNavigator,
-  LeftBarType,
-  LoginType,
-  UnauthStackParamsList,
-} from 'src/navigation/types';
-import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
-import { getScreenOptions } from 'src/navigation/helpers';
-import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
 
 type Props = NativeStackScreenProps<
   UnauthStackParamsList,
@@ -42,6 +44,8 @@ const LoginViaCredentialsScreenContent = observer(
     const authStoreRef = useRef(authStore).current;
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
     const onSubmit = useCallback(async () => {
       setIsLoading(true);
@@ -98,6 +102,10 @@ const LoginViaCredentialsScreenContent = observer(
       setIsPasswordVisible(!isPasswordVisible);
     };
 
+    const onPressSSOLogin = async () => {
+      await ssoLogin();
+    };
+
     useEffect(() => {
       switch (route.params?.type) {
         case LoginType.ConfigureShopDevice:
@@ -148,6 +156,18 @@ const LoginViaCredentialsScreenContent = observer(
           <Text style={styles.secondaryButton}>Forgot Username</Text>
           <View style={styles.separator} />
           <Text style={styles.secondaryButton}>Forgot Password</Text>
+        </View>
+        <View style={styles.ssoLoginContainer}>
+          <Text style={styles.text}>3M Employee ?</Text>
+          <Button
+            type={ButtonType.primary}
+            icon={SVGs.ConnectedWorker}
+            iconProps={LOGIN_ICON_PROPS}
+            buttonStyle={styles.ssoLoginButton}
+            textStyle={styles.ssoLoginButtonText}
+            title="Log In with Single Sign-On (SSO)"
+            onPress={onPressSSOLogin}
+          />
         </View>
         <Button
           type={ButtonType.primary}
@@ -211,5 +231,28 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     fontFamily: fonts.TT_Regular,
     color: colors.purpleDark,
+  },
+  ssoLoginContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  ssoLoginButton: {
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  ssoLoginButtonText: {
+    paddingLeft: 8,
+    fontSize: 13,
+    fontFamily: fonts.TT_Bold,
+    lineHeight: 18,
+    color: colors.purpleDark,
+  },
+  text: {
+    paddingTop: 4,
+    fontSize: 14,
+    lineHeight: 18,
+    fontFamily: fonts.TT_Bold,
+    color: colors.black,
   },
 });
