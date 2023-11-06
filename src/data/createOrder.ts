@@ -57,6 +57,11 @@ class CreateOrderTask extends Task {
     const repairFacilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
 
+    const orderMethodTypeId =
+      this.orderType === OrderType.Purchase
+        ? OrderMethodType.Manual
+        : OrderMethodType.Return;
+
     this.createOrderContext.orderResponse = head(
       (await createOrderAPI({
         comments: '',
@@ -65,7 +70,7 @@ class CreateOrderTask extends Task {
         orderDetails,
         orderGroup: '',
         orderId: 0,
-        orderMethodTypeId: OrderMethodType.Manual,
+        orderMethodTypeId,
         orderTotal: 0,
         orderTypeId: this.orderType,
         repairFacilityId,
