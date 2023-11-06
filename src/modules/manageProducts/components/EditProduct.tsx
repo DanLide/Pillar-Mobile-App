@@ -49,11 +49,12 @@ const SCAN_ICON_PROPS: SvgProps = {
 
 interface Props extends Pick<ProductModalProps, 'product' | 'stockName'> {
   upcError?: string;
+  onRemoveBySelect?: (removeBy: number) => void;
   onUpcChange?: (upc: string) => void;
 }
 
 export const EditProduct = observer(
-  ({ product, stockName, upcError, onUpcChange }: Props) => {
+  ({ product, stockName, upcError, onRemoveBySelect, onUpcChange }: Props) => {
     const store = useRef(manageProductsStore).current;
     const inputRef = useRef<TextInput | null>(null);
 
@@ -175,7 +176,7 @@ export const EditProduct = observer(
           selectedItem={product?.inventoryUseTypeId}
           renderItem={renderInventoryType}
           style={styles.inventoryTypes}
-          onSelect={item => store.setInventoryType(item)}
+          onSelect={onRemoveBySelect}
         />
         <Dropdown
           label="Category"

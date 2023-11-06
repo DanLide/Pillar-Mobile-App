@@ -1,9 +1,10 @@
-import React, { memo, useEffect } from 'react';
+import React, { forwardRef, memo, useEffect } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
   ViewProps,
 } from 'react-native';
@@ -66,26 +67,29 @@ const getEditQuantityLabel = (type?: ProductModalType) => {
   }
 };
 
-export const ProductQuantity = memo(
-  ({
-    type,
-    product,
-    isEdit,
-    jobSelectable,
-    toastType,
-    maxValue,
-    minValue,
-    onHand,
-    disabled,
-    hideCount,
-    style,
-    isHideDecreaseButton,
-    onChangeProductQuantity,
-    onPressAddToList,
-    onJobSelectNavigation,
-    onRemove,
-    onToastAction,
-  }: Props) => {
+export const ProductQuantity = forwardRef(
+  (
+    {
+      type,
+      product,
+      isEdit,
+      jobSelectable,
+      toastType,
+      maxValue,
+      minValue,
+      onHand,
+      disabled,
+      hideCount,
+      style,
+      isHideDecreaseButton,
+      onChangeProductQuantity,
+      onPressAddToList,
+      onJobSelectNavigation,
+      onRemove,
+      onToastAction,
+    }: Props,
+    ref: React.ForwardedRef<TextInput>,
+  ) => {
     const jobNumber = product?.job?.jobNumber;
 
     const isSpecialOrder =
@@ -224,6 +228,7 @@ export const ProductQuantity = memo(
             error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             label={getEditQuantityLabel(type)}
+            ref={ref}
             onChange={onChange}
             onRemove={onRemove}
             isHideDecreaseButton={isHideDecreaseButton}

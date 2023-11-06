@@ -5,6 +5,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  forwardRef,
 } from 'react';
 import {
   View,
@@ -57,24 +58,27 @@ const removeLeadingZero = ifElse(
 
 const INITIAL_FONT_SIZE = 78;
 
-export const EditQuantity = memo(
-  ({
-    currentValue = 0,
-    maxValue,
-    minValue,
-    stepValue,
-    label,
-    labelWithNewLine,
-    labelContainerStyle,
-    initFontSize = INITIAL_FONT_SIZE,
-    vertical,
-    disabled,
-    hideCount,
-    error,
-    keyboardType,
-    isHideDecreaseButton,
-    onChange,
-  }: Props) => {
+export const EditQuantity = forwardRef(
+  (
+    {
+      currentValue = 0,
+      maxValue,
+      minValue,
+      stepValue,
+      label,
+      labelWithNewLine,
+      labelContainerStyle,
+      initFontSize = INITIAL_FONT_SIZE,
+      vertical,
+      disabled,
+      hideCount,
+      error,
+      keyboardType,
+      isHideDecreaseButton,
+      onChange,
+    }: Props,
+    ref: React.ForwardedRef<TextInput>,
+  ) => {
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
     const displayMinValue = removeLeadingZero(minValue);
@@ -257,8 +261,9 @@ export const EditQuantity = memo(
             style={inputStyle}
             value={error ? '-' : displayValue}
             keyboardType={keyboardType}
-            onChangeText={onChangeInputText}
             returnKeyType="done"
+            ref={ref}
+            onChangeText={onChangeInputText}
             onBlur={onFocusLost}
             onLayout={onLayout}
             onContentSizeChange={onContentSizeChange}

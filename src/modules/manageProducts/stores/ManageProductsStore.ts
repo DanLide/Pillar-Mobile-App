@@ -63,7 +63,12 @@ export class ManageProductsStore extends BaseProductsStore {
   @action setInventoryType(inventoryUseTypeId: number) {
     if (!this.updatedProduct) return;
 
-    this.updatedProduct = { ...this.updatedProduct, inventoryUseTypeId };
+    this.updatedProduct = {
+      ...this.updatedProduct,
+      inventoryUseTypeId,
+      reservedCount: 0,
+      unitsPerContainer: 0,
+    };
   }
 
   @action setCategory(categoryId: number) {

@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/default
@@ -93,6 +99,7 @@ export const ProductModal = observer(
   }: ProductModalProps) => {
     const store = useRef(manageProductsStore).current;
     const scrollViewRef = useRef<Animated.ScrollView>(null);
+    const reservedCountInputRef = useRef<TextInput>(null);
 
     const [isLoading, setIsLoading] = useState(false);
     const [upcError, setUpcError] = useState<string | undefined>();
@@ -202,6 +209,14 @@ export const ProductModal = observer(
       handleCancel();
     }, [handleCancel, store.isProductChanged]);
 
+    const handleRemoveBySelect = useCallback(
+      (item: number) => {
+        store.setInventoryType(item);
+        reservedCountInputRef.current?.focus();
+      },
+      [store],
+    );
+
     const handleUpcChange = useCallback(() => {
       setUpcError(undefined);
     }, []);
@@ -295,6 +310,7 @@ export const ProductModal = observer(
                     minValue={0}
                     onHand={onHand}
                     disabled={!canEditProduct}
+                    ref={reservedCountInputRef}
                     onToastAction={handleToastAction}
                   />
                   {isEdit ? (
@@ -302,6 +318,7 @@ export const ProductModal = observer(
                       product={product}
                       stockName={stockName}
                       upcError={upcError}
+                      onRemoveBySelect={handleRemoveBySelect}
                       onUpcChange={handleUpcChange}
                     />
                   ) : (
