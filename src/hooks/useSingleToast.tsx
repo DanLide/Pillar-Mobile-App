@@ -17,6 +17,7 @@ export const getToastDuration = (type?: string) => {
     case ToastType.UpcUpdateError:
     case ToastType.BluetoothDisabled:
     case ToastType.SuggestedItemsError:
+    case ToastType.UnitsPerContainerError:
       return 0;
     default:
       return TOAST_DURATION_MS;

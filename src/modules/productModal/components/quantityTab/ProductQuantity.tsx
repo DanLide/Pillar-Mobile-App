@@ -1,9 +1,10 @@
-import React, { memo, useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
   ViewProps,
 } from 'react-native';
@@ -20,12 +21,14 @@ import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
+import { ToastMessage } from 'src/components/ToastMessage';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
   | ToastType.ProductUpdateError
   | ToastType.ProductUpdateSuccess
-  | ToastType.UpcUpdateError;
+  | ToastType.UpcUpdateError
+  | ToastType.UnitsPerContainerError;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
@@ -47,7 +50,10 @@ interface Props extends ViewProps {
   onToastAction?: () => void;
 }
 
-export const toastMessages: Record<ProductQuantityToastType, string> = {
+export const toastMessages: Record<
+  ProductQuantityToastType,
+  JSX.Element | string
+> = {
   [ToastType.ProductQuantityError]:
     "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
   [ToastType.ProductUpdateError]:
@@ -55,6 +61,12 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
   [ToastType.UpcUpdateError]:
     'This UPC already exists in the stock location of this product. Please, use another one',
+  [ToastType.UnitsPerContainerError]: (
+    <ToastMessage>
+      <ToastMessage bold>Pieces Per Container</ToastMessage> cannot be saved
+      less than 1
+    </ToastMessage>
+  ),
 };
 
 const getEditQuantityLabel = (type?: ProductModalType) => {
@@ -66,26 +78,29 @@ const getEditQuantityLabel = (type?: ProductModalType) => {
   }
 };
 
-export const ProductQuantity = memo(
-  ({
-    type,
-    product,
-    isEdit,
-    jobSelectable,
-    toastType,
-    maxValue,
-    minValue,
-    onHand,
-    disabled,
-    hideCount,
-    style,
-    isHideDecreaseButton,
-    onChangeProductQuantity,
-    onPressAddToList,
-    onJobSelectNavigation,
-    onRemove,
-    onToastAction,
-  }: Props) => {
+export const ProductQuantity = forwardRef(
+  (
+    {
+      type,
+      product,
+      isEdit,
+      jobSelectable,
+      toastType,
+      maxValue,
+      minValue,
+      onHand,
+      disabled,
+      hideCount,
+      style,
+      isHideDecreaseButton,
+      onChangeProductQuantity,
+      onPressAddToList,
+      onJobSelectNavigation,
+      onRemove,
+      onToastAction,
+    }: Props,
+    ref: React.ForwardedRef<TextInput>,
+  ) => {
     const jobNumber = product?.job?.jobNumber;
 
     const isSpecialOrder =
@@ -224,6 +239,7 @@ export const ProductQuantity = memo(
             error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             label={getEditQuantityLabel(type)}
+            ref={ref}
             onChange={onChange}
             onRemove={onRemove}
             isHideDecreaseButton={isHideDecreaseButton}

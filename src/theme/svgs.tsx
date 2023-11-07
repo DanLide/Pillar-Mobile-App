@@ -1160,6 +1160,30 @@ export const TransparentWarning = memo((props: SvgProps) => (
   </Svg>
 ));
 
+export const ProductsIcon = memo((props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill="#000"
+      fillRule="evenodd"
+      d="M5.625 4.303v6.494L0 12.83v7.547l6.375 2.302L12 20.649l5.625 2.03L24 20.377V12.83l-5.625-2.033V4.303L12 2 5.625 4.303Zm2.958.526L12 3.596l3.417 1.233L12 6.063 8.583 4.829Zm4.167 2.558 4.125-1.489v4.899l-2.437.881-1.688.609v-4.9Zm-3.187 4.291-2.438-.881V5.898l4.125 1.489v4.9l-1.687-.609Zm4.645 1.678.98-.354 2.437-.879 3.417 1.232-3.417 1.235-3.417-1.234Zm-11.25-.001 3.417-1.232 2.438.879.978.354-3.416 1.234-3.417-1.235Zm15.417 2.559 4.125-1.491v4.901l-4.125 1.489v-4.899Zm-5.625 3.41v-4.901l4.125 1.491v4.899l-4.125-1.489Zm-5.625-3.41 4.125-1.491v4.901l-4.125 1.489v-4.899ZM1.5 19.324v-4.901l4.125 1.491v4.899L1.5 19.324Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+));
+
+export const ProductsErrorIcon = memo(
+  ({ color, primaryColor, secondaryColor }: SvgPropsWithColors) => (
+    <View style={styles.iconRelative}>
+      <ProductsIcon color={color} />
+      <ErrorIcon
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        style={styles.iconAbsolute}
+      />
+    </View>
+  ),
+);
+
 export const CautionMiddleIcon = memo((props: SvgProps) => (
   <Svg width={21} height={20} fill="none" {...props}>
     <Path

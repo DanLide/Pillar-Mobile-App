@@ -14,7 +14,6 @@ import {
   getSupplierListByFacilityIdAPI,
 } from './api/productsAPI';
 import { any, isEmpty } from 'ramda';
-import { mock2Locks } from './fetchStocks';
 
 interface FetchStocksContext {
   stocks: StockModelWithMLAccess[];
@@ -63,7 +62,7 @@ export class FetchManageProductStocksTask extends Task {
       ],
     );
 
-    this.fetchStocksContext.stocks = stocks ? mock2Locks(stocks) : [];
+    this.fetchStocksContext.stocks = stocks ?? [];
     this.fetchStocksContext.categories = categories ?? [];
     this.fetchStocksContext.suppliers = suppliers ?? [];
     this.fetchStocksContext.facilityProducts = facilityProducts ?? [];

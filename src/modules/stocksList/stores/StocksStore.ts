@@ -5,7 +5,7 @@ import {
   CategoryResponse,
   FacilityProductResponse,
   SupplierResponse,
-} from '../../../data/api/productsAPI';
+} from 'src/data/api/productsAPI';
 
 export class StockStore {
   @observable stocks: ExtendedStockModel[];
@@ -22,6 +22,12 @@ export class StockStore {
     this.enabledSuppliers = [];
 
     makeObservable(this);
+  }
+
+  static isStockWithMLAccess(
+    stock: StockModel | StockModelWithMLAccess,
+  ): stock is StockModelWithMLAccess {
+    return !!(stock as StockModelWithMLAccess).equipment;
   }
 
   @computed get getSupplierNameById() {
@@ -46,13 +52,15 @@ export class StockStore {
     );
   }
 
-  @action setStocks(stocks: StockModel[]) {
-    const mappedStocks = stocks.map((stockItem) => {
-      return {
-        ...stockItem.equipment,
-        ...stockItem.mlAccessData,
-      }
-    });
+  @action setStocks(stocks: (StockModel | StockModelWithMLAccess)[]) {
+    const mappedStocks = stocks.map(stockItem =>
+      StockStore.isStockWithMLAccess(stockItem)
+        ? {
+            ...stockItem.equipment,
+            ...stockItem.mlAccessData,
+          }
+        : stockItem,
+    );
     this.stocks = mappedStocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
     );
@@ -117,10 +125,11 @@ export type StockModelWithMLAccess = {
     accessProfile: string;
     firmwareVersion: number;
     masterLockId: string;
-  } | null
-}
+  } | null;
+};
 
-export type ExtendedStockModel = StockModel & Partial<StockModelWithMLAccess['mlAccessData']>
+export type ExtendedStockModel = StockModel &
+  Partial<StockModelWithMLAccess['mlAccessData']>;
 
 export type FacilityProductModel = FacilityProductResponse;
 export type CategoryModel = CategoryResponse;

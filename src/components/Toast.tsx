@@ -27,6 +27,7 @@ export enum ToastActionType {
   Close = 'Close',
   Retry = 'Retry',
   Undo = 'Undo',
+  Edit = 'Edit',
   OpenSettings = 'OpenSettings',
 }
 
@@ -48,6 +49,7 @@ const icons: Record<
   [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,
   [ToastType.CreateInvoiceError]: SVGs.RefundErrorIcon,
+  [ToastType.UnitsPerContainerError]: SVGs.ProductsErrorIcon,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
@@ -93,6 +95,7 @@ export const Toast: React.FC<Props> = ({
     switch (type) {
       case ToastType.ProductUpdateSuccess:
       case ToastType.CreateInvoiceError:
+      case ToastType.UnitsPerContainerError:
         return styles.messageLeft;
       default:
         return null;
@@ -136,6 +139,15 @@ export const Toast: React.FC<Props> = ({
             Undo
           </Text>
         );
+      case ToastActionType.Edit:
+        return (
+          <Text
+            testID={testIds.idUndoText(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Edit
+          </Text>
+        );
       case ToastActionType.OpenSettings:
         return (
           <Text
@@ -158,12 +170,11 @@ export const Toast: React.FC<Props> = ({
   const handleRightButtonPress = useCallback(async () => {
     switch (actionType) {
       case ToastActionType.Close:
+      case ToastActionType.Edit:
         onPress?.(id);
         onHide();
         break;
       case ToastActionType.Undo:
-        onPress?.(id);
-        break;
       case ToastActionType.OpenSettings:
         onPress?.(id);
         break;
