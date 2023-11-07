@@ -20,7 +20,6 @@ import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { OrderType } from 'src/constants/common.enum';
 import { StocksListItem } from 'src/modules/stocksList/components/StocksListItem';
 import { stocksStore } from 'src/modules/stocksList/stores';
-import { AppNavigator } from 'src/navigation/types';
 
 interface Props {
   isLoading?: boolean;
@@ -28,7 +27,6 @@ interface Props {
   orderType?: OrderType;
   onItemPress?: (item: ProductModel) => void;
   withStockLocation?: boolean;
-  unlockingNextScreen?: AppNavigator;
   nextNavigationGoBack?: boolean;
 }
 

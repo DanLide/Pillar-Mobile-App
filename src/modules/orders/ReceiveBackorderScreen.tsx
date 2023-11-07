@@ -19,7 +19,7 @@ import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
 } from 'src/navigation/types';
-import { ProductModal } from 'src/modules/productModal';
+import { ProductModal, ProductModalType } from 'src/modules/productModal';
 import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -53,7 +53,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     setEditableProductQuantity,
     onRemoveProduct,
     onCloseModal,
-  } = useBaseProductsScreen(ordersStore, navigation, true);
+  } = useBaseProductsScreen(ordersStore, navigation, ProductModalType.ReceiveOrder, true);
 
   useEffect(() => {
     fetchOrdersStocks(stocksStore)
@@ -120,7 +120,6 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         <SelectedProductsList
           onItemPress={onEditProduct}
           withStockLocation
-          unlockingNextScreen={AppNavigator.ReceiveBackorderScreen}
           nextNavigationGoBack
         />
       </View>
