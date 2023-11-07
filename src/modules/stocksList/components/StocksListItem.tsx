@@ -16,11 +16,11 @@ interface Props {
 }
 
 export const StocksListItem: React.FC<Props> = observer(({ item, onPressItem }) => {
-  const { organizationName, roleTypeId } = item;
+  const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
 
   const navigation = useNavigation();
-  const lockStatus = masterLockStore.stocksState[item.deviceId]?.status;
-  const isVisible = masterLockStore.stocksState[item.deviceId]?.visibility === LockVisibility.VISIBLE;
+  const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+  const isVisible = masterLockStore.stocksState[controllerSerialNo]?.visibility === LockVisibility.VISIBLE;
 
   const isLocked = roleTypeId === RoleType.Cabinet &&
     lockStatus === LockStatus.LOCKED &&
@@ -29,8 +29,8 @@ export const StocksListItem: React.FC<Props> = observer(({ item, onPressItem }) 
 
   const handlePress = () => {
     if (isLocked) {
-      masterLockStore.unlock(item.deviceId)
-      return navigation.navigate(AppNavigator.BaseUnlockScreen, { title: organizationName, masterlockId: item.deviceId})
+      masterLockStore.unlock(controllerSerialNo)
+      return navigation.navigate(AppNavigator.BaseUnlockScreen, { title: organizationName, masterlockId: controllerSerialNo})
     }
     onPressItem(item)
   };

@@ -53,12 +53,12 @@ class MasterLockStore {
     stockItem: ExtendedStockModel,
   ): Promise<string> | void {
     if (
-      stockItem.leanTecSerialNo &&
+      stockItem.controllerSerialNo &&
       stockItem.accessProfile &&
       stockItem.firmwareVersion
     ) {
-      MasterLockModule.initLock(
-        stockItem.leanTecSerialNo,
+      return MasterLockModule.initLock(
+        stockItem.controllerSerialNo,
         stockItem.accessProfile,
         stockItem.firmwareVersion,
       );
