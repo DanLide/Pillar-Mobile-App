@@ -53,7 +53,7 @@ type Props = NativeStackScreenProps<
 >;
 
 export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }) => {
-  const { params: { masterlockId, nextScreen } } = route;
+  const { params: { masterlockId, nextScreen, nextNavigationGoBack } } = route;
   const masterLockStatus: LockStatus = masterLockStore.stocksState[masterlockId].status;
   // const status: ExtendedMasterLockStatuses = LockStatus.UNLOCKED
   const status: ExtendedMasterLockStatuses = masterLockStore.isUnlocking ?
@@ -88,12 +88,18 @@ export const BaseUnlockScreen: React.FC<Props> = observer(({ navigation, route }
   }, [masterlockId])
 
   const navigateNextScreen = useCallback(() => {
+    if (nextNavigationGoBack) {
+      return navigation.goBack();
+    }
     nextScreen && navigation.navigate(nextScreen)
   }, [navigation, nextScreen])
 
 
   useLayoutEffect(() => {
     if (status === LockStatus.OPEN || status === LockStatus.OPEN_LOCKED) {
+      if (nextNavigationGoBack) {
+        return navigation.goBack();
+      }
       nextScreen && navigation.replace(nextScreen)
     }
   }, [status, navigation, nextScreen])

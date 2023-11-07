@@ -5,6 +5,7 @@ import { GetOrderDetailsResponse, GetOrdersAPIResponse } from 'src/data/api';
 import { BaseProductsStore } from 'src/stores/BaseProductsStore';
 import { ProductModel } from 'src/stores/types';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 
 export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
@@ -17,12 +18,15 @@ export class OrdersStore extends BaseProductsStore {
   @observable orders?: GetOrdersAPIResponse[];
   @observable supplierId?: number;
   @observable currentStockName?: string;
+  @observable backorderCabinets?: StockModel[];
+  @observable cabinetSelection: boolean;
 
   constructor() {
     super();
 
     this.orders = undefined;
     this.supplierId = undefined;
+    this.cabinetSelection = false;
     makeObservable(this);
   }
 
@@ -87,6 +91,10 @@ export class OrdersStore extends BaseProductsStore {
     this.orders = orders;
   }
 
+  @action setCabinetSelection(value: boolean) {
+    this.cabinetSelection = value;
+  }
+
   @action setCurrentOrderProducts(products: ProductModel[]) {
     if (this.currentOrder) {
       this.currentOrder.productList = products;
@@ -117,7 +125,11 @@ export class OrdersStore extends BaseProductsStore {
     if (this.currentOrder) this.currentOrder.order.customPONumber = poNumber;
   }
 
-  @action clearCreateOrder() {
+  @action setBackorderCabinets(cabinets: StockModel[]) {
+    this.backorderCabinets = cabinets;
+  }
+
+  @action clearCreateOrReceiveBackOrder() {
     this.supplierId = undefined;
     this.clear();
   }

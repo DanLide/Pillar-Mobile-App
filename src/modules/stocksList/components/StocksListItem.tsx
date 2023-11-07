@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ViewStyle,
+} from 'react-native';
 import masterLockStore from '../../../stores/MasterLockStore';
 
 import { StockModel } from '../stores/StocksStore';
@@ -12,64 +18,97 @@ import { observer } from 'mobx-react';
 
 interface Props {
   item: StockModel;
-  onPressItem: (stock: StockModel) => void;
+  onPressItem?: (stock: StockModel) => void;
+  containerStyle?: ViewStyle;
+  subContainer?: ViewStyle;
+  nextScreen?: AppNavigator;
+  skipNavToUnlockScreen?: boolean;
+  itemRightText?: string;
+  nextNavigationGoBack?: boolean;
 }
 
-export const StocksListItem: React.FC<Props> = observer(({ item, onPressItem }) => {
-  const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
+export const StocksListItem: React.FC<Props> = observer(
+  ({
+    item,
+    onPressItem,
+    containerStyle,
+    subContainer,
+    nextScreen,
+    skipNavToUnlockScreen,
+    itemRightText,
+    nextNavigationGoBack,
+  }) => {
+    const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
 
-  const navigation = useNavigation();
-  const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
-  const isVisible = masterLockStore.stocksState[controllerSerialNo]?.visibility === LockVisibility.VISIBLE;
+    const navigation = useNavigation();
+    const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+    const isVisible =
+      masterLockStore.stocksState[controllerSerialNo]?.visibility ===
+      LockVisibility.VISIBLE;
 
-  const isLocked = roleTypeId === RoleType.Cabinet &&
-    lockStatus === LockStatus.LOCKED &&
-    isVisible
-    ;
+    const isLocked =
+      roleTypeId === RoleType.Cabinet &&
+      lockStatus === LockStatus.LOCKED &&
+      isVisible;
+    const handlePress = () => {
+      if (isLocked && !skipNavToUnlockScreen) {
+        masterLockStore.unlock(item.controllerSerialNo);
+        return navigation.navigate(AppNavigator.BaseUnlockScreen, {
+          title: organizationName,
+          masterlockId: item.controllerSerialNo,
+          nextScreen,
+          nextNavigationGoBack,
+        });
+      }
+      onPressItem && onPressItem(item);
+    };
 
-  const handlePress = () => {
-    if (isLocked) {
-      masterLockStore.unlock(controllerSerialNo)
-      return navigation.navigate(AppNavigator.BaseUnlockScreen, { title: organizationName, masterlockId: controllerSerialNo})
-    }
-    onPressItem(item)
-  };
+    const renderIcon = () => {
+      if (roleTypeId !== RoleType.Cabinet && isVisible) {
+        return <SVGs.CabinetSimple />;
+      }
+      switch (lockStatus) {
+        case LockStatus.UNLOCKED:
+        case LockStatus.OPEN:
+          return <SVGs.CabinetOpen />;
+        case LockStatus.LOCKED:
+        case LockStatus.PENDING_UNLOCK:
+        case LockStatus.PENDING_RELOCK:
+          return <SVGs.CabinetLocked />;
+        case LockStatus.OPEN_LOCKED:
+          return <SVGs.CabinetOpenLocked />;
+        case LockStatus.UNKNOWN:
+          return <SVGs.CabinetError />;
+        default:
+          return <SVGs.CabinetSimple />;
+      }
+    };
 
-  const renderIcon = () => {
-    if (roleTypeId !== RoleType.Cabinet && isVisible) {
-      return <SVGs.CabinetSimple />
-    }
-    switch (lockStatus) {
-      case LockStatus.UNLOCKED:
-      case LockStatus.OPEN:
-        return (<SVGs.CabinetOpen />)
-      case LockStatus.LOCKED:
-      case LockStatus.PENDING_UNLOCK:
-      case LockStatus.PENDING_RELOCK:
-        return (<SVGs.CabinetLocked />)
-      case LockStatus.OPEN_LOCKED:
-        return (<SVGs.CabinetOpenLocked />)
-      case LockStatus.UNKNOWN:
-        return (<SVGs.CabinetError />)
-      default: return <SVGs.CabinetSimple />
-    }
-  }
-
-  return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
-      <View style={styles.underlineContainer}>
-        <View style={styles.rowContainer}>
-          {renderIcon()}
-          <Text style={styles.title}>{organizationName}</Text>
+    return (
+      <TouchableOpacity
+        style={[styles.container, containerStyle]}
+        onPress={handlePress}
+        disabled={!onPressItem}
+      >
+        <View style={[styles.underlineContainer, subContainer]}>
+          <View style={styles.rowContainer}>
+            {renderIcon()}
+            <Text style={styles.title}>{organizationName}</Text>
+          </View>
+          <View style={styles.statusContainer}>
+            {itemRightText && (
+              <Text style={styles.statusText}>{itemRightText}</Text>
+            )}
+            {isLocked && !itemRightText && (
+              <Text style={styles.statusText}>Unlock</Text>
+            )}
+            <SVGs.ChevronIcon color={colors.purpleDark} />
+          </View>
         </View>
-        <View style={styles.statusContainer}>
-          {isLocked && <Text style={styles.statusText}>Unlock</Text>}
-          <SVGs.ChevronIcon color={colors.purpleDark} />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-});
+      </TouchableOpacity>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -77,6 +116,7 @@ const styles = StyleSheet.create({
     height: 65.5,
     paddingLeft: 16,
     backgroundColor: colors.white,
+    paddingRight: 22,
   },
   underlineContainer: {
     flex: 1,
@@ -92,11 +132,12 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontFamily: fonts.TT_Regular,
     color: '#323234',
+    flex: 1,
   },
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingRight: 22,
+    marginLeft: 5,
   },
   statusText: {
     paddingRight: 16,
@@ -107,5 +148,7 @@ const styles = StyleSheet.create({
   },
   rowContainer: {
     flexDirection: 'row',
-  }
+    flex: 1,
+    alignItems: 'center',
+  },
 });

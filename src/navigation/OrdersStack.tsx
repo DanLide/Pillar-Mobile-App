@@ -20,6 +20,10 @@ import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
 import { CreateOrderResultScreen } from 'src/modules/orders/CreateOrderResultScreen';
 import { OrderType } from 'src/constants/common.enum';
 import { ProductModalType } from 'src/modules/productModal';
+import ReceiveBackorderScreen from 'src/modules/orders/ReceiveBackorderScreen';
+import { BackOrderScannerScreen } from 'src/modules/orders/BackOrderScannerScreen';
+import { BackOrderResultScreen } from 'src/modules/orders/BackorderResultScreen';
+
 
 const Stack = createStackNavigator<OrdersParamsList>();
 
@@ -148,6 +152,30 @@ export const OrdersStack: React.FC = () => {
         component={CameraPermissionScreen}
         options={getScreenOptions({
           title: 'Camera Access',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ReceiveBackorderScreen}
+        component={ReceiveBackorderScreen}
+        options={getScreenOptions({
+          title: 'Receive Backorder',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.BackorderScannerScreen}
+        component={BackOrderScannerScreen}
+        options={getScreenOptions({
+          title: 'Receive Backorder',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.BackOrderResultScreen}
+        component={BackOrderResultScreen}
+        options={getScreenOptions({
+          title: 'Receive Backorder',
           leftBarButtonType: LeftBarType.Back,
         })}
       />

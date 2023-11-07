@@ -28,9 +28,11 @@ export const useBaseProductsScreen = (
   store: Store,
   navigation: BaseProductsScreenNavigationProp,
   type?: ProductModalType,
+  backorder?: boolean,
 ) => {
-  const [modalParams, setModalParams] =
-    useState<ProductModalParams>(initModalParams);
+  const [modalParams, setModalParams] = useState<ProductModalParams>(
+    initModalParams,
+  );
 
   const scannedProductsCount = Object.keys(store.getProducts).length;
 
@@ -43,8 +45,13 @@ export const useBaseProductsScreen = (
       });
       return;
     }
-    navigation.navigate(AppNavigator.ScannerScreen, { modalType: type });
-  }, [navigation, type]);
+    navigation.navigate(
+      backorder
+        ? AppNavigator.BackorderScannerScreen
+        : AppNavigator.ScannerScreen,
+      { modalType: type },
+    );
+  }, [navigation, backorder]);
 
   const onEditProduct = useCallback(
     (product: ProductModel) => {
