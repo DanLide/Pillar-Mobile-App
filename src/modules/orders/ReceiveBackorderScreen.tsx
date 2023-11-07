@@ -135,6 +135,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           buttonStyle={styles.buttonContainer}
           title="Scan"
           onPress={onPressScan}
+          disabled={!supplier}
         />
         <Button
           disabled={!scannedProductsCount}
