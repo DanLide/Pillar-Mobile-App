@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -18,12 +18,18 @@ import { colors, fonts } from 'src/theme';
 import { ordersStore } from '../stores';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { OrderType } from 'src/constants/common.enum';
+import { StocksListItem } from 'src/modules/stocksList/components/StocksListItem';
+import { stocksStore } from 'src/modules/stocksList/stores';
+import { AppNavigator } from 'src/navigation/types';
 
 interface Props {
   isLoading?: boolean;
   itemTitleColor?: string;
   orderType?: OrderType;
   onItemPress?: (item: ProductModel) => void;
+  withStockLocation?: boolean;
+  unlockingNextScreen?: AppNavigator;
+  nextNavigationGoBack?: boolean;
 }
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
@@ -34,6 +40,8 @@ export const SelectedProductsList: React.FC<Props> = observer(
     itemTitleColor = colors.purpleDark,
     orderType,
     onItemPress,
+    withStockLocation,
+    nextNavigationGoBack,
   }) => {
     const store = useRef<SyncedProductStoreType>(ordersStore).current;
 
@@ -71,26 +79,42 @@ export const SelectedProductsList: React.FC<Props> = observer(
       [itemTitleColor],
     );
 
+
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<ProductModel>) => {
         const { manufactureCode, partNo, name, reservedCount } = item;
+        let stockModel
+        if (withStockLocation) {
+          stockModel = stocksStore.stocks.find((stock) => {
+            return stock.partyRoleId === item.storageAreaId
+          })
+        }
 
         const handlePress = () => onItemPress?.(item);
 
         return (
-          <Pressable style={styles.item} onPress={handlePress}>
-            <View style={styles.itemDetails}>
-              <Text numberOfLines={1} style={itemTitleStyle}>
-                {manufactureCode} {partNo}
-              </Text>
-              <Text numberOfLines={1} style={styles.itemSubtitle}>
-                {name}
+          <Pressable onPress={handlePress}>
+            {
+              stockModel && <StocksListItem item={stockModel}
+                containerStyle={styles.stockContainer}
+                subContainer={styles.subContainer}
+                nextNavigationGoBack={nextNavigationGoBack}
+              />
+            }
+            <View style={styles.item}>
+              <View style={styles.itemDetails}>
+                <Text numberOfLines={1} style={itemTitleStyle}>
+                  {manufactureCode} {partNo}
+                </Text>
+                <Text numberOfLines={1} style={styles.itemSubtitle}>
+                  {name}
+                </Text>
+              </View>
+              <Text style={styles.itemCounter}>{reservedCount}</Text>
+              <Text style={[styles.itemCounter, styles.itemCounterRight]}>
+                ${getProductTotalCost(item)}
               </Text>
             </View>
-            <Text style={styles.itemCounter}>{reservedCount}</Text>
-            <Text style={[styles.itemCounter, styles.itemCounterRight]}>
-              ${getProductTotalCost(item)}
-            </Text>
           </Pressable>
         );
       },
@@ -178,4 +202,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
   },
+  stockContainer: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray,
+  },
+  subContainer: {
+    borderBottomWidth: 0,
+  }
 });

@@ -64,7 +64,7 @@ const SelectStockScreenBody: React.FC<Props> = observer(
 
     useEffect(() => {
       if (isFocused) {
-        store.clearCreateOrder();
+        store.clearCreateOrReceiveBackOrder();
       }
     }, [isFocused, store]);
 

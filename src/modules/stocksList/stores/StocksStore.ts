@@ -66,6 +66,13 @@ export class StockStore {
     );
   }
 
+  @computed get suppliersRenderFormat() {
+    return this.suppliers.map(item => ({
+      label: item.name,
+      value: item.partyRoleId,
+    }))
+  }
+
   @action setFacilityProducts(products: FacilityProductModel[]) {
     this.facilityProducts = products;
   }

@@ -7,12 +7,14 @@ import {
   Pressable,
   RefreshControl,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
 import { SVGs, colors, fonts } from 'src/theme';
 import { Button, ButtonType, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
+import { AppNavigator } from 'src/navigation/types';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
@@ -32,6 +34,7 @@ export const OrdersList = memo(
     isFiltered,
   }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
+    const navigation = useNavigation();
 
     const onFetchOrders = useCallback(async () => {
       setIsLoading(true);
@@ -39,6 +42,10 @@ export const OrdersList = memo(
       if (error) setFetchError(true);
       setIsLoading(false);
     }, [setFetchError]);
+
+    const onPressBackorder = () => {
+      navigation.navigate(AppNavigator.ReceiveBackorderScreen);
+    }
 
     return (
       <View style={styles.container}>
@@ -60,7 +67,7 @@ export const OrdersList = memo(
             <RefreshControl refreshing={isLoading} onRefresh={onFetchOrders} />
           }
         />
-        <Pressable style={styles.backorderContainer}>
+        <Pressable style={styles.backorderContainer} onPress={onPressBackorder}>
           <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
           <Text style={styles.backborderText}>
             Order not Found? Receive Backorder

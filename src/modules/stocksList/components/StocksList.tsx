@@ -22,6 +22,8 @@ import { RoleType } from '../../../constants/common.enum';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
+  skipNavToUnlockScreen?: boolean;
+  itemRightText?: string;
   onFetchStocks?: (
     store: StockStore,
   ) => Promise<void | BadRequestError | AuthError>;
@@ -32,7 +34,11 @@ const errorText =
   'Sorry, we are unable to connect to your stock location right now. To continue, you may need to locate a key to unlock the stock location.';
 
 export const StocksList: React.FC<Props> = observer(
-  ({ onPressItem, onFetchStocks }) => {
+  ({ onPressItem,
+    onFetchStocks,
+    skipNavToUnlockScreen,
+    itemRightText,
+  }) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
 
@@ -65,8 +71,13 @@ export const StocksList: React.FC<Props> = observer(
     }, [onFetchStocks]);
 
     const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
-      ({ item }) => <StocksListItem item={item} onPressItem={onPressItem} />,
-      [onPressItem],
+      ({ item }) => <StocksListItem
+        item={item}
+        onPressItem={onPressItem}
+        skipNavToUnlockScreen={skipNavToUnlockScreen}
+        itemRightText={itemRightText}
+      />,
+      [onPressItem, itemRightText, skipNavToUnlockScreen],
     );
 
     const handlePressRetry = () => {

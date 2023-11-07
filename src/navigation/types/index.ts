@@ -64,6 +64,9 @@ export enum AppNavigator {
   SelectStockLocationsScreen = 'SelectStockLocationsScreen',
   DeviceConfigCompletedScreen = 'DeviceConfigCompletedScreen',
   EnterShopCodeScreen = 'EnterShopCodeScreen',
+  ReceiveBackorderScreen = 'ReceiveBackorderScreen',
+  BackorderScannerScreen = 'BackorderScannerScreen',
+  BackOrderResultScreen = 'BackOrderResultScreen',
 }
 
 type ScannerParams = { modalType?: ProductModalType };
@@ -91,6 +94,7 @@ type SelectSSOScreenParams = {
 type UnlockStockScreenParams = {
   title?: string;
   masterlockId: string;
+  nextNavigationGoBack?: boolean;
   nextScreen?:
     | AppNavigator.ReturnProductsScreen
     | AppNavigator.RemoveProductsScreen
@@ -192,8 +196,13 @@ export type OrdersParamsList = {
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
   [AppNavigator.ScannerScreen]: ScannerParams | undefined;
+  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams
+  [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.ReceiveBackorderScreen]: undefined;
+  [AppNavigator.BackorderScannerScreen]: undefined;
+  [AppNavigator.BackOrderResultScreen]: undefined;
 };
 
 export type ConfigureDeviceStackParams = {

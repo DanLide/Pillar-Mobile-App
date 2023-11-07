@@ -5,6 +5,7 @@ import { OrdersListItem } from './OrdersListItem';
 import { PONumberModal } from './PONumberModal';
 import { SelectedProductsList } from './SelectedProductsList';
 import { StatusBadge } from './StatusBadge';
+import { StockLocationListModal } from './StockLocationListModal';
 import { StockWithProducts } from './StockWithProducts';
 import { TotalCostBar } from './TotalCostBar';
 
@@ -18,4 +19,5 @@ export {
   StockWithProducts,
   TotalCostBar,
   PONumberModal,
+  StockLocationListModal,
 };

@@ -315,6 +315,12 @@ export class URLProvider {
     );
   }
 
+  receiveBackOrder() {
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/BackOrder`,
+    );
+  }
+
   getSuggestedProductsAPI() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
