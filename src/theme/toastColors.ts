@@ -47,6 +47,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.UnitsPerContainerError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
 
   [ToastType.Info]: {
     primary: colors.purple,

@@ -72,6 +72,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.UnitsPerContainerError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.UnitsPerContainerError}
+          actionType={ToastActionType.Edit}
+        />
+      ),
 
       [ToastType.Info]: toast => (
         <Toast

@@ -53,16 +53,14 @@ export class StockStore {
   }
 
   @action setStocks(stocks: (StockModel | StockModelWithMLAccess)[]) {
-    const mappedStocks = stocks.map(stockItem => {
-      console.log(stockItem);
-
-      return StockStore.isStockWithMLAccess(stockItem)
+    const mappedStocks = stocks.map(stockItem =>
+      StockStore.isStockWithMLAccess(stockItem)
         ? {
             ...stockItem.equipment,
             ...stockItem.mlAccessData,
           }
-        : stockItem;
-    });
+        : stockItem,
+    );
     this.stocks = mappedStocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
     );

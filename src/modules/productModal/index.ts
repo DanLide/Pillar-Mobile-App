@@ -2,6 +2,7 @@ import {
   ProductQuantity,
   Description,
   ProductQuantityToastType,
+  QUANTITY_PICKER_HEIGHT,
 } from './components/quantityTab';
 import {
   ProductModal,
@@ -10,6 +11,12 @@ import {
   ProductModalProps,
 } from './ProductModal';
 
-export { ProductModal, ProductModalType, Description, ProductQuantity };
+export {
+  ProductModal,
+  ProductModalType,
+  Description,
+  ProductQuantity,
+  QUANTITY_PICKER_HEIGHT,
+};
 
 export type { ProductModalParams, ProductModalProps, ProductQuantityToastType };

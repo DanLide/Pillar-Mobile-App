@@ -1,6 +1,5 @@
 import React, {
   useCallback,
-  memo,
   useMemo,
   useState,
   useRef,
@@ -45,8 +44,10 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   isHideDecreaseButton?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity: number) => void;
+  onChange?: (quantity: number) => void;
 }
+
+export const QUANTITY_PICKER_HEIGHT = 103;
 
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
@@ -89,8 +90,7 @@ export const EditQuantity = forwardRef(
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
     const [fontSize, setFontSize] = useState(initFontSize);
 
-    const isInputDisabled = disabled || error;
-    const isInputHidden = error || hideCount;
+    const isInputDisabled = disabled || hideCount;
 
     useEffect(() => {
       if (currentValue !== +displayValue) {
@@ -110,11 +110,12 @@ export const EditQuantity = forwardRef(
       () => [
         styles.input,
         vertical && styles.inputVertical,
-        isInputHidden && styles.inputHidden,
+        isInputDisabled && styles.inputHidden,
         !!label && styles.inputWithLabel,
+        error && styles.inputError,
         { fontSize },
       ],
-      [fontSize, isInputHidden, label, vertical],
+      [error, fontSize, isInputDisabled, label, vertical],
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -134,7 +135,7 @@ export const EditQuantity = forwardRef(
     const setNewValue = useCallback(
       (value: string) => {
         setDisplayValue(value);
-        onChange(+value);
+        onChange?.(+value);
       },
       [onChange],
     );
@@ -259,7 +260,7 @@ export const EditQuantity = forwardRef(
             contextMenuHidden
             editable={!isInputDisabled}
             style={inputStyle}
-            value={error ? '-' : displayValue}
+            value={hideCount ? '-' : displayValue}
             keyboardType={keyboardType}
             returnKeyType="done"
             ref={ref}
@@ -291,7 +292,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    height: 103,
+    height: QUANTITY_PICKER_HEIGHT,
     width: 184,
     borderWidth: 1,
     borderRadius: 8,
@@ -299,6 +300,10 @@ const styles = StyleSheet.create({
     fontSize: 78,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
+  },
+  inputError: {
+    borderColor: colors.red,
+    borderTopWidth: 1,
   },
   inputHidden: {
     borderColor: colors.background,
