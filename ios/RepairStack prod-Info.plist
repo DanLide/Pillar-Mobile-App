@@ -46,7 +46,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Need to create photo of qr code</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses bluetooth to connect and unlock cabinets.</string>
+	<string>This app uses location to connect and unlock cabinets.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to read qr codes from gallery</string>
 	<key>UIAppFonts</key>

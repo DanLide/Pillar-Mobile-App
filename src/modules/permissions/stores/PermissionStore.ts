@@ -23,15 +23,21 @@ import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 class PermissionStore {
   @observable bluetoothPermission: PermissionStatus;
   @observable bluetoothStatus: BluetoothStateManager.BluetoothState;
+  @observable locationPermission: PermissionStatus;
 
   constructor() {
     makeAutoObservable(this);
     this.bluetoothPermission = RESULTS.UNAVAILABLE;
+    this.locationPermission = RESULTS.UNAVAILABLE;
     this.bluetoothStatus = 'Unknown';
     this.bluetoothCheck();
+    this.locationCheck();
 
     AppState.addEventListener('change', state => {
-      state === 'active' && this.bluetoothCheck();
+      if (state === 'active') {
+        this.bluetoothCheck();
+        this.locationCheck();
+      }
     });
     BluetoothStateManager.onStateChange(state => {
       runInAction(() => {
@@ -43,7 +49,15 @@ class PermissionStore {
   @action async requestPermission(type: Permission) {
     const status = await request(type);
     runInAction(() => {
-      this.bluetoothPermission = status;
+      switch (type) {
+        case PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL:
+          this.bluetoothPermission = status;
+          break;
+        case PERMISSIONS.IOS.LOCATION_WHEN_IN_USE: {
+          this.locationPermission = status;
+          break;
+        }
+      }
     });
     return status;
   }
@@ -60,6 +74,14 @@ class PermissionStore {
     check(PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL).then(result => {
       runInAction(() => {
         this.bluetoothPermission = result;
+      });
+    });
+  }
+
+  @action locationCheck() {
+    check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(result => {
+      runInAction(() => {
+        this.locationPermission = result;
       });
     });
   }
