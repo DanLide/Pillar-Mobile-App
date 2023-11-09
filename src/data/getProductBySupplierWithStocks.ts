@@ -7,6 +7,7 @@ import {
   GetOrderSummaryProduct,
   getProductByOrderTypeAndSupplierAPI,
 } from './api/orders';
+import { BadRequestError } from './helpers/tryFetch';
 import {
   getFetchProductByFacilityIdAPI,
   getFetchStockAPI,
@@ -65,6 +66,19 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
     if (!this.store.supplierId) {
       this.store.setSupplier(productSupplier);
+    }
+
+    const selectedSupplier = this.store.supplierId;
+
+    if (!productSupplier) return;
+
+    if (selectedSupplier !== productSupplier) {
+      const supplierName = stocksStore.getSupplierNameById(productSupplier);
+
+      throw new BadRequestError(
+        ProductByOrderTypeAndSupplierError.NotAssignedToDistributor,
+        supplierName,
+      );
     }
 
     const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
