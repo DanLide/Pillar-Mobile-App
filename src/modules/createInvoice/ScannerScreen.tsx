@@ -1,9 +1,9 @@
-import React, { useRef, useCallback, useState, useEffect } from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
-import { ActivityIndicator, Text, View, StyleSheet } from 'react-native';
+import { ToastType } from 'src/contexts/types';
+import { useSingleToast } from 'src/hooks';
 
-import { BaseScannerScreen, Button, ButtonType } from '../../components';
-
+import { BaseScannerScreen, ScannerScreenError } from '../../components';
 import {
   ScannerModalStoreType,
   CurrentProductStoreType,
@@ -16,6 +16,7 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
+import { BadRequestError } from 'src/data/helpers/tryFetch';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -29,6 +30,7 @@ const initModalParams: ProductModalParams = {
 export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
+  const { showToast } = useSingleToast();
 
   const store = useRef<BaseProductsStore>(createInvoiceStore).current;
 
@@ -45,9 +47,16 @@ export const ScannerScreen: React.FC = observer(() => {
   const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
   const onFetchProduct = async (code: string) => {
+    const isProductRecoverable = (product?: ProductModel) =>
+      product?.isRecoverable;
+
     const currentProduct = createInvoiceStore.getProductById(
       +code.replace('~~', ''),
     );
+
+    if (!isProductRecoverable(currentProduct)) {
+      return ScannerScreenError.ProductIsNotRecoverable;
+    }
 
     store.setCurrentProduct(currentProduct);
   };

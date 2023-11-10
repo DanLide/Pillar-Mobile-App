@@ -233,7 +233,7 @@ export class URLProvider {
   }
 
   createInvoice(jobId: number) {
-    const partyRoleId = this.authStore.getPartyRoleId;
+    const partyRoleId = this.ssoStore.getCurrentSSO?.pisaId;
     return new URL(
       `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/SubmitInvoiceCCC/${partyRoleId}/${jobId}`,
     );
