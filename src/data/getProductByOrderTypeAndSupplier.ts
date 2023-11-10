@@ -110,7 +110,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
     }
 
     const [productDetails, settings] = await Promise.all([
-      getFetchProductAPI(btoa(this.scanCode), currentStock),
+      getFetchProductAPI(btoa(this.scanCode), currentStock.partyRoleId),
       getProductSettingsByIdAPI(productId, currentStock),
     ]);
 

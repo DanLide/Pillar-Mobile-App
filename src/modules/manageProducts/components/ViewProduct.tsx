@@ -46,13 +46,13 @@ export const ViewProduct = observer(({ product }: Props) => {
           <InfoBadge
             type={BadgeType.Large}
             title="Minimum Quantity"
-            subtitle={product?.min}
+            subtitle={product?.min ?? 0}
           />
           <Text style={styles.slash}>/</Text>
           <InfoBadge
             type={BadgeType.Large}
             title="Maximum Quantity"
-            subtitle={product?.max}
+            subtitle={product?.max ?? 0}
           />
         </View>
       )}

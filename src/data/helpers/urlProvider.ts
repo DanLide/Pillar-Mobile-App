@@ -136,12 +136,11 @@ export class URLProvider {
     );
   }
 
-  getFetchProductUrl(scanCode: string, currentStock?: StockModel) {
-    const partyRoleID = currentStock?.partyRoleId;
+  getFetchProductUrl(scanCode: string, partyRoleId?: number) {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/${partyRoleID}/${scanCode}/${facilityId}/0`,
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/${partyRoleId}/${scanCode}/${facilityId}/0`,
     );
   }
 

@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -35,7 +29,6 @@ import {
   ProductModalProps,
   ProductModalType,
   ProductQuantity,
-  ProductQuantityToastType,
   QUANTITY_PICKER_HEIGHT,
 } from '../../productModal';
 
@@ -113,16 +106,11 @@ export const ProductModal = observer(
     const viewRef = useRef<View>(null);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isUnitsPerContainerError, setIsUnitsPerContainerError] =
+      useState(false);
     const [upcError, setUpcError] = useState<string | undefined>();
     const [alertParams, setAlertParams] =
       useState<AlertParams>(INIT_ALERT_PARAMS);
-    const [productQuantityToastType, setProductQuantityToastType] = useState<
-      ProductQuantityToastType | undefined
-    >(undefined);
-
-    useEffect(() => {
-      if (toastType) setProductQuantityToastType(toastType);
-    }, [toastType]);
 
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
@@ -198,7 +186,7 @@ export const ProductModal = observer(
           ),
         );
 
-        setProductQuantityToastType(ToastType.UnitsPerContainerError);
+        setIsUnitsPerContainerError(true);
         scrollViewRef.current?.scrollTo({ y, animated: true });
         return;
       }
@@ -221,7 +209,7 @@ export const ProductModal = observer(
     ]);
 
     const handleToastAction = useCallback(() => {
-      switch (productQuantityToastType) {
+      switch (toastType) {
         case ToastType.ProductUpdateError:
           return handleSubmit();
         case ToastType.UpcUpdateError:
@@ -231,7 +219,7 @@ export const ProductModal = observer(
           unitsPerContainerInputRef.current?.focus();
           break;
       }
-    }, [handleSubmit, onEditPress, productQuantityToastType]);
+    }, [handleSubmit, onEditPress, toastType]);
 
     const handleEditPress = useCallback(() => {
       onEditPress?.();
@@ -259,11 +247,10 @@ export const ProductModal = observer(
 
     const handleUnitsPerContainerChange = useCallback(
       (unitsPerContainer: number) => {
-        if (productQuantityToastType === ToastType.UnitsPerContainerError)
-          setProductQuantityToastType(undefined);
+        if (isUnitsPerContainerError) setIsUnitsPerContainerError(false);
         store.setUnitsPerContainer(unitsPerContainer);
       },
-      [productQuantityToastType, store],
+      [isUnitsPerContainerError, store],
     );
 
     const handleUpcChange = useCallback(() => {
@@ -354,7 +341,7 @@ export const ProductModal = observer(
                     type={ProductModalType.ManageProduct}
                     product={product}
                     onChangeProductQuantity={setEditableProductQuantity}
-                    toastType={productQuantityToastType}
+                    toastType={toastType}
                     maxValue={maxValue ?? 0}
                     minValue={0}
                     onHand={onHand}
@@ -366,10 +353,7 @@ export const ProductModal = observer(
                     <EditProduct
                       product={product}
                       stockName={stockName}
-                      unitsPerContainerError={
-                        productQuantityToastType ===
-                        ToastType.UnitsPerContainerError
-                      }
+                      unitsPerContainerError={isUnitsPerContainerError}
                       upcError={upcError}
                       onRemoveBySelect={handleRemoveBySelect}
                       onUnitsPerContainerChange={handleUnitsPerContainerChange}
