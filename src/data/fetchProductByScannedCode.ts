@@ -15,6 +15,14 @@ interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
 }
 
+const getProductByScannedCode = async (scanCode: string, stockId?: number) => {
+  const productWithStock = await getFetchProductAPI(scanCode, stockId);
+
+  if (productWithStock) return productWithStock;
+
+  return getFetchProductAPI(scanCode);
+};
+
 export const fetchProductByScannedCode = async (
   store: CurrentProductStoreType & StockProductStoreType,
   scanCode: string,
@@ -47,9 +55,9 @@ export class FetchProductByScannedCodeTask extends Task {
   }
 
   async run(): Promise<void> {
-    this.productContext.product = await getFetchProductAPI(
+    this.productContext.product = await getProductByScannedCode(
       this.scanCode,
-      this.stockStore?.currentStock,
+      this.stockStore?.currentStock?.partyRoleId,
     );
   }
 }

@@ -85,11 +85,8 @@ export interface ProductByFacilityIdResponse {
   repairFacilityID: number;
 }
 
-export const getFetchProductAPI = (
-  scanCode: string,
-  currentStock?: StockModel,
-) => {
-  const url = new URLProvider().getFetchProductUrl(scanCode, currentStock);
+export const getFetchProductAPI = (scanCode: string, partyRoleId = 0) => {
+  const url = new URLProvider().getFetchProductUrl(scanCode, partyRoleId);
 
   return tryAuthFetch<ProductResponse>({ url, request: { method: 'GET' } });
 };
@@ -221,6 +218,8 @@ export const updateProductQuantityAPI = (
 
 export const updateProductSettingsAPI = (product?: ProductModel) => {
   const url = new URLProvider().updateProductSettings(product?.productId);
+
+  console.log('update remove by API', url, product?.inventoryUseTypeId);
 
   const body = JSON.stringify({
     ProductID: product?.productId,

@@ -17,11 +17,20 @@ import {
 import { find, pipe, prop, whereEq } from 'ramda';
 import { stocksStore } from '../modules/stocksList/stores';
 import { SupplierModel } from '../modules/stocksList/stores/StocksStore';
+import { Utils } from 'src/data/helpers/utils';
 
 interface FetchProductByScannedCodeContext {
   product?: ProductResponse;
   enabledSuppliers: SupplierModel[];
 }
+
+const getProductByScannedCode = async (scanCode: string, stockId?: number) => {
+  const productWithStock = await getFetchProductAPI(scanCode, stockId);
+
+  if (productWithStock) return productWithStock;
+
+  return getFetchProductAPI(scanCode);
+};
 
 export const fetchProductDetails = async (
   store: CurrentProductStoreType & StockProductStoreType,
@@ -56,16 +65,28 @@ export class FetchProductDetails extends Task {
   async run(): Promise<void> {
     const currentStock = this.stockStore?.currentStock;
 
-    const product = await getFetchProductAPI(this.scanCode, currentStock);
+    const product = await getProductByScannedCode(
+      this.scanCode,
+      currentStock?.partyRoleId,
+    );
 
     if (!product) return;
 
     const { productId } = product;
 
-    const [settings, enabledSuppliers = []] = await Promise.all([
-      getProductSettingsByIdAPI(productId, currentStock),
-      getEnabledSuppliersByProductIdAPI(productId),
-    ]);
+    const [settingsResponse, enabledSuppliersResponse] =
+      await Promise.allSettled([
+        getProductSettingsByIdAPI(productId, currentStock),
+        getEnabledSuppliersByProductIdAPI(productId),
+      ]);
+
+    const settings = Utils.isPromiseFulfilled(settingsResponse)
+      ? settingsResponse.value
+      : null;
+
+    const enabledSuppliers = Utils.isPromiseFulfilled(enabledSuppliersResponse)
+      ? enabledSuppliersResponse.value ?? []
+      : [];
 
     const orderMultiple = pipe(
       find(whereEq({ productId })),

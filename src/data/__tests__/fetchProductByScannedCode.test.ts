@@ -52,7 +52,7 @@ describe('fetchProductByScannedCode', () => {
     );
     expect(getFetchProductAPI).toHaveBeenCalledWith(
       mockScanCode,
-      mockStore.currentStock,
+      mockStore.currentStock?.partyRoleId,
     );
   });
 
@@ -67,7 +67,7 @@ describe('fetchProductByScannedCode', () => {
     await expect(fetchProductByScannedCodeTask.run()).rejects.toThrow();
     expect(getFetchProductAPI).toHaveBeenCalledWith(
       mockScanCode,
-      mockStore.currentStock,
+      mockStore.currentStock?.partyRoleId,
     );
   });
 
@@ -106,7 +106,7 @@ describe('fetchProductByScannedCode', () => {
     await fetchProductByScannedCode(mockStore, mockScanCode);
     expect(getFetchProductAPI).toHaveBeenCalledWith(
       mockScanCode,
-      mockStore.currentStock,
+      mockStore.currentStock?.partyRoleId,
     );
   });
 });

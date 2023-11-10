@@ -47,6 +47,10 @@ export class Utils {
   static isNetworkError(error: RequestError | void): boolean {
     return !!error && error.message === 'Network request failed';
   }
+
+  static isPromiseFulfilled = <T>(
+    input: PromiseSettledResult<T>,
+  ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 }
 
 export const isBadRequestError = (
