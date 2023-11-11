@@ -27,6 +27,7 @@ export const BluetoothPermissionScreen = observer(
           });
         }
       }
+      await permissionStore.setBluetoothPowerListener();
       navigation.navigate(AppNavigator.SelectStockScreen, {
         orderType: params?.orderType,
         succeedBluetooth: false,
