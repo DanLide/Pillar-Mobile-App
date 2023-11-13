@@ -37,5 +37,9 @@ export const useSingleToast = () => {
     [toast],
   );
 
-  return { showToast };
+  const hideAll = () => {
+    toast.hideAll?.();
+  };
+
+  return { showToast, hideAll };
 };
