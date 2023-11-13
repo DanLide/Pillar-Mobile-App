@@ -1,7 +1,5 @@
 import React, { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
-import { ToastType } from 'src/contexts/types';
-import { useSingleToast } from 'src/hooks';
 
 import { BaseScannerScreen, ScannerScreenError } from '../../components';
 import {
@@ -16,7 +14,7 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
-import { BadRequestError } from 'src/data/helpers/tryFetch';
+import { BarcodeFormat } from 'vision-camera-code-scanner';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -30,7 +28,6 @@ const initModalParams: ProductModalParams = {
 export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
-  const { showToast } = useSingleToast();
 
   const store = useRef<BaseProductsStore>(createInvoiceStore).current;
 
@@ -54,7 +51,7 @@ export const ScannerScreen: React.FC = observer(() => {
       +code.replace('~~', ''),
     );
 
-    if (!isProductRecoverable(currentProduct)) {
+    if (currentProduct && !isProductRecoverable(currentProduct)) {
       return ScannerScreenError.ProductIsNotRecoverable;
     }
 
@@ -69,6 +66,7 @@ export const ScannerScreen: React.FC = observer(() => {
         onProductScan={onProductScan}
         onCloseModal={onCloseModal}
         onFetchProduct={onFetchProduct}
+        filteredType={BarcodeFormat.UPC_A}
       />
     </ToastContextProvider>
   );

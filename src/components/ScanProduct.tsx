@@ -47,6 +47,7 @@ const FLASH_TIME_MS = 200;
 
 export type ScanProductProps = {
   onScan: (code: Barcode['content']['data']) => void;
+  filteredType?: BarcodeFormat;
   isActive?: boolean;
   isUPC?: boolean;
   scannedProductCount?: number;
@@ -161,6 +162,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   isUPC,
   scannedProductCount,
   tooltipText,
+  filteredType,
 }) => {
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
@@ -477,6 +479,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           style={styles.scanner}
           onRead={onRead}
           isActive={isActive}
+          filteredType={filteredType}
           isUPC={isUPC}
           onLayout={onLayoutScanner}
         />

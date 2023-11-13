@@ -25,6 +25,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 export interface ScannerProps extends Partial<CameraProps> {
   isUPC?: boolean;
+  filteredType?: BarcodeFormat;
   containerStyle?: ViewStyle;
   onRead: (barcode: Barcode[], frame: Frame) => void;
 }
@@ -39,6 +40,7 @@ const PIXEL_FORMAT = '420v';
 const Scanner: React.FC<ScannerProps> = ({
   isActive = false,
   isUPC,
+  filteredType,
   onRead,
   ...props
 }) => {
@@ -54,7 +56,7 @@ const Scanner: React.FC<ScannerProps> = ({
   const frameProcessor = useFrameProcessor(
     frame => {
       'worklet';
-      if(!isActive || !onRead || !isFocused) return
+      if (!isActive || !onRead || !isFocused) return;
 
       const barcodes = scanBarcodes(
         frame,
@@ -63,9 +65,9 @@ const Scanner: React.FC<ScannerProps> = ({
           checkInverted: true,
         },
       );
-
       const filtered = barcodes.filter((value, index, self) => {
         return (
+          value.format !== filteredType &&
           self.findIndex(
             el =>
               JSON.stringify(el.rawValue) === JSON.stringify(value.rawValue),
