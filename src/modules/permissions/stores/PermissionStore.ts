@@ -33,11 +33,6 @@ class PermissionStore {
     AppState.addEventListener('change', state => {
       state === 'active' && this.bluetoothCheck();
     });
-    BluetoothStateManager.onStateChange(state => {
-      runInAction(() => {
-        this.bluetoothStatus = state;
-      });
-    }, true);
   }
 
   @action async requestPermission(type: Permission) {
@@ -50,6 +45,14 @@ class PermissionStore {
 
   @action openSetting() {
     openSettings();
+  }
+
+  @action async setBluetoothPowerListener  () {
+    BluetoothStateManager.onStateChange(state => {
+      runInAction(() => {
+        this.bluetoothStatus = state;
+      });
+    }, true);
   }
 
   @action openBluetoothPowerSetting() {
