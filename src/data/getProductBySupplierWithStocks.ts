@@ -8,10 +8,7 @@ import {
   getProductByOrderTypeAndSupplierAPI,
 } from './api/orders';
 import { BadRequestError } from './helpers/tryFetch';
-import {
-  getFetchProductByFacilityIdAPI,
-  getFetchStockAPI,
-} from './api';
+import { getFetchProductByFacilityIdAPI } from './api';
 import { stocksStore } from '../modules/stocksList/stores';
 
 interface FetchProductByOrderTypeAndSupplierContext {
@@ -89,10 +86,9 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       this.store.setBackorderCabinets(product.cabinets);
       this.store.setCabinetSelection(true);
     } else {
-      const allStocks = await getFetchStockAPI();
 
       const availableStocks =
-        allStocks.filter(stock =>
+        stocksStore.stocks.filter(stock =>
           product.cabinets.find(
             cabinet => stock.partyRoleId === cabinet.storageAreaId,
           ),

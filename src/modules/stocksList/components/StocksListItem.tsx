@@ -50,7 +50,8 @@ export const StocksListItem: React.FC<Props> = observer(
       roleTypeId === RoleType.Cabinet &&
       lockStatus === LockStatus.LOCKED &&
       isVisible;
-    const handlePress = () => {
+
+    const unlockMasterlock = () => {
       if (isLocked && !skipNavToUnlockScreen) {
         masterLockStore.unlock(item.controllerSerialNo);
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
@@ -60,9 +61,12 @@ export const StocksListItem: React.FC<Props> = observer(
           nextNavigationGoBack,
         });
       }
+    }
+
+    const handlePress = () => {
       onPressItem && onPressItem(item);
     };
-
+    console.warn(isLocked && !skipNavToUnlockScreen)
     const renderIcon = () => {
       if (roleTypeId !== RoleType.Cabinet && isVisible) {
         return <SVGs.CabinetSimple />;
@@ -100,7 +104,7 @@ export const StocksListItem: React.FC<Props> = observer(
               <Text style={styles.statusText}>{itemRightText}</Text>
             )}
             {isLocked && !itemRightText && (
-              <Text style={styles.statusText}>Unlock</Text>
+              <Text onPress={unlockMasterlock} style={styles.statusText}>Unlock</Text>
             )}
             <SVGs.ChevronIcon color={colors.purpleDark} />
           </View>

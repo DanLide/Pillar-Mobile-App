@@ -1,5 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, View, Text } from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+  ActivityIndicator,
+  AppState,
+} from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
@@ -30,6 +38,8 @@ import { SelectedProductsList, TotalCostBar } from './components';
 import { fetchOrdersStocks } from 'src/data/fetchOrdersStocks';
 import { receiveBackOrder } from 'src/data/receiveBackOrder';
 import { OrderType } from 'src/constants/common.enum';
+import permissionStore from '../permissions/stores/PermissionStore';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -43,6 +53,8 @@ const createOrderErrorText = "The order wasn't created. Please try again.";
 
 const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
   const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
+  const { showToast, hideAll } = useSingleToast();
+  const locationPermission = permissionStore.locationPermission;
 
   const {
     modalParams,
@@ -54,12 +66,44 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     onRemoveProduct,
     onCloseModal,
   } = useBaseProductsScreen(ordersStore, navigation, ProductModalType.ReceiveOrder, true);
+  const [isLocationPermissionRequested, setIsLocationPermissionRequested] = useState(false);
+
+  useEffect(() => {
+    if (
+      locationPermission !== RESULTS.GRANTED &&
+      locationPermission !== RESULTS.DENIED &&
+      isLocationPermissionRequested
+    ) {
+      showToast('Location permissions not granted', {
+        type: ToastType.BluetoothDisabled,
+        onPress: () => {
+          permissionStore.openSetting();
+        },
+      });
+      return;
+    }
+    hideAll();
+  }, [
+    showToast,
+    locationPermission,
+    isLocationPermissionRequested,
+    hideAll,
+  ]);
 
   useEffect(() => {
     fetchOrdersStocks(stocksStore)
   }, [])
 
-  const { showToast } = useSingleToast();
+  useEffect(() => {
+    const lister = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        setIsLocationPermissionRequested(false);
+      }
+    });
+    return () => {
+      lister.remove()
+    }
+  }, []);
 
   const supplier = useMemo<DropdownItem | undefined>(
     () => find(whereEq({ value: ordersStore.supplierId }), stocksStore.suppliersRenderFormat),
@@ -79,6 +123,23 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       }),
     [navigation],
   );
+
+  if ((
+    locationPermission === RESULTS.UNAVAILABLE ||
+    locationPermission === RESULTS.DENIED ||
+    locationPermission === RESULTS.BLOCKED
+  ) && !isLocationPermissionRequested) {
+    const requestPerm = async () => {
+      await permissionStore.requestPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      setIsLocationPermissionRequested(true);
+    }
+    requestPerm();
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator size='large' />
+      </SafeAreaView>
+    )
+  }
 
   const onReceiveOrder = async () => {
     setIsCreateOrderLoading(true);

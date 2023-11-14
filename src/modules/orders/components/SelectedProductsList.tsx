@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -11,15 +11,17 @@ import {
   TextStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { autorun } from 'mobx';
 
 import { ProductModel, SyncedProductStoreType } from 'src/stores/types';
 import { ProductEmptyList, Separator } from 'src/components';
 import { colors, fonts } from 'src/theme';
 import { ordersStore } from '../stores';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
-import { OrderType } from 'src/constants/common.enum';
+import { OrderType, RoleType } from 'src/constants/common.enum';
 import { StocksListItem } from 'src/modules/stocksList/components/StocksListItem';
 import { stocksStore } from 'src/modules/stocksList/stores';
+import masterLockStore from '../../../stores/MasterLockStore';
 
 interface Props {
   isLoading?: boolean;
@@ -57,6 +59,23 @@ export const SelectedProductsList: React.FC<Props> = observer(
       ),
       [],
     );
+
+    useEffect(() => {
+      if (withStockLocation) {
+        autorun(() => {
+          const initAllStocks = async () => {
+            await Promise.all(
+              stocksStore.stocks.filter(stock => {
+                if (stock.roleTypeId === RoleType.Cabinet) {
+                  return masterLockStore.initMasterLockForStocks(stock);
+                }
+              }),
+            );
+          };
+          initAllStocks();
+        });
+      }
+    }, [stocksStore.stocks.length]);
 
     const ListEmptyComponent = useMemo(
       () =>
