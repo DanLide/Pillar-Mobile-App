@@ -15,6 +15,8 @@ import { SVGs, colors, fonts } from 'src/theme';
 import { Button, ButtonType, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
 import { AppNavigator } from 'src/navigation/types';
+import { getScreenName } from 'src/navigation/helpers/getScreenName';
+import permissionStore from '../../permissions/stores/PermissionStore';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
@@ -44,7 +46,16 @@ export const OrdersList = memo(
     }, [setFetchError]);
 
     const onPressBackorder = () => {
-      navigation.navigate(AppNavigator.ReceiveBackorderScreen);
+      const routeName = getScreenName(permissionStore);
+
+      if (routeName === AppNavigator.SelectStockScreen) {
+        return navigation.navigate(AppNavigator.ReceiveBackorderScreen);
+      }
+
+      navigation.navigate(AppNavigator.BluetoothPermissionScreen, {
+        nextRoute: AppNavigator.ReceiveBackorderScreen,
+      });
+
     }
 
     return (
