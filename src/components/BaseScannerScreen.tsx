@@ -22,6 +22,7 @@ import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
 import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
 import { useSingleToast } from '../hooks';
+import { BarcodeFormat } from 'vision-camera-code-scanner';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -44,9 +45,14 @@ interface Props {
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;
-  onFetchProduct?: (code: string) => Promise<void | RequestError | ScannerScreenError.ProductIsNotRecoverable>;
+  onFetchProduct?: (
+    code: string,
+  ) => Promise<
+    void | RequestError | ScannerScreenError.ProductIsNotRecoverable
+  >;
   onBadRequestError?: (error: BadRequestError) => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
+  filteredType?: BarcodeFormat;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -74,6 +80,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onFetchProduct,
     onBadRequestError,
     ProductModalComponent = ProductModal,
+    filteredType,
   }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
@@ -202,6 +209,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onScan={onScanProduct}
           isActive={!disableScanner && isScannerActive}
           scannedProductCount={scannedProducts.length}
+          filteredType={filteredType}
         />
         <ProductModalComponent
           {...modalParams}
