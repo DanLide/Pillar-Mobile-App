@@ -61,7 +61,7 @@ export const StocksListItem: React.FC<Props> = observer(
           nextNavigationGoBack,
         });
       }
-    }
+    };
 
     const handlePress = () => {
       onPressItem && onPressItem(item);
@@ -104,7 +104,9 @@ export const StocksListItem: React.FC<Props> = observer(
               <Text style={styles.statusText}>{itemRightText}</Text>
             )}
             {isLocked && !itemRightText && (
-              <Text onPress={unlockMasterlock} style={styles.statusText}>Unlock</Text>
+              <Text onPress={unlockMasterlock} style={styles.statusText}>
+                Unlock
+              </Text>
             )}
             <SVGs.ChevronIcon color={colors.purpleDark} />
           </View>

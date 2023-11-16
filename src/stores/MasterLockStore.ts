@@ -1,10 +1,20 @@
 import { ExtendedStockModel } from './../modules/stocksList/stores/StocksStore';
-import { makeAutoObservable, observable, action, runInAction } from 'mobx';
+import {
+  makeAutoObservable,
+  observable,
+  action,
+  runInAction,
+  reaction,
+} from 'mobx';
 import MasterLockModule, {
   LockVisibility,
   LockStatus,
   MasterLockStateListener,
 } from '../data/masterlock';
+import permissionStoreInstance, {
+  PermissionStore,
+} from 'src/modules/permissions/stores/PermissionStore';
+import { RESULTS } from 'react-native-permissions';
 
 type UpdatedLockItem = [string, LockVisibility | LockStatus];
 
@@ -23,30 +33,46 @@ class MasterLockStore {
   @observable stocksState: Record<string, StockState>;
   @observable isUnlocking: boolean;
   @observable relockTimeMasterlocksTime: Record<string, string>;
+  @observable permissionStore: PermissionStore;
+  @observable masterlockConfigured: boolean;
+
   static parseString(input: string) {
     return input.split('/');
   }
 
-  constructor() {
+  constructor(permissionStoreInstance: PermissionStore) {
     makeAutoObservable(this);
     this.stocksState = {};
     this.relockTimeMasterlocksTime = {};
     this.isUnlocking = false;
-    MasterLockModule.configure(LICENSE_ID);
+    this.permissionStore = permissionStoreInstance;
+    this.masterlockConfigured = false;
 
-    MasterLockStateListener.addListener('visibilityStatus', (data: string) => {
-      const updatedVisibility = MasterLockStore.parseString(
-        data,
-      ) as UpdatedLockItem;
-      this.updateStockState(updatedVisibility, 'visibility');
-    });
+    reaction(
+      () => this.permissionStore.bluetoothPermission,
+      async updatedBluetoothStatus => {
+        if (updatedBluetoothStatus === RESULTS.GRANTED && !this.masterlockConfigured) {
+          this.masterlockConfigured = true;
+          await MasterLockModule.configure(LICENSE_ID);
+          MasterLockStateListener.addListener(
+            'visibilityStatus',
+            (data: string) => {
+              const updatedVisibility = MasterLockStore.parseString(
+                data,
+              ) as UpdatedLockItem;
+              this.updateStockState(updatedVisibility, 'visibility');
+            },
+          );
 
-    MasterLockStateListener.addListener('lockStatus', (data: string) => {
-      const updatedStatuses = MasterLockStore.parseString(
-        data,
-      ) as UpdatedLockItem;
-      this.updateStockState(updatedStatuses, 'status');
-    });
+          MasterLockStateListener.addListener('lockStatus', (data: string) => {
+            const updatedStatuses = MasterLockStore.parseString(
+              data,
+            ) as UpdatedLockItem;
+            this.updateStockState(updatedStatuses, 'status');
+          });
+        }
+      },
+    );
   }
 
   @action initMasterLockForStocks(
@@ -111,4 +137,4 @@ class MasterLockStore {
   }
 }
 
-export default new MasterLockStore();
+export default new MasterLockStore(permissionStoreInstance);
