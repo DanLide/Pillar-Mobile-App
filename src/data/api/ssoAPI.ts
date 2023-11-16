@@ -27,16 +27,15 @@ interface MultiSSOAPIObj {
   distributorName?: string;
 }
 
-export const singleSSOAPI = (facilityID: string) => {
+export const singleSSOAPI = (token: string, facilityID: string) => {
   const url = new URLProvider().getSingleSSOUrl(facilityID);
 
   url.search = decodeURIComponent(url.search);
-  return tryAuthFetch<SingleSSOAPIResponse>({
+  return tryFetch<SingleSSOAPIResponse>({
     url,
     request: {
       method: 'GET',
-      // TODO remove this
-      // headers: { authorization: `Bearer ${token}` },
+      headers: { authorization: `Bearer ${token}` },
     },
   });
 };
@@ -50,7 +49,6 @@ export const multiSSOAPI = (token: string, msoID: string) => {
     url,
     request: {
       method: 'GET',
-      // TODO remove this
       headers: { authorization: `Bearer ${token}` },
     },
   });
