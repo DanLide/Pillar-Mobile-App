@@ -181,10 +181,12 @@ class GetSSOTask extends Task {
   }
 
   private async fetchSSOList(): Promise<SSOModel[] | undefined> {
-    if (this.loginFlowContext.facilityID !== undefined) {
+    const { facilityID, token } = this.loginFlowContext;
+    if (facilityID && token) {
       // is SSO user
       const response: SingleSSOAPIResponse = await singleSSOAPI(
-        this.loginFlowContext.facilityID,
+        token,
+        facilityID,
       );
       const res = this.mapSingle(response);
       // return undefined if the element is undefined
