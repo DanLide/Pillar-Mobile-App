@@ -116,6 +116,7 @@ export const ProductModal = observer(
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
     const canEditProduct = permissionProvider.canEditProduct();
+    const canEditProductInStock = permissionProvider.canEditProductInStock();
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 
@@ -372,7 +373,7 @@ export const ProductModal = observer(
                 />
               )}
               <View style={styles.buttons}>
-                {canEditProduct && (
+                {canEditProductInStock && (
                   <Button
                     title={isEdit ? 'Cancel' : 'Edit'}
                     type={ButtonType.secondary}
