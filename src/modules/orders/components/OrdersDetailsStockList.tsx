@@ -16,14 +16,14 @@ import { ordersStore } from '../stores';
 import { StockWithProducts } from './StockWithProducts';
 
 interface Props {
-  productsByStockName: Record<string, ProductModel[]>;
+  productsByStockId: Record<string, ProductModel[]>;
   selectedStock?: string;
 
-  onSelectProducts: (stockName: string) => void;
+  onSelectProducts: (stockName: string, stockId: string) => void;
 }
 
 export const OrdersDetailsStockList: React.FC<Props> = observer(
-  ({ productsByStockName, selectedStock, onSelectProducts }) => {
+  ({ productsByStockId, selectedStock, onSelectProducts }) => {
     const ordersStoreRef = useRef(ordersStore).current;
     const { currentOrder } = ordersStoreRef;
 
@@ -60,22 +60,23 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
 
     const renderStockList = useCallback(
       ({ item }: ListRenderItemInfo<string>) => {
-        const products = productsByStockName[item];
-
+        const products = productsByStockId[item];
+        const stockName = products[0].stockLocationName || ''
         return (
           <Pressable
             style={styles.stockContainer}
-            onPress={() => onSelectProducts(item)}
+            onPress={() => onSelectProducts(stockName, item)}
             disabled={!isOrderReceivable}
           >
             {isOrderReceivable ? (
-              renderSelectedRadioButton(item)
+              renderSelectedRadioButton(stockName)
             ) : (
               <View style={styles.radioButtonPlaceholder} />
             )}
             <StockWithProducts
-              stockName={item}
+              stockName={stockName}
               products={products}
+              stockId={item}
               orderId={currentOrder.order.orderId}
             />
           </Pressable>
@@ -85,14 +86,14 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
         currentOrder.order.orderId,
         isOrderReceivable,
         onSelectProducts,
-        productsByStockName,
+        productsByStockId,
         renderSelectedRadioButton,
       ],
     );
 
     return (
       <FlatList
-        data={Object.keys(productsByStockName)}
+        data={Object.keys(productsByStockId)}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={renderStockList}
       />

@@ -4,6 +4,7 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { groupBy } from 'ramda';
+import { autorun } from 'mobx';
 
 import { ordersStore } from './stores';
 import {
@@ -15,8 +16,16 @@ import { AppNavigator, OrdersParamsList } from '../../navigation/types';
 import { fetchOrderDetails } from '../../data/fetchOrderDetails';
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import { OrderStatusType } from '../../constants/common.enum';
+import { OrderStatusType, RoleType } from '../../constants/common.enum';
 import { OrdersDetailsStockList } from './components/OrdersDetailsStockList';
+import permissionStore from 'src/modules/permissions/stores/PermissionStore';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { ToastType } from 'src/contexts/types';
+import { fetchStocks } from 'src/data/fetchStocks';
+import { stocksStore } from '../stocksList/stores';
+import masterLockStore from '../../stores/MasterLockStore';
+import { useSingleToast } from 'src/hooks';
+import { LockStatus, LockVisibility } from 'src/data/masterlock';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -28,18 +37,36 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
+  const [isLocationPermissionRequested, setIsLocationPermissionRequested] = useState(false);
+  const locationPermission = permissionStore.locationPermission;
+
+  const { showToast, hideAll } = useSingleToast();
+  const selectedStockId = useRef('');
+
+  const stockItem = stocksStore.stocks.find((stock) => stock.partyRoleId === Number(selectedStockId.current));
+
+  const controllerSerialNo = stockItem?.controllerSerialNo || ''
+
+  const isVisible = masterLockStore.stocksState[controllerSerialNo]?.visibility ===
+    LockVisibility.VISIBLE;
+
+  const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+  const navigateToUnlockScreen = isVisible && lockStatus === LockStatus.LOCKED && stockItem?.roleTypeId === RoleType.Cabinet;
+
   const { currentOrder } = ordersStoreRef;
-  const orderProductsByStockName = groupBy(
-    product => product.stockLocationName || '',
+  const orderProductsByStockId = groupBy(
+    product => product.stockLocationId || '',
     currentOrder?.productList || [],
   );
+
   const [selectedStock, setSelectedStock] = useState<string | undefined>(
     undefined,
   );
 
-  const onSelectProducts: (currentStockNames: string) => void = useCallback(
-    (currentStockNames: string) => {
+  const onSelectProducts: (currentStockNames: string, stockId: string) => void = useCallback(
+    (currentStockNames: string, stockId: string) => {
       setSelectedStock(currentStockNames);
+      selectedStockId.current = stockId
     },
     [],
   );
@@ -48,6 +75,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     setSelectedStock(undefined);
     setIsLoading(true);
     setIsError(false);
+    await fetchStocks(stocksStore);
     const result = await fetchOrderDetails(route.params.orderId);
     if (result) {
       setIsError(true);
@@ -61,14 +89,71 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     }
   }, [fetchOrder, isFocused]);
 
-  const onNavigateToOrderByStockLocation = useCallback(() => {
+  const onNavigateToOrderByStockLocation = () => {
     if (selectedStock) {
       ordersStoreRef.setSelectedProductsByStock(selectedStock);
+
+      if (navigateToUnlockScreen) {
+        masterLockStore.unlock(controllerSerialNo);
+        return navigation.navigate(AppNavigator.BaseUnlockScreen, {
+          masterlockId: controllerSerialNo,
+          nextScreen: AppNavigator.OrderByStockLocationScreen,
+        });
+      };
       navigation.navigate(AppNavigator.OrderByStockLocationScreen);
     }
-  }, [navigation, ordersStoreRef, selectedStock]);
+  };
 
-  if (isLoading) {
+  useEffect(() => {
+    if (
+      locationPermission !== RESULTS.GRANTED &&
+      locationPermission !== RESULTS.DENIED &&
+      isLocationPermissionRequested
+    ) {
+      showToast('Location permissions not granted', {
+        type: ToastType.BluetoothDisabled,
+        onPress: () => {
+          permissionStore.openSetting();
+        },
+      });
+      return;
+    }
+    hideAll();
+  }, [
+    hideAll,
+    showToast,
+    isLocationPermissionRequested,
+    locationPermission,
+  ]);
+
+  useEffect(() => {
+    autorun(() => {
+      const initAllStocks = async () => {
+        await Promise.all(
+          stocksStore.stocks.filter(stock => {
+            if (stock.roleTypeId === RoleType.Cabinet) {
+              return masterLockStore.initMasterLockForStocks(stock);
+            }
+          }),
+        );
+        setIsLoading(false);
+      };
+      initAllStocks();
+    });
+  }, []);
+
+  const showLocationPermLoader = (
+    locationPermission === RESULTS.UNAVAILABLE ||
+    locationPermission === RESULTS.DENIED ||
+    locationPermission === RESULTS.BLOCKED
+  ) && !isLocationPermissionRequested
+
+  if (isLoading || showLocationPermLoader) {
+    const requestPerm = async () => {
+      await permissionStore.requestPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      setIsLocationPermissionRequested(true);
+    }
+    requestPerm();
     return <ActivityIndicator size="large" style={styles.loading} />;
   }
 
@@ -178,7 +263,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
             <Text style={styles.headerText}>Received/Ordered</Text>
           </View>
           <OrdersDetailsStockList
-            productsByStockName={orderProductsByStockName}
+            productsByStockId={orderProductsByStockId}
             selectedStock={selectedStock}
             onSelectProducts={onSelectProducts}
           />

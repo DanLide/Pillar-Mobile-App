@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { useIsFocused, RouteProp } from '@react-navigation/native';
-import { autorun } from 'mobx';
 import { observer } from 'mobx-react';
 import {
   RESULTS,
