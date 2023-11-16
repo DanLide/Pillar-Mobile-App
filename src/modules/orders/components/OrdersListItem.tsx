@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { groupBy } from 'ramda';
+import { RESULTS } from 'react-native-permissions';
 
 import { StatusBadge } from './StatusBadge';
 import { GetOrdersAPIResponse } from '../../../data/api';
@@ -17,6 +18,8 @@ import { AppNavigator, OrdersParamsList } from '../../../navigation/types';
 import { StockWithProducts } from './StockWithProducts';
 import { Separator } from 'src/components';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
+import { OrderStatusType } from 'src/constants/common.enum';
+import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 
 type Props = ListRenderItemInfo<GetOrdersAPIResponse> & { isFiltered: boolean };
 
@@ -29,6 +32,21 @@ export const OrdersListItem = memo(({ item, isFiltered }: Props) => {
   const navigation = useNavigation<OrderScreenNavigationProp>();
 
   const onPress = () => {
+    if (
+      item.status === OrderStatusType.SUBMITTED ||
+      item.status === OrderStatusType.RECEIVING
+    ) {
+      const isNeedNavToPermission = permissionStore.bluetoothPermission !== RESULTS.GRANTED;
+      if (isNeedNavToPermission) {
+        navigation.navigate(
+          AppNavigator.BluetoothPermissionScreen, {
+          nextRoute: AppNavigator.OrderDetailsScreen,
+          orderId: item.orderId.toString(),
+        }
+        );
+        return
+      }
+    }
     navigation.navigate(AppNavigator.OrderDetailsScreen, {
       orderId: item.orderId.toString(),
     });

@@ -66,7 +66,7 @@ export const StocksListItem: React.FC<Props> = observer(
     const handlePress = () => {
       onPressItem && onPressItem(item);
     };
-    console.warn(isLocked && !skipNavToUnlockScreen)
+
     const renderIcon = () => {
       if (roleTypeId !== RoleType.Cabinet && isVisible) {
         return <SVGs.CabinetSimple />;

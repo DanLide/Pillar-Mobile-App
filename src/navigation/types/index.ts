@@ -79,10 +79,11 @@ type CameraPermissionScreenParams = {
 
 type CreateOrderParams = {
   orderType?: OrderType;
+  orderId?: string;
 };
 
 type BluetoothPermissionScreenParams = {
-  nextRoute: AppNavigator.SelectStockScreen;
+  nextRoute: AppNavigator.SelectStockScreen | AppNavigator.OrderDetailsScreen;
 } & CreateOrderParams;
 
 type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
@@ -99,7 +100,8 @@ type UnlockStockScreenParams = {
     | AppNavigator.ReturnProductsScreen
     | AppNavigator.RemoveProductsScreen
     | AppNavigator.CreateOrderScreen
-    | AppNavigator.ManageProductsScreen;
+    | AppNavigator.ManageProductsScreen
+    | AppNavigator.OrderByStockLocationScreen;
 };
 
 export enum LoginType {

@@ -24,6 +24,7 @@ export const BluetoothPermissionScreen = observer(
           navigation.replace(params.nextRoute, {
             orderType: params.orderType,
             succeedBluetooth: true,
+            orderId: params.orderId,
           });
         }
       }

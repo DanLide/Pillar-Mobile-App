@@ -32,6 +32,7 @@ export interface ProductModel
   tax?: number;
   storageAreaId?: number;
   stockLocationName?: string;
+  stockLocationId?: string;
   storageAreaName?: string;
   inventoryById?: number;
 }
