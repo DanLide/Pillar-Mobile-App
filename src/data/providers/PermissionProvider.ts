@@ -46,4 +46,10 @@ export class PermissionProvider {
   canEditProduct() {
     return this.hasPermission(Permission.InventoryManagement_StockMobile_Edit);
   }
+
+  canEditProductInStock() {
+    return this.hasPermission(
+      Permission.InventoryManagement_ProductsInStockMobile_Edit,
+    );
+  }
 }
