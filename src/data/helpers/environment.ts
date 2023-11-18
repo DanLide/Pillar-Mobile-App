@@ -40,6 +40,9 @@ export const environment = {
     shopSetup: {
       apiUri: `${Config.API_URL}/shopsetup`,
     },
+    shopSetupAuthentication: {
+      apiUri: `${Config.API_URL}/shopsetupauthentication`,
+    },
   },
   features: {
     editProductROSwitch: false

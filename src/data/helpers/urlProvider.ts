@@ -34,6 +34,7 @@ export class URLProvider {
       inventory: { apiUri: string };
       order: { apiUri: string };
       shopSetup: { apiUri: string };
+      shopSetupAuthentication: { apiUri: string },
       base: { apiUri: string };
     };
   };
@@ -118,7 +119,7 @@ export class URLProvider {
   }
 
   getShopSetupLoginUrl() {
-    return new URL(`${this.currentEnv.modules.shopSetup.apiUri}/api/login`);
+    return new URL(`${this.currentEnv.modules.shopSetupAuthentication.apiUri}/api/login`);
   }
 
   getDeviceByRepairFacilityIdUrl() {
