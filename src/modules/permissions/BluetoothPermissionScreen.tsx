@@ -14,7 +14,6 @@ import {
 export const BluetoothPermissionScreen = observer(
   ({ navigation, route }: BluetoothPermissionScreenProps) => {
     const params = route.params;
-
     const onButtonPress = async () => {
       if (permissionStore.bluetoothPermission === RESULTS.DENIED) {
         const result = await permissionStore.requestPermission(
@@ -27,6 +26,8 @@ export const BluetoothPermissionScreen = observer(
             orderId: params.orderId,
           });
         }
+        await permissionStore.setBluetoothPowerListener();
+        return;
       }
       await permissionStore.setBluetoothPowerListener();
       navigation.navigate(params?.nextRoute || AppNavigator.SelectStockScreen, {
