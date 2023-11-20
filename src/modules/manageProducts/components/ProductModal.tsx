@@ -64,7 +64,6 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
 
 const getErrorMessage = (error: unknown) => {
   switch (error) {
-    case ProductModalErrors.UpcUpdateError:
     case ProductModalErrors.UpcFormatError:
       return 'Invalid UPC Code';
     case ProductModalErrors.UpcLengthError:
