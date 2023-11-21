@@ -86,22 +86,24 @@ type BluetoothPermissionScreenParams = {
   nextRoute: AppNavigator.SelectStockScreen | AppNavigator.OrderDetailsScreen;
 } & CreateOrderParams;
 
-type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
+export type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
 
 type SelectSSOScreenParams = {
   isUpdating?: boolean;
 };
 
+export type UnlockStockNextScreenParams =
+  | AppNavigator.ReturnProductsScreen
+  | AppNavigator.RemoveProductsScreen
+  | AppNavigator.CreateOrderScreen
+  | AppNavigator.ManageProductsScreen
+  | AppNavigator.OrderByStockLocationScreen;
+
 type UnlockStockScreenParams = {
   title?: string;
   masterlockId: string;
   nextNavigationGoBack?: boolean;
-  nextScreen?:
-    | AppNavigator.ReturnProductsScreen
-    | AppNavigator.RemoveProductsScreen
-    | AppNavigator.CreateOrderScreen
-    | AppNavigator.ManageProductsScreen
-    | AppNavigator.OrderByStockLocationScreen;
+  nextScreen?: UnlockStockNextScreenParams;
 };
 
 export enum LoginType {
@@ -198,8 +200,6 @@ export type OrdersParamsList = {
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
   [AppNavigator.ScannerScreen]: ScannerParams | undefined;
-  [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams
-  [AppNavigator.ScannerScreen]: undefined;
   [AppNavigator.HowToScanScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
   [AppNavigator.ReceiveBackorderScreen]: undefined;

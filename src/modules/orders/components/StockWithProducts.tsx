@@ -15,7 +15,7 @@ import { LockStatus, LockVisibility } from 'src/data/masterlock';
 import { stocksStore } from 'src/modules/stocksList/stores';
 import { ProductModel } from 'src/stores/types';
 import { SVGs, colors, fonts } from 'src/theme';
-import masterLockStore from '../../../stores/MasterLockStore';
+import { masterLockStore } from 'src/stores';
 
 interface Props {
   stockName: string;
@@ -37,9 +37,12 @@ export const StockWithProducts: React.FC<Props> = ({
   totalProductsQty,
   stockNameStyle,
 }) => {
-  const stockItem = stocksStore.stocks.find((stock) => stock.partyRoleId === Number(stockId));
-  const controllerSerialNo = stockItem?.controllerSerialNo || ''
-  const isVisible = masterLockStore.stocksState[controllerSerialNo]?.visibility ===
+  const stockItem = stocksStore.stocks.find(
+    stock => stock.partyRoleId === Number(stockId),
+  );
+  const controllerSerialNo = stockItem?.controllerSerialNo || '';
+  const isVisible =
+    masterLockStore.stocksState[controllerSerialNo]?.visibility ===
     LockVisibility.VISIBLE;
 
   const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
@@ -127,8 +130,8 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   titleContainer: {
-    flexDirection: 'row', 
-    alignItems: 'center' 
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   productDetails: {
     flexDirection: 'row',
