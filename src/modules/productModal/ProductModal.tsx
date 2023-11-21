@@ -18,6 +18,7 @@ import {
   ToastContextProvider,
 } from 'src/contexts';
 import { ProductModel } from 'src/stores/types';
+import { ToastType } from 'src/contexts/types';
 
 export enum ProductModalType {
   Remove,
@@ -146,6 +147,7 @@ export const ProductModal = memo(
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
+                disabled={toastType === ToastType.ProductQuantityError}
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 maxValue={maxValue}
