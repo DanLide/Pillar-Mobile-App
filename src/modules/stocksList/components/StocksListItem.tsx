@@ -31,7 +31,6 @@ interface Props {
   onPressItem?: (stock: StockModel) => void;
   containerStyle?: ViewStyle;
   subContainer?: ViewStyle;
-  nextScreen?: UnlockStockNextScreenParams;
   skipNavToUnlockScreen?: boolean;
   itemRightText?: string;
   nextNavigationGoBack?: boolean;
@@ -43,7 +42,6 @@ export const StocksListItem: React.FC<Props> = observer(
     onPressItem,
     containerStyle,
     subContainer,
-    nextScreen,
     skipNavToUnlockScreen,
     itemRightText,
     nextNavigationGoBack,
@@ -67,7 +65,6 @@ export const StocksListItem: React.FC<Props> = observer(
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
           title: organizationName,
           masterlockId: item.controllerSerialNo,
-          nextScreen,
           nextNavigationGoBack,
         });
       }
