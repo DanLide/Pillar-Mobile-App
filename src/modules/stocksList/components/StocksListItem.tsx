@@ -6,22 +6,31 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import masterLockStore from '../../../stores/MasterLockStore';
+import { masterLockStore } from 'src/stores';
 
 import { StockModel } from '../stores/StocksStore';
 import { RoleType } from '../../../constants/common.enum';
 import { colors, fonts, SVGs } from '../../../theme';
 import { useNavigation } from '@react-navigation/native';
-import { AppNavigator } from '../../../navigation/types';
+import {
+  AppNavigator,
+  RemoveStackParamList,
+  UnlockStockNextScreenParams,
+} from '../../../navigation/types';
 import { LockStatus, LockVisibility } from '../../../data/masterlock';
 import { observer } from 'mobx-react';
+import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
+
+type ScreenNavigationProp = NativeStackNavigationProp<
+  RemoveStackParamList,
+  AppNavigator.SelectStockScreen
+>;
 
 interface Props {
   item: StockModel;
   onPressItem?: (stock: StockModel) => void;
   containerStyle?: ViewStyle;
   subContainer?: ViewStyle;
-  nextScreen?: AppNavigator;
   skipNavToUnlockScreen?: boolean;
   itemRightText?: string;
   nextNavigationGoBack?: boolean;
@@ -33,14 +42,13 @@ export const StocksListItem: React.FC<Props> = observer(
     onPressItem,
     containerStyle,
     subContainer,
-    nextScreen,
     skipNavToUnlockScreen,
     itemRightText,
     nextNavigationGoBack,
   }) => {
     const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
 
-    const navigation = useNavigation();
+    const navigation = useNavigation<ScreenNavigationProp>();
     const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
     const isVisible =
       masterLockStore.stocksState[controllerSerialNo]?.visibility ===
@@ -52,12 +60,11 @@ export const StocksListItem: React.FC<Props> = observer(
       isVisible;
 
     const unlockMasterlock = () => {
-      if (isLocked && !skipNavToUnlockScreen) {
+      if (isLocked && !skipNavToUnlockScreen && item.controllerSerialNo) {
         masterLockStore.unlock(item.controllerSerialNo);
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
           title: organizationName,
           masterlockId: item.controllerSerialNo,
-          nextScreen,
           nextNavigationGoBack,
         });
       }

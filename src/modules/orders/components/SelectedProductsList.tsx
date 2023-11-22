@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   StyleSheet,
   FlatList,
@@ -11,7 +11,6 @@ import {
   TextStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
-import { autorun } from 'mobx';
 
 import { ProductModel, SyncedProductStoreType } from 'src/stores/types';
 import { ProductEmptyList, Separator } from 'src/components';
@@ -21,7 +20,8 @@ import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { OrderType, RoleType } from 'src/constants/common.enum';
 import { StocksListItem } from 'src/modules/stocksList/components/StocksListItem';
 import { stocksStore } from 'src/modules/stocksList/stores';
-import masterLockStore from '../../../stores/MasterLockStore';
+import { masterLockStore } from 'src/stores';
+import { fetchStocks } from 'src/data/fetchStocks';
 
 interface Props {
   isLoading?: boolean;
@@ -60,22 +60,15 @@ export const SelectedProductsList: React.FC<Props> = observer(
       [],
     );
 
-    useEffect(() => {
-      if (withStockLocation) {
-        autorun(() => {
-          const initAllStocks = async () => {
-            await Promise.all(
-              stocksStore.stocks.filter(stock => {
-                if (stock.roleTypeId === RoleType.Cabinet) {
-                  return masterLockStore.initMasterLockForStocks(stock);
-                }
-              }),
-            );
-          };
-          initAllStocks();
-        });
-      }
+    const initMasterLock = useCallback(async () => {
+      await fetchStocks(stocksStore);
+      if (!stocksStore.stocks.length) return;
+      await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
     }, [stocksStore.stocks.length]);
+
+    useEffect(() => {
+      initMasterLock();
+    }, []);
 
     const ListEmptyComponent = useMemo(
       () =>
@@ -96,28 +89,28 @@ export const SelectedProductsList: React.FC<Props> = observer(
       [itemTitleColor],
     );
 
-
     const renderItem = useCallback(
       ({ item }: ListRenderItemInfo<ProductModel>) => {
         const { manufactureCode, partNo, name, reservedCount } = item;
-        let stockModel
+        let stockModel;
         if (withStockLocation) {
-          stockModel = stocksStore.stocks.find((stock) => {
-            return stock.partyRoleId === item.storageAreaId
-          })
+          stockModel = stocksStore.stocks.find(stock => {
+            return stock.partyRoleId === item.storageAreaId;
+          });
         }
 
         const handlePress = () => onItemPress?.(item);
 
         return (
           <Pressable onPress={handlePress}>
-            {
-              stockModel && <StocksListItem item={stockModel}
+            {stockModel && (
+              <StocksListItem
+                item={stockModel}
                 containerStyle={styles.stockContainer}
                 subContainer={styles.subContainer}
                 nextNavigationGoBack={nextNavigationGoBack}
               />
-            }
+            )}
             <View style={styles.item}>
               <View style={styles.itemDetails}>
                 <Text numberOfLines={1} style={itemTitleStyle}>
@@ -225,5 +218,5 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     borderBottomWidth: 0,
-  }
+  },
 });

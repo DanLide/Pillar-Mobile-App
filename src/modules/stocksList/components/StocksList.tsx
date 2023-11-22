@@ -8,6 +8,13 @@ import {
   Text,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { RouteProp, useIsFocused, useRoute } from '@react-navigation/native';
+import { masterLockStore } from 'src/stores';
+import permissionStore from 'src/modules/permissions/stores/PermissionStore';
+import { useSingleToast } from 'src/hooks';
+import { RESULTS } from 'react-native-permissions';
+import { ToastType } from 'src/contexts/types';
+import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
 
 import { StockModel, StockStore } from '../stores/StocksStore';
 import { stocksStore } from '../stores';
@@ -16,9 +23,6 @@ import { StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
 import { AuthError, BadRequestError } from '../../../data/helpers/tryFetch';
-import masterLockStore from '../../../stores/MasterLockStore';
-import { autorun } from 'mobx';
-import { RoleType } from '../../../constants/common.enum';
 
 interface Props {
   onPressItem: (stock: StockModel) => void;
@@ -34,49 +38,90 @@ const errorText =
   'Sorry, we are unable to connect to your stock location right now. To continue, you may need to locate a key to unlock the stock location.';
 
 export const StocksList: React.FC<Props> = observer(
-  ({ onPressItem,
-    onFetchStocks,
-    skipNavToUnlockScreen,
-    itemRightText,
-  }) => {
+  ({ onPressItem, onFetchStocks, skipNavToUnlockScreen, itemRightText }) => {
+    const route =
+      useRoute<
+        RouteProp<RemoveStackParamList, AppNavigator.SelectStockScreen>
+      >();
+    const isFocused = useIsFocused();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
+    const { showToast, hideAll } = useSingleToast();
+    const { isBluetoothOn, bluetoothPermission, locationPermission } =
+      permissionStore;
 
-    useEffect(() => {
-      autorun(() => {
-        const initAllStocks = async () => {
-          await Promise.all(
-            stocksStore.stocks.filter(stock => {
-              if (stock.roleTypeId === RoleType.Cabinet) {
-                return masterLockStore.initMasterLockForStocks(stock);
-              }
-            }),
-          );
-          setIsLoading(false);
-        };
-        initAllStocks();
-      });
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const checkPermissions = async () => {
+      await permissionStore.setBluetoothPowerListener();
+
+      permissionStore.bluetoothCheck();
+      permissionStore.locationCheck();
+      if (
+        locationPermission !== RESULTS.GRANTED &&
+        locationPermission !== RESULTS.DENIED
+      ) {
+        showToast('Location permissions not granted', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openSetting();
+          },
+        });
+        return;
+      }
+      if (route.params?.succeedBluetooth && isBluetoothOn) {
+        showToast('Bluetooth successfully connected', {
+          type: ToastType.BluetoothEnabled,
+        });
+        return;
+      }
+      if (bluetoothPermission !== RESULTS.GRANTED) {
+        showToast('Bluetooth not connected', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openSetting();
+          },
+        });
+        return;
+      }
+      if (!isBluetoothOn) {
+        showToast('Make sure Bluetooth is enabled, bluetooth not connected', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openBluetoothPowerSetting();
+          },
+          style: styles.toastStyle,
+        });
+        return;
+      }
+      hideAll();
+    };
+
+    const initMasterLock = useCallback(async () => {
+      if (!stocksStore.stocks.length) return;
+      await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
+    }, [stocksStore.stocks]);
 
     const handleFetchStocks = useCallback(async () => {
       setIsLoading(true);
-
       const fetchStocksFunction = onFetchStocks ? onFetchStocks : fetchStocks;
-
       const error = await fetchStocksFunction(stocksStore);
-
       if (error) {
         setIsError(true);
+      } else if (stocksStore.stocks.length) {
+        await initMasterLock();
       }
-    }, [onFetchStocks]);
+      setIsLoading(false);
+    }, [initMasterLock, onFetchStocks]);
 
     const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
-      ({ item }) => <StocksListItem
-        item={item}
-        onPressItem={onPressItem}
-        skipNavToUnlockScreen={skipNavToUnlockScreen}
-        itemRightText={itemRightText}
-      />,
+      ({ item }) => (
+        <StocksListItem
+          item={item}
+          onPressItem={onPressItem}
+          skipNavToUnlockScreen={skipNavToUnlockScreen}
+          itemRightText={itemRightText}
+        />
+      ),
       [onPressItem, itemRightText, skipNavToUnlockScreen],
     );
 
@@ -86,27 +131,11 @@ export const StocksList: React.FC<Props> = observer(
     };
 
     useEffect(() => {
-      handleFetchStocks();
-      autorun(() => {
-        const setupMasterLock = async () => {
-          if (!stocksStore.stocks.length) return;
-          const cabinets = stocksStore.stocks.filter(
-            stock => stock.roleTypeId === RoleType.Cabinet,
-          );
-
-          Promise.all(
-            cabinets.map(stock => {
-              if (stock.roleTypeId === RoleType.Cabinet) {
-                return masterLockStore.initMasterLockForStocks(stock);
-              }
-            }),
-          ).finally(() => {
-            setIsLoading(false);
-          });
-        };
-        setupMasterLock();
-      });
-    }, [handleFetchStocks]);
+      if (isFocused) {
+        checkPermissions();
+        handleFetchStocks();
+      }
+    }, [handleFetchStocks, isFocused]);
 
     if (isLoading) {
       return <ActivityIndicator size="large" />;
@@ -160,5 +189,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     textAlign: 'center',
     color: colors.grayDark2,
+  },
+  toastStyle: {
+    gap: 8,
   },
 });

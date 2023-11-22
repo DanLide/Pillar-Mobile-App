@@ -61,7 +61,7 @@ export class PermissionStore {
     openSettings();
   }
 
-  @action async setBluetoothPowerListener  () {
+  @action async setBluetoothPowerListener() {
     const state = await BluetoothStateManager.getState();
     runInAction(() => {
       this.bluetoothStatus = state;

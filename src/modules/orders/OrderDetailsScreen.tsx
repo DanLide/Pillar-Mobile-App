@@ -5,6 +5,7 @@ import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { groupBy } from 'ramda';
 import { autorun } from 'mobx';
+import { masterLockStore } from 'src/stores';
 
 import { ordersStore } from './stores';
 import {
@@ -23,7 +24,6 @@ import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { ToastType } from 'src/contexts/types';
 import { fetchStocks } from 'src/data/fetchStocks';
 import { stocksStore } from '../stocksList/stores';
-import masterLockStore from '../../stores/MasterLockStore';
 import { useSingleToast } from 'src/hooks';
 import { LockStatus, LockVisibility } from 'src/data/masterlock';
 
@@ -37,21 +37,28 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
-  const [isLocationPermissionRequested, setIsLocationPermissionRequested] = useState(false);
+  const [isLocationPermissionRequested, setIsLocationPermissionRequested] =
+    useState(false);
   const locationPermission = permissionStore.locationPermission;
 
   const { showToast, hideAll } = useSingleToast();
   const selectedStockId = useRef('');
 
-  const stockItem = stocksStore.stocks.find((stock) => stock.partyRoleId === Number(selectedStockId.current));
+  const stockItem = stocksStore.stocks.find(
+    stock => stock.partyRoleId === Number(selectedStockId.current),
+  );
 
-  const controllerSerialNo = stockItem?.controllerSerialNo || ''
+  const controllerSerialNo = stockItem?.controllerSerialNo || '';
 
-  const isVisible = masterLockStore.stocksState[controllerSerialNo]?.visibility ===
+  const isVisible =
+    masterLockStore.stocksState[controllerSerialNo]?.visibility ===
     LockVisibility.VISIBLE;
 
   const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
-  const navigateToUnlockScreen = isVisible && lockStatus === LockStatus.LOCKED && stockItem?.roleTypeId === RoleType.Cabinet;
+  const navigateToUnlockScreen =
+    isVisible &&
+    lockStatus === LockStatus.LOCKED &&
+    stockItem?.roleTypeId === RoleType.Cabinet;
 
   const { currentOrder } = ordersStoreRef;
   const orderProductsByStockId = groupBy(
@@ -63,13 +70,16 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     undefined,
   );
 
-  const onSelectProducts: (currentStockNames: string, stockId: string) => void = useCallback(
-    (currentStockNames: string, stockId: string) => {
+  const onSelectProducts: (currentStockNames: string, stockId: string) => void =
+    useCallback((currentStockNames: string, stockId: string) => {
       setSelectedStock(currentStockNames);
-      selectedStockId.current = stockId
-    },
-    [],
-  );
+      selectedStockId.current = stockId;
+    }, []);
+
+  const initMasterLock = useCallback(async () => {
+    if (!stocksStore.stocks.length) return;
+    masterLockStore.initMasterLockForStocks(stocksStore.stocks);
+  }, [stocksStore.stocks]);
 
   const fetchOrder = useCallback(async () => {
     setSelectedStock(undefined);
@@ -79,9 +89,11 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     const result = await fetchOrderDetails(route.params.orderId);
     if (result) {
       setIsError(true);
+    } else if (stocksStore.stocks.length) {
+      await initMasterLock();
     }
     setIsLoading(false);
-  }, [route.params.orderId]);
+  }, [initMasterLock, route.params.orderId]);
 
   useEffect(() => {
     if (isFocused) {
@@ -99,7 +111,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
           masterlockId: controllerSerialNo,
           nextScreen: AppNavigator.OrderByStockLocationScreen,
         });
-      };
+      }
       navigation.navigate(AppNavigator.OrderByStockLocationScreen);
     }
   };
@@ -119,40 +131,21 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       return;
     }
     hideAll();
-  }, [
-    hideAll,
-    showToast,
-    isLocationPermissionRequested,
-    locationPermission,
-  ]);
+  }, [hideAll, showToast, isLocationPermissionRequested, locationPermission]);
 
-  useEffect(() => {
-    autorun(() => {
-      const initAllStocks = async () => {
-        await Promise.all(
-          stocksStore.stocks.filter(stock => {
-            if (stock.roleTypeId === RoleType.Cabinet) {
-              return masterLockStore.initMasterLockForStocks(stock);
-            }
-          }),
-        );
-        setIsLoading(false);
-      };
-      initAllStocks();
-    });
-  }, []);
-
-  const showLocationPermLoader = (
-    locationPermission === RESULTS.UNAVAILABLE ||
-    locationPermission === RESULTS.DENIED ||
-    locationPermission === RESULTS.BLOCKED
-  ) && !isLocationPermissionRequested
+  const showLocationPermLoader =
+    (locationPermission === RESULTS.UNAVAILABLE ||
+      locationPermission === RESULTS.DENIED ||
+      locationPermission === RESULTS.BLOCKED) &&
+    !isLocationPermissionRequested;
 
   if (isLoading || showLocationPermLoader) {
     const requestPerm = async () => {
-      await permissionStore.requestPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      await permissionStore.requestPermission(
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      );
       setIsLocationPermissionRequested(true);
-    }
+    };
     requestPerm();
     return <ActivityIndicator size="large" style={styles.loading} />;
   }
