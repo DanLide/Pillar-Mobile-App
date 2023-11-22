@@ -219,8 +219,6 @@ export const updateProductQuantityAPI = (
 export const updateProductSettingsAPI = (product?: ProductModel) => {
   const url = new URLProvider().updateProductSettings(product?.productId);
 
-  console.log('update remove by API', url, product?.inventoryUseTypeId);
-
   const body = JSON.stringify({
     ProductID: product?.productId,
     UPC: product?.upc,
