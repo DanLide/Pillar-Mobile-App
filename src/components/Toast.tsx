@@ -63,6 +63,7 @@ const icons: Record<
 
   [ToastType.BluetoothEnabled]: SVGs.BluetoothIconSuccess,
   [ToastType.BluetoothDisabled]: SVGs.BluetoothIconDisconnected,
+  [ToastType.LocationDisabled]: SVGs.LocationPermIcon,
 };
 
 export const Toast: React.FC<Props> = ({

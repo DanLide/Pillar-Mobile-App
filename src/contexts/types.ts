@@ -20,4 +20,6 @@ export enum ToastType {
 
   BluetoothEnabled = 'BluetoothEnabled',
   BluetoothDisabled = 'BluetoothDisabled',
+
+  LocationDisabled = 'LocationDisabled',
 }
