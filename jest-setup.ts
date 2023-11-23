@@ -65,14 +65,31 @@ jest.mock('react-native-device-info', () => ({
 
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
-RNNativeModules.RNGestureHandlerModule =
-  RNNativeModules.RNGestureHandlerModule || {
-    State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
-    attachGestureHandler: jest.fn(),
-    createGestureHandler: jest.fn(),
-    dropGestureHandler: jest.fn(),
-    updateGestureHandler: jest.fn(),
-  };
+RNNativeModules.RNGestureHandlerModule = RNNativeModules.RNGestureHandlerModule || {
+  State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
+  attachGestureHandler: jest.fn(),
+  createGestureHandler: jest.fn(),
+  dropGestureHandler: jest.fn(),
+  updateGestureHandler: jest.fn(),
+};
 RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
   forceTouchAvailable: false,
 };
+
+jest.mock('react-native-bluetooth-state-manager', () => ({}));
+
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+
+  RN.NativeModules.MasterLockModule = {
+    initLock: jest.fn(),
+    deinit: jest.fn(),
+    readRelockTime: jest.fn(),
+    writeRelockTime: jest.fn(),
+    unlock: jest.fn(),
+    removeListeners: jest.fn(),
+    addListener: jest.fn(),
+  };
+
+  return RN;
+});
