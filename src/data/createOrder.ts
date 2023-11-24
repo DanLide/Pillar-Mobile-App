@@ -117,6 +117,8 @@ class SaveOrderDataTask extends Task {
   async run() {
     const { orderResponse } = this.createOrderContext;
 
+    if (!orderResponse) throw new Error();
+
     const productList = this.ordersStore.getProducts;
     const supplierId = this.ordersStore.supplierId;
 
@@ -124,16 +126,12 @@ class SaveOrderDataTask extends Task {
       ? this.stocksStore.getSupplierNameById(supplierId)
       : undefined;
 
-    // TODO: remove this after backend orderId fix
     const order =
-      orderResponse &&
-      this.orderType === OrderType.Purchase &&
-      assoc('status', OrderStatusType.POREQUIRED, orderResponse);
+      this.orderType === OrderType.Return
+        ? assoc('status', OrderStatusType.SUBMITTED, orderResponse)
+        : orderResponse;
 
     this.ordersStore.setCurrentOrder({
-      // TODO: remove ts-ignore after backend orderId fix
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       order: assoc('supplierName', supplierName, order),
       productList,
     });
