@@ -79,7 +79,7 @@ export class UpdateProductTask extends Task {
       await updateProductSettingsAPI(updatedProduct);
     }
 
-    await Promise.all([
+    await Promise.allSettled([
       shouldUpdateQuantity &&
         updateProductQuantityAPI(
           updatedProduct,

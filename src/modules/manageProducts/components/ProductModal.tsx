@@ -223,7 +223,8 @@ export const ProductModal = observer(
 
     const handleEditPress = useCallback(() => {
       onEditPress?.();
-    }, [onEditPress]);
+      store.setOnHand(0);
+    }, [onEditPress, store]);
 
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {
