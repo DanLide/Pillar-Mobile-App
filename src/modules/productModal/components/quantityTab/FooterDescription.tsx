@@ -31,6 +31,15 @@ export const FooterDescription: React.FC<Props> = ({
         : value
       : null;
 
+  const shipmentQuantity = useMemo(() => {
+    switch (type) {
+      case ProductModalType.ReceiveOrder:
+        return product.shippedQty;
+      default:
+        return product.orderMultiple;
+    }
+  }, [product.orderMultiple, product.shippedQty, type]);
+
   return useMemo(() => {
     switch (type) {
       case ProductModalType.ReceiveOrder:
@@ -64,7 +73,7 @@ export const FooterDescription: React.FC<Props> = ({
               <View style={[styles.itemContainer, { margin: 8 }]}>
                 <Text style={styles.title}>Shipment Quantity</Text>
                 <Text style={styles.subtitleInStock}>
-                  {renderValue(product.orderMultiple)}
+                  {renderValue(shipmentQuantity)}
                 </Text>
               </View>
 
