@@ -8,7 +8,7 @@ import {
   Text,
 } from 'react-native';
 import { observer } from 'mobx-react';
-import { RouteProp, useIsFocused, useRoute } from '@react-navigation/native';
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { masterLockStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
@@ -44,18 +44,20 @@ export const StocksList: React.FC<Props> = observer(
         RouteProp<RemoveStackParamList, AppNavigator.SelectStockScreen>
       >();
     const isFocused = useIsFocused();
+    const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
     const { showToast, hideAll } = useSingleToast();
     const { isBluetoothOn, bluetoothPermission, locationPermission } =
       permissionStore;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const checkPermissions = async () => {
       await permissionStore.setBluetoothPowerListener();
-
       permissionStore.bluetoothCheck();
       permissionStore.locationCheck();
+
+      let hideToasts = true;
+
       if (
         locationPermission !== RESULTS.GRANTED &&
         locationPermission !== RESULTS.DENIED
@@ -66,11 +68,17 @@ export const StocksList: React.FC<Props> = observer(
             permissionStore.openSetting();
           },
         });
-        return;
+        hideToasts = false;
+
       }
+
       if (route.params?.succeedBluetooth && isBluetoothOn) {
         showToast('Bluetooth successfully connected', {
           type: ToastType.BluetoothEnabled,
+        });
+        navigation.setParams({
+          ...route.params,
+          succeedBluetooth: false,
         });
         return;
       }
@@ -93,7 +101,7 @@ export const StocksList: React.FC<Props> = observer(
         });
         return;
       }
-      hideAll();
+      hideToasts && hideAll();
     };
 
     const initMasterLock = useCallback(async () => {
@@ -131,8 +139,16 @@ export const StocksList: React.FC<Props> = observer(
     };
 
     useEffect(() => {
+      checkPermissions();
+    }, [
+      isBluetoothOn,
+      bluetoothPermission,
+      locationPermission,
+      showToast,
+    ])
+
+    useEffect(() => {
       if (isFocused) {
-        checkPermissions();
         handleFetchStocks();
       }
     }, [handleFetchStocks, isFocused]);
