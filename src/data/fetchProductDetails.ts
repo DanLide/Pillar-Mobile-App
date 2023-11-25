@@ -24,14 +24,6 @@ interface FetchProductByScannedCodeContext {
   enabledSuppliers: SupplierModel[];
 }
 
-const getProductByScannedCode = async (scanCode: string, stockId?: number) => {
-  const productWithStock = await getFetchProductAPI(scanCode, stockId);
-
-  if (productWithStock) return productWithStock;
-
-  return getFetchProductAPI(scanCode);
-};
-
 export const fetchProductDetails = async (
   store: CurrentProductStoreType & StockProductStoreType,
   scanCode: string,
@@ -65,7 +57,7 @@ export class FetchProductDetails extends Task {
   async run(): Promise<void> {
     const currentStock = this.stockStore?.currentStock;
 
-    const product = await getProductByScannedCode(
+    const product = await getFetchProductAPI(
       this.scanCode,
       currentStock?.partyRoleId,
     );

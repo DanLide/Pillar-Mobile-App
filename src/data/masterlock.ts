@@ -1,5 +1,4 @@
-import { NativeEventEmitter } from "react-native";
-import { NativeModules } from "react-native";
+import { NativeEventEmitter, NativeModules } from "react-native";
 
 const {MasterLockModule} = NativeModules;
 export const MasterLockStateListener = new NativeEventEmitter(MasterLockModule);

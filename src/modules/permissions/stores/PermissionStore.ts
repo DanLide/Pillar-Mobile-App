@@ -20,7 +20,7 @@ import {
 // eslint-disable-next-line import/default
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 
-class PermissionStore {
+export class PermissionStore {
   @observable bluetoothPermission: PermissionStatus;
   @observable bluetoothStatus: BluetoothStateManager.BluetoothState;
   @observable locationPermission: PermissionStatus;
@@ -61,7 +61,12 @@ class PermissionStore {
     openSettings();
   }
 
-  @action async setBluetoothPowerListener  () {
+  @action async setBluetoothPowerListener() {
+    const state = await BluetoothStateManager.getState();
+    runInAction(() => {
+      this.bluetoothStatus = state;
+    });
+
     BluetoothStateManager.onStateChange(state => {
       runInAction(() => {
         this.bluetoothStatus = state;

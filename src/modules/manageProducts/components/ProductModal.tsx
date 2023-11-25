@@ -64,7 +64,6 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
 
 const getErrorMessage = (error: unknown) => {
   switch (error) {
-    case ProductModalErrors.UpcUpdateError:
     case ProductModalErrors.UpcFormatError:
       return 'Invalid UPC Code';
     case ProductModalErrors.UpcLengthError:
@@ -224,7 +223,8 @@ export const ProductModal = observer(
 
     const handleEditPress = useCallback(() => {
       onEditPress?.();
-    }, [onEditPress]);
+      store.setOnHand(0);
+    }, [onEditPress, store]);
 
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {

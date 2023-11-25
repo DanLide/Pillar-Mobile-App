@@ -292,14 +292,16 @@ export const EditProduct = observer(
                 </View>
               </View>
             </View>
-            <Tooltip
-              message={shipmentQuantityTooltip}
-              contentStyle={styles.shipmentQuantity}
-            >
-              <Text style={styles.shipmentQuantityText}>
-                What is Shipment Quantity?
-              </Text>
-            </Tooltip>
+            {!isSpecialOrder && (
+              <Tooltip
+                message={shipmentQuantityTooltip}
+                contentStyle={styles.shipmentQuantity}
+              >
+                <Text style={styles.shipmentQuantityText}>
+                  What is Shipment Quantity?
+                </Text>
+              </Tooltip>
+            )}
           </View>
           <View style={styles.bottomSection}>
             <Dropdown

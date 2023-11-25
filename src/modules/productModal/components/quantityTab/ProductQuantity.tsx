@@ -124,6 +124,12 @@ export const ProductQuantity = forwardRef(
       reservedCount = product.receivedQty,
     } = product;
 
+    const isProductQuantityError = toastType === ToastType.ProductQuantityError;
+
+    const currentValue = isProductQuantityError
+      ? product.onHand
+      : reservedCount;
+
     const stepQty = getProductStepQty(inventoryUseTypeId);
 
     const keyboardType: KeyboardTypeOptions =
@@ -163,8 +169,7 @@ export const ProductQuantity = forwardRef(
           ? 'Next'
           : 'Done';
 
-      const disabled =
-        toastType === ToastType.ProductQuantityError || reservedCount === 0;
+      const disabled = isProductQuantityError || reservedCount === 0;
 
       return (
         <Button
@@ -230,13 +235,12 @@ export const ProductQuantity = forwardRef(
         {renderDescription()}
         <View>
           <EditQuantity
-            currentValue={reservedCount}
+            currentValue={currentValue}
             maxValue={maxValue}
             minValue={minValue ?? stepQty}
             stepValue={stepQty}
             disabled={disabled}
             hideCount={hideCount}
-            error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
             label={getEditQuantityLabel(type)}
             ref={ref}
