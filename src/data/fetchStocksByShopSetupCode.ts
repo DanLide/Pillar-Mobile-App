@@ -15,7 +15,7 @@ import {
 import { getFetchStockByPartyRoleIdAPI } from './api/stocksAPI';
 import { mapSingle } from './helpers/utils';
 import { setSSORNToken } from 'src/helpers/localStorage';
-import { deviceInfoStore } from 'src/stores';
+import { authStore, deviceInfoStore } from 'src/stores';
 
 interface FetchStocksContext {
   shop: SingleSSOAPIResponse;
@@ -63,7 +63,12 @@ export class FetchShopByShopSetupCodeTask extends Task {
   async run(): Promise<void> {
     const shop = await shopSetupLoginAPI(this.shopSetupCode);
 
-    const response = await singleSSOAPI(shop.repairFacilityId);
+    if (!authStore.getToken) throw Error('Unauthorized');
+
+    const response = await singleSSOAPI(
+      authStore.getToken,
+      shop.repairFacilityId,
+    );
     if (response) {
       this.fetchStocksContext.shop = response;
       const mappedResponse = mapSingle(response);
