@@ -82,7 +82,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       });
       return;
     }
-    hideAll();
+    hideAll && hideAll();
   }, [
     showToast,
     locationPermission,

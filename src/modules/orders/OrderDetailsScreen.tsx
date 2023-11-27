@@ -130,7 +130,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       });
       return;
     }
-    hideAll();
+    hideAll && hideAll();
   }, [hideAll, showToast, isLocationPermissionRequested, locationPermission]);
 
   const showLocationPermLoader =
