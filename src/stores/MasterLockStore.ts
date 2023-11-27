@@ -21,7 +21,7 @@ const LICENSE_ID =
 
 export const RELOCK_TIME = 10000; // msec
 export const RELOCK_TIME_SEC = RELOCK_TIME / 1000;
-export const INIT_TIME = 3000;
+export const INIT_TIME = 4000;
 
 export class MasterLockStore {
   @observable stocksState: Record<string, StockState>;
