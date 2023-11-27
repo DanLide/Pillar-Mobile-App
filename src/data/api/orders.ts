@@ -180,7 +180,7 @@ export const getOrderStorageAreaAPI = (orderId: number) => {
 };
 
 export const receiveOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
-  const url = new URLProvider().receiveBackOrder();
+  const url = new URLProvider().receiveOrder();
 
   return tryAuthFetch<string>({
     url,

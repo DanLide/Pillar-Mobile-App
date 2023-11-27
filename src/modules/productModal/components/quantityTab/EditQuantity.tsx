@@ -169,7 +169,10 @@ export const EditQuantity = forwardRef(
     }, [currentValue, stepValue, setNewValue]);
 
     const onFocusLost = useCallback(() => {
-      if (isNaN(currentValue) || currentValue < minValue) {
+      if (
+        isNaN(currentValue) ||
+        (currentValue < minValue && isHideDecreaseButton)
+      ) {
         return setNewValue(displayMinValue);
       }
 
@@ -177,7 +180,15 @@ export const EditQuantity = forwardRef(
       const displayText = removeLeadingZero(updatedCount);
 
       setNewValue(displayText);
-    }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
+    }, [
+      currentValue,
+      minValue,
+      isHideDecreaseButton,
+      stepValue,
+      setNewValue,
+      displayMinValue,
+    ]);
+
     const DecreaseButton = useMemo(() => {
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
