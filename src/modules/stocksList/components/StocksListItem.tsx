@@ -5,19 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ViewStyle,
+  Pressable,
 } from 'react-native';
 import { masterLockStore } from 'src/stores';
 
 import { StockModel } from '../stores/StocksStore';
-import { RoleType } from '../../../constants/common.enum';
+import { RoleType } from 'src/constants/common.enum';
 import { colors, fonts, SVGs } from '../../../theme';
 import { useNavigation } from '@react-navigation/native';
-import {
-  AppNavigator,
-  RemoveStackParamList,
-  UnlockStockNextScreenParams,
-} from '../../../navigation/types';
-import { LockStatus, LockVisibility } from '../../../data/masterlock';
+import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
+import { LockStatus, LockVisibility } from 'src/data/masterlock';
 import { observer } from 'mobx-react';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
 
@@ -35,6 +32,8 @@ interface Props {
   itemRightText?: string;
   nextNavigationGoBack?: boolean;
 }
+
+const UNLOCK_BUTTON_HIT_SLOP = { right: 24 };
 
 export const StocksListItem: React.FC<Props> = observer(
   ({
@@ -106,17 +105,19 @@ export const StocksListItem: React.FC<Props> = observer(
             {renderIcon()}
             <Text style={styles.title}>{organizationName}</Text>
           </View>
-          <View style={styles.statusContainer}>
+          <Pressable
+            hitSlop={UNLOCK_BUTTON_HIT_SLOP}
+            onPress={unlockMasterlock}
+            style={styles.statusContainer}
+          >
             {itemRightText && (
               <Text style={styles.statusText}>{itemRightText}</Text>
             )}
             {isLocked && !itemRightText && (
-              <Text onPress={unlockMasterlock} style={styles.statusText}>
-                Unlock
-              </Text>
+              <Text style={styles.statusText}>Unlock</Text>
             )}
             <SVGs.ChevronIcon color={colors.purpleDark} />
-          </View>
+          </Pressable>
         </View>
       </TouchableOpacity>
     );
@@ -151,6 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 5,
+    height: '100%',
   },
   statusText: {
     paddingRight: 16,
