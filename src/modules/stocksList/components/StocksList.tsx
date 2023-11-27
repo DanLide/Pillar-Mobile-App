@@ -8,7 +8,12 @@ import {
   Text,
 } from 'react-native';
 import { observer } from 'mobx-react';
-import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { masterLockStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
@@ -47,62 +52,6 @@ export const StocksList: React.FC<Props> = observer(
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
-    const { showToast, hideAll } = useSingleToast();
-    const { isBluetoothOn, bluetoothPermission, locationPermission } =
-      permissionStore;
-
-    const checkPermissions = async () => {
-      await permissionStore.setBluetoothPowerListener();
-      permissionStore.bluetoothCheck();
-      permissionStore.locationCheck();
-
-      let hideToasts = true;
-
-      if (
-        locationPermission !== RESULTS.GRANTED &&
-        locationPermission !== RESULTS.DENIED
-      ) {
-        showToast('Location permissions not granted', {
-          type: ToastType.BluetoothDisabled,
-          onPress: () => {
-            permissionStore.openSetting();
-          },
-        });
-        hideToasts = false;
-
-      }
-
-      if (route.params?.succeedBluetooth && isBluetoothOn) {
-        showToast('Bluetooth successfully connected', {
-          type: ToastType.BluetoothEnabled,
-        });
-        navigation.setParams({
-          ...route.params,
-          succeedBluetooth: false,
-        });
-        return;
-      }
-      if (bluetoothPermission !== RESULTS.GRANTED) {
-        showToast('Bluetooth not connected', {
-          type: ToastType.BluetoothDisabled,
-          onPress: () => {
-            permissionStore.openSetting();
-          },
-        });
-        return;
-      }
-      if (!isBluetoothOn) {
-        showToast('Make sure Bluetooth is enabled, bluetooth not connected', {
-          type: ToastType.BluetoothDisabled,
-          onPress: () => {
-            permissionStore.openBluetoothPowerSetting();
-          },
-          style: styles.toastStyle,
-        });
-        return;
-      }
-      hideToasts && hideAll();
-    };
 
     const initMasterLock = useCallback(async () => {
       if (!stocksStore.stocks.length) return;
@@ -138,14 +87,69 @@ export const StocksList: React.FC<Props> = observer(
       setIsError(false);
     };
 
+    const { showToast, hideAll, toastInitialized } = useSingleToast();
+
+    const checkPermissions = async () => {
+      await permissionStore.setBluetoothPowerListener();
+      permissionStore.locationCheck();
+
+      let hideToasts = true;
+
+      if (!toastInitialized) return;
+
+      if (
+        permissionStore.locationPermission !== RESULTS.GRANTED &&
+        permissionStore.locationPermission !== RESULTS.DENIED
+      ) {
+        showToast('Location permissions not granted', {
+          type: ToastType.LocationDisabled,
+          onPress: () => {
+            permissionStore.openSetting();
+          },
+        });
+        hideToasts = false;
+      }
+
+      if (route.params?.succeedBluetooth && permissionStore.isBluetoothOn) {
+        showToast('Bluetooth successfully connected', {
+          type: ToastType.BluetoothEnabled,
+        });
+        navigation.setParams({
+          ...route.params,
+          succeedBluetooth: false,
+        });
+        return;
+      }
+      if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
+        showToast('Bluetooth not connected', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openSetting();
+          },
+        });
+        return;
+      }
+      if (!permissionStore.isBluetoothOn) {
+        showToast('Make sure Bluetooth is enabled, bluetooth not connected', {
+          type: ToastType.BluetoothDisabled,
+          onPress: () => {
+            permissionStore.openBluetoothPowerSetting();
+          },
+          style: styles.toastStyle,
+        });
+        return;
+      }
+      hideToasts && hideAll();
+    };
+
     useEffect(() => {
       checkPermissions();
     }, [
-      isBluetoothOn,
-      bluetoothPermission,
-      locationPermission,
+      permissionStore.isBluetoothOn,
+      permissionStore.bluetoothPermission,
+      permissionStore.locationPermission,
       showToast,
-    ])
+    ]);
 
     useEffect(() => {
       if (isFocused) {

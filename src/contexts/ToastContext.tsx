@@ -139,6 +139,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.OpenSettings}
         />
       ),
+      [ToastType.LocationDisabled]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.LocationDisabled}
+          actionType={ToastActionType.OpenSettings}
+        />
+      ),
     }),
     [],
   );

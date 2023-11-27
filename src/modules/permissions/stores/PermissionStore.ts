@@ -23,6 +23,7 @@ import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 export class PermissionStore {
   @observable bluetoothPermission: PermissionStatus;
   @observable bluetoothStatus: BluetoothStateManager.BluetoothState;
+  bluetoothPowerListenerSet: boolean;
   @observable locationPermission: PermissionStatus;
 
   constructor() {
@@ -30,6 +31,7 @@ export class PermissionStore {
     this.bluetoothPermission = RESULTS.UNAVAILABLE;
     this.locationPermission = RESULTS.UNAVAILABLE;
     this.bluetoothStatus = 'Unknown';
+    this.bluetoothPowerListenerSet = false;
     this.bluetoothCheck();
     this.locationCheck();
 
@@ -62,6 +64,10 @@ export class PermissionStore {
   }
 
   @action async setBluetoothPowerListener() {
+    if (this.bluetoothPowerListenerSet) return;
+
+    this.bluetoothPowerListenerSet = true;
+
     const state = await BluetoothStateManager.getState();
     runInAction(() => {
       this.bluetoothStatus = state;

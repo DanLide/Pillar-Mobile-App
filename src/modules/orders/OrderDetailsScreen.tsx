@@ -123,7 +123,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       isLocationPermissionRequested
     ) {
       showToast('Location permissions not granted', {
-        type: ToastType.BluetoothDisabled,
+        type: ToastType.LocationDisabled,
         onPress: () => {
           permissionStore.openSetting();
         },

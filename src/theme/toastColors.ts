@@ -95,4 +95,9 @@ export const toastColors: Record<
     secondary: colors.white3,
     action: colors.redDark,
   },
+  [ToastType.LocationDisabled]: {
+    primary: colors.green3,
+    secondary: colors.white3,
+    action: colors.redDark,
+  },
 };
