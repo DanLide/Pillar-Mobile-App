@@ -1,11 +1,17 @@
-import { StackNavigationProp } from '@react-navigation/stack';
 import { CompositeNavigationProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
+import { OrderType } from 'src/constants/common.enum';
+import { ProductModalType } from 'src/modules/productModal';
+import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 
 export enum AppNavigator {
   // UnauthStack
   UnauthStack = 'UnauthStack',
   WelcomeScreen = 'WelcomeScreen',
   LoginViaCredentialsScreen = 'LoginViaCredentialsScreen',
+  LoginViaPinScreen = 'LoginViaPinScreen',
+  UpdateShopLocationScreen = 'UpdateShopLocationScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -14,6 +20,7 @@ export enum AppNavigator {
   LanguageSelectScreen = 'LanguageSelectScreen',
   SelectSSOScreen = 'SelectSSOScreen',
   Drawer = 'Drawer',
+  Settings = 'Settings',
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
@@ -49,31 +56,60 @@ export enum AppNavigator {
   OrderByStockLocationScreen = 'OrderByStockLocationScreen',
   CreateOrderScreen = 'CreateOrderScreen',
   CreateOrderResultScreen = 'CreateOrderResultScreen',
+
+  //Configure device
+  ConfigureDeviceStack = 'ConfigureDeviceStack',
+  BaseShopSetupScreen = 'BaseShopSetupScreen',
+  ScanShopCodeScreen = 'ScanShopCodeScreen',
+  SelectStockLocationsScreen = 'SelectStockLocationsScreen',
+  DeviceConfigCompletedScreen = 'DeviceConfigCompletedScreen',
+  EnterShopCodeScreen = 'EnterShopCodeScreen',
+  ReceiveBackorderScreen = 'ReceiveBackorderScreen',
+  BackorderScannerScreen = 'BackorderScannerScreen',
+  BackOrderResultScreen = 'BackOrderResultScreen',
 }
 
+type ScannerParams = { modalType?: ProductModalType };
+
 type CameraPermissionScreenParams = {
-  nextRoute: keyof (RemoveStackParamList & ReturnStackParamList);
+  nextRoute: keyof (RemoveStackParamList &
+    ReturnStackParamList &
+    ConfigureDeviceStackParams);
+} & ScannerParams;
+
+type CreateOrderParams = {
+  orderType?: OrderType;
+  orderId?: string;
 };
 
 type BluetoothPermissionScreenParams = {
-  nextRoute: AppNavigator.SelectStockScreen;
-};
+  nextRoute: AppNavigator.SelectStockScreen | AppNavigator.OrderDetailsScreen;
+} & CreateOrderParams;
 
-type StockLocationParams = { succeedBluetooth?: boolean };
+export type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
 
 type SelectSSOScreenParams = {
   isUpdating?: boolean;
 };
 
+export type UnlockStockNextScreenParams =
+  | AppNavigator.ReturnProductsScreen
+  | AppNavigator.RemoveProductsScreen
+  | AppNavigator.CreateOrderScreen
+  | AppNavigator.ManageProductsScreen
+  | AppNavigator.OrderByStockLocationScreen;
+
 type UnlockStockScreenParams = {
   title?: string;
   masterlockId: string;
-  nextScreen?:
-    | AppNavigator.ReturnProductsScreen
-    | AppNavigator.RemoveProductsScreen
-    | AppNavigator.CreateOrderScreen
-    | AppNavigator.ManageProductsScreen;
+  nextNavigationGoBack?: boolean;
+  nextScreen?: UnlockStockNextScreenParams;
 };
+
+export enum LoginType {
+  ConfigureShopDevice,
+  LoginShopDevice,
+}
 
 export type AppStackParamList = {
   [AppNavigator.UnauthStack]: undefined;
@@ -82,7 +118,9 @@ export type AppStackParamList = {
 
 export type UnauthStackParamsList = {
   [AppNavigator.WelcomeScreen]: undefined;
-  [AppNavigator.LoginViaCredentialsScreen]: undefined;
+  [AppNavigator.LoginViaCredentialsScreen]: { type: LoginType } | undefined;
+  [AppNavigator.LoginViaPinScreen]: undefined;
+  [AppNavigator.UpdateShopLocationScreen]: undefined;
 };
 
 export type HomeStackParamList = {
@@ -96,6 +134,8 @@ export type HomeStackParamList = {
   [AppNavigator.ManageProductsStack]: undefined;
   [AppNavigator.CreateInvoiceStack]: undefined;
   [AppNavigator.OrdersStack]: undefined;
+  [AppNavigator.ConfigureDeviceStack]: undefined;
+  [AppNavigator.Settings]: undefined;
 };
 
 export type RemoveStackParamList = {
@@ -106,7 +146,7 @@ export type RemoveStackParamList = {
   [AppNavigator.BluetoothPermissionScreen]:
     | BluetoothPermissionScreenParams
     | undefined;
-  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: ScannerParams | undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
@@ -119,7 +159,7 @@ export type ReturnStackParamList = {
   [AppNavigator.BluetoothPermissionScreen]:
     | BluetoothPermissionScreenParams
     | undefined;
-  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: ScannerParams | undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
@@ -132,7 +172,7 @@ export type ManageProductsStackParamList = {
   [AppNavigator.BluetoothPermissionScreen]:
     | BluetoothPermissionScreenParams
     | undefined;
-  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: ScannerParams | undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
 };
 
@@ -155,12 +195,24 @@ export type OrdersParamsList = {
     | undefined;
   [AppNavigator.OrderByStockLocationScreen]: undefined;
   [AppNavigator.SelectStockScreen]: StockLocationParams | undefined;
-  [AppNavigator.CreateOrderScreen]: undefined;
-  [AppNavigator.CreateOrderResultScreen]: undefined;
+  [AppNavigator.CreateOrderScreen]: CreateOrderParams | undefined;
+  [AppNavigator.CreateOrderResultScreen]: CreateOrderParams | undefined;
   [AppNavigator.ResultScreen]: undefined;
   [AppNavigator.BaseUnlockScreen]: UnlockStockScreenParams;
-  [AppNavigator.ScannerScreen]: undefined;
+  [AppNavigator.ScannerScreen]: ScannerParams | undefined;
   [AppNavigator.HowToScanScreen]: undefined;
+  [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
+  [AppNavigator.ReceiveBackorderScreen]: undefined;
+  [AppNavigator.BackorderScannerScreen]: undefined;
+  [AppNavigator.BackOrderResultScreen]: undefined;
+};
+
+export type ConfigureDeviceStackParams = {
+  [AppNavigator.BaseShopSetupScreen]: undefined;
+  [AppNavigator.ScanShopCodeScreen]: undefined;
+  [AppNavigator.SelectStockLocationsScreen]: undefined;
+  [AppNavigator.DeviceConfigCompletedScreen]: { stocks: StockModel[] };
+  [AppNavigator.EnterShopCodeScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;
 };
 
@@ -180,11 +232,13 @@ export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
     ReturnStackParamList &
       RemoveStackParamList &
       ManageProductsStackParamList &
+      ConfigureDeviceStackParams &
       OrdersParamsList,
     | AppNavigator.RemoveProductsScreen
     | AppNavigator.ReturnProductsScreen
     | AppNavigator.ManageProductsScreen
     | AppNavigator.CreateOrderScreen
+    | AppNavigator.BaseShopSetupScreen
   >,
   StackNavigationProp<HomeStackParamList>
 >;
@@ -192,4 +246,20 @@ export type BaseProductsScreenNavigationProp = CompositeNavigationProp<
 export type BaseResultScreenNavigationProp = StackNavigationProp<
   ReturnStackParamList & RemoveStackParamList,
   AppNavigator.ResultScreen
+>;
+
+export type CameraPermissionScreenProps = NativeStackScreenProps<
+  RemoveStackParamList &
+    ReturnStackParamList &
+    ManageProductsStackParamList &
+    OrdersParamsList,
+  AppNavigator.CameraPermissionScreen
+>;
+
+export type BluetoothPermissionScreenProps = NativeStackScreenProps<
+  RemoveStackParamList &
+    ReturnStackParamList &
+    ManageProductsStackParamList &
+    OrdersParamsList,
+  AppNavigator.BluetoothPermissionScreen
 >;

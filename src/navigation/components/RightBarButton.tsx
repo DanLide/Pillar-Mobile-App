@@ -10,13 +10,15 @@ import { testIds } from '../../helpers';
 interface Props {
   rightBarButtonType?: RightBarType;
   testID?: string;
+  onPress?: () => void;
 }
 
 export const RightBarButton: React.FC<Props> = ({
   rightBarButtonType,
   testID = 'rightBarButton',
+  onPress,
 }) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const onIconPress = () => {
     switch (rightBarButtonType) {
       case RightBarType.Logout:

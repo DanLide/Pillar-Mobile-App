@@ -27,9 +27,12 @@ const initModalParams: ProductModalParams = {
 export const useBaseProductsScreen = (
   store: Store,
   navigation: BaseProductsScreenNavigationProp,
+  type?: ProductModalType,
+  backorder?: boolean,
 ) => {
-  const [modalParams, setModalParams] =
-    useState<ProductModalParams>(initModalParams);
+  const [modalParams, setModalParams] = useState<ProductModalParams>(
+    initModalParams,
+  );
 
   const scannedProductsCount = Object.keys(store.getProducts).length;
 
@@ -38,11 +41,17 @@ export const useBaseProductsScreen = (
     if (result !== RESULTS.GRANTED) {
       navigation.navigate(AppNavigator.CameraPermissionScreen, {
         nextRoute: AppNavigator.ScannerScreen,
+        modalType: type,
       });
       return;
     }
-    navigation.navigate(AppNavigator.ScannerScreen);
-  }, [navigation]);
+    navigation.navigate(
+      backorder
+        ? AppNavigator.BackorderScannerScreen
+        : AppNavigator.ScannerScreen,
+      { modalType: type },
+    );
+  }, [navigation, backorder]);
 
   const onEditProduct = useCallback(
     (product: ProductModel) => {
@@ -51,10 +60,10 @@ export const useBaseProductsScreen = (
         isEdit: true,
         maxValue: store.getEditableMaxValue(product),
         onHand: store.getEditableOnHand(product),
-        type: ProductModalType.CreateOrder,
+        type: type ?? ProductModalType.CreateOrder,
       });
     },
-    [store],
+    [store, type],
   );
 
   const onSubmitProduct = useCallback(

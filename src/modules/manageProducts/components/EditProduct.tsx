@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  forwardRef,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   KeyboardTypeOptions,
   StyleSheet,
@@ -48,294 +54,318 @@ const SCAN_ICON_PROPS: SvgProps = {
 };
 
 interface Props extends Pick<ProductModalProps, 'product' | 'stockName'> {
+  unitsPerContainerError?: boolean;
   upcError?: string;
+  onRemoveBySelect?: (removeBy: number) => void;
+  onUnitsPerContainerChange?: (unitsPerContainer: number) => void;
   onUpcChange?: (upc: string) => void;
 }
 
 export const EditProduct = observer(
-  ({ product, stockName, upcError, onUpcChange }: Props) => {
-    const store = useRef(manageProductsStore).current;
-    const inputRef = useRef<TextInput | null>(null);
+  forwardRef(
+    (
+      {
+        product,
+        stockName,
+        unitsPerContainerError,
+        upcError,
+        onRemoveBySelect,
+        onUnitsPerContainerChange,
+        onUpcChange,
+      }: Props,
+      ref: React.ForwardedRef<TextInput>,
+    ) => {
+      const store = useRef(manageProductsStore).current;
+      const inputRef = useRef<TextInput | null>(null);
 
-    const [isUpcActive, setIsUpcActive] = useState(false);
+      const [isUpcActive, setIsUpcActive] = useState(false);
 
-    const minQty = getProductStepQty(product?.inventoryUseTypeId);
+      const minQty = getProductStepQty(product?.inventoryUseTypeId);
 
-    const keyboardType: KeyboardTypeOptions =
-      product?.inventoryUseTypeId === InventoryUseType.Percent
-        ? 'decimal-pad'
-        : 'number-pad';
+      const keyboardType: KeyboardTypeOptions =
+        product?.inventoryUseTypeId === InventoryUseType.Percent
+          ? 'decimal-pad'
+          : 'number-pad';
 
-    const isSpecialOrder =
-      product?.inventoryUseTypeId === InventoryUseType.NonStock;
+      const isSpecialOrder =
+        product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
-    const isOnOrder = (product?.onOrder ?? 0) > 0;
+      const isEachPeace = product?.inventoryUseTypeId === InventoryUseType.Each;
 
-    const categories = useMemo<DropdownItem[]>(
-      () =>
-        stocksStore.categories.map(item => ({
-          label: item.description,
-          value: item.id,
-        })),
-      [],
-    );
+      const isOnOrder = (product?.onOrder ?? 0) > 0;
 
-    const category = useMemo<DropdownItem | undefined>(
-      () => find(whereEq({ value: product?.categoryId }), categories),
-      [categories, product?.categoryId],
-    );
+      const categories = useMemo<DropdownItem[]>(
+        () =>
+          stocksStore.categories.map(item => ({
+            label: item.description,
+            value: item.id,
+          })),
+        [],
+      );
 
-    const suppliers = useMemo<DropdownItem[]>(
-      () =>
-        stocksStore.suppliers.map(item => ({
-          label: item.name,
-          value: item.partyRoleId,
-        })),
-      [],
-    );
+      const category = useMemo<DropdownItem | undefined>(
+        () => find(whereEq({ value: product?.categoryId }), categories),
+        [categories, product?.categoryId],
+      );
 
-    const supplier = useMemo<DropdownItem | undefined>(
-      () => find(whereEq({ value: product?.supplierPartyRoleId }), suppliers),
-      [product?.supplierPartyRoleId, suppliers],
-    );
+      const suppliers = useMemo<DropdownItem[]>(
+        () =>
+          stocksStore.suppliers.map(item => ({
+            label: item.name,
+            value: item.partyRoleId,
+          })),
+        [],
+      );
 
-    const enabledSuppliers = useMemo<DropdownItem[]>(
-      () =>
-        stocksStore.enabledSuppliers.map(item => ({
-          label: item.name,
-          value: item.partyRoleId,
-        })),
-      [],
-    );
+      const supplier = useMemo<DropdownItem | undefined>(
+        () => find(whereEq({ value: product?.supplierPartyRoleId }), suppliers),
+        [product?.supplierPartyRoleId, suppliers],
+      );
 
-    const enabledSupplier = useMemo<DropdownItem | undefined>(
-      () =>
-        find(whereEq({ value: product?.replenishedFormId }), enabledSuppliers),
-      [enabledSuppliers, product?.replenishedFormId],
-    );
+      const enabledSuppliers = useMemo<DropdownItem[]>(
+        () =>
+          stocksStore.enabledSuppliers.map(item => ({
+            label: item.name,
+            value: item.partyRoleId,
+          })),
+        [],
+      );
 
-    const shipmentQuantityTooltip = useMemo(
-      () => (
-        <Text style={styles.tooltipMessage}>
-          <Text style={[styles.tooltipMessage, styles.textBold]}>
-            Shipment Quantity
-          </Text>{' '}
-          - The increment in which the product is shipped (i.e 4-pack)
-        </Text>
-      ),
-      [],
-    );
+      const enabledSupplier = useMemo<DropdownItem | undefined>(
+        () =>
+          find(
+            whereEq({ value: product?.replenishedFormId }),
+            enabledSuppliers,
+          ),
+        [enabledSuppliers, product?.replenishedFormId],
+      );
 
-    const restockFromTooltip = useMemo(
-      () => (
-        <Text style={styles.tooltipMessage}>
-          <Text style={[styles.tooltipMessage, styles.textBold]}>
-            Restock From
-          </Text>{' '}
-          - Choose to replenish either from your distributor or from another
-          Stock Location
-        </Text>
-      ),
-      [],
-    );
+      const shipmentQuantityTooltip = useMemo(
+        () => (
+          <Text style={styles.tooltipMessage}>
+            <Text style={[styles.tooltipMessage, styles.textBold]}>
+              Shipment Quantity
+            </Text>{' '}
+            - The increment in which the product is shipped (i.e 4-pack)
+          </Text>
+        ),
+        [],
+      );
 
-    const renderInventoryType = useCallback(
-      (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
-      [],
-    );
+      const restockFromTooltip = useMemo(
+        () => (
+          <Text style={styles.tooltipMessage}>
+            <Text style={[styles.tooltipMessage, styles.textBold]}>
+              Restock From
+            </Text>{' '}
+            - Choose to replenish either from your distributor or from another
+            Stock Location
+          </Text>
+        ),
+        [],
+      );
 
-    const handleUpcChange = useCallback(
-      (upc: string) => {
-        onUpcChange?.(upc);
-        store.setUpc(upc);
-      },
-      [onUpcChange, store],
-    );
+      const renderInventoryType = useCallback(
+        (item: number) => <InventoryTypeBadge inventoryUseTypeId={item} />,
+        [],
+      );
 
-    const onScanProduct = useCallback<ScanProductProps['onScan']>(
-      async code => {
-        if (typeof code === 'string') {
-          handleUpcChange(code);
-          inputRef?.current?.focus();
-        }
+      const handleUpcChange = useCallback(
+        (upc: string) => {
+          onUpcChange?.(upc);
+          store.setUpc(upc);
+        },
+        [onUpcChange, store],
+      );
 
-        setIsUpcActive(false);
-      },
-      [handleUpcChange],
-    );
+      const onScanProduct = useCallback<ScanProductProps['onScan']>(
+        async code => {
+          if (typeof code === 'string') {
+            handleUpcChange(code);
+            inputRef?.current?.focus();
+          }
 
-    const onUpcClose = useCallback(() => setIsUpcActive(false), []);
+          setIsUpcActive(false);
+        },
+        [handleUpcChange],
+      );
 
-    return (
-      <>
-        <Dropdown
-          label="Remove By"
-          disabled={isOnOrder}
-          data={inventoryTypes}
-          selectedItem={product?.inventoryUseTypeId}
-          renderItem={renderInventoryType}
-          style={styles.inventoryTypes}
-          onSelect={item => store.setInventoryType(item)}
-        />
-        <Dropdown
-          label="Category"
-          data={categories}
-          selectedItem={category}
-          style={styles.categories}
-          onSelect={item => store.setCategory(+item.value)}
-        />
-        <View style={styles.orderSection}>
-          <View style={styles.orderSettingsContainer}>
-            <Text style={styles.orderSettingsLabel}>Order Settings</Text>
-            <View style={styles.orderSettings}>
-              {!isSpecialOrder && (
-                <View style={styles.minMaxRow}>
+      const onUpcClose = useCallback(() => setIsUpcActive(false), []);
+
+      return (
+        <>
+          <Dropdown
+            label="Remove By"
+            disabled={isOnOrder}
+            data={inventoryTypes}
+            selectedItem={product?.inventoryUseTypeId}
+            renderItem={renderInventoryType}
+            style={styles.inventoryTypes}
+            onSelect={onRemoveBySelect}
+          />
+          <Dropdown
+            label="Category"
+            data={categories}
+            selectedItem={category}
+            style={styles.categories}
+            onSelect={item => store.setCategory(+item.value)}
+          />
+          <View style={styles.orderSection}>
+            <View style={styles.orderSettingsContainer}>
+              <Text style={styles.orderSettingsLabel}>Order Settings</Text>
+              <View style={styles.orderSettings}>
+                {!isSpecialOrder && (
+                  <View style={styles.minMaxRow}>
+                    <EditQuantity
+                      vertical
+                      label="Minimum"
+                      currentValue={product?.min ?? 0}
+                      maxValue={MAX_VALUE}
+                      minValue={minQty}
+                      stepValue={minQty}
+                      initFontSize={28}
+                      keyboardType={keyboardType}
+                      onChange={value => store.setMinValue(value)}
+                    />
+                    <Text style={styles.slash}>/</Text>
+                    <EditQuantity
+                      vertical
+                      label="Maximum"
+                      currentValue={product?.max ?? 0}
+                      maxValue={MAX_VALUE}
+                      minValue={minQty}
+                      stepValue={minQty}
+                      initFontSize={28}
+                      keyboardType={keyboardType}
+                      onChange={value => store.setMaxValue(value)}
+                    />
+                  </View>
+                )}
+                <View style={styles.orderQuantities}>
+                  {isEachPeace && (
+                    <EditQuantity
+                      vertical
+                      label="Pieces Per"
+                      labelWithNewLine="Container"
+                      disabled={isOnOrder}
+                      hideCount={isOnOrder}
+                      currentValue={product?.unitsPerContainer ?? 0}
+                      maxValue={MAX_VALUE}
+                      minValue={MIN_VALUE}
+                      stepValue={STEP_VALUE}
+                      initFontSize={28}
+                      keyboardType="number-pad"
+                      error={unitsPerContainerError}
+                      ref={ref}
+                      onChange={onUnitsPerContainerChange}
+                    />
+                  )}
+                  {!isSpecialOrder && (
+                    <EditQuantity
+                      vertical
+                      label="Shipment"
+                      labelWithNewLine="Quantity"
+                      disabled={isOnOrder}
+                      hideCount={isOnOrder}
+                      currentValue={product?.orderMultiple ?? 0}
+                      maxValue={MAX_VALUE}
+                      minValue={MIN_VALUE}
+                      stepValue={STEP_VALUE}
+                      initFontSize={28}
+                      keyboardType="number-pad"
+                      onChange={value => store.setOrderMultiple(value)}
+                    />
+                  )}
                   <EditQuantity
+                    disabled
                     vertical
-                    label="Minimum"
-                    currentValue={product?.min ?? 0}
+                    label="On order"
+                    labelContainerStyle={styles.onOrderLabel}
+                    currentValue={product?.onOrder ?? 0}
                     maxValue={MAX_VALUE}
-                    minValue={minQty}
-                    stepValue={minQty}
+                    minValue={MIN_VALUE}
+                    stepValue={STEP_VALUE}
                     initFontSize={28}
-                    keyboardType={keyboardType}
-                    onChange={value => store.setMinValue(value)}
-                  />
-                  <Text style={styles.slash}>/</Text>
-                  <EditQuantity
-                    vertical
-                    label="Maximum"
-                    currentValue={product?.max ?? 0}
-                    maxValue={MAX_VALUE}
-                    minValue={minQty}
-                    stepValue={minQty}
-                    initFontSize={28}
-                    keyboardType={keyboardType}
-                    onChange={value => store.setMaxValue(value)}
+                    keyboardType="number-pad"
+                    onChange={value => store.setOnOrder(value)}
                   />
                 </View>
-              )}
-              <View style={styles.orderQuantities}>
-                {product?.inventoryUseTypeId === InventoryUseType.Each && (
-                  <EditQuantity
-                    vertical
-                    label="Pieces Per"
-                    labelWithNewLine="Container"
-                    disabled={isOnOrder}
-                    hideCount={isOnOrder}
-                    currentValue={product?.unitsPerContainer ?? 0}
-                    maxValue={MAX_VALUE}
-                    minValue={MIN_VALUE}
-                    stepValue={STEP_VALUE}
-                    initFontSize={28}
-                    keyboardType="number-pad"
-                    onChange={value => store.setUnitsPerContainer(value)}
-                  />
-                )}
-                {!isSpecialOrder && (
-                  <EditQuantity
-                    vertical
-                    label="Shipment"
-                    labelWithNewLine="Quantity"
-                    disabled={isOnOrder}
-                    hideCount={isOnOrder}
-                    currentValue={product?.orderMultiple ?? 0}
-                    maxValue={MAX_VALUE}
-                    minValue={MIN_VALUE}
-                    stepValue={STEP_VALUE}
-                    initFontSize={28}
-                    keyboardType="number-pad"
-                    onChange={value => store.setOrderMultiple(value)}
-                  />
-                )}
-                <EditQuantity
-                  disabled
-                  hideCount
-                  vertical
-                  label="On order"
-                  labelContainerStyle={styles.onOrderLabel}
-                  currentValue={product?.onOrder ?? 0}
-                  maxValue={MAX_VALUE}
-                  minValue={MIN_VALUE}
-                  stepValue={STEP_VALUE}
-                  initFontSize={28}
-                  keyboardType="number-pad"
-                  onChange={value => store.setOnOrder(value)}
+              </View>
+            </View>
+            {!isSpecialOrder && (
+              <Tooltip
+                message={shipmentQuantityTooltip}
+                contentStyle={styles.shipmentQuantity}
+              >
+                <Text style={styles.shipmentQuantityText}>
+                  What is Shipment Quantity?
+                </Text>
+              </Tooltip>
+            )}
+          </View>
+          <View style={styles.bottomSection}>
+            <Dropdown
+              label="Distributor"
+              disabled={isOnOrder}
+              data={suppliers}
+              selectedItem={supplier}
+              onSelect={item => store.setSupplier(+item.value)}
+            />
+            {!isSpecialOrder && (
+              <View style={styles.spaceBetweenContainer}>
+                <Dropdown
+                  label="Restock From"
+                  disabled={isOnOrder}
+                  data={enabledSuppliers}
+                  selectedItem={enabledSupplier}
+                  style={styles.restockFromDropdown}
+                  onSelect={item => store.setRestockFrom(+item.value)}
                 />
+                <View style={styles.infoIconContainer}>
+                  <Tooltip message={restockFromTooltip} />
+                </View>
               </View>
-            </View>
-          </View>
-          <Tooltip
-            message={shipmentQuantityTooltip}
-            contentStyle={styles.shipmentQuantity}
-          >
-            <Text style={styles.shipmentQuantityText}>
-              What is Shipment Quantity?
-            </Text>
-          </Tooltip>
-        </View>
-        <View style={styles.bottomSection}>
-          <Dropdown
-            label="Distributor"
-            disabled={isOnOrder}
-            data={suppliers}
-            selectedItem={supplier}
-            onSelect={item => store.setSupplier(+item.value)}
-          />
-          {!isSpecialOrder && (
+            )}
             <View style={styles.spaceBetweenContainer}>
-              <Dropdown
-                label="Restock From"
-                disabled={isOnOrder}
-                data={enabledSuppliers}
-                selectedItem={enabledSupplier}
-                style={styles.restockFromDropdown}
-                onSelect={item => store.setRestockFrom(+item.value)}
+              <Input
+                keyboardType="number-pad"
+                type={InputType.Primary}
+                value={product?.upc}
+                label="UPC Number"
+                error={upcError}
+                ref={inputRef}
+                containerStyle={styles.upcInput}
+                onChangeText={handleUpcChange}
               />
-              <View style={styles.infoIconContainer}>
-                <Tooltip message={restockFromTooltip} />
-              </View>
+              <Button
+                title="Scan"
+                type={ButtonType.secondary}
+                icon={SVGs.CodeIcon}
+                iconProps={SCAN_ICON_PROPS}
+                buttonStyle={styles.scanButton}
+                textStyle={styles.scanButtonText}
+                onPress={() => setIsUpcActive(true)}
+              />
             </View>
-          )}
-          <View style={styles.spaceBetweenContainer}>
-            <Input
-              keyboardType="number-pad"
-              type={InputType.Primary}
-              value={product?.upc}
-              label="UPC Number"
-              error={upcError}
-              ref={inputRef}
-              containerStyle={styles.upcInput}
-              onChangeText={handleUpcChange}
-            />
-            <Button
-              title="Scan"
-              type={ButtonType.secondary}
-              icon={SVGs.CodeIcon}
-              iconProps={SCAN_ICON_PROPS}
-              buttonStyle={styles.scanButton}
-              textStyle={styles.scanButtonText}
-              onPress={() => setIsUpcActive(true)}
+            <Switch
+              trackColor={{ true: colors.purple }}
+              value={product?.isRecoverable}
+              label="Recoverable"
+              labelStyle={styles.recoverableLabel}
+              style={styles.spaceBetweenContainer}
+              onPress={() => store.toggleIsRecoverable()}
             />
           </View>
-          <Switch
-            trackColor={{ true: colors.purple }}
-            value={product?.isRecoverable}
-            label="Recoverable"
-            labelStyle={styles.recoverableLabel}
-            style={styles.spaceBetweenContainer}
-            onPress={() => store.toggleIsRecoverable()}
+          <UpcScanner
+            isActive={isUpcActive}
+            stockName={stockName}
+            onScan={onScanProduct}
+            onClose={onUpcClose}
           />
-        </View>
-        <UpcScanner
-          isActive={isUpcActive}
-          stockName={stockName}
-          onScan={onScanProduct}
-          onClose={onUpcClose}
-        />
-      </>
-    );
-  },
+        </>
+      );
+    },
+  ),
 );
 
 const styles = StyleSheet.create({

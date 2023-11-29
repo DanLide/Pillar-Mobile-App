@@ -12,16 +12,11 @@ import { stocksStore } from '../modules/stocksList/stores';
 
 export const onUpdateProduct = async (
   manageProductsStore: ManageProductsStore,
-) => {
-  try {
-    await new TaskExecutor([
-      new UpdateProductTask(manageProductsStore),
-      new SaveUpdateProductToStore(manageProductsStore),
-    ]).execute();
-  } catch (error) {
-    return error;
-  }
-};
+) =>
+  new TaskExecutor([
+    new UpdateProductTask(manageProductsStore),
+    new SaveUpdateProductToStore(manageProductsStore),
+  ]).execute();
 
 export class UpdateProductTask extends Task {
   manageProductsStore: ManageProductsStore;
@@ -84,7 +79,7 @@ export class UpdateProductTask extends Task {
       await updateProductSettingsAPI(updatedProduct);
     }
 
-    await Promise.all([
+    await Promise.allSettled([
       shouldUpdateQuantity &&
         updateProductQuantityAPI(
           updatedProduct,

@@ -2,9 +2,8 @@ import React from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { getVersion } from 'react-native-device-info';
 
-import { authStore, ssoStore } from '../../stores';
+import { authStore, ssoStore, deviceInfoStore } from '../../stores';
 import { colors, fonts, SVGs } from '../../theme';
 import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
@@ -15,14 +14,19 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
   const isNavigationToShopSelectAvailable =
-    (ssoStore.getSSOList?.length || 0) > 1;
-  const version = `Version ${getVersion()}`;
+    (ssoStore.getSSOList?.length || 0) > 1 &&
+    !ssoStore.getIsDeviceConfiguredBySSO;
+  const version = `Version ${deviceInfoStore.version}`;
   const onLogout = () => {
     authStore.logOut();
   };
 
   const onNavigateToSelectShopLocation = () => {
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
+  };
+
+  const onNavigationToSettings = () => {
+    navigation.navigate(AppNavigator.Settings);
   };
 
   return (
@@ -54,6 +58,8 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
         title={'Settings'}
         icon={<SVGs.SettingsIcon />}
         showChevron
+        onPress={onNavigationToSettings}
+        disabled={false}
       />
 
       <View style={styles.bottomContainer}>

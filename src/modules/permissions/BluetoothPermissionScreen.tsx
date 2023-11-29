@@ -1,48 +1,37 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
-import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 import { observer } from 'mobx-react';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
+import permissionStore from './stores/PermissionStore';
 import {
   AppNavigator,
-  RemoveStackParamList,
-  ReturnStackParamList,
-} from '../../navigation/types';
-import permissionStore from './stores/PermissionStore';
-
-type Props = NativeStackScreenProps<
-  RemoveStackParamList & ReturnStackParamList,
-  AppNavigator.BluetoothPermissionScreen
->;
+  BluetoothPermissionScreenProps,
+} from 'src/navigation/types';
 
 export const BluetoothPermissionScreen = observer(
-  ({ navigation, route }: Props) => {
-    const [bluetoothPermissionChecked, setBluetoothPermissionChecked] =
-      useState<boolean>(false);
-    console.warn(permissionStore.bluetoothPermission);
+  ({ navigation, route }: BluetoothPermissionScreenProps) => {
+    const params = route.params;
     const onButtonPress = async () => {
       if (permissionStore.bluetoothPermission === RESULTS.DENIED) {
         const result = await permissionStore.requestPermission(
           PERMISSIONS.IOS.BLUETOOTH_PERIPHERAL,
         );
-        if (result === RESULTS.GRANTED && route.params) {
-          navigation.replace(route.params.nextRoute, {
+        if (result === RESULTS.GRANTED && params) {
+          navigation.replace(params.nextRoute, {
+            orderType: params.orderType,
             succeedBluetooth: true,
+            orderId: params.orderId,
           });
         }
-        return setBluetoothPermissionChecked(true);
-      } else if (
-        (permissionStore.bluetoothPermission === RESULTS.BLOCKED ||
-          permissionStore.bluetoothPermission === RESULTS.LIMITED) &&
-        !bluetoothPermissionChecked
-      ) {
-        permissionStore.openSetting();
-        return setBluetoothPermissionChecked(true);
+        await permissionStore.setBluetoothPowerListener();
+        return;
       }
-      navigation.navigate(AppNavigator.SelectStockScreen, {
+      await permissionStore.setBluetoothPowerListener();
+      navigation.navigate(params?.nextRoute || AppNavigator.SelectStockScreen, {
+        orderType: params?.orderType,
         succeedBluetooth: false,
       });
     };

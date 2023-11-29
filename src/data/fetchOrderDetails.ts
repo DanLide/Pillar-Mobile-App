@@ -67,6 +67,8 @@ export class SaveOrdersToStoreTask extends Task {
         reservedCount:
           orderProduct.shippedQty !== 0 && orderProduct.orderedQty === 0
             ? orderProduct.shippedQty
+            : orderProduct.orderedQty === orderProduct.receivedQty
+            ? orderProduct.receivedQty
             : orderProduct.orderedQty - orderProduct.receivedQty,
         nameDetails: '',
         isRecoverable: false,

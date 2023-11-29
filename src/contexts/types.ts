@@ -5,9 +5,12 @@ export enum ToastType {
   ProductUpdateError = 'ProductUpdateError',
   UpcUpdateError = 'UpcUpdateError',
   SuggestedItemsError = 'SuggestedItemsError',
+  CreateInvoiceError = 'CreateInvoiceError',
+  UnitsPerContainerError = 'UnitsPerContainerError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',
+  TooltipCreateInvoice = 'TooltipCreateInvoice',
 
   Success = 'Success',
   ProductUpdateSuccess = 'ProductUpdateSuccess',
@@ -17,4 +20,6 @@ export enum ToastType {
 
   BluetoothEnabled = 'BluetoothEnabled',
   BluetoothDisabled = 'BluetoothDisabled',
+
+  LocationDisabled = 'LocationDisabled',
 }

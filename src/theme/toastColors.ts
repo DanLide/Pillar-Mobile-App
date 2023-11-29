@@ -12,6 +12,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.CreateInvoiceError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Error]: {
     primary: colors.red,
     secondary: colors.redLight,
@@ -42,6 +47,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.UnitsPerContainerError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
 
   [ToastType.Info]: {
     primary: colors.purple,
@@ -49,6 +59,11 @@ export const toastColors: Record<
     action: colors.purpleDark,
   },
   [ToastType.TooltipInfo]: {
+    primary: colors.purple,
+    secondary: colors.background,
+    action: colors.purpleDark,
+  },
+  [ToastType.TooltipCreateInvoice]: {
     primary: colors.purple,
     secondary: colors.background,
     action: colors.purpleDark,
@@ -78,6 +93,11 @@ export const toastColors: Record<
   [ToastType.BluetoothDisabled]: {
     primary: colors.green3,
     secondary: colors.white3,
-    action: colors.green4,
+    action: colors.redDark,
+  },
+  [ToastType.LocationDisabled]: {
+    primary: colors.green3,
+    secondary: colors.white3,
+    action: colors.redDark,
   },
 };

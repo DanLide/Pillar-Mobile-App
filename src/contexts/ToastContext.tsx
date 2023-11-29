@@ -72,6 +72,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.UnitsPerContainerError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.UnitsPerContainerError}
+          actionType={ToastActionType.Edit}
+        />
+      ),
 
       [ToastType.Info]: toast => (
         <Toast
@@ -103,6 +110,14 @@ export const ToastContextProvider: React.FC<Props> = ({
         />
       ),
 
+      [ToastType.CreateInvoiceError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.CreateInvoiceError}
+          actionType={ToastActionType.Retry}
+        />
+      ),
+
       [ToastType.Retry]: toast => (
         <Toast
           {...toast}
@@ -121,6 +136,13 @@ export const ToastContextProvider: React.FC<Props> = ({
         <Toast
           {...toast}
           type={ToastType.BluetoothDisabled}
+          actionType={ToastActionType.OpenSettings}
+        />
+      ),
+      [ToastType.LocationDisabled]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.LocationDisabled}
           actionType={ToastActionType.OpenSettings}
         />
       ),

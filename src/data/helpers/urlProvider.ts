@@ -1,6 +1,5 @@
-import { environment } from './environment';
 import { AuthStore } from 'src/stores/AuthStore';
-import { authStore, ssoStore } from 'src/stores';
+import { authStore, ssoStore, deviceInfoStore } from 'src/stores';
 import { OrderType, PartyRelationshipType } from 'src/constants/common.enum';
 import { SSOStore } from 'src/stores/SSOStore';
 import {
@@ -11,9 +10,10 @@ import {
   ReturnProductsStore,
   returnProductsStore,
 } from 'src/modules/returnProducts/stores';
-import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { OrdersStore } from 'src/modules/orders/stores/OrdersStore';
 import { ordersStore } from 'src/modules/orders/stores';
+import { StockModel } from '../../modules/stocksList/stores/StocksStore';
+import { environment } from './environment';
 
 export class URLProvider {
   authStore: AuthStore;
@@ -33,6 +33,9 @@ export class URLProvider {
       pisaEquipment: { apiUri: string };
       inventory: { apiUri: string };
       order: { apiUri: string };
+      shopSetup: { apiUri: string };
+      shopSetupAuthentication: { apiUri: string },
+      base: { apiUri: string };
     };
   };
 
@@ -107,12 +110,38 @@ export class URLProvider {
     );
   }
 
-  getFetchProductUrl(scanCode: string, currentStock?: StockModel) {
-    const partyRoleID = currentStock?.partyRoleId;
+  getFetchStockByPartyRoleIdUrl() {
+    const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleID/${partyRoleID}/${PartyRelationshipType.RepairFacilityToStorage}`,
+    );
+  }
+
+  getShopSetupLoginUrl() {
+    return new URL(`${this.currentEnv.modules.shopSetupAuthentication.apiUri}/api/login`);
+  }
+
+  getDeviceByRepairFacilityIdUrl() {
+    const partyRoleID = this.ssoStore.getCurrentSSO?.pisaId;
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/DeviceByRepairFacilityPartyRoleID/${partyRoleID}`,
+    );
+  }
+
+  getFetchStocksWithCabinetsData() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceName = deviceInfoStore.getDeviceName;
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/StorageByPartyRoleIDAndDeviceID/${facilityId}/${PartyRelationshipType.RepairFacilityToStorage}/${deviceName}`,
+    );
+  }
+
+  getFetchProductUrl(scanCode: string, partyRoleId?: number) {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/${partyRoleID}/${scanCode}/${facilityId}/0`,
+      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/${partyRoleId}/${scanCode}/${facilityId}/0`,
     );
   }
 
@@ -205,7 +234,7 @@ export class URLProvider {
   }
 
   createInvoice(jobId: number) {
-    const partyRoleId = this.authStore.getPartyRoleId;
+    const partyRoleId = this.ssoStore.getCurrentSSO?.pisaId;
     return new URL(
       `${this.currentEnv.modules.pisaJob.apiUri}/api/Invoice/SubmitInvoiceCCC/${partyRoleId}/${jobId}`,
     );
@@ -286,6 +315,12 @@ export class URLProvider {
     );
   }
 
+  receiveBackOrder() {
+    return new URL(
+      `${this.currentEnv.modules.order.apiUri}/api/Order/BackOrder`,
+    );
+  }
+
   getSuggestedProductsAPI() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
@@ -303,5 +338,29 @@ export class URLProvider {
     return new URL(
       `${this.currentEnv.modules.order.apiUri}/api/Order/PONumber`,
     );
+  }
+
+  resetMasterlock() {
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Device/MasterLock/ResetKeys`,
+    );
+  }
+
+  SSOAssignMobileDevice() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceId = deviceInfoStore.getDeviceName;
+
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignDevice/${deviceId}/${facilityId}`,
+    );
+  }
+
+  getRNToken() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const deviceId = this.ssoStore.getCurrentMobileDevice(
+      deviceInfoStore.getDeviceName,
+    )?.partyRoleId;
+
+    return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }
 }

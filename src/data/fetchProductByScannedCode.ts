@@ -49,7 +49,7 @@ export class FetchProductByScannedCodeTask extends Task {
   async run(): Promise<void> {
     this.productContext.product = await getFetchProductAPI(
       this.scanCode,
-      this.stockStore?.currentStock,
+      this.stockStore?.currentStock?.partyRoleId,
     );
   }
 }

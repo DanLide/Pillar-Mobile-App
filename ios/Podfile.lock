@@ -468,7 +468,11 @@ PODS:
     - React-jsi (= 0.71.6)
     - React-logger (= 0.71.6)
     - React-perflogger (= 0.71.6)
+  - RNBluetoothStateManager (1.3.5):
+    - React-Core
   - RNCAsyncStorage (1.19.1):
+    - React-Core
+  - RNCClipboard (1.12.1):
     - React-Core
   - RNDeviceInfo (10.7.0):
     - React-Core
@@ -482,7 +486,7 @@ PODS:
     - RNFBApp
   - RNGestureHandler (2.9.0):
     - React-Core
-  - RNKeychain (8.1.1):
+  - RNKeychain (8.1.2):
     - React-Core
   - RNPermissions (3.8.0):
     - React-Core
@@ -573,7 +577,9 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNBluetoothStateManager (from `../node_modules/react-native-bluetooth-state-manager`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
@@ -699,8 +705,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNBluetoothStateManager:
+    :path: "../node_modules/react-native-bluetooth-state-manager"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCClipboard:
+    :path: "../node_modules/@react-native-clipboard/clipboard"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFBApp:
@@ -792,13 +802,15 @@ SPEC CHECKSUMS:
   React-RCTVibration: 73d201599a64ea14b4e0b8f91b64970979fd92e6
   React-runtimeexecutor: 8692ac548bec648fa121980ccb4304afd136d584
   ReactCommon: 0c43eaeaaee231d7d8dc24fc5a6e4cf2b75bf196
+  RNBluetoothStateManager: 724f2c76b04e0a2b840dfd7305b68f614bc01c81
   RNCAsyncStorage: f47fe18526970a69c34b548883e1aeceb115e3e1
+  RNCClipboard: d77213bfa269013bf4b857b7a9ca37ee062d8ef1
   RNDeviceInfo: 25d818c85db769cc0e7083d39efaa01a6f450df3
   RNFBApp: 81a9593ff681b448d1847f5d5493906310cdebe3
   RNFBCrashlytics: 9193f269c765dba3d1b0f6c5b1a6603f23f75b4c
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
-  RNKeychain: ff836453cba46938e0e9e4c22e43d43fa2c90333
-  RNPermissions: 2b5a6ae7311982dfa3f2f8d539b7a119cfae605f
+  RNKeychain: a65256b6ca6ba6976132cc4124b238a5b13b3d9c
+  RNPermissions: b82a4dbabca70c43d001e33b9c72837803c3deec
   RNReanimated: 29295af754cdd6f8e4428427d4195e02ea8766e0
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315

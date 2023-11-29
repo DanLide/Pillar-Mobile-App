@@ -986,7 +986,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack qa-Info.plist";
@@ -1025,7 +1025,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack qa-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -1062,7 +1062,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack uat-Info.plist";
@@ -1101,7 +1101,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack uat-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -1138,7 +1138,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack prod-Info.plist";
@@ -1177,7 +1177,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 38;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack prod-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";

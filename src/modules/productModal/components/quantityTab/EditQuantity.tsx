@@ -1,10 +1,10 @@
 import React, {
   useCallback,
-  memo,
   useMemo,
   useState,
   useRef,
   useEffect,
+  forwardRef,
 } from 'react';
 import {
   View,
@@ -41,10 +41,13 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   disabled?: boolean;
   hideCount?: boolean;
   error?: boolean;
+  isHideDecreaseButton?: boolean;
 
   onRemove?: () => void;
-  onChange: (quantity: number) => void;
+  onChange?: (quantity: number) => void;
 }
+
+export const QUANTITY_PICKER_HEIGHT = 103;
 
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
@@ -56,23 +59,27 @@ const removeLeadingZero = ifElse(
 
 const INITIAL_FONT_SIZE = 78;
 
-export const EditQuantity = memo(
-  ({
-    currentValue = 0,
-    maxValue,
-    minValue,
-    stepValue,
-    label,
-    labelWithNewLine,
-    labelContainerStyle,
-    initFontSize = INITIAL_FONT_SIZE,
-    vertical,
-    disabled,
-    hideCount,
-    error,
-    keyboardType,
-    onChange,
-  }: Props) => {
+export const EditQuantity = forwardRef(
+  (
+    {
+      currentValue = 0,
+      maxValue,
+      minValue,
+      stepValue,
+      label,
+      labelWithNewLine,
+      labelContainerStyle,
+      initFontSize = INITIAL_FONT_SIZE,
+      vertical,
+      disabled,
+      hideCount,
+      error,
+      keyboardType,
+      isHideDecreaseButton,
+      onChange,
+    }: Props,
+    ref: React.ForwardedRef<TextInput>,
+  ) => {
     const displayCurrentValue = removeLeadingZero(currentValue);
     const displayMaxValue = removeLeadingZero(maxValue);
     const displayMinValue = removeLeadingZero(minValue);
@@ -83,8 +90,7 @@ export const EditQuantity = memo(
     const [displayValue, setDisplayValue] = useState(displayCurrentValue);
     const [fontSize, setFontSize] = useState(initFontSize);
 
-    const isInputDisabled = disabled || error;
-    const isInputHidden = error || hideCount;
+    const isInputDisabled = disabled || hideCount;
 
     useEffect(() => {
       if (currentValue !== +displayValue) {
@@ -104,10 +110,12 @@ export const EditQuantity = memo(
       () => [
         styles.input,
         vertical && styles.inputVertical,
-        isInputHidden && styles.inputHidden,
+        isInputDisabled && styles.inputHidden,
+        !!label && styles.inputWithLabel,
+        error && styles.inputError,
         { fontSize },
       ],
-      [fontSize, isInputHidden, vertical],
+      [error, fontSize, isInputDisabled, label, vertical],
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -127,7 +135,7 @@ export const EditQuantity = memo(
     const setNewValue = useCallback(
       (value: string) => {
         setDisplayValue(value);
-        onChange(+value);
+        onChange?.(+value);
       },
       [onChange],
     );
@@ -161,7 +169,10 @@ export const EditQuantity = memo(
     }, [currentValue, stepValue, setNewValue]);
 
     const onFocusLost = useCallback(() => {
-      if (isNaN(currentValue) || currentValue < minValue) {
+      if (
+        isNaN(currentValue) ||
+        (currentValue < minValue && isHideDecreaseButton)
+      ) {
         return setNewValue(displayMinValue);
       }
 
@@ -169,14 +180,22 @@ export const EditQuantity = memo(
       const displayText = removeLeadingZero(updatedCount);
 
       setNewValue(displayText);
-    }, [currentValue, minValue, stepValue, setNewValue, displayMinValue]);
+    }, [
+      currentValue,
+      minValue,
+      isHideDecreaseButton,
+      stepValue,
+      setNewValue,
+      displayMinValue,
+    ]);
 
     const DecreaseButton = useMemo(() => {
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
       if (
         !(currentValue === minValue && minValue === 0) &&
-        currentValue >= minValue
+        currentValue >= minValue &&
+        !isHideDecreaseButton
       ) {
         return (
           <TouchableOpacity
@@ -193,6 +212,7 @@ export const EditQuantity = memo(
       isInputDisabled,
       currentValue,
       minValue,
+      isHideDecreaseButton,
       quantityButtonStyle,
       onDecreaseCount,
     ]);
@@ -251,10 +271,11 @@ export const EditQuantity = memo(
             contextMenuHidden
             editable={!isInputDisabled}
             style={inputStyle}
-            value={error ? '-' : displayValue}
+            value={hideCount ? '-' : displayValue}
             keyboardType={keyboardType}
-            onChangeText={onChangeInputText}
             returnKeyType="done"
+            ref={ref}
+            onChangeText={onChangeInputText}
             onBlur={onFocusLost}
             onLayout={onLayout}
             onContentSizeChange={onContentSizeChange}
@@ -282,7 +303,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    height: 103,
+    height: QUANTITY_PICKER_HEIGHT,
     width: 184,
     borderWidth: 1,
     borderRadius: 8,
@@ -290,6 +311,10 @@ const styles = StyleSheet.create({
     fontSize: 78,
     fontFamily: fonts.TT_Bold,
     textAlign: 'center',
+  },
+  inputError: {
+    borderColor: colors.red,
+    borderTopWidth: 1,
   },
   inputHidden: {
     borderColor: colors.background,
@@ -318,6 +343,10 @@ const styles = StyleSheet.create({
     height: 48,
     maxWidth: 108,
     padding: 8,
+  },
+  inputWithLabel: {
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
   },
   quantityButton: {
     width: 48,

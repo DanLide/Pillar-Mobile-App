@@ -20,27 +20,33 @@ interface CreateOrderContext {
   orderResponse?: GetOrdersAPIResponse;
 }
 
-export const createOrder = async (ordersStore: OrdersStore) => {
+export const createOrder = async (
+  ordersStore: OrdersStore,
+  orderType = OrderType.Purchase,
+) => {
   const createOrderContext: CreateOrderContext = {};
 
   return new TaskExecutor([
-    new CreateOrderTask(createOrderContext, ordersStore),
-    new SaveOrderDataTask(createOrderContext, ordersStore),
+    new CreateOrderTask(createOrderContext, orderType, ordersStore),
+    new SaveOrderDataTask(createOrderContext, orderType, ordersStore),
   ]).execute();
 };
 
 class CreateOrderTask extends Task {
   createOrderContext: CreateOrderContext;
+  orderType: OrderType;
   ordersStore: OrdersStore;
   ssoStore: SSOStore;
 
   constructor(
     createOrderContext: CreateOrderContext,
+    orderType: OrderType,
     ordersStore: OrdersStore,
     sso_store = ssoStore,
   ) {
     super();
     this.createOrderContext = createOrderContext;
+    this.orderType = orderType;
     this.ordersStore = ordersStore;
     this.ssoStore = sso_store;
   }
@@ -51,6 +57,11 @@ class CreateOrderTask extends Task {
     const repairFacilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
 
+    const orderMethodTypeId =
+      this.orderType === OrderType.Purchase
+        ? OrderMethodType.Manual
+        : OrderMethodType.Return;
+
     this.createOrderContext.orderResponse = head(
       (await createOrderAPI({
         comments: '',
@@ -59,9 +70,9 @@ class CreateOrderTask extends Task {
         orderDetails,
         orderGroup: '',
         orderId: 0,
-        orderMethodTypeId: OrderMethodType.Manual,
+        orderMethodTypeId,
         orderTotal: 0,
-        orderTypeId: OrderType.Purchase,
+        orderTypeId: this.orderType,
         repairFacilityId,
         supplierId,
         taxStatus: '',
@@ -86,22 +97,27 @@ class CreateOrderTask extends Task {
 
 class SaveOrderDataTask extends Task {
   createOrderContext: CreateOrderContext;
+  orderType: OrderType;
   ordersStore: OrdersStore;
   stocksStore: StockStore;
 
   constructor(
     createOrderContext: CreateOrderContext,
+    orderType: OrderType,
     ordersStore: OrdersStore,
     stocks_store = stocksStore,
   ) {
     super();
     this.createOrderContext = createOrderContext;
+    this.orderType = orderType;
     this.ordersStore = ordersStore;
     this.stocksStore = stocks_store;
   }
 
   async run() {
     const { orderResponse } = this.createOrderContext;
+
+    if (!orderResponse) throw new Error();
 
     const productList = this.ordersStore.getProducts;
     const supplierId = this.ordersStore.supplierId;
@@ -110,15 +126,12 @@ class SaveOrderDataTask extends Task {
       ? this.stocksStore.getSupplierNameById(supplierId)
       : undefined;
 
-    // TODO: remove this after backend orderId fix
     const order =
-      orderResponse &&
-      assoc('status', OrderStatusType.POREQUIRED, orderResponse);
+      this.orderType === OrderType.Return
+        ? assoc('status', OrderStatusType.SUBMITTED, orderResponse)
+        : orderResponse;
 
     this.ordersStore.setCurrentOrder({
-      // TODO: remove ts-ignore after backend orderId fix
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       order: assoc('supplierName', supplierName, order),
       productList,
     });

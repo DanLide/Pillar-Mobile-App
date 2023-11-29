@@ -7,24 +7,36 @@ import {
   Pressable,
   RefreshControl,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-import { GetOrdersAPIResponse } from '../../../data/api';
+import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
-import { SVGs, colors, fonts } from '../../../theme';
-import { Button, ButtonType, Separator } from '../../../components';
+import { SVGs, colors, fonts } from 'src/theme';
+import { Button, ButtonType, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
+import { AppNavigator } from 'src/navigation/types';
+import { getScreenName } from 'src/navigation/helpers/getScreenName';
+import permissionStore from '../../permissions/stores/PermissionStore';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
   isFiltered: boolean;
 
-  onPrimaryPress?: () => void;
   setFetchError: (errorStatus: boolean) => void;
+  onPrimaryPress?: () => void;
+  onSecondaryPress?: () => void;
 }
 
 export const OrdersList = memo(
-  ({ orders, onPrimaryPress, setFetchError, isFiltered }: Props) => {
+  ({
+    orders,
+    onPrimaryPress,
+    onSecondaryPress,
+    setFetchError,
+    isFiltered,
+  }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
+    const navigation = useNavigation();
 
     const onFetchOrders = useCallback(async () => {
       setIsLoading(true);
@@ -32,6 +44,19 @@ export const OrdersList = memo(
       if (error) setFetchError(true);
       setIsLoading(false);
     }, [setFetchError]);
+
+    const onPressBackorder = () => {
+      const routeName = getScreenName(permissionStore);
+
+      if (routeName === AppNavigator.SelectStockScreen) {
+        return navigation.navigate(AppNavigator.ReceiveBackorderScreen);
+      }
+
+      navigation.navigate(AppNavigator.BluetoothPermissionScreen, {
+        nextRoute: AppNavigator.ReceiveBackorderScreen,
+      });
+
+    }
 
     return (
       <View style={styles.container}>
@@ -53,7 +78,7 @@ export const OrdersList = memo(
             <RefreshControl refreshing={isLoading} onRefresh={onFetchOrders} />
           }
         />
-        <Pressable style={styles.backorderContainer}>
+        <Pressable style={styles.backorderContainer} onPress={onPressBackorder}>
           <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
           <Text style={styles.backborderText}>
             Order not Found? Receive Backorder
@@ -66,6 +91,7 @@ export const OrdersList = memo(
             title="Return Order"
             buttonStyle={[styles.button, styles.returnButton]}
             textStyle={styles.buttonText}
+            onPress={onSecondaryPress}
           />
           <Button
             type={ButtonType.primary}

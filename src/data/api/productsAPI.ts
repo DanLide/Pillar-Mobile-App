@@ -85,11 +85,8 @@ export interface ProductByFacilityIdResponse {
   repairFacilityID: number;
 }
 
-export const getFetchProductAPI = (
-  scanCode: string,
-  currentStock?: StockModel,
-) => {
-  const url = new URLProvider().getFetchProductUrl(scanCode, currentStock);
+export const getFetchProductAPI = (scanCode: string, partyRoleId = 0) => {
+  const url = new URLProvider().getFetchProductUrl(scanCode, partyRoleId);
 
   return tryAuthFetch<ProductResponse>({ url, request: { method: 'GET' } });
 };

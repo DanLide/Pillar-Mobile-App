@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import { colors, fonts } from '../../theme';
 
@@ -17,5 +17,6 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontFamily: fonts.TT_Bold,
     color: colors.white,
+    width: '100%',
   },
 });

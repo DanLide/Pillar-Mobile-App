@@ -22,6 +22,7 @@ import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ToastMessage } from './ToastMessage';
 import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
 import { useSingleToast } from '../hooks';
+import { BarcodeFormat } from 'vision-camera-code-scanner';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -31,6 +32,7 @@ export enum ScannerScreenError {
   ProductNotFound = 'ProductNotFound',
   ProductNotAssignedToStock = 'ProductNotAssignedToStock',
   NetworkRequestFailed = 'NetworkRequestFailed',
+  ProductIsNotRecoverable = 'ProductIsNotRecoverable',
 }
 
 interface Props {
@@ -43,9 +45,14 @@ interface Props {
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;
-  onFetchProduct?: (code: string) => Promise<void | RequestError>;
+  onFetchProduct?: (
+    code: string,
+  ) => Promise<
+    void | RequestError | ScannerScreenError.ProductIsNotRecoverable
+  >;
   onBadRequestError?: (error: BadRequestError) => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
+  filteredType?: BarcodeFormat;
 }
 
 export const scannerErrorMessages: Record<ScannerScreenError, string> = {
@@ -55,6 +62,8 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
     'This product is not assigned to this stock location',
   [ScannerScreenError.NetworkRequestFailed]:
     'Please check your internet connection and retry',
+  [ScannerScreenError.ProductIsNotRecoverable]:
+    'Product should Recoverable for Create Invoice',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -71,6 +80,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onFetchProduct,
     onBadRequestError,
     ProductModalComponent = ProductModal,
+    filteredType,
   }) => {
     const [isScannerActive, setIsScannerActive] = useState(true);
 
@@ -95,9 +105,16 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     );
 
     const handleFetchError = useCallback(
-      (error: RequestError) => {
-        if (Utils.isNetworkError(error)) {
+      (error: RequestError | ScannerScreenError.ProductIsNotRecoverable) => {
+        if (
+          error !== ScannerScreenError.ProductIsNotRecoverable &&
+          Utils.isNetworkError(error)
+        ) {
           return handleScanError?.(ScannerScreenError.NetworkRequestFailed);
+        }
+
+        if (error === ScannerScreenError.ProductIsNotRecoverable) {
+          return handleScanError?.(ScannerScreenError.ProductIsNotRecoverable);
         }
 
         if (isBadRequestError(error) && error.error_description) {
@@ -192,6 +209,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onScan={onScanProduct}
           isActive={!disableScanner && isScannerActive}
           scannedProductCount={scannedProducts.length}
+          filteredType={filteredType}
         />
         <ProductModalComponent
           {...modalParams}

@@ -1,10 +1,12 @@
+import { ExtendedStockModel } from './../modules/stocksList/stores/StocksStore';
 import { makeAutoObservable, observable, action, runInAction } from 'mobx';
 import MasterLockModule, {
   LockVisibility,
   LockStatus,
   MasterLockStateListener,
 } from '../data/masterlock';
-import { StockModel } from '../modules/stocksList/stores/StocksStore';
+import { PermissionStore } from 'src/modules/permissions/stores/PermissionStore';
+import { RoleType } from 'src/constants/common.enum';
 
 type UpdatedLockItem = [string, LockVisibility | LockStatus];
 
@@ -18,21 +20,28 @@ const LICENSE_ID =
 
 export const RELOCK_TIME = 10000; // msec
 export const RELOCK_TIME_SEC = RELOCK_TIME / 1000;
+export const INIT_TIME = 60000;
 
-class MasterLockStore {
+export class MasterLockStore {
   @observable stocksState: Record<string, StockState>;
   @observable isUnlocking: boolean;
   @observable relockTimeMasterlocksTime: Record<string, string>;
+  @observable permissionStore: PermissionStore;
+  @observable masterlockConfigured: boolean;
+  @observable isIniting: boolean;
+
   static parseString(input: string) {
     return input.split('/');
   }
 
-  constructor() {
+  constructor(permissionStoreInstance: PermissionStore) {
     makeAutoObservable(this);
     this.stocksState = {};
     this.relockTimeMasterlocksTime = {};
     this.isUnlocking = false;
-    MasterLockModule.configure(LICENSE_ID);
+    this.permissionStore = permissionStoreInstance;
+    this.masterlockConfigured = false;
+    this.isIniting = false;
 
     MasterLockStateListener.addListener('visibilityStatus', (data: string) => {
       const updatedVisibility = MasterLockStore.parseString(
@@ -49,20 +58,42 @@ class MasterLockStore {
     });
   }
 
-  @action initMasterLockForStocks(stockItem: StockModel): Promise<string> {
-    return (
-      stockItem.deviceId &&
-      MasterLockModule.initLock(
-        stockItem.deviceId,
-        stockItem.accessProfile,
-        stockItem.firmwareVersion,
-      )
+  @action async initMasterLockForStocks(stocks: ExtendedStockModel[]) {
+    if (this.isIniting) return;
+    this.isIniting = true;
+    await MasterLockModule.configure(LICENSE_ID);
+    const stocksWithML = stocks.filter(
+      stock =>
+        stock.roleTypeId === RoleType.Cabinet &&
+        stock.controllerSerialNo &&
+        stock.accessProfile &&
+        stock.firmwareVersion,
     );
+    for (const stock of stocksWithML) {
+      const { controllerSerialNo, accessProfile, firmwareVersion } = stock;
+
+      if (
+        stock.roleTypeId === RoleType.Cabinet &&
+        controllerSerialNo &&
+        accessProfile &&
+        firmwareVersion
+      ) {
+        await MasterLockModule.initLock(
+          controllerSerialNo,
+          accessProfile,
+          firmwareVersion,
+        );
+      }
+    }
+
+    setTimeout(() => {
+      this.isIniting = false;
+    }, INIT_TIME);
   }
 
   @action async unlock(deviceID: string) {
     this.isUnlocking = true;
-    await this.handleMasterRelockTime(deviceID)
+    await this.handleMasterRelockTime(deviceID);
     MasterLockModule.unlock(deviceID).then(() => {
       runInAction(() => {
         this.isUnlocking = false;
@@ -86,7 +117,7 @@ class MasterLockStore {
         }
       }
     } catch (e) {
-      console.warn('error', e)
+      console.warn('error', e);
     }
   }
 
@@ -105,5 +136,3 @@ class MasterLockStore {
     };
   }
 }
-
-export default new MasterLockStore();

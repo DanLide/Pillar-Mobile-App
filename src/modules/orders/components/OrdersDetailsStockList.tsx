@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
   FlatList,
   View,
@@ -16,67 +16,67 @@ import { ordersStore } from '../stores';
 import { StockWithProducts } from './StockWithProducts';
 
 interface Props {
-  productsByStockName: Record<string, ProductModel[]>;
+  productsByStockId: Record<string, ProductModel[]>;
   selectedStock?: string;
 
-  onSelectProducts: (stockName: string) => void;
+  onSelectProducts: (stockName: string, stockId: string) => void;
 }
 
 export const OrdersDetailsStockList: React.FC<Props> = observer(
-  ({ productsByStockName, selectedStock, onSelectProducts }) => {
+  ({ productsByStockId, selectedStock, onSelectProducts }) => {
     const ordersStoreRef = useRef(ordersStore).current;
     const { currentOrder } = ordersStoreRef;
 
     if (!currentOrder) return null;
 
+    const isOrderReceivable = useMemo(() => {
+      switch (currentOrder.order.status) {
+        case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
+        case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
+        case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+          return true;
+        case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
+        case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
+        case OrderTitleByStatusType[OrderStatusType.CLOSED]:
+        case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
+        default:
+          return false;
+      }
+    }, [currentOrder.order.status]);
+
     const renderSelectedRadioButton = useCallback(
-      (item: string) => {
-        switch (currentOrder.order.status) {
-          case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
-          case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
-          case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
-            return (
-              <View style={styles.radioButton}>
-                {selectedStock === item ? (
-                  <View style={styles.radioButtonPoint} />
-                ) : null}
-              </View>
-            );
-          case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
-          case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
-          case OrderTitleByStatusType[OrderStatusType.CLOSED]:
-          case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
-          default:
-            return <View style={styles.radioButtonPlaceholder} />;
-        }
-      },
-      [currentOrder.order.status, selectedStock],
+      (item: string) =>
+        isOrderReceivable ? (
+          <View style={styles.radioButton}>
+            {selectedStock === item ? (
+              <View style={styles.radioButtonPoint} />
+            ) : null}
+          </View>
+        ) : (
+          <View style={styles.radioButtonPlaceholder} />
+        ),
+      [isOrderReceivable, selectedStock],
     );
 
     const renderStockList = useCallback(
       ({ item }: ListRenderItemInfo<string>) => {
-        const products = productsByStockName[item];
-        const isNotAllProductsReceived = products.reduce((acc, product) => {
-          if (product.receivedQty !== product.orderedQty) {
-            acc = false;
-          }
-          return acc;
-        }, true);
-
+        const products = productsByStockId[item];
+        const stockName = products[0].stockLocationName || ''
         return (
           <Pressable
             style={styles.stockContainer}
-            onPress={() => onSelectProducts(item)}
-            disabled={isNotAllProductsReceived}
+            onPress={() => onSelectProducts(stockName, item)}
+            disabled={!isOrderReceivable}
           >
-            {!isNotAllProductsReceived ? (
-              renderSelectedRadioButton(item)
+            {isOrderReceivable ? (
+              renderSelectedRadioButton(stockName)
             ) : (
               <View style={styles.radioButtonPlaceholder} />
             )}
             <StockWithProducts
-              stockName={item}
+              stockName={stockName}
               products={products}
+              stockId={item}
               orderId={currentOrder.order.orderId}
             />
           </Pressable>
@@ -84,15 +84,16 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
       },
       [
         currentOrder.order.orderId,
+        isOrderReceivable,
         onSelectProducts,
-        productsByStockName,
+        productsByStockId,
         renderSelectedRadioButton,
       ],
     );
 
     return (
       <FlatList
-        data={Object.keys(productsByStockName)}
+        data={Object.keys(productsByStockId)}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={renderStockList}
       />

@@ -15,7 +15,8 @@ interface Props {
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const isNavigationToShopSelectAvailable =
-    (ssoStore.getSSOList?.length || 0) > 1;
+    (ssoStore.getSSOList?.length || 0) > 1 &&
+    !ssoStore.getIsDeviceConfiguredBySSO;
   const canRemoveProduct = permissionProvider.canRemoveProduct();
   const canReturnProduct = permissionProvider.canReturnProduct();
 

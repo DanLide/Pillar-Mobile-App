@@ -1,5 +1,11 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // eslint-disable-next-line import/default
@@ -23,6 +29,7 @@ import {
   ProductModalProps,
   ProductModalType,
   ProductQuantity,
+  QUANTITY_PICKER_HEIGHT,
 } from '../../productModal';
 
 import { colors, fonts } from 'src/theme';
@@ -33,6 +40,7 @@ import { permissionProvider } from 'src/data/providers';
 import { ViewProduct } from './ViewProduct';
 import { ToastType } from 'src/contexts/types';
 import AlertWrapper from 'src/contexts/AlertWrapper';
+import { InventoryUseType } from 'src/constants/common.enum';
 
 export enum ProductModalErrors {
   UpcUpdateError = 'UpcUpdateError',
@@ -56,7 +64,6 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
 
 const getErrorMessage = (error: unknown) => {
   switch (error) {
-    case ProductModalErrors.UpcUpdateError:
     case ProductModalErrors.UpcFormatError:
       return 'Invalid UPC Code';
     case ProductModalErrors.UpcLengthError:
@@ -93,8 +100,13 @@ export const ProductModal = observer(
   }: ProductModalProps) => {
     const store = useRef(manageProductsStore).current;
     const scrollViewRef = useRef<Animated.ScrollView>(null);
+    const reservedCountInputRef = useRef<TextInput>(null);
+    const unitsPerContainerInputRef = useRef<TextInput>(null);
+    const viewRef = useRef<View>(null);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [isUnitsPerContainerError, setIsUnitsPerContainerError] =
+      useState(false);
     const [upcError, setUpcError] = useState<string | undefined>();
     const [alertParams, setAlertParams] =
       useState<AlertParams>(INIT_ALERT_PARAMS);
@@ -103,6 +115,7 @@ export const ProductModal = observer(
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
     const canEditProduct = permissionProvider.canEditProduct();
+    const canEditProductInStock = permissionProvider.canEditProductInStock();
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 
@@ -162,6 +175,22 @@ export const ProductModal = observer(
     const handleSubmit = useCallback(async () => {
       if (!product) return;
 
+      const isEachPeace = product?.inventoryUseTypeId === InventoryUseType.Each;
+      const viewRefInstance = viewRef.current;
+
+      if (isEachPeace && !product.unitsPerContainer && viewRefInstance) {
+        const y = await new Promise<number>(resolve =>
+          unitsPerContainerInputRef.current?.measureLayout(
+            viewRefInstance,
+            (x, y) => resolve(y - QUANTITY_PICKER_HEIGHT),
+          ),
+        );
+
+        setIsUnitsPerContainerError(true);
+        scrollViewRef.current?.scrollTo({ y, animated: true });
+        return;
+      }
+
       setIsLoading(true);
       const error = await onSubmit(product);
       setIsLoading(false);
@@ -186,12 +215,16 @@ export const ProductModal = observer(
         case ToastType.UpcUpdateError:
           onEditPress?.();
           break;
+        case ToastType.UnitsPerContainerError:
+          unitsPerContainerInputRef.current?.focus();
+          break;
       }
     }, [handleSubmit, onEditPress, toastType]);
 
     const handleEditPress = useCallback(() => {
       onEditPress?.();
-    }, [onEditPress]);
+      store.setOnHand(0);
+    }, [onEditPress, store]);
 
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {
@@ -201,6 +234,25 @@ export const ProductModal = observer(
 
       handleCancel();
     }, [handleCancel, store.isProductChanged]);
+
+    const handleRemoveBySelect = useCallback(
+      (removeBy: number) => {
+        if (product?.inventoryUseTypeId === removeBy) return;
+
+        store.setInventoryType(removeBy);
+        reservedCountInputRef.current?.focus();
+      },
+
+      [product?.inventoryUseTypeId, store],
+    );
+
+    const handleUnitsPerContainerChange = useCallback(
+      (unitsPerContainer: number) => {
+        if (isUnitsPerContainerError) setIsUnitsPerContainerError(false);
+        store.setUnitsPerContainer(unitsPerContainer);
+      },
+      [isUnitsPerContainerError, store],
+    );
 
     const handleUpcChange = useCallback(() => {
       setUpcError(undefined);
@@ -284,7 +336,7 @@ export const ProductModal = observer(
                 nestedScrollEnabled
               >
                 <Description product={product} topOffset={topOffset} />
-                <View style={styles.settings}>
+                <View style={styles.settings} ref={viewRef}>
                   <ProductQuantity
                     isEdit={isEdit}
                     type={ProductModalType.ManageProduct}
@@ -295,14 +347,19 @@ export const ProductModal = observer(
                     minValue={0}
                     onHand={onHand}
                     disabled={!canEditProduct}
+                    ref={reservedCountInputRef}
                     onToastAction={handleToastAction}
                   />
                   {isEdit ? (
                     <EditProduct
                       product={product}
                       stockName={stockName}
+                      unitsPerContainerError={isUnitsPerContainerError}
                       upcError={upcError}
+                      onRemoveBySelect={handleRemoveBySelect}
+                      onUnitsPerContainerChange={handleUnitsPerContainerChange}
                       onUpcChange={handleUpcChange}
+                      ref={unitsPerContainerInputRef}
                     />
                   ) : (
                     <ViewProduct product={product} />
@@ -316,7 +373,7 @@ export const ProductModal = observer(
                 />
               )}
               <View style={styles.buttons}>
-                {canEditProduct && (
+                {canEditProductInStock && (
                   <Button
                     title={isEdit ? 'Cancel' : 'Edit'}
                     type={ButtonType.secondary}

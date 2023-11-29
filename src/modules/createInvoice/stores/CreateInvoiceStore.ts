@@ -46,7 +46,7 @@ export class CreateInvoiceStore extends BaseProductsStore {
     return (product: ProductModel) =>
       product.onHand +
       getReservedCountById(this.getProducts, product.productId) -
-      product.reservedCount;
+      (product.reservedCount || 0);
   }
 
   @action setCurrentJob(job: JobModel) {
@@ -54,6 +54,13 @@ export class CreateInvoiceStore extends BaseProductsStore {
   }
 
   @action setFacilityProducts(products: ProductModel[]) {
-    this.facilityProducts = products;
+    this.facilityProducts = this.mapProducts(products);
+  }
+
+  mapProducts(products: ProductModel[]) {
+    return products.map(product => ({
+      ...product,
+      isRecoverable: product.isRecoverable === 'Yes',
+    }));
   }
 }

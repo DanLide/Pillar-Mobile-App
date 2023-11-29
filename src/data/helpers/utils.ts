@@ -1,5 +1,7 @@
 import { either, filter, isEmpty, isNil, map, not, pipe } from 'ramda';
 import { BadRequestError, RequestError } from './tryFetch';
+import { SingleSSOAPIResponse } from '../api/ssoAPI';
+import { SSOModel } from '../../stores/SSOStore';
 
 export class Utils {
   static zeroToUndefined<Type>(value: Type) {
@@ -45,10 +47,42 @@ export class Utils {
   static isNetworkError(error: RequestError | void): boolean {
     return !!error && error.message === 'Network request failed';
   }
+
+  static isPromiseFulfilled = <T>(
+    input: PromiseSettledResult<T>,
+  ): input is PromiseFulfilledResult<T> => input.status === 'fulfilled';
 }
 
 export const isBadRequestError = (
   error: RequestError | BadRequestError | void,
 ): error is BadRequestError => {
   return (error as BadRequestError)?.error !== undefined;
+};
+
+export const mapSingle = (resp: SingleSSOAPIResponse): SSOModel | undefined => {
+  const pisaId = Utils.zeroToUndefined<number>(+resp.pisaId);
+  if (pisaId === undefined || Utils.isNullOrEmpty(resp.name)) {
+    return undefined;
+  }
+
+  const address = [
+    resp.streetAddress1,
+    resp.streetAddress2,
+    resp.city,
+    resp.zipCode,
+    resp.state,
+    resp.country,
+  ]
+    .filter(Utils.notNullOrEmpty)
+    .join(', ');
+
+  return {
+    pisaId: pisaId,
+    address: address,
+    name: resp.name,
+    pillarId: resp.id,
+    msoPillarId: resp.msoId,
+    distributorId: resp.distributorId,
+    distributorName: resp.distributor,
+  };
 };

@@ -19,7 +19,7 @@ jest.mock('react-native-vision-camera', () => {});
 jest.mock('react-native-volume-manager', () => {
   return {
     setVolume: jest.fn(),
-  }
+  };
 });
 jest.mock('react-native-track-player', () => {
   return {
@@ -57,19 +57,39 @@ jest.mock('react-native-track-player', () => {
 });
 
 jest.mock('react-native-device-info', () => ({
-  default: jest.fn(),
+  getVersion: jest.fn(),
+  getDeviceName: jest.fn(async () => 'iphone'),
+  getDeviceNameSync: jest.fn(() => '3M-AAD-iphone'),
+  getBundleId: jest.fn(() => 'com.bundle'),
 }));
 
 RNNativeModules.UIManager = RNNativeModules.UIManager || {};
 RNNativeModules.UIManager.RCTView = RNNativeModules.UIManager.RCTView || {};
-RNNativeModules.RNGestureHandlerModule =
-  RNNativeModules.RNGestureHandlerModule || {
-    State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
-    attachGestureHandler: jest.fn(),
-    createGestureHandler: jest.fn(),
-    dropGestureHandler: jest.fn(),
-    updateGestureHandler: jest.fn(),
-  };
+RNNativeModules.RNGestureHandlerModule = RNNativeModules.RNGestureHandlerModule || {
+  State: { BEGAN: 'BEGAN', FAILED: 'FAILED', ACTIVE: 'ACTIVE', END: 'END' },
+  attachGestureHandler: jest.fn(),
+  createGestureHandler: jest.fn(),
+  dropGestureHandler: jest.fn(),
+  updateGestureHandler: jest.fn(),
+};
 RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
   forceTouchAvailable: false,
 };
+
+jest.mock('react-native-bluetooth-state-manager', () => ({}));
+
+jest.mock('react-native', () => {
+  const RN = jest.requireActual('react-native');
+
+  RN.NativeModules.MasterLockModule = {
+    initLock: jest.fn(),
+    deinit: jest.fn(),
+    readRelockTime: jest.fn(),
+    writeRelockTime: jest.fn(),
+    unlock: jest.fn(),
+    removeListeners: jest.fn(),
+    addListener: jest.fn(),
+  };
+
+  return RN;
+});

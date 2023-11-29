@@ -1,7 +1,7 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
 
-import { LeftBarButton, TitleBar, RightBarButton } from '../components';
+import { LeftBarButton, RightBarButton, TitleBar } from '../components';
 
 import { colors } from '../../theme/colors';
 
@@ -11,16 +11,24 @@ interface GetScreenOptions {
   title: string;
   leftBarButtonType?: LeftBarType;
   rightBarButtonType?: RightBarType;
-  style?: ViewStyle
+  style?: ViewStyle;
+  leftBarButtonAction?: () => void;
+  rightBarButtonAction?: () => void;
 }
 
 export const getScreenOptions = (params: GetScreenOptions) => ({
   headerTitle: () => <TitleBar title={params.title} />,
   headerLeft: () => (
-    <LeftBarButton leftBarButtonType={params.leftBarButtonType} />
+    <LeftBarButton
+      onPress={params.leftBarButtonAction}
+      leftBarButtonType={params.leftBarButtonType}
+    />
   ),
   headerRight: () => (
-    <RightBarButton rightBarButtonType={params.rightBarButtonType} />
+    <RightBarButton
+      onPress={params.rightBarButtonAction}
+      rightBarButtonType={params.rightBarButtonType}
+    />
   ),
   headerStyle: {
     backgroundColor: colors.purple,

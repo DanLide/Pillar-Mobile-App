@@ -5,10 +5,10 @@ import {
   CategoryResponse,
   FacilityProductResponse,
   SupplierResponse,
-} from '../../../data/api/productsAPI';
+} from 'src/data/api/productsAPI';
 
 export class StockStore {
-  @observable stocks: StockModel[];
+  @observable stocks: ExtendedStockModel[];
   @observable facilityProducts: FacilityProductModel[];
   @observable categories: CategoryModel[];
   @observable suppliers: SupplierModel[];
@@ -22,6 +22,12 @@ export class StockStore {
     this.enabledSuppliers = [];
 
     makeObservable(this);
+  }
+
+  static isStockWithMLAccess(
+    stock: StockModel | StockModelWithMLAccess,
+  ): stock is StockModelWithMLAccess {
+    return !!(stock as StockModelWithMLAccess).equipment;
   }
 
   @computed get getSupplierNameById() {
@@ -40,10 +46,31 @@ export class StockStore {
       )(this.facilityProducts);
   }
 
-  @action setStocks(stocks: StockModel[]) {
-    this.stocks = stocks.sort((a, b) =>
+  @computed get getMasterlockStocks() {
+    return this.stocks.filter(
+      stock => stock.controllerSerialNo && stock.controllerType === 'ML',
+    );
+  }
+
+  @action setStocks(stocks: (StockModel | StockModelWithMLAccess)[]) {
+    const mappedStocks = stocks.map(stockItem =>
+      StockStore.isStockWithMLAccess(stockItem)
+        ? {
+            ...stockItem.equipment,
+            ...stockItem.mlAccessData,
+          }
+        : stockItem,
+    );
+    this.stocks = mappedStocks.sort((a, b) =>
       a.organizationName.localeCompare(b.organizationName),
     );
+  }
+
+  @computed get suppliersRenderFormat() {
+    return this.suppliers.map(item => ({
+      label: item.name,
+      value: item.partyRoleId,
+    }))
   }
 
   @action setFacilityProducts(products: FacilityProductModel[]) {
@@ -89,14 +116,27 @@ export interface StockModel {
   // isActiveTransfer: number;
   // isAssignedToUser: number;
   partyRoleId: number;
-  deviceId: string;
   roleTypeId: number;
   leanTecSerialNo?: string;
-  accessProfile: string;
-  firmwareVersion: number;
+  accessProfile?: string;
+  firmwareVersion?: number;
+  controllerSerialNo?: string;
+  controllerType?: 'ML' | string;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }
+
+export type StockModelWithMLAccess = {
+  equipment: StockModel;
+  mlAccessData: {
+    accessProfile: string;
+    firmwareVersion: number;
+    masterLockId: string;
+  } | null;
+};
+
+export type ExtendedStockModel = StockModel &
+  Partial<StockModelWithMLAccess['mlAccessData']>;
 
 export type FacilityProductModel = FacilityProductResponse;
 export type CategoryModel = CategoryResponse;

@@ -8,82 +8,76 @@ import {
   request,
   openSettings,
 } from 'react-native-permissions';
-import { NativeStackScreenProps } from 'react-native-screens/native-stack';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
-import {
-  AppNavigator,
-  RemoveStackParamList,
-  ReturnStackParamList,
-} from '../../navigation/types';
+import { CameraPermissionScreenProps } from 'src/navigation/types';
 
-type Props = NativeStackScreenProps<
-  RemoveStackParamList & ReturnStackParamList,
-  AppNavigator.CameraPermissionScreen
->;
+export const CameraPermissionScreen = memo(
+  ({ navigation, route }: CameraPermissionScreenProps) => {
+    const [cameraPermission, setCameraPermission] = useState<PermissionStatus>(
+      RESULTS.DENIED,
+    );
 
-export const CameraPermissionScreen = memo(({ navigation, route }: Props) => {
-  const [cameraPermission, setCameraPermission] = useState<PermissionStatus>(
-    RESULTS.DENIED,
-  );
+    const { nextRoute, modalType } = route.params;
 
-  const buttonTitle =
-    cameraPermission === RESULTS.BLOCKED ? 'Settings' : 'Continue';
+    const buttonTitle =
+      cameraPermission === RESULTS.BLOCKED ? 'Settings' : 'Continue';
 
-  const permissionCheck = async () => {
-    const result = await check(PERMISSIONS.IOS.CAMERA);
+    const permissionCheck = async () => {
+      const result = await check(PERMISSIONS.IOS.CAMERA);
 
-    setCameraPermission(result);
-  };
+      setCameraPermission(result);
+    };
 
-  useEffect(() => {
-    permissionCheck();
-  }, []);
+    useEffect(() => {
+      permissionCheck();
+    }, []);
 
-  const onButtonPress = async () => {
-    if (cameraPermission === RESULTS.BLOCKED) return openSettings();
+    const onButtonPress = async () => {
+      if (cameraPermission === RESULTS.BLOCKED) return openSettings();
 
-    const result = await request(PERMISSIONS.IOS.CAMERA);
+      const result = await request(PERMISSIONS.IOS.CAMERA);
 
-    if (result === RESULTS.GRANTED) {
-      navigation.replace(route.params.nextRoute);
-      return;
-    }
+      if (result === RESULTS.GRANTED) {
+        navigation.replace(nextRoute, { modalType });
+        return;
+      }
 
-    setCameraPermission(result);
-  };
+      setCameraPermission(result);
+    };
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>Camera Access</Text>
-        <Text style={styles.subtitle}>
-          RepairStack would like to access to your camera, so that you can
-          easily scan products.
-        </Text>
-        <SVGs.CameraIcon color={colors.black} style={styles.icon} />
-        {cameraPermission === RESULTS.BLOCKED ? (
+    return (
+      <View style={styles.container}>
+        <View style={styles.contentContainer}>
+          <Text style={styles.title}>Camera Access</Text>
           <Text style={styles.subtitle}>
-            <Text>Allow camera access in{'\n'}</Text>
-            <Text style={styles.bold}>Settings {'>'} RepairStack</Text>
+            RepairStack would like to access to your camera, so that you can
+            easily scan products.
           </Text>
-        ) : (
-          <Text style={styles.subtitle}>
-            Without camera access, you will not be able to proceed with the app
-            features
-          </Text>
-        )}
+          <SVGs.CameraIcon color={colors.black} style={styles.icon} />
+          {cameraPermission === RESULTS.BLOCKED ? (
+            <Text style={styles.subtitle}>
+              <Text>Allow camera access in{'\n'}</Text>
+              <Text style={styles.bold}>Settings {'>'} RepairStack</Text>
+            </Text>
+          ) : (
+            <Text style={styles.subtitle}>
+              Without camera access, you will not be able to proceed with the
+              app features
+            </Text>
+          )}
+        </View>
+        <Button
+          type={ButtonType.primary}
+          buttonStyle={styles.button}
+          title={buttonTitle}
+          onPress={onButtonPress}
+        />
       </View>
-      <Button
-        type={ButtonType.primary}
-        buttonStyle={styles.button}
-        title={buttonTitle}
-        onPress={onButtonPress}
-      />
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {

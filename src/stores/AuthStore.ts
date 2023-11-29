@@ -1,13 +1,13 @@
-import { action, makeObservable, observable, computed } from 'mobx';
 import { add, differenceInMilliseconds } from 'date-fns';
+import { action, computed, makeObservable, observable } from 'mobx';
 
-import { LogoutListener } from '../data/helpers/tryFetch';
-import { stocksStore } from '../modules/stocksList/stores';
-import { Utils } from '../data/helpers/utils';
+import { ssoStore } from '.';
 import { Permissions } from '../data/helpers';
 import { GetAuthToken } from '../data/helpers/getAuthToken';
+import { LogoutListener } from '../data/helpers/tryFetch';
+import { Utils } from '../data/helpers/utils';
 import { removeProductsStore } from '../modules/removeProducts/stores';
-import { ssoStore } from '.';
+import { stocksStore } from '../modules/stocksList/stores';
 
 export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @observable isLoggedIn?: boolean;
@@ -147,6 +147,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.roleTypeDescription = value;
   }
 
+  @action resetPermissionSet() {
+    this.permissionSet = undefined;
+  }
+
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
@@ -155,6 +159,8 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isLoggedIn = false;
     stocksStore.clear();
     removeProductsStore.clear();
-    ssoStore.clear();
+    if (!ssoStore.getIsDeviceConfiguredBySSO) {
+      ssoStore.clear();
+    }
   }
 }

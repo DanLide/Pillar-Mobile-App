@@ -96,7 +96,7 @@ const BaseProducts = observer(
       setEditableProductQuantity,
       onRemoveProduct,
       onCloseModal,
-    } = useBaseProductsScreen(store, navigation);
+    } = useBaseProductsScreen(store, navigation, modalType);
 
     const scanButtonType =
       modalType === ProductModalType.ManageProduct && !scannedProductsCount
@@ -135,7 +135,7 @@ const BaseProducts = observer(
 
       if (error && modalType === ProductModalType.CreateInvoice) {
         showToast('The Invoice was not generated. Please try again.', {
-          type: ToastType.Retry,
+          type: ToastType.CreateInvoiceError,
           duration: 0,
           onPress: onCompleteRemove,
         });
@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width,
     height,
-    backgroundColor: 'gray',
+    backgroundColor: colors.gray,
     top: 0,
     zIndex: 100,
     opacity: 0.6,

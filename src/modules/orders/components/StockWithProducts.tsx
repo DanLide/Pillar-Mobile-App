@@ -10,11 +10,16 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import { RoleType } from 'src/constants/common.enum';
+import { LockStatus, LockVisibility } from 'src/data/masterlock';
+import { stocksStore } from 'src/modules/stocksList/stores';
 import { ProductModel } from 'src/stores/types';
 import { SVGs, colors, fonts } from 'src/theme';
+import { masterLockStore } from 'src/stores';
 
 interface Props {
   stockName: string;
+  stockId: string;
   products: ProductModel[];
   orderId: number;
 
@@ -27,10 +32,42 @@ export const StockWithProducts: React.FC<Props> = ({
   orderId,
   products,
   stockName,
+  stockId,
   productContainerStyle,
   totalProductsQty,
   stockNameStyle,
 }) => {
+  const stockItem = stocksStore.stocks.find(
+    stock => stock.partyRoleId === Number(stockId),
+  );
+  const controllerSerialNo = stockItem?.controllerSerialNo || '';
+  const isVisible =
+    masterLockStore.stocksState[controllerSerialNo]?.visibility ===
+    LockVisibility.VISIBLE;
+
+  const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+
+  const renderIcon = () => {
+    if (stockItem?.roleTypeId !== RoleType.Cabinet && isVisible) {
+      return <SVGs.CabinetSimple />;
+    }
+    switch (lockStatus) {
+      case LockStatus.UNLOCKED:
+      case LockStatus.OPEN:
+        return <SVGs.CabinetOpen />;
+      case LockStatus.LOCKED:
+      case LockStatus.PENDING_UNLOCK:
+      case LockStatus.PENDING_RELOCK:
+        return <SVGs.CabinetLocked />;
+      case LockStatus.OPEN_LOCKED:
+        return <SVGs.CabinetOpenLocked />;
+      case LockStatus.UNKNOWN:
+        return <SVGs.CabinetError />;
+      default:
+        return <SVGs.CabinetSimple />;
+    }
+  };
+
   const renderProduct = useCallback(
     ({ item, index }: ListRenderItemInfo<ProductModel>) => (
       <View
@@ -65,7 +102,10 @@ export const StockWithProducts: React.FC<Props> = ({
 
   return (
     <View style={styles.products}>
-      <Text style={[styles.stockName, stockNameStyle]}>{stockName}</Text>
+      <View style={styles.titleContainer}>
+        <Text style={[styles.stockName, stockNameStyle]}>{stockName}</Text>
+        {renderIcon()}
+      </View>
       {!isNil(totalProductsQty) ? (
         <Text style={styles.productQty}>{totalProductsQty} Products</Text>
       ) : null}
@@ -87,6 +127,11 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontFamily: fonts.TT_Bold,
     paddingVertical: 8,
+    marginRight: 4,
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   productDetails: {
     flexDirection: 'row',

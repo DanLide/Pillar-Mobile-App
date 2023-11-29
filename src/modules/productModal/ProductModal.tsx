@@ -2,22 +2,23 @@ import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
+import { useHeaderHeight } from '@react-navigation/elements';
 
-import { Modal } from '../../components';
+import { Modal } from 'src/components';
 import {
   ProductQuantity,
   ProductQuantityToastType,
 } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
-import { colors, fonts } from '../../theme';
+import { colors, fonts } from 'src/theme';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
-} from '../../contexts';
-import { ProductModel } from '../../stores/types';
-import { useHeaderHeight } from '@react-navigation/elements';
+} from 'src/contexts';
+import { ProductModel } from 'src/stores/types';
+import { ToastType } from 'src/contexts/types';
 
 export enum ProductModalType {
   Remove,
@@ -26,6 +27,7 @@ export enum ProductModalType {
   ManageProduct,
   ReceiveOrder,
   CreateOrder,
+  ReturnOrder,
   Hidden,
 }
 
@@ -35,11 +37,13 @@ export interface ProductModalParams {
   maxValue?: number;
   onHand?: number;
   toastType?: ProductQuantityToastType;
+  minValue?: number;
 }
 
 export interface ProductModalProps extends ProductModalParams {
   product?: ProductModel;
   stockName?: string;
+  isHideDecreaseButton?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
@@ -62,6 +66,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
     case ProductModalType.CreateInvoice:
     case ProductModalType.ReceiveOrder:
     case ProductModalType.CreateOrder:
+    case ProductModalType.ReturnOrder:
       return [Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
@@ -78,7 +83,9 @@ export const ProductModal = memo(
     toastType,
     isEdit,
     maxValue = 0,
+    minValue,
     onHand = 0,
+    isHideDecreaseButton,
     onClose,
     onSubmit,
     onRemove,
@@ -140,14 +147,17 @@ export const ProductModal = memo(
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
+                disabled={toastType === ToastType.ProductQuantityError}
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 maxValue={maxValue}
+                minValue={minValue}
                 style={styles.productQuantityContainer}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
+                isHideDecreaseButton={isHideDecreaseButton}
               />
             );
           case Tabs.LinkJob:
@@ -175,10 +185,12 @@ export const ProductModal = memo(
         isEdit,
         toastType,
         maxValue,
+        minValue,
         onHand,
         onJobSelectNavigation,
         onRemoveAlert,
         selectedTab,
+        isHideDecreaseButton,
       ],
     );
 
@@ -187,7 +199,8 @@ export const ProductModal = memo(
         case Tabs.EditQuantity: {
           if (
             type === ProductModalType.ReceiveOrder ||
-            type === ProductModalType.CreateOrder
+            type === ProductModalType.CreateOrder ||
+            type === ProductModalType.ReturnOrder
           ) {
             return (
               <Text style={styles.title} ellipsizeMode="middle">

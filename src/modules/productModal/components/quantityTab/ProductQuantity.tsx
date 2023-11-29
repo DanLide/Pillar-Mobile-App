@@ -1,31 +1,34 @@
-import React, { memo, useEffect } from 'react';
+import React, { forwardRef, useEffect } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
   ViewProps,
 } from 'react-native';
 
-import { colors, fonts, SVGs } from '../../../../theme';
+import { colors, fonts, SVGs } from 'src/theme';
 import { EditQuantity } from './EditQuantity';
 import { FooterDescription } from './FooterDescription';
-import { ToastType } from '../../../../contexts/types';
-import { getProductStepQty } from '../../../../data/helpers';
-import { InventoryUseType } from '../../../../constants/common.enum';
-import { ProductModel } from '../../../../stores/types';
+import { ToastType } from 'src/contexts/types';
+import { getProductStepQty } from 'src/data/helpers';
+import { InventoryUseType } from 'src/constants/common.enum';
+import { ProductModel } from 'src/stores/types';
 import { Button, ButtonType, ColoredTooltip } from '../../../../components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
-import { useSingleToast } from '../../../../hooks';
+import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
+import { ToastMessage } from 'src/components/ToastMessage';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
   | ToastType.ProductUpdateError
   | ToastType.ProductUpdateSuccess
-  | ToastType.UpcUpdateError;
+  | ToastType.UpcUpdateError
+  | ToastType.UnitsPerContainerError;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
@@ -38,6 +41,7 @@ interface Props extends ViewProps {
   product?: ProductModel;
   disabled?: boolean;
   hideCount?: boolean;
+  isHideDecreaseButton?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -46,7 +50,10 @@ interface Props extends ViewProps {
   onToastAction?: () => void;
 }
 
-export const toastMessages: Record<ProductQuantityToastType, string> = {
+export const toastMessages: Record<
+  ProductQuantityToastType,
+  JSX.Element | string
+> = {
   [ToastType.ProductQuantityError]:
     "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
   [ToastType.ProductUpdateError]:
@@ -54,27 +61,46 @@ export const toastMessages: Record<ProductQuantityToastType, string> = {
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
   [ToastType.UpcUpdateError]:
     'This UPC already exists in the stock location of this product. Please, use another one',
+  [ToastType.UnitsPerContainerError]: (
+    <ToastMessage>
+      <ToastMessage bold>Pieces Per Container</ToastMessage> cannot be saved
+      less than 1
+    </ToastMessage>
+  ),
 };
 
-export const ProductQuantity = memo(
-  ({
-    type,
-    product,
-    isEdit,
-    jobSelectable,
-    toastType,
-    maxValue,
-    minValue,
-    onHand,
-    disabled,
-    hideCount,
-    style,
-    onChangeProductQuantity,
-    onPressAddToList,
-    onJobSelectNavigation,
-    onRemove,
-    onToastAction,
-  }: Props) => {
+const getEditQuantityLabel = (type?: ProductModalType) => {
+  switch (type) {
+    case ProductModalType.CreateOrder:
+      return 'Order Quantity';
+    case ProductModalType.ReturnOrder:
+      return 'Return Quantity';
+  }
+};
+
+export const ProductQuantity = forwardRef(
+  (
+    {
+      type,
+      product,
+      isEdit,
+      jobSelectable,
+      toastType,
+      maxValue,
+      minValue,
+      onHand,
+      disabled,
+      hideCount,
+      style,
+      isHideDecreaseButton,
+      onChangeProductQuantity,
+      onPressAddToList,
+      onJobSelectNavigation,
+      onRemove,
+      onToastAction,
+    }: Props,
+    ref: React.ForwardedRef<TextInput>,
+  ) => {
     const jobNumber = product?.job?.jobNumber;
 
     const isSpecialOrder =
@@ -97,6 +123,12 @@ export const ProductQuantity = memo(
       inventoryUseTypeId,
       reservedCount = product.receivedQty,
     } = product;
+
+    const isProductQuantityError = toastType === ToastType.ProductQuantityError;
+
+    const currentValue = isProductQuantityError
+      ? product.onHand
+      : reservedCount;
 
     const stepQty = getProductStepQty(inventoryUseTypeId);
 
@@ -137,8 +169,7 @@ export const ProductQuantity = memo(
           ? 'Next'
           : 'Done';
 
-      const disabled =
-        toastType === ToastType.ProductQuantityError || reservedCount === 0;
+      const disabled = isProductQuantityError || reservedCount === 0;
 
       return (
         <Button
@@ -157,6 +188,7 @@ export const ProductQuantity = memo(
           return null;
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
+        case ProductModalType.ReturnOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
@@ -171,6 +203,7 @@ export const ProductQuantity = memo(
       switch (type) {
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
+        case ProductModalType.ReturnOrder:
           return (
             <View style={styles.costOfProduct}>
               {!isSpecialOrder && (
@@ -202,16 +235,18 @@ export const ProductQuantity = memo(
         {renderDescription()}
         <View>
           <EditQuantity
-            currentValue={reservedCount}
+            currentValue={currentValue}
             maxValue={maxValue}
             minValue={minValue ?? stepQty}
             stepValue={stepQty}
             disabled={disabled}
             hideCount={hideCount}
-            error={toastType === ToastType.ProductQuantityError}
             keyboardType={keyboardType}
+            label={getEditQuantityLabel(type)}
+            ref={ref}
             onChange={onChange}
             onRemove={onRemove}
+            isHideDecreaseButton={isHideDecreaseButton}
           />
           {type === ProductModalType.ManageProduct && isEdit ? null : (
             <FooterDescription

@@ -11,9 +11,22 @@ import { observer } from 'mobx-react';
 
 import { ordersStore } from 'src/modules/orders/stores';
 import { colors, fonts } from 'src/theme';
+import { OrderType } from 'src/constants/common.enum';
 
-export const TotalCostBar = observer(({ style }: ViewProps) => {
+interface Props extends ViewProps {
+  orderType?: OrderType;
+}
+
+const purchaseOrderText = 'Total Cost';
+const returnOrderText = 'Return Order Total';
+
+export const TotalCostBar = observer(({ orderType, style }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
+
+  const isReturnOrder = orderType === OrderType.Return;
+  const totalCost = ordersStoreRef.getTotalCost;
+
+  const costSign = isReturnOrder && !!totalCost && '-';
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, style],
@@ -22,8 +35,12 @@ export const TotalCostBar = observer(({ style }: ViewProps) => {
 
   return (
     <View style={containerStyle}>
-      <Text style={styles.text}>Total Cost: </Text>
-      <Text style={styles.count}>${ordersStoreRef.getTotalCost}</Text>
+      <Text style={styles.text}>
+        {isReturnOrder ? returnOrderText : purchaseOrderText}:{' '}
+      </Text>
+      <Text style={styles.count}>
+        {costSign}${totalCost}
+      </Text>
     </View>
   );
 });

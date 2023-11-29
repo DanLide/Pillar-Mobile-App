@@ -1,13 +1,19 @@
-import React from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useRef } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
-import { Button, ButtonType } from '../../components';
 import Logo from '../../../assets/images/logo.png';
-import { colors, fonts, SVGs } from '../../theme';
-import { AppNavigator, UnauthStackParamsList } from '../../navigation/types';
+import { Button, ButtonType } from '../../components';
+import {
+  AppNavigator,
+  LoginType,
+  UnauthStackParamsList,
+} from '../../navigation/types';
+import { SVGs, colors, fonts } from '../../theme';
+import { ssoStore } from 'src/stores';
+import { DeviceName } from './components/DeviceName';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -17,11 +23,32 @@ interface Props {
 }
 
 const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
-const isDeviceConfigured = true;
 
 export const WelcomeScreen = ({ navigation }: Props) => {
+  const ssoStoreRef = useRef(ssoStore).current;
+
   const onPressContinue = () => {
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
+      type: LoginType.LoginShopDevice,
+    });
+  };
+
+  const handleConfigureDevice = () => {
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
+      type: LoginType.ConfigureShopDevice,
+    });
+  };
+
+  const onLoginViaCredentials = () => {
     navigation.navigate(AppNavigator.LoginViaCredentialsScreen);
+  };
+
+  const onLoginViaPin = () => {
+    navigation.navigate(AppNavigator.LoginViaPinScreen);
+  };
+
+  const onUpdateLocation = () => {
+    navigation.navigate(AppNavigator.UpdateShopLocationScreen);
   };
 
   const onPressSSOLogin = async () => {
@@ -33,29 +60,31 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <View style={styles.continueContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <Text style={styles.text}>Welcome to RepairStack!</Text>
-        {isDeviceConfigured ? (
+        {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <View>
-            <Text style={styles.locationText}>Location</Text>
-            <TouchableOpacity onPress={() => console.log('Update Location')}>
+            <Text style={styles.locationText}>
+              {ssoStore.getCurrentSSO?.address}
+            </Text>
+            {/* <TouchableOpacity onPress={onUpdateLocation}>
               <Text style={styles.updateLocationBtn}>Update Location</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ) : (
           <Text style={styles.locationText}>(Location not set)</Text>
         )}
-        {isDeviceConfigured ? (
+        {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <>
             <Button
               type={ButtonType.primary}
               buttonStyle={styles.continueButton}
               title="Continue"
-              onPress={onPressContinue}
+              onPress={onLoginViaPin}
             />
             <Button
               type={ButtonType.secondary}
               buttonStyle={styles.secondaryBtn}
               title="Login with Username"
-              onPress={() => console.log('Login with Username')}
+              onPress={onPressContinue}
             />
           </>
         ) : (
@@ -64,17 +93,18 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               type={ButtonType.primary}
               buttonStyle={styles.continueButton}
               title="Configure shop device"
-              onPress={() => console.log('Configure shop device')}
+              onPress={handleConfigureDevice}
             />
             <Button
               type={ButtonType.secondary}
               buttonStyle={styles.secondaryBtn}
               title="Admin device login"
-              onPress={() => console.log('Admin device login')}
+              onPress={onLoginViaCredentials}
             />
           </>
         )}
       </View>
+      <DeviceName />
       <View style={styles.ssoLoginContainer}>
         <Text style={styles.text}>3M Employee ?</Text>
         <Button
@@ -132,7 +162,8 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   locationText: {
-    paddingTop: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 32,
     fontSize: 14,
     lineHeight: 18,
     fontFamily: fonts.TT_Bold,

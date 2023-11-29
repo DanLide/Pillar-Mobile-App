@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.38.2</string>
+	<string>0.0.46.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -46,7 +46,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>Need to create photo of qr code</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses bluetooth to connect and unlock cabinets.</string>
+	<string>This app uses location to connect and unlock cabinets.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need to read qr codes from gallery</string>
 	<key>UIAppFonts</key>

@@ -1,3 +1,4 @@
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import {
   OrderMethodType,
   OrderStatusType,
@@ -98,6 +99,7 @@ export interface GetOrderSummaryProduct extends OrderProductResponse {
   orderDetailId: number;
   storageAreaId: number;
   storageAreaName: string;
+  cabinets: StockModel[];
 }
 
 export interface GetOrderSummaryAPIResponse {
@@ -179,6 +181,21 @@ export const getOrderStorageAreaAPI = (orderId: number) => {
 
 export const receiveOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
   const url = new URLProvider().receiveOrder();
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      body: JSON.stringify(products),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  });
+};
+
+export const receiveBackOrderAPI = (products: ReceiveOrderRequestProduct[]) => {
+  const url = new URLProvider().receiveBackOrder();
 
   return tryAuthFetch<string>({
     url,

@@ -1,9 +1,11 @@
-import { BaseProductsStore } from '../../../stores/BaseProductsStore';
 import { action, computed, makeObservable, observable, override } from 'mobx';
-import { ProductModel } from '../../../stores/types';
 import { v1 as uuid } from 'uuid';
-import { addProductToList } from '../helpers';
 import { equals } from 'ramda';
+
+import { BaseProductsStore } from 'src/stores/BaseProductsStore';
+import { ProductModel } from 'src/stores/types';
+import { addProductToList } from '../helpers';
+import { InventoryUseType } from 'src/constants/common.enum';
 
 const PRODUCT_MAX_COUNT = 9999;
 
@@ -63,7 +65,14 @@ export class ManageProductsStore extends BaseProductsStore {
   @action setInventoryType(inventoryUseTypeId: number) {
     if (!this.updatedProduct) return;
 
-    this.updatedProduct = { ...this.updatedProduct, inventoryUseTypeId };
+    const isEachPeace = inventoryUseTypeId === InventoryUseType.Each;
+
+    this.updatedProduct = {
+      ...this.updatedProduct,
+      ...(isEachPeace && { unitsPerContainer: 0 }),
+      inventoryUseTypeId,
+      reservedCount: 0,
+    };
   }
 
   @action setCategory(categoryId: number) {

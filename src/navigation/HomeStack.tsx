@@ -1,35 +1,43 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createStackNavigator } from '@react-navigation/stack';
+import React from 'react';
+import { isNil } from 'ramda';
 
-import { AuthStore } from '../stores/AuthStore';
-import { SSOStore } from '../stores/SSOStore';
-import {
-  AppNavigator,
-  HomeStackParamList,
-  RightBarType,
-  LeftBarType,
-} from './types';
-import { getNavigationOptions, getScreenOptions } from './helpers';
-import { authStore, ssoStore } from '../stores';
 import { HomeScreen } from '../modules/home/HomeScreen';
-import TermsScreen from '../modules/terms/TermsScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 import { SelectSSOScreen } from '../modules/sso/SelectSSOScreen';
-import { ReturnStack } from './ReturnStack';
-import { RemoveStack } from './RemoveStack';
-import { ManageProductsStack } from './ManageProductsStack';
-import { DrawerContent } from './components';
+import TermsScreen from '../modules/terms/TermsScreen';
+import { authStore, ssoStore } from '../stores';
+import { AuthStore } from '../stores/AuthStore';
+import { SSOStore } from '../stores/SSOStore';
+import { ConfigureDeviceStack } from './ConfigureDeviceStack';
 import { CreateInvoiceStack } from './CreateInvoiceStack';
+import { ManageProductsStack } from './ManageProductsStack';
 import { OrdersStack } from './OrdersStack';
+import { RemoveStack } from './RemoveStack';
+import { ReturnStack } from './ReturnStack';
+import { DrawerContent } from './components';
+import { getNavigationOptions, getScreenOptions } from './helpers';
+import {
+  AppNavigator,
+  ConfigureDeviceStackParams,
+  HomeStackParamList,
+  LeftBarType,
+  RightBarType,
+} from './types';
+import { SettingsScreen } from 'src/modules/settings/SettingsScreen';
 
 const getInitialScreen = (
   authStore: AuthStore,
   ssoStore: SSOStore,
-): keyof HomeStackParamList => {
+): keyof HomeStackParamList | keyof ConfigureDeviceStackParams => {
+  const getIsDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
   // if (!authStore.isLanguageSelected) {
   //   return AppNavigator.LanguageSelectScreen;
   // }
+  if (!isNil(getIsDeviceConfiguredBySSO) && !getIsDeviceConfiguredBySSO) {
+    return AppNavigator.ConfigureDeviceStack;
+  }
   if (!authStore.isTnCSelected) {
     return AppNavigator.TermsScreen;
   }
@@ -119,6 +127,19 @@ export const HomeStack: React.FC = () => {
         name={AppNavigator.OrdersStack}
         component={OrdersStack}
         options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.ConfigureDeviceStack}
+        component={ConfigureDeviceStack}
+        options={getNavigationOptions}
+      />
+      <Stack.Screen
+        name={AppNavigator.Settings}
+        component={SettingsScreen}
+        options={getScreenOptions({
+          title: 'Settings',
+          leftBarButtonType: LeftBarType.Back,
+        })}
       />
     </Stack.Navigator>
   );
