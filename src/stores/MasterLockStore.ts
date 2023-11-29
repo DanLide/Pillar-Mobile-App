@@ -6,7 +6,6 @@ import MasterLockModule, {
   MasterLockStateListener,
 } from '../data/masterlock';
 import { PermissionStore } from 'src/modules/permissions/stores/PermissionStore';
-import { RESULTS } from 'react-native-permissions';
 import { RoleType } from 'src/constants/common.enum';
 
 type UpdatedLockItem = [string, LockVisibility | LockStatus];
@@ -21,7 +20,7 @@ const LICENSE_ID =
 
 export const RELOCK_TIME = 10000; // msec
 export const RELOCK_TIME_SEC = RELOCK_TIME / 1000;
-export const INIT_TIME = 4000;
+export const INIT_TIME = 60000;
 
 export class MasterLockStore {
   @observable stocksState: Record<string, StockState>;
@@ -85,10 +84,11 @@ export class MasterLockStore {
           firmwareVersion,
         );
       }
-      setTimeout(() => {
-        this.isIniting = false;
-      }, INIT_TIME);
     }
+
+    setTimeout(() => {
+      this.isIniting = false;
+    }, INIT_TIME);
   }
 
   @action async unlock(deviceID: string) {
