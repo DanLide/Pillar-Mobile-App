@@ -82,11 +82,12 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
     if (!product) return;
 
-    if (product.cabinets.length > 1) {
-      this.store.setBackorderCabinets(product.cabinets);
-      this.store.setCabinetSelection(true);
-    } else {
-
+    //unlock when fix multiple backorders
+    // if (product.cabinets.length > 1) {
+    //   this.store.setBackorderCabinets(product.cabinets);
+    //   this.store.setCabinetSelection(true);
+    // } else {
+    
       const availableStocks =
         stocksStore.stocks.filter(stock =>
           product.cabinets.find(
@@ -94,7 +95,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
           ),
         ) || [];
       this.store.setCurrentStocks(availableStocks[0]);
-    }
+    // }
 
     this.productContext.product = product;
   }
