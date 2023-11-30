@@ -13,6 +13,7 @@ import { BadRequestError } from './helpers/tryFetch';
 import { stocksStore } from '../modules/stocksList/stores';
 import { getProductSettingsByIdAPI } from './api/productsAPI';
 import { OrderType } from 'src/constants/common.enum';
+import { Utils } from 'src/data/helpers/utils';
 
 interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
@@ -109,10 +110,20 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    const [productDetails, settings] = await Promise.all([
-      getFetchProductAPI(btoa(this.scanCode), currentStock.partyRoleId),
-      getProductSettingsByIdAPI(productId, currentStock),
-    ]);
+    const [productDetailsResponse, settingsResponse] = await Promise.allSettled(
+      [
+        getFetchProductAPI(btoa(this.scanCode), currentStock.partyRoleId),
+        getProductSettingsByIdAPI(productId, currentStock),
+      ],
+    );
+
+    const productDetails = Utils.isPromiseFulfilled(productDetailsResponse)
+      ? productDetailsResponse.value
+      : null;
+
+    const settings = Utils.isPromiseFulfilled(settingsResponse)
+      ? settingsResponse.value
+      : null;
 
     this.productContext.product = {
       ...product,
