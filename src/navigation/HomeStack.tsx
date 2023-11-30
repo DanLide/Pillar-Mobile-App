@@ -20,18 +20,22 @@ import { DrawerContent } from './components';
 import { getNavigationOptions, getScreenOptions } from './helpers';
 import {
   AppNavigator,
-  ConfigureDeviceStackParams,
   HomeStackParamList,
   LeftBarType,
   RightBarType,
 } from './types';
 import { SettingsScreen } from 'src/modules/settings/SettingsScreen';
+import { AlphaAlertScreen } from 'src/modules/terms/AlphaAlertScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const getInitialScreen = (
   authStore: AuthStore,
   ssoStore: SSOStore,
-): keyof HomeStackParamList | keyof ConfigureDeviceStackParams => {
+): keyof HomeStackParamList => {
   const getIsDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
+  if (!authStore.isUsernameExistInUsernames) {
+    return AppNavigator.AlphaAlertScreen;
+  }
   // if (!authStore.isLanguageSelected) {
   //   return AppNavigator.LanguageSelectScreen;
   // }
@@ -41,7 +45,7 @@ const getInitialScreen = (
   if (!authStore.isTnCSelected) {
     return AppNavigator.TermsScreen;
   }
-  if (!ssoStore.getCurrentSSO) {
+  if (ssoStore.getCurrentSSO) {
     return AppNavigator.SelectSSOScreen;
   }
   return AppNavigator.HomeScreen;
@@ -76,6 +80,7 @@ const DrawerHome = () => (
 );
 
 export const HomeStack: React.FC = () => {
+  const navigation = useNavigation<any>();
   const initialRoute = getInitialScreen(authStore, ssoStore);
 
   return (
@@ -91,6 +96,24 @@ export const HomeStack: React.FC = () => {
         options={getScreenOptions({
           title: 'Terms & Conditions',
           rightBarButtonType: RightBarType.Logout,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.AlphaAlertScreen}
+        component={AlphaAlertScreen}
+        options={getScreenOptions({
+          title: 'Alpha/Beta Agreement',
+          leftBarButtonType: LeftBarType.Close,
+          leftBarButtonAction: () => {
+            const screen = getInitialScreen(authStore, ssoStore);
+            if (screen === AppNavigator.HomeScreen) {
+              navigation.reset({
+                routes: [{ name: AppNavigator.Drawer }],
+              });
+            } else {
+              navigation.navigate(screen);
+            }
+          },
         })}
       />
       <Stack.Screen

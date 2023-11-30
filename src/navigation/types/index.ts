@@ -21,6 +21,7 @@ export enum AppNavigator {
   SelectSSOScreen = 'SelectSSOScreen',
   Drawer = 'Drawer',
   Settings = 'Settings',
+  AlphaAlertScreen = 'AlphaAlertScreen',
 
   // Shared screens
   SelectStockScreen = 'SelectStockScreen',
@@ -86,7 +87,9 @@ type BluetoothPermissionScreenParams = {
   nextRoute: AppNavigator.SelectStockScreen | AppNavigator.OrderDetailsScreen;
 } & CreateOrderParams;
 
-export type StockLocationParams = { succeedBluetooth?: boolean } & CreateOrderParams;
+export type StockLocationParams = {
+  succeedBluetooth?: boolean;
+} & CreateOrderParams;
 
 type SelectSSOScreenParams = {
   isUpdating?: boolean;
@@ -136,6 +139,7 @@ export type HomeStackParamList = {
   [AppNavigator.OrdersStack]: undefined;
   [AppNavigator.ConfigureDeviceStack]: undefined;
   [AppNavigator.Settings]: undefined;
+  [AppNavigator.AlphaAlertScreen]: undefined;
 };
 
 export type RemoveStackParamList = {
