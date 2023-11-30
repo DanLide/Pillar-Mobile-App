@@ -45,7 +45,7 @@ const getInitialScreen = (
   if (!authStore.isTnCSelected) {
     return AppNavigator.TermsScreen;
   }
-  if (ssoStore.getCurrentSSO) {
+  if (!ssoStore.getCurrentSSO) {
     return AppNavigator.SelectSSOScreen;
   }
   return AppNavigator.HomeScreen;
@@ -102,7 +102,7 @@ export const HomeStack: React.FC = () => {
         name={AppNavigator.AlphaAlertScreen}
         component={AlphaAlertScreen}
         options={getScreenOptions({
-          title: 'Alpha/Beta Agreement',
+          title: '3M Alpha/Beta Agreement',
           leftBarButtonType: LeftBarType.Close,
           leftBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);

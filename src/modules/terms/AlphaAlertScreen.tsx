@@ -5,7 +5,7 @@ import { getUsernames, setUsernames } from 'src/helpers/localStorage';
 
 import WebView from 'react-native-webview';
 
-import AlphaBetaAgreement from '../../assets/AlphaBetaAgreement.pdf';
+import AlphaBetaAgreement from '../../../assets/pdf/AlphaBetaAgreement.pdf';
 
 export const AlphaAlertScreen = () => {
   const updateUsernames = useCallback(async () => {
