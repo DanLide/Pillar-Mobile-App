@@ -120,6 +120,8 @@ export const ProductModal = observer(
     const topOffset = useSharedValue(modalCollapsedOffset);
 
     const isOnOrder = (product?.onOrder ?? 0) > 0;
+    const isSpecialOrder =
+      product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
     const onOrderTitle = useMemo(
       () => (
@@ -223,8 +225,8 @@ export const ProductModal = observer(
 
     const handleEditPress = useCallback(() => {
       onEditPress?.();
-      store.setOnHand(0);
-    }, [onEditPress, store]);
+      if (isSpecialOrder) store.setOnHand(0);
+    }, [isSpecialOrder, onEditPress, store]);
 
     const handleCancelPress = useCallback(() => {
       if (store.isProductChanged) {

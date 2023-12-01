@@ -7,6 +7,7 @@ export const getIsUpcUnique = (product?: ProductModel) =>
       where({
         upc: equals(product?.upc),
         productId: complement(equals(product?.productId)),
+        stockLocationId: equals(product?.partyRoleId),
       }),
     ),
     not,
