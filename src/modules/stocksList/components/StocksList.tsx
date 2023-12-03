@@ -17,7 +17,7 @@ import {
 import { masterLockStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
-import { RESULTS } from 'react-native-permissions';
+import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { ToastType } from 'src/contexts/types';
 import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
 
@@ -54,9 +54,13 @@ export const StocksList: React.FC<Props> = observer(
     const [isError, setIsError] = useState(false);
 
     const initMasterLock = useCallback(async () => {
-      if (!stocksStore.stocks.length) return;
+      if (
+        !stocksStore.stocks.length ||
+        !permissionStore.isMasterLockPermissionsGranted
+      )
+        return;
       await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
-    }, [stocksStore.stocks]);
+    }, [stocksStore.stocks, permissionStore.isMasterLockPermissionsGranted]);
 
     const handleFetchStocks = useCallback(async () => {
       setIsLoading(true);
@@ -88,6 +92,16 @@ export const StocksList: React.FC<Props> = observer(
     };
 
     const { showToast, hideAll, toastInitialized } = useSingleToast();
+
+    const requestLocationPermission = useCallback(async () => {
+      await permissionStore.requestPermission(
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      );
+    }, []);
+
+    useEffect(() => {
+      requestLocationPermission();
+    }, [requestLocationPermission]);
 
     const checkPermissions = async () => {
       await permissionStore.setBluetoothPowerListener();

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { authStore } from 'src/stores';
 import { getUsernames, setUsernames } from 'src/helpers/localStorage';
+import Pdf from 'react-native-pdf';
 
 import WebView from 'react-native-webview';
 
@@ -24,7 +25,22 @@ export const AlphaAlertScreen = () => {
   }, [updateUsernames]);
   return (
     <View style={styles.container}>
-      <WebView style={styles.container} source={AlphaBetaAgreement} />
+      <Pdf
+        source={AlphaBetaAgreement}
+        onLoadComplete={(numberOfPages, filePath) => {
+          console.log(`Number of pages: ${numberOfPages}`);
+        }}
+        onPageChanged={(page, numberOfPages) => {
+          console.log(`Current page: ${page}`);
+        }}
+        onError={error => {
+          console.log(error);
+        }}
+        onPressLink={uri => {
+          console.log(`Link pressed: ${uri}`);
+        }}
+        style={styles.container}
+      />
     </View>
   );
 };

@@ -102,7 +102,7 @@ export const HomeStack: React.FC = () => {
         name={AppNavigator.AlphaAlertScreen}
         component={AlphaAlertScreen}
         options={getScreenOptions({
-          title: '3M Alpha/Beta Agreement',
+          title: 'Alpha/Beta Agreement',
           leftBarButtonType: LeftBarType.Close,
           leftBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);

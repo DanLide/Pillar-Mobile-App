@@ -103,6 +103,13 @@ export class PermissionStore {
   @computed get isBluetoothOn() {
     return this.bluetoothStatus === 'PoweredOn';
   }
+
+  @computed get isMasterLockPermissionsGranted() {
+    return (
+      this.bluetoothPermission === RESULTS.GRANTED &&
+      this.locationPermission === RESULTS.GRANTED
+    );
+  }
 }
 
 export default new PermissionStore();
