@@ -1,7 +1,7 @@
 import { isEmpty } from 'ramda';
 
 import { Task, TaskExecutor } from './helpers';
-import { getFetchStockAPI } from './api';
+import { getFetchStockByDeviceNameAPI, getFetchStockAPI } from './api';
 
 import {
   StockModelWithMLAccess,
@@ -33,7 +33,12 @@ export class FetchStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const response = await getFetchStockAPI();
+    let response: StockModelWithMLAccess[] | undefined = [];
+    try {
+      response = await getFetchStockByDeviceNameAPI();
+    } catch (error) {
+      response = await getFetchStockAPI();
+    }
     this.fetchStocksContext.stocks = response || [];
   }
 }

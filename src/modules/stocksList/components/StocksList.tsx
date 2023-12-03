@@ -14,7 +14,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { masterLockStore } from 'src/stores';
+import { masterLockStore, ssoStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
 import { RESULTS } from 'react-native-permissions';
@@ -52,6 +52,7 @@ export const StocksList: React.FC<Props> = observer(
     const navigation = useNavigation();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
+    const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
 
     const initMasterLock = useCallback(async () => {
       if (!stocksStore.stocks.length) return;
@@ -90,6 +91,8 @@ export const StocksList: React.FC<Props> = observer(
     const { showToast, hideAll, toastInitialized } = useSingleToast();
 
     const checkPermissions = async () => {
+      if (!isDeviceConfiguredBySSO) return;
+      console.log(2);
       await permissionStore.setBluetoothPowerListener();
       permissionStore.locationCheck();
 
