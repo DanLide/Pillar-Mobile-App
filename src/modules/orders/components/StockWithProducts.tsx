@@ -15,7 +15,7 @@ import { LockStatus, LockVisibility } from 'src/data/masterlock';
 import { stocksStore } from 'src/modules/stocksList/stores';
 import { ProductModel } from 'src/stores/types';
 import { SVGs, colors, fonts } from 'src/theme';
-import { masterLockStore } from 'src/stores';
+import { masterLockStore, ssoStore } from 'src/stores';
 
 interface Props {
   stockName: string;
@@ -40,6 +40,7 @@ export const StockWithProducts: React.FC<Props> = ({
   const stockItem = stocksStore.stocks.find(
     stock => stock.partyRoleId === Number(stockId),
   );
+  const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
   const controllerSerialNo = stockItem?.controllerSerialNo || '';
   const isVisible =
     masterLockStore.stocksState[controllerSerialNo]?.visibility ===
@@ -48,7 +49,10 @@ export const StockWithProducts: React.FC<Props> = ({
   const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
 
   const renderIcon = () => {
-    if (stockItem?.roleTypeId !== RoleType.Cabinet && isVisible) {
+    if (
+      (stockItem?.roleTypeId !== RoleType.Cabinet && isVisible) ||
+      !isDeviceConfiguredBySSO
+    ) {
       return <SVGs.CabinetSimple />;
     }
     switch (lockStatus) {

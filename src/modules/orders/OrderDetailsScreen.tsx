@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { groupBy } from 'ramda';
 import { autorun } from 'mobx';
-import { masterLockStore } from 'src/stores';
+import { masterLockStore, ssoStore } from 'src/stores';
 
 import { ordersStore } from './stores';
 import {
@@ -40,6 +40,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const [isLocationPermissionRequested, setIsLocationPermissionRequested] =
     useState(false);
   const locationPermission = permissionStore.locationPermission;
+  const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
 
   const { showToast, hideAll } = useSingleToast();
   const selectedStockId = useRef('');
@@ -58,7 +59,8 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const navigateToUnlockScreen =
     isVisible &&
     lockStatus === LockStatus.LOCKED &&
-    stockItem?.roleTypeId === RoleType.Cabinet;
+    stockItem?.roleTypeId === RoleType.Cabinet &&
+    isDeviceConfiguredBySSO;
 
   const { currentOrder } = ordersStoreRef;
   const orderProductsByStockId = groupBy(

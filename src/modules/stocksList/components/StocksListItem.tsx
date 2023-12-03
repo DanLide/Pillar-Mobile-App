@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
   ViewStyle,
   Pressable,
 } from 'react-native';
-import { masterLockStore } from 'src/stores';
+import { masterLockStore, ssoStore } from 'src/stores';
 
 import { StockModel } from '../stores/StocksStore';
 import { RoleType } from 'src/constants/common.enum';
@@ -47,6 +47,7 @@ export const StocksListItem: React.FC<Props> = observer(
   }) => {
     const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
 
+    const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
     const navigation = useNavigation<ScreenNavigationProp>();
     const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
     const isVisible =
@@ -59,7 +60,12 @@ export const StocksListItem: React.FC<Props> = observer(
       isVisible;
 
     const unlockMasterlock = () => {
-      if (isLocked && !skipNavToUnlockScreen && item.controllerSerialNo) {
+      if (
+        isLocked &&
+        !skipNavToUnlockScreen &&
+        item.controllerSerialNo &&
+        isDeviceConfiguredBySSO
+      ) {
         masterLockStore.unlock(item.controllerSerialNo);
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
           title: organizationName,
@@ -74,7 +80,10 @@ export const StocksListItem: React.FC<Props> = observer(
     };
 
     const renderIcon = () => {
-      if (roleTypeId !== RoleType.Cabinet && isVisible) {
+      if (
+        (roleTypeId !== RoleType.Cabinet && isVisible) ||
+        !isDeviceConfiguredBySSO
+      ) {
         return <SVGs.CabinetSimple />;
       }
       switch (lockStatus) {
@@ -113,7 +122,7 @@ export const StocksListItem: React.FC<Props> = observer(
             {itemRightText && (
               <Text style={styles.statusText}>{itemRightText}</Text>
             )}
-            {isLocked && !itemRightText && (
+            {isDeviceConfiguredBySSO && isLocked && !itemRightText && (
               <Text style={styles.statusText}>Unlock</Text>
             )}
             <SVGs.ChevronIcon color={colors.purpleDark} />

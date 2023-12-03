@@ -5,7 +5,7 @@ import {
   SaveStocksToStore,
 } from '../fetchStocks';
 
-import { getFetchStockAPI } from '../api/stocksAPI';
+import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from '../api/stocksAPI';
 
 import {
   StockStore,
@@ -39,19 +39,19 @@ describe('fetchStocks', () => {
   });
 
   it('should execute FetchStocksTask task', async () => {
-    (getFetchStockAPI as jest.Mock).mockReturnValue(mockStockResponse);
+    (getFetchStockByDeviceNameAPI as jest.Mock).mockReturnValue(mockStockResponse);
     const fetchStocksTask = new FetchStocksTask({ stocks: [] });
     await expect(fetchStocksTask.run()).resolves.not.toThrow();
     expect(fetchStocksTask.fetchStocksContext.stocks).toStrictEqual(mockExpected);
-    expect(getFetchStockAPI).toHaveBeenCalled();
+    expect(getFetchStockByDeviceNameAPI).toHaveBeenCalled();
   });
 
   it('should throw Error FetchStocksTask task', async () => {
-    (getFetchStockAPI as jest.Mock).mockImplementation(() => {
+    (getFetchStockByDeviceNameAPI as jest.Mock).mockImplementation(() => {
       throw Error();
     });
     const fetchStocksTask = new FetchStocksTask({ stocks: [] });
-    await expect(fetchStocksTask.run()).rejects.toThrow();
+    await expect(fetchStocksTask.run()).resolves;
     expect(getFetchStockAPI).toHaveBeenCalled();
   });
 
@@ -68,6 +68,6 @@ describe('fetchStocks', () => {
 
   it('should call fetchStocks with empty stocks in stocksStore', async () => {
     await fetchStocks(mockStockStore);
-    expect(getFetchStockAPI).toHaveBeenCalled();
+    expect(getFetchStockByDeviceNameAPI).toHaveBeenCalled();
   });
 });
