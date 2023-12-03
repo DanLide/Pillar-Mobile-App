@@ -25,8 +25,8 @@ import autoLogoutService, {
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
-import { getSSORNToken } from 'src/helpers/localStorage';
-import { deviceInfoStore, ssoStore } from 'src/stores';
+import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
+import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 
 const { width, height } = Dimensions.get('window');
 const backgroundImageSize = {
@@ -85,6 +85,17 @@ const App = observer(() => {
   useEffect(() => {
     getSSORNTokenData();
   }, [getSSORNTokenData]);
+
+  const getUsernamesData = useCallback(async () => {
+    const data = await getUsernames();
+    if (data && data.usernames) {
+      authStore.setUsernames(data.usernames);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUsernamesData();
+  }, [getUsernamesData]);
 
   const renderSplashScreen = () => {
     if (appState === 'active') {
