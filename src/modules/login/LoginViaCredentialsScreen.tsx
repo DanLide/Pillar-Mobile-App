@@ -67,7 +67,7 @@ const LoginViaCredentialsScreenContent = observer(
         );
       } else if (error.code === 'no_permission') {
         showToast(error.message, {
-          type: ToastType.Error,
+          type: ToastType.ProfileError,
           duration: 0,
         });
       } else {
