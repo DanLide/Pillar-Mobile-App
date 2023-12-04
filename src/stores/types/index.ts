@@ -35,6 +35,7 @@ export interface ProductModel
   stockLocationId?: string;
   storageAreaName?: string;
   inventoryById?: number;
+  partyRoleId?: number;
 }
 
 export interface ClearStoreType {
