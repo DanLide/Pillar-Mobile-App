@@ -106,7 +106,6 @@ export const StocksList: React.FC<Props> = observer(
 
     const checkPermissions = async () => {
       if (!isDeviceConfiguredBySSO) return;
-      console.log(2);
       await permissionStore.setBluetoothPowerListener();
       permissionStore.locationCheck();
 

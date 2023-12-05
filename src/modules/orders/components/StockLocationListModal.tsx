@@ -1,32 +1,34 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Modal,
-  StyleSheet,
-  Pressable,
-} from 'react-native';
-import { getFetchStockAPI } from 'src/data/api';
+import { View, Text, Modal, StyleSheet, Pressable } from 'react-native';
+import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';
-import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
+import { StockModel, StockModelWithMLAccess } from 'src/modules/stocksList/stores/StocksStore';
 import { colors, fonts, SVGs } from 'src/theme';
 import { ordersStore } from '../stores';
 
 type StockLocationListModalProps = {
   visible: boolean;
   closeModal: () => void;
-}
+};
 
-export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({ visible, closeModal }) => {
+export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
+  visible,
+  closeModal,
+}) => {
   const product = ordersStore.currentProduct;
 
   const fetchStocks = async () => {
-    const allStocks = await getFetchStockAPI();
+    let stocks: StockModelWithMLAccess[] | undefined = [];
+    try {
+      stocks = await getFetchStockByDeviceNameAPI();
+    } catch (error) {
+      stocks = await getFetchStockAPI();
+    }
     const productCabinets = ordersStore.backorderCabinets;
 
     const availableStocks =
-      allStocks.filter(stock =>
+      stocks.filter(stock =>
         productCabinets.find(
           cabinet => stock.partyRoleId === cabinet.storageAreaId,
         ),
@@ -47,16 +49,10 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({ 
           <Text style={styles.bannerText}>Choose Stock Location for Item</Text>
           <View style={styles.descriptionContainer}>
             <View style={styles.titleContainer}>
-              <Pressable
-                style={styles.iconWrapper}
-                onPress={closeModal}
-              >
+              <Pressable style={styles.iconWrapper} onPress={closeModal}>
                 <SVGs.CloseIcon color={colors.purpleDark3} />
               </Pressable>
-              <Text
-                numberOfLines={1}
-                style={styles.title}
-              >
+              <Text numberOfLines={1} style={styles.title}>
                 {product?.name}
               </Text>
             </View>
@@ -68,13 +64,13 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({ 
             onPressItem={onItemPress}
             onFetchStocks={fetchStocks}
             skipNavToUnlockScreen
-            itemRightText='Receive here'
+            itemRightText="Receive here"
           />
         </View>
       </View>
     </Modal>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -122,4 +118,4 @@ const styles = StyleSheet.create({
     fontSize: 22,
     lineHeight: 26,
   },
-})
+});
