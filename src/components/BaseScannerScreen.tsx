@@ -1,28 +1,29 @@
-import React, { useCallback, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
+import React, { useCallback, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 
+import { BarcodeFormat } from 'vision-camera-code-scanner';
+import { ToastType } from '../contexts/types';
+import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
+import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
+import { Utils, isBadRequestError } from '../data/helpers/utils';
+import { useSingleToast } from '../hooks';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalProps,
+} from '../modules/productModal';
 import {
   CurrentProductStoreType,
   ProductModel,
   ScannerModalStoreType,
   StockProductStoreType,
 } from '../stores/types';
-import { ToastType } from '../contexts/types';
-import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
-import { isBadRequestError, Utils } from '../data/helpers/utils';
-import {
-  ProductModal,
-  ProductModalParams,
-  ProductModalProps,
-} from '../modules/productModal';
-import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
+import ScanProduct, { ScanProductProps } from './ScanProduct';
+import { Spinner } from './Spinner';
 import { ToastMessage } from './ToastMessage';
-import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
-import { useSingleToast } from '../hooks';
-import { BarcodeFormat } from 'vision-camera-code-scanner';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -155,6 +156,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         } else {
           handleScanError?.(ScannerScreenError.ProductNotFound);
         }
+        setIsScannerActive(true);
       },
       [fetchProductByCode, handleScanError],
     );
@@ -211,6 +213,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           scannedProductCount={scannedProducts.length}
           filteredType={filteredType}
         />
+        <Spinner visible={!isScannerActive} />
         <ProductModalComponent
           {...modalParams}
           product={product}
