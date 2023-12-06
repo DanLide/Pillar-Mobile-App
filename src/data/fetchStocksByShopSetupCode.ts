@@ -40,7 +40,7 @@ export const fetchStocksByShopSetupCodeTask = async (
     new FetchShopByShopSetupCodeTask(stocksContext, shopSetupCode, ssoStore),
     new FetchStocksByShopTask(stocksContext),
     new FetchSSOMobileDevicesTask(stocksContext, ssoStore),
-    // new FetchRNTokenTask(stocksContext),
+    new FetchRNTokenTask(stocksContext),
     new SaveDataToStore(stocksContext, stocksStore, ssoStore),
   ]).execute();
 };
@@ -111,7 +111,7 @@ export class FetchSSOMobileDevicesTask extends Task {
         device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
       )
     ) {
-      this.fetchStocksContext.ssoMobileDevices = response;
+      this.ssoStore.setSSOMobileDevices(response);
     } else {
       throw Error('Device not assign to Repair facility!');
     }
@@ -128,7 +128,7 @@ class FetchRNTokenTask extends Task {
   async run(): Promise<void> {
     const response = await getRNTokenAPI();
     if (response) {
-      this.fetchStocksContext.rnToken = response;
+      this.fetchStocksContext.rnToken = response.token;
     }
   }
 }
@@ -151,10 +151,9 @@ export class SaveDataToStore extends Task {
 
   async run() {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
-    this.ssoStore.setSSOMobileDevices(this.fetchStocksContext.ssoMobileDevices);
     this.ssoStore.setDeviceConfiguration(true);
-    if (this.ssoStore.getCurrentSSO) {
-      setSSORNToken('RNToken', this.ssoStore.getCurrentSSO);
+    if (this.ssoStore.getCurrentSSO && this.fetchStocksContext.rnToken) {
+      setSSORNToken(this.fetchStocksContext.rnToken, this.ssoStore.getCurrentSSO);
     }
   }
 }

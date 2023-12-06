@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
+import { observer } from 'mobx-react';
 
 import { getNavigationOptions, getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, UnauthStackParamsList } from './types';
@@ -7,10 +8,12 @@ import { WelcomeScreen } from '../modules/login/WelcomeScreen';
 import { LoginViaCredentialsScreen } from '../modules/login/LoginViaCredentialsScreen';
 import { LoginViaPinScreen } from 'src/modules/login/LoginViaPinScreen';
 import { UpdateShopLocationScreen } from 'src/modules/login/UpdateShopLocationScreen';
+import { ssoStore } from 'src/stores';
+
 
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
-export const UnauthStack: React.FC = () => {
+export const UnauthStack: React.FC = observer(() => {
   return (
     <Stack.Navigator initialRouteName={AppNavigator.WelcomeScreen}>
       <Stack.Screen
@@ -30,7 +33,7 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.LoginViaPinScreen}
         component={LoginViaPinScreen}
         options={getScreenOptions({
-          title: 'RepairStack',
+          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -44,4 +47,4 @@ export const UnauthStack: React.FC = () => {
       />
     </Stack.Navigator>
   );
-};
+});
