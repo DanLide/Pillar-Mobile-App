@@ -27,6 +27,42 @@ interface MultiSSOAPIObj {
   distributorName?: string;
 }
 
+export interface GetUnassignedDevicesResponse {
+  AllowSSODiscountChange: boolean;
+  CCCLicenseNumber: null;
+  DROrderId: null;
+  Discount: null;
+  IsDistributorChanged: boolean;
+  IsMobilePINCodeRequired: boolean;
+  Permission: [];
+  PrimaryContactpartyRelationshipType: [];
+  branch: null;
+  branchId: null;
+  contractType: null;
+  createdByUserB2CId: null;
+  distributor: null;
+  distributorId: null;
+  distributorName: null;
+  electronicAddress: [];
+  isContractType: boolean;
+  leanTecSerialNo: string;
+  liquidMarkup: null;
+  materialMarkup: null;
+  modifiedByUserB2CId: null;
+  msoId: null;
+  name: string;
+  parentPartyRoleId: number;
+  partyIdentificationType: [];
+  partyRelationshipType: [];
+  partyRoleId: number;
+  partySettingsType: [];
+  postalAddress: [];
+  roleTypeId: number;
+  shopType: null;
+  telecommunicationsNumber: [];
+  territories: [];
+}
+
 export const singleSSOAPI = (token: string, facilityID: string) => {
   const url = new URLProvider().getSingleSSOUrl(facilityID);
 
@@ -89,12 +125,24 @@ export const deviceByRepairFacilityIdAPI = () => {
   });
 };
 
-export const assignDeviceToSSOAPI = () => {
-  const url = new URLProvider().SSOAssignMobileDevice();
+export const assignDeviceToSSOAPI = (deviceId: number) => {
+  const url = new URLProvider().SSOAssignMobileDevice(deviceId);
+
   return tryAuthFetch<string>({
     url,
     request: {
       method: 'PUT',
+    },
+  });
+};
+
+export const fetchUnassignedDevices = () => {
+  const url = new URLProvider().getUnassignedDevices();
+
+  return tryAuthFetch<GetUnassignedDevicesResponse[]>({
+    url,
+    request: {
+      method: 'GET',
     },
   });
 };
