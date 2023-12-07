@@ -10,8 +10,16 @@ interface ResetMasterlockRequest {
   repairFacilityId: string;
 }
 
-export const getFetchStockAPI = () => {
+export const getFetchStockByDeviceNameAPI = () => {
   const url = new URLProvider().getFetchStocksWithCabinetsData();
+  return tryAuthFetch<StockModelWithMLAccess[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+export const getFetchStockAPI = () => {
+  const url = new URLProvider().getFetchStockUrl();
   return tryAuthFetch<StockModelWithMLAccess[]>({
     url,
     request: { method: 'GET' },

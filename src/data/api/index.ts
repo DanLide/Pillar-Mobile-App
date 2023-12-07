@@ -1,6 +1,6 @@
 import { getRoleManagerAPI } from './getRoleManager';
 import { loginAPI, LoginAPIParams } from './login';
-import { getFetchStockAPI } from './stocksAPI';
+import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from './stocksAPI';
 import {
   getFetchProductAPI,
   removeProductAPI,
@@ -22,6 +22,7 @@ import {
 } from './orders';
 
 export {
+  getFetchStockByDeviceNameAPI,
   getRoleManagerAPI,
   loginAPI,
   getFetchStockAPI,

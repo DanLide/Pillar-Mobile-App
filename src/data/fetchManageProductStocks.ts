@@ -1,5 +1,5 @@
 import { Task, TaskExecutor } from './helpers';
-import { getFetchStockAPI } from './api';
+import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from './api';
 
 import {
   CategoryModel,
@@ -53,14 +53,17 @@ export class FetchManageProductStocksTask extends Task {
   }
 
   async run(): Promise<void> {
-    const [stocks, categories, suppliers, facilityProducts] = await Promise.all(
-      [
-        getFetchStockAPI(),
-        getCategoriesByFacilityIdAPI(),
-        getSupplierListByFacilityIdAPI(),
-        getFacilityProducts(),
-      ],
-    );
+    let stocks: StockModelWithMLAccess[] | undefined = [];
+    try {
+      stocks = await getFetchStockByDeviceNameAPI();
+    } catch (error) {
+      stocks = await getFetchStockAPI();
+    }
+    const [categories, suppliers, facilityProducts] = await Promise.all([
+      getCategoriesByFacilityIdAPI(),
+      getSupplierListByFacilityIdAPI(),
+      getFacilityProducts(),
+    ]);
 
     this.fetchStocksContext.stocks = stocks ?? [];
     this.fetchStocksContext.categories = categories ?? [];

@@ -26,7 +26,7 @@ export const ConfigureDeviceStack: React.FC = () => {
             authStore.logOut();
           },
           leftBarButtonType: LeftBarType.Back,
-          title: 'Scan your Repair Facility code',
+          title: 'Repair Facility code',
         })}
       />
       <Stack.Screen
@@ -34,7 +34,7 @@ export const ConfigureDeviceStack: React.FC = () => {
         component={EnterShopCodeScreen}
         options={getScreenOptions({
           leftBarButtonType: LeftBarType.Back,
-          title: 'Enter Repair Facility code',
+          title: 'Repair Facility code',
         })}
       />
       <Stack.Screen

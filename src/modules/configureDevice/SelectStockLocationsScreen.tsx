@@ -56,6 +56,7 @@ const SelectStockLocations = observer(({ navigation }: Props) => {
         type: ToastType.Error,
       });
     } else {
+      stocksStore.clear();
       navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
         stocks: selectedStocks,
       });

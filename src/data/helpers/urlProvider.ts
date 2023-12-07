@@ -34,7 +34,6 @@ export class URLProvider {
       inventory: { apiUri: string };
       order: { apiUri: string };
       shopSetup: { apiUri: string };
-      shopSetupAuthentication: { apiUri: string },
       base: { apiUri: string };
     };
   };
@@ -119,7 +118,7 @@ export class URLProvider {
   }
 
   getShopSetupLoginUrl() {
-    return new URL(`${this.currentEnv.modules.shopSetupAuthentication.apiUri}/api/login`);
+    return new URL(`${this.currentEnv.modules.shopSetup.apiUri}/api/login`);
   }
 
   getDeviceByRepairFacilityIdUrl() {
@@ -346,12 +345,17 @@ export class URLProvider {
     );
   }
 
-  SSOAssignMobileDevice() {
+  SSOAssignMobileDevice(deviceId: number) {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
-    const deviceId = deviceInfoStore.getDeviceName;
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignDevice/${deviceId}/${facilityId}`,
+    );
+  }
+
+  getUnassignedDevices() {
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/UnassignedEquipment/34`,
     );
   }
 

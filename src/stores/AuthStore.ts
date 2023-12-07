@@ -24,6 +24,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private facilityID?: string;
   private refreshToken?: string;
   private tokenExpiresOn?: Date;
+  private usernames: string[];
 
   constructor() {
     this.token = undefined;
@@ -32,6 +33,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.permissionSet = undefined;
     this.roleTypeDescription = undefined;
     this.isLoggedIn = false;
+    this.usernames = [];
     makeObservable(this);
   }
 
@@ -73,12 +75,26 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     return this.name;
   }
 
+  @computed public get getUserName() {
+    return this.username;
+  }
+
+  @computed public get getUserNames() {
+    return this.usernames;
+  }
+
   @computed get userRole() {
     return this.roleTypeDescription || '';
   }
 
   @computed get getRefreshToken() {
     return this.refreshToken;
+  }
+
+  @computed get isUsernameExistInUsernames() {
+    return !!this.usernames.find(
+      (username: string) => username === this.username,
+    );
   }
 
   onServerLogout() {
@@ -149,6 +165,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
 
   @action resetPermissionSet() {
     this.permissionSet = undefined;
+  }
+
+  @action setUsernames(usernames: string[]) {
+    this.usernames = usernames;
   }
 
   @action logOut() {

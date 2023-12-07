@@ -30,6 +30,7 @@ import { fetchStocksByShopSetupCodeTask } from 'src/data/fetchStocksByShopSetupC
 import { Utils } from 'src/data/helpers/utils';
 import { stocksStore } from 'src/modules/stocksList/stores';
 import { ssoStore } from 'src/stores';
+import { Spinner } from 'src/components/Spinner';
 
 export enum ScannerScreenError {
   IncorrectQRCode,
@@ -139,15 +140,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
   return (
     <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
       <View style={styles.container}>
-        {isLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator
-              size="large"
-              color="white"
-              style={styles.activityIndicator}
-            />
-          </View>
-        ) : null}
+        <Spinner visible={isLoading} />
         <ScanProduct
           onScan={onScanShopCode}
           isActive={isScannerActive}
