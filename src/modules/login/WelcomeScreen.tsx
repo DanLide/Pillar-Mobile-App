@@ -1,9 +1,10 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useRef } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
+import { ssoStore } from 'src/stores';
 import Logo from '../../../assets/images/logo.png';
 import { Button, ButtonType } from '../../components';
 import {
@@ -12,7 +13,6 @@ import {
   UnauthStackParamsList,
 } from '../../navigation/types';
 import { SVGs, colors, fonts } from '../../theme';
-import { ssoStore } from 'src/stores';
 import { DeviceName } from './components/DeviceName';
 
 interface Props {
@@ -27,11 +27,7 @@ const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 export const WelcomeScreen = ({ navigation }: Props) => {
   const ssoStoreRef = useRef(ssoStore).current;
 
-  const onPressContinue = () => {
-    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
-      type: LoginType.LoginShopDevice,
-    });
-  };
+  const onPressContinue = () => {};
 
   const handleConfigureDevice = () => {
     navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
@@ -79,6 +75,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               buttonStyle={styles.continueButton}
               title="Continue"
               onPress={onLoginViaPin}
+              disabled={true}
             />
             <Button
               type={ButtonType.secondary}
