@@ -1,10 +1,10 @@
 import React, {
-  useEffect,
   useRef,
   useState,
   useMemo,
   useLayoutEffect,
   useCallback,
+  useEffect,
 } from 'react';
 import {
   StyleSheet,
@@ -67,14 +67,26 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
       params: { masterlockId, nextScreen, nextNavigationGoBack },
     } = route;
     const masterLockStatus: LockStatus =
-      masterLockStore.stocksState[masterlockId].status;
+      masterLockStore.stocksState[masterlockId]?.status;
     // const status: ExtendedMasterLockStatuses = LockStatus.UNLOCKED
     const status: ExtendedMasterLockStatuses = masterLockStore.isUnlocking
       ? ExtendedMasterLockStatus.UNLOCKING
       : masterLockStatus;
 
     const [countDownNumber, setCountDownNumber] = useState(RELOCK_TIME_SEC);
+    const [canSkipUnlock, setCanSkipUnlock] = useState(false);
     const intervalID = useRef<NodeJS.Timer | null>(null);
+
+    useEffect(() => {
+      if (status !== ExtendedMasterLockStatus.UNLOCKING) {
+        setCanSkipUnlock(false);
+        return;
+      }
+
+      const timerId = setTimeout(() => setCanSkipUnlock(true), 2000);
+
+      return () => clearTimeout(timerId);
+    }, [canSkipUnlock, status]);
 
     useLayoutEffect(() => {
       if (
@@ -245,10 +257,16 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
       switch (status) {
         case ExtendedMasterLockStatus.UNLOCKING:
           return (
-            <Text style={[styles.bottomText, { fontSize: 15 }]}>
-              Device specific instructions on how to power on and prodcast
-              signal...
-            </Text>
+            canSkipUnlock && (
+              <View style={styles.buttonsContainer}>
+                <Button
+                  type={ButtonType.primary}
+                  buttonStyle={styles.primaryButton}
+                  title="Proceed without Unlocking"
+                  onPress={navigateNextScreen}
+                />
+              </View>
+            )
           );
         case LockStatus.UNLOCKED:
           return (
@@ -287,7 +305,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
             </View>
           );
       }
-    }, [status]);
+    }, [canSkipUnlock, navigateNextScreen, status, unlock]);
 
     return (
       <LinearGradient
