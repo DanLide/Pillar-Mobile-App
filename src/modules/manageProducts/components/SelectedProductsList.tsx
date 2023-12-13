@@ -16,44 +16,54 @@ import {
 import { manageProductsStore } from '../stores';
 import { colors, fonts } from '../../../theme';
 
+interface Props {
+  onEditProduct: (item: ProductModel) => void;
+}
+
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
-export const SelectedProductsList: React.FC = observer(() => {
-  const store = useRef<SyncedProductStoreType>(manageProductsStore).current;
+export const SelectedProductsList: React.FC<Props> = observer(
+  ({ onEditProduct }) => {
+    const store = useRef<SyncedProductStoreType>(manageProductsStore).current;
 
-  const products = store.getNotSyncedProducts;
+    const products = store.getNotSyncedProducts;
 
-  const ListHeader = useMemo(
-    () =>
-      products.length > 0 ? (
-        <View style={styles.headerTitleContainer}>
-          <Text numberOfLines={1} style={styles.headerTitleLeft}>
-            Recently Scanned
-          </Text>
-          <Text style={styles.headerTitleRight}>Qty</Text>
-        </View>
-      ) : null,
-    [products.length],
-  );
+    const ListHeader = useMemo(
+      () =>
+        products.length > 0 ? (
+          <View style={styles.headerTitleContainer}>
+            <Text numberOfLines={1} style={styles.headerTitleLeft}>
+              Recently Scanned
+            </Text>
+            <Text style={styles.headerTitleRight}>Qty</Text>
+          </View>
+        ) : null,
+      [products.length],
+    );
 
-  const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<ProductModel>) => (
-      <SelectedProductsListItem disabled hideOnHandCount item={item} />
-    ),
-    [],
-  );
+    const renderItem = useCallback(
+      ({ item }: ListRenderItemInfo<ProductModel>) => (
+        <SelectedProductsListItem
+          hideOnHandCount
+          item={item}
+          onPress={onEditProduct}
+        />
+      ),
+      [onEditProduct],
+    );
 
-  return (
-    <FlatList
-      contentContainerStyle={styles.container}
-      data={products}
-      renderItem={renderItem}
-      keyExtractor={keyExtractor}
-      ListEmptyComponent={ProductEmptyList}
-      ListHeaderComponent={ListHeader}
-    />
-  );
-});
+    return (
+      <FlatList
+        contentContainerStyle={styles.container}
+        data={products}
+        renderItem={renderItem}
+        keyExtractor={keyExtractor}
+        ListEmptyComponent={ProductEmptyList}
+        ListHeaderComponent={ListHeader}
+      />
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: { flexGrow: 1 },
