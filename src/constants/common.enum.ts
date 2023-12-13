@@ -309,3 +309,8 @@ export enum OrderMethodType {
 //   PDF = "PDF",
 //   Video = "Video"
 // }
+
+export enum UserType {
+  SSO,
+  Distributor,
+}
