@@ -7,6 +7,7 @@ export enum ToastType {
   SuggestedItemsError = 'SuggestedItemsError',
   CreateInvoiceError = 'CreateInvoiceError',
   UnitsPerContainerError = 'UnitsPerContainerError',
+  ProfileError = 'ProfileError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',

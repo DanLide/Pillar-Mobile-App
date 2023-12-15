@@ -118,6 +118,14 @@ export const ToastContextProvider: React.FC<Props> = ({
         />
       ),
 
+      [ToastType.ProfileError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ProfileError}
+          actionType={ToastActionType.Retry}
+        />
+      ),
+
       [ToastType.Retry]: toast => (
         <Toast
           {...toast}
