@@ -360,7 +360,7 @@ export class URLProvider {
   }
 
   getRNToken() {
-    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
     const deviceId = this.ssoStore.getCurrentMobileDevice(
       deviceInfoStore.getDeviceName,
     )?.partyRoleId;
