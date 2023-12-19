@@ -1,9 +1,18 @@
 import React, { useCallback, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, TextInput, FlatList } from 'react-native';
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  FlatList,
+} from 'react-native';
 import { Input } from 'src/components';
 import { RoleType, UserType } from 'src/constants/common.enum';
 import { colors, fonts } from 'src/theme';
 import { SearchIcon } from 'src/theme/svgs';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
 
 const mockedList = [
   {
@@ -22,115 +31,125 @@ const mockedList = [
     Role: RoleType.DistributorRegionalManager,
     UserType: UserType.Distributor,
   },
-]
+];
 
+interface Props {
+  navigation: StackNavigationProp<
+    UnauthStackParamsList,
+    AppNavigator.LoginViaPinScreen
+  >;
+}
 
-export const LoginViaPinScreen = () => {
+export const LoginViaPinScreen: React.FC<Props> = ({ navigation }) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [input, setInput] = useState('');
 
   const onPressTab = (index: number) => {
-    if (selectedTabIndex === index) return
-    setSelectedTabIndex(index)
+    if (selectedTabIndex === index) return;
+    setSelectedTabIndex(index);
   };
 
-  const onChangeText = (value) => {
+  const onChangeText = value => {
     setInput(value);
-  }
+  };
 
   const renderTabs = () => {
     return (
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(0)
+            onPressTab(0);
           }}
-          style={
-            [styles.tabButton,
-            selectedTabIndex === 0 && styles.selectedButton
-            ]
-          }>
-          <Text style={[
-            styles.buttonText,
-            selectedTabIndex === 0 && styles.selectedButtonText
-          ]}>
+          style={[
+            styles.tabButton,
+            selectedTabIndex === 0 && styles.selectedButton,
+          ]}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedTabIndex === 0 && styles.selectedButtonText,
+            ]}
+          >
             Repair Facility
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(1)
+            onPressTab(1);
           }}
-          style={
-            [styles.tabButton,
-            selectedTabIndex === 1 && styles.selectedButton
-            ]
-          }>
-          <Text style={[
-            styles.buttonText,
-            selectedTabIndex === 1 && styles.selectedButtonText
-          ]}>
+          style={[
+            styles.tabButton,
+            selectedTabIndex === 1 && styles.selectedButton,
+          ]}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedTabIndex === 1 && styles.selectedButtonText,
+            ]}
+          >
             Distributors
           </Text>
         </TouchableOpacity>
-      </View >
-    )
-  }
+      </View>
+    );
+  };
 
-  const renderItem = useCallback(({ item }) => {
-    const title = `${item.FirstName} ${item.LastName}`
-    return (
-      <TouchableOpacity style={styles.itemContainer}>
-        <Text style={styles.itemTitle}>
-          {title}
-        </Text>
-        <Text style={styles.itemRole}>
-          {item.Role}
-        </Text>
-      </TouchableOpacity>
-    )
-  }, [])
+  const renderItem = useCallback(
+    ({ item }) => {
+      const title = `${item.FirstName} ${item.LastName}`;
 
-  const filteredList = mockedList.filter((item) => {
-    const title = `${item.FirstName} ${item.LastName}`
-    return title.toLowerCase().includes(input.toLowerCase())
-  })
+      const openLoginViaPin = () =>
+        navigation.navigate(AppNavigator.CreatePinScreen, {
+          username: title,
+          b2cUserId: item.B2Cid,
+        });
 
-  return <View style={styles.screenContainer}>
-    <View style={styles.header}>
-      {renderTabs()}
-      <Text style={styles.subTitle}>Select a User Account</Text>
-      <View>
-        <TextInput
-          value={input}
-          style={styles.input}
-          placeholder='Search User'
-          placeholderTextColor={colors.grayDark2}
-          onChangeText={onChangeText}
-        />
-        <View
-          style={styles.searchWrapper}
+      return (
+        <TouchableOpacity
+          style={styles.itemContainer}
+          onPress={openLoginViaPin}
         >
-          <SearchIcon color={colors.black} width={20} height={20} />
-        </View>
+          <Text style={styles.itemTitle}>{title}</Text>
+          <Text style={styles.itemRole}>{item.Role}</Text>
+        </TouchableOpacity>
+      );
+    },
+    [navigation],
+  );
+
+  const filteredList = mockedList.filter(item => {
+    const title = `${item.FirstName} ${item.LastName}`;
+    return title.toLowerCase().includes(input.toLowerCase());
+  });
+
+  return (
+    <View style={styles.screenContainer}>
+      <View style={styles.header}>
+        {renderTabs()}
+        <Text style={styles.subTitle}>Select a User Account</Text>
         <View>
-          {/* {filterIcon button here in v2} */}
+          <TextInput
+            value={input}
+            style={styles.input}
+            placeholder="Search User"
+            placeholderTextColor={colors.grayDark2}
+            onChangeText={onChangeText}
+          />
+          <View style={styles.searchWrapper}>
+            <SearchIcon color={colors.black} width={20} height={20} />
+          </View>
+          <View>{/* {filterIcon button here in v2} */}</View>
+        </View>
+        <View style={styles.listTitleContainer}>
+          <Text style={styles.listTitleText}>Employee</Text>
+          <Text style={styles.listTitleText}>Role</Text>
         </View>
       </View>
-      <View style={styles.listTitleContainer}>
-        <Text style={styles.listTitleText}>
-          Employee
-        </Text>
-        <Text style={styles.listTitleText}>
-          Role
-        </Text>
-      </View>
+      <FlatList data={filteredList} renderItem={renderItem} />
     </View>
-    <FlatList
-      data={filteredList}
-      renderItem={renderItem}
-    />
-  </View>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -222,5 +241,5 @@ const styles = StyleSheet.create({
     color: colors.grayDark3,
     lineHeight: 16,
     fontFamily: fonts.TT_Regular,
-  }
-})
+  },
+});

@@ -12,6 +12,7 @@ export enum AppNavigator {
   LoginViaCredentialsScreen = 'LoginViaCredentialsScreen',
   LoginViaPinScreen = 'LoginViaPinScreen',
   UpdateShopLocationScreen = 'UpdateShopLocationScreen',
+  CreatePinScreen = 'CreatePinScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -124,6 +125,7 @@ export type UnauthStackParamsList = {
   [AppNavigator.LoginViaCredentialsScreen]: { type: LoginType } | undefined;
   [AppNavigator.LoginViaPinScreen]: undefined;
   [AppNavigator.UpdateShopLocationScreen]: undefined;
+  [AppNavigator.CreatePinScreen]: { username: string; b2cUserId: string };
 };
 
 export type HomeStackParamList = {

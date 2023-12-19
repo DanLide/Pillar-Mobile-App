@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInputProps,
+  View,
+  ViewProps,
+} from 'react-native';
 import {
   CodeField,
   Cursor,
+  RenderCellOptions,
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+
 import { SVGs, colors } from '../theme';
 import Button, { ButtonType } from './Button';
 
 type Props = {
   cellCount: number;
   handleConfirm: (shopSetupCode: string) => void;
-};
+} & Pick<TextInputProps, 'keyboardType'> &
+  Pick<ViewProps, 'style'>;
 
-const SecretCodeForm = ({ cellCount, handleConfirm }: Props) => {
+const SecretCodeForm = ({
+  cellCount,
+  keyboardType,
+  style,
+  handleConfirm,
+}: Props) => {
   const [value, setValue] = useState('');
   const [enableMask, setEnableMask] = useState(true);
   const ref = useBlurOnFulfill({ value, cellCount: cellCount });
@@ -23,7 +38,9 @@ const SecretCodeForm = ({ cellCount, handleConfirm }: Props) => {
     setValue,
   });
 
-  const isDisabled = value.length !== 5;
+  const isDisabled = value.length !== cellCount;
+
+  const containerStyle = useMemo(() => [styles.container, style], [style]);
 
   const onChangeText = (value: string) => {
     setValue(value);
@@ -35,7 +52,7 @@ const SecretCodeForm = ({ cellCount, handleConfirm }: Props) => {
     handleConfirm(value);
   };
 
-  const renderCell = ({ index, symbol, isFocused }) => {
+  const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
     let textChild = null;
 
     if (symbol) {
@@ -56,7 +73,7 @@ const SecretCodeForm = ({ cellCount, handleConfirm }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={containerStyle}>
       <View style={styles.fieldRow}>
         <CodeField
           ref={ref}
@@ -68,6 +85,7 @@ const SecretCodeForm = ({ cellCount, handleConfirm }: Props) => {
           rootStyle={styles.codeFieldRoot}
           textContentType="oneTimeCode"
           renderCell={renderCell}
+          keyboardType={keyboardType}
         />
         <Pressable style={styles.toggle} onPress={toggleMask}>
           {enableMask ? (
