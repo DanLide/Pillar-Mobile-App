@@ -42,7 +42,7 @@ export const fetchStocksByShopSetupCodeTask = async (
     new FetchShopByShopSetupCodeTask(stocksContext, shopSetupCode, ssoStore),
     new FetchStocksByShopTask(stocksContext),
     new FetchSSOMobileDevicesTask(stocksContext, ssoStore),
-    // new FetchRNTokenTask(stocksContext),
+    new FetchRNTokenTask(stocksContext),
     new SaveDataToStore(stocksContext, stocksStore, ssoStore),
   ]).execute();
 };
@@ -51,6 +51,7 @@ export class FetchShopByShopSetupCodeTask extends Task {
   fetchStocksContext: FetchStocksContext;
   shopSetupCode: string;
   ssoStore: SSOStore;
+
   constructor(
     fetchStocksContext: FetchStocksContext,
     shopSetupCode: string,
@@ -81,6 +82,7 @@ export class FetchShopByShopSetupCodeTask extends Task {
 
 export class FetchStocksByShopTask extends Task {
   fetchStocksContext: FetchStocksContext;
+
   constructor(fetchStocksContext: FetchStocksContext) {
     super();
     this.fetchStocksContext = fetchStocksContext;
@@ -134,6 +136,7 @@ export class FetchSSOMobileDevicesTask extends Task {
 
 class FetchRNTokenTask extends Task {
   fetchStocksContext: FetchStocksContext;
+
   constructor(fetchStocksContext: FetchStocksContext) {
     super();
     this.fetchStocksContext = fetchStocksContext;
@@ -167,8 +170,12 @@ export class SaveDataToStore extends Task {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
     this.ssoStore.setSSOMobileDevices(this.fetchStocksContext.ssoMobileDevices);
     this.ssoStore.setDeviceConfiguration(true);
-    if (this.ssoStore.getCurrentSSO) {
-      setSSORNToken('RNToken', this.ssoStore.getCurrentSSO);
+
+    const currentSSO = this.ssoStore.getCurrentSSO;
+    const rnToken = this.fetchStocksContext.rnToken;
+
+    if (currentSSO && rnToken) {
+      await setSSORNToken(rnToken, currentSSO);
     }
   }
 }
