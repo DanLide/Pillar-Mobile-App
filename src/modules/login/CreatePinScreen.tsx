@@ -1,12 +1,23 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { observer } from 'mobx-react';
 
 import SecretCodeForm from 'src/components/SecretCodeForm';
 import { colors, fonts } from 'src/theme';
 import { InfoTitleBar, InfoTitleBarType } from 'src/components';
 import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
 import { onSetPin } from 'src/data/setPin';
+import { loginLinkStore } from 'src/modules/login/stores';
+import TokenParser from 'src/modules/login/components/TokenParser';
+import { onLoginWithToken } from 'src/data/login';
+import { authStore } from 'src/stores';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from 'src/contexts';
+import { useSingleToast } from 'src/hooks';
+import { ToastType } from 'src/contexts/types';
 
 type Props = StackScreenProps<
   UnauthStackParamsList,
@@ -18,58 +29,112 @@ const errorMessages = {
   submitError: 'Something went wrong. Please, retry',
 };
 
-export const CreatePinScreen: React.FC<Props> = ({ navigation, route }) => {
-  const [validationError, setValidationError] = useState(false);
+export const CreatePinScreenBase: React.FC<Props> = observer(
+  ({ navigation, route }) => {
+    const authStoreRef = useRef(authStore).current;
+    const loginLinkStoreRef = useRef(loginLinkStore).current;
 
-  const { username, b2cUserId, prevPin } = route.params;
+    const [validationError, setValidationError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-  const handlePinChange = useCallback(() => {
-    setValidationError(false);
-  }, []);
+    const { showToast } = useSingleToast();
 
-  const handleConfirm = useCallback(
-    async (pin: string) => {
-      if (!prevPin) {
-        return navigation.push(AppNavigator.CreatePinScreen, {
-          username,
-          b2cUserId,
-          prevPin: pin,
-        });
-      }
+    const { username, b2cUserId, prevPin } = route.params;
 
-      if (pin !== prevPin) return setValidationError(true);
+    const loginLink = loginLinkStoreRef.getLoginLink;
 
-      const error = await onSetPin(b2cUserId, pin);
+    const handlePinChange = useCallback(() => {
+      setValidationError(false);
+    }, []);
 
-      if (error) console.log(error);
-    },
-    [b2cUserId, navigation, prevPin, username],
-  );
+    const showSubmitErrorToast = useCallback(
+      () => showToast(errorMessages.submitError, { type: ToastType.Error }),
+      [showToast],
+    );
 
-  return (
-    <KeyboardAvoidingView
-      keyboardVerticalOffset={85}
-      behavior="padding"
-      style={styles.container}
-    >
-      <InfoTitleBar
-        type={InfoTitleBarType.Secondary}
-        title="Create a PIN Code"
-      />
-      <Text style={styles.username}>{username}</Text>
-      <SecretCodeForm
-        autoFocus
-        cellCount={4}
-        keyboardType="number-pad"
-        errorMessage={validationError ? errorMessages.validationError : null}
-        confirmDisabled={validationError}
-        style={styles.codeForm}
-        onChangeText={handlePinChange}
-        handleConfirm={handleConfirm}
-      />
-    </KeyboardAvoidingView>
-  );
-};
+    const handleConfirm = useCallback(
+      async (pin: string) => {
+        if (!prevPin) {
+          return navigation.push(AppNavigator.CreatePinScreen, {
+            username,
+            b2cUserId,
+            prevPin: pin,
+          });
+        }
+
+        if (pin !== prevPin) return setValidationError(true);
+
+        setIsLoading(true);
+        const error = await onSetPin(b2cUserId, pin, loginLinkStoreRef);
+        setIsLoading(false);
+
+        if (error) showSubmitErrorToast();
+      },
+      [
+        b2cUserId,
+        loginLinkStoreRef,
+        navigation,
+        prevPin,
+        showSubmitErrorToast,
+        username,
+      ],
+    );
+
+    const handleTokenReceived = useCallback(
+      async (token: string) => {
+        setIsLoading(true);
+        const error = await onLoginWithToken(token, authStoreRef);
+        setIsLoading(false);
+
+        loginLinkStoreRef.clear();
+
+        if (error) showSubmitErrorToast();
+      },
+      [authStoreRef, loginLinkStoreRef, showSubmitErrorToast],
+    );
+
+    const handleTokenLoadingStart = useCallback(() => setIsLoading(true), []);
+
+    const handleTokenLoadingEnd = useCallback(() => setIsLoading(false), []);
+
+    return (
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={85}
+        behavior="padding"
+        style={styles.container}
+      >
+        <InfoTitleBar
+          type={InfoTitleBarType.Secondary}
+          title="Create a PIN Code"
+        />
+        <Text style={styles.username}>{username}</Text>
+        <SecretCodeForm
+          autoFocus
+          cellCount={4}
+          keyboardType="number-pad"
+          errorMessage={validationError ? errorMessages.validationError : null}
+          confirmDisabled={validationError}
+          isLoading={isLoading}
+          style={styles.codeForm}
+          onChangeText={handlePinChange}
+          handleConfirm={handleConfirm}
+        />
+        <TokenParser
+          magicLink={loginLink}
+          onTokenReceived={handleTokenReceived}
+          onLoadStart={handleTokenLoadingStart}
+          onLoadEnd={handleTokenLoadingEnd}
+        />
+      </KeyboardAvoidingView>
+    );
+  },
+);
+
+export const CreatePinScreen: React.FC<Props> = props => (
+  <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+    <CreatePinScreenBase {...props} />
+  </ToastContextProvider>
+);
 
 const styles = StyleSheet.create({
   codeForm: {

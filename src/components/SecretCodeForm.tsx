@@ -24,6 +24,7 @@ type Props = {
   handleConfirm: (shopSetupCode: string) => void;
   errorMessage?: string | null;
   confirmDisabled?: boolean;
+  isLoading?: boolean;
 } & Pick<TextInputProps, 'autoFocus' | 'keyboardType' | 'onChangeText'> &
   Pick<ViewProps, 'style'>;
 
@@ -33,12 +34,12 @@ const SecretCodeForm = ({
   keyboardType,
   errorMessage,
   confirmDisabled,
+  isLoading,
   style,
   onChangeText,
   handleConfirm,
 }: Props) => {
   const [value, setValue] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [enableMask, setEnableMask] = useState(true);
   const ref = useBlurOnFulfill({ value, cellCount: cellCount });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -66,9 +67,7 @@ const SecretCodeForm = ({
   const toggleMask = () => setEnableMask(f => !f);
 
   const handleSubmitForm = useCallback(async () => {
-    setIsLoading(true);
-    await handleConfirm(value);
-    setIsLoading(false);
+    handleConfirm(value);
   }, [handleConfirm, value]);
 
   const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
