@@ -13,13 +13,15 @@ import {
 import { Button, ButtonType } from 'src/components';
 
 import { fetchSSOUsers } from 'src/data/fetchSSOUsers';
-import { AppNavigator } from 'src/navigation/types';
+import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
 import { ssoStore } from 'src/stores';
 import { SSOUser } from 'src/stores/SSOStore';
 import { colors, fonts, SVGs } from 'src/theme';
 import { SearchIcon } from 'src/theme/svgs';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-const titleError = 'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.'
+const titleError =
+  'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -33,53 +35,52 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const [input, setInput] = useState('');
 
   const fetchUsers = () => {
-    fetchSSOUsers(ssoStore)
+    fetchSSOUsers(ssoStore);
   };
 
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   const onPressTab = (index: number) => {
-    if (selectedTabIndex === index) return
-    setSelectedTabIndex(index)
+    if (selectedTabIndex === index) return;
+    setSelectedTabIndex(index);
   };
 
   const onChangeText = (value: string) => {
     setInput(value);
-  }
+  };
 
-  const renderItem = useCallback(({ item }: { item: SSOUser }) => {
-    const title = `${item.firstName} ${item.lastName}`;
-    const onPress = () => {
-      if (!item.isPinRequired) {
-        // TODO
-        return
-      }
+  const renderItem = useCallback(
+    ({ item }: { item: SSOUser }) => {
+      const title = `${item.firstName} ${item.lastName}`;
+      const onPress = () => {
+        if (!item.isPinRequired) {
+          // TODO
+          return;
+        }
 
-      navigation.navigate(AppNavigator.CreatePinScreen, {
-        username: title,
-        b2cUserId: item.B2Cid,
-      });
-    }
+        return navigation.navigate(AppNavigator.CreatePinScreen, {
+          username: title,
+          b2cUserId: item.b2CId,
+        });
+      };
 
-    return (
-      <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
-        <Text style={styles.itemTitle}>
-          {title}
-        </Text>
-        <Text style={styles.itemRole}>
-          {item.role}
-        </Text>
-      </TouchableOpacity>
-    )
-  }, [])
+      return (
+        <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
+          <Text style={styles.itemTitle}>{title}</Text>
+          <Text style={styles.itemRole}>{item.role}</Text>
+        </TouchableOpacity>
+      );
+    },
+    [navigation],
+  );
 
   if (!ssoStore.ssoUsersList) {
     return <ActivityIndicator size="large" style={styles.loading} />;
   }
 
-  const users = ssoStore.SsoSeparatedUsersList?.[selectedTabIndex]
+  const users = ssoStore.SsoSeparatedUsersList?.[selectedTabIndex];
 
   const onLoginViaCredentials = () => {
     navigation.navigate(AppNavigator.LoginViaCredentialsScreen);
@@ -90,109 +91,105 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(0)
+            onPressTab(0);
           }}
-          style={
-            [
-              styles.tabButton,
-              selectedTabIndex === 0 && styles.selectedButton
-            ]
-          }>
-          <Text style={[
-            styles.buttonText,
-            selectedTabIndex === 0 && styles.selectedButtonText
-          ]}>
+          style={[
+            styles.tabButton,
+            selectedTabIndex === 0 && styles.selectedButton,
+          ]}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedTabIndex === 0 && styles.selectedButtonText,
+            ]}
+          >
             Repair Facility
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(1)
+            onPressTab(1);
           }}
-          style={
-            [
-              styles.tabButton,
-              selectedTabIndex === 1 && styles.selectedButton
-            ]
-          }>
-          <Text style={[
-            styles.buttonText,
-            selectedTabIndex === 1 && styles.selectedButtonText
-          ]}>
+          style={[
+            styles.tabButton,
+            selectedTabIndex === 1 && styles.selectedButton,
+          ]}
+        >
+          <Text
+            style={[
+              styles.buttonText,
+              selectedTabIndex === 1 && styles.selectedButtonText,
+            ]}
+          >
             Distributors
           </Text>
         </TouchableOpacity>
-      </View >
-    )
-  }
+      </View>
+    );
+  };
 
   const renderError = () => {
     if (ssoStore.ssoUsersList) {
       return null;
     }
-    return <View style={styles.errorContainer}>
-      <SVGs.UserNotFound />
-      <Text style={styles.errorText}>
-        {titleError}
-      </Text>
-      <Button
-        type={ButtonType.secondary}
-        title="Retry"
-        onPress={fetchUsers}
-        buttonStyle={styles.retryButton}
-      />
-    </View>
-  }
-
-  const filteredList = users.filter((item) => {
-    const title = `${item.firstName} ${item.lastName}`
-    return title.toLowerCase().includes(input.toLowerCase())
-  })
-
-  return <View style={styles.screenContainer}>
-    <View style={styles.header}>
-      {renderTabs()}
-      <Text style={styles.subTitle}>Select a User Account</Text>
-      <View>
-        <TextInput
-          value={input}
-          style={styles.input}
-          placeholder='Search User'
-          placeholderTextColor={colors.grayDark2}
-          onChangeText={onChangeText}
+    return (
+      <View style={styles.errorContainer}>
+        <SVGs.UserNotFound />
+        <Text style={styles.errorText}>{titleError}</Text>
+        <Button
+          type={ButtonType.secondary}
+          title="Retry"
+          onPress={fetchUsers}
+          buttonStyle={styles.retryButton}
         />
-        <View
-          style={styles.searchWrapper}
-        >
-          <SearchIcon color={colors.black} width={20} height={20} />
-        </View>
+      </View>
+    );
+  };
+
+  const filteredList = users.filter(item => {
+    const title = `${item.firstName} ${item.lastName}`;
+    return title.toLowerCase().includes(input.toLowerCase());
+  });
+
+  return (
+    <View style={styles.screenContainer}>
+      <View style={styles.header}>
+        {renderTabs()}
+        <Text style={styles.subTitle}>Select a User Account</Text>
         <View>
-          {/* {filterIcon button here in v2} */}
+          <TextInput
+            value={input}
+            style={styles.input}
+            placeholder="Search User"
+            placeholderTextColor={colors.grayDark2}
+            onChangeText={onChangeText}
+          />
+          <View style={styles.searchWrapper}>
+            <SearchIcon color={colors.black} width={20} height={20} />
+          </View>
+          <View>{/* {filterIcon button here in v2} */}</View>
+        </View>
+        <View style={styles.listTitleContainer}>
+          <Text style={styles.listTitleText}>Employee</Text>
+          <Text style={styles.listTitleText}>Role</Text>
         </View>
       </View>
-      <View style={styles.listTitleContainer}>
-        <Text style={styles.listTitleText}>
-          Employee
-        </Text>
-        <Text style={styles.listTitleText}>
-          Role
-        </Text>
-      </View>
-    </View>
-    <FlatList
-      data={filteredList}
-      renderItem={renderItem}
-      ListEmptyComponent={renderError()}
-    />
-    <SafeAreaView style={styles.buttonWrapper}>
-      <Button
-        type={ButtonType.secondary}
-        title='Login with Username'
-        buttonStyle={styles.loginButton}
-        onPress={onLoginViaCredentials}
+      <FlatList
+        data={filteredList}
+        renderItem={renderItem}
+        ListEmptyComponent={renderError()}
       />
-    </SafeAreaView>
-  </View>
+      <SafeAreaView style={styles.buttonWrapper}>
+        <Button
+          type={ButtonType.secondary}
+          title="Login with Username"
+          buttonStyle={styles.loginButton}
+          onPress={onLoginViaCredentials}
+        />
+      </SafeAreaView>
+    </View>
+  );
 });
 
 const styles = StyleSheet.create({
@@ -318,5 +315,5 @@ const styles = StyleSheet.create({
     marginTop: 16,
     borderWidth: 0,
     backgroundColor: 'transparent',
-  }
-})
+  },
+});
