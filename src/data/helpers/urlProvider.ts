@@ -367,4 +367,16 @@ export class URLProvider {
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }
+
+  setPin(b2cUserId: string) {
+    return new URL(
+      `${this.currentEnv.modules.base.apiUri}/map/api/auth/set-pin/${b2cUserId}`,
+    );
+  }
+
+  getLoginLink(b2cUserId: string, pin: string) {
+    return new URL(
+      `${this.currentEnv.modules.base.apiUri}/map/api/auth/login-link/${b2cUserId}/${pin}`,
+    );
+  }
 }

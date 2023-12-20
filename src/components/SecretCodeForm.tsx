@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -15,19 +15,26 @@ import {
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
 
-import { SVGs, colors } from '../theme';
+import { SVGs, colors, fonts } from '../theme';
 import Button, { ButtonType } from './Button';
+import { useFocusEffect } from '@react-navigation/native';
 
 type Props = {
   cellCount: number;
   handleConfirm: (shopSetupCode: string) => void;
-} & Pick<TextInputProps, 'keyboardType'> &
+  errorMessage?: string | null;
+  confirmDisabled?: boolean;
+} & Pick<TextInputProps, 'autoFocus' | 'keyboardType' | 'onChangeText'> &
   Pick<ViewProps, 'style'>;
 
 const SecretCodeForm = ({
   cellCount,
+  autoFocus,
   keyboardType,
+  errorMessage,
+  confirmDisabled,
   style,
+  onChangeText,
   handleConfirm,
 }: Props) => {
   const [value, setValue] = useState('');
@@ -35,14 +42,23 @@ const SecretCodeForm = ({
   const ref = useBlurOnFulfill({ value, cellCount: cellCount });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
-    setValue,
+    setValue: (text: string) => {
+      onChangeText?.(text);
+      setValue(text);
+    },
   });
 
-  const isDisabled = value.length !== cellCount;
+  const isDisabled = value.length !== cellCount || confirmDisabled;
 
   const containerStyle = useMemo(() => [styles.container, style], [style]);
 
-  const onChangeText = (value: string) => {
+  useFocusEffect(
+    useCallback(() => {
+      if (autoFocus) ref.current?.focus();
+    }, [autoFocus, ref]),
+  );
+
+  const handleChangeText = (value: string) => {
     setValue(value);
   };
 
@@ -74,26 +90,30 @@ const SecretCodeForm = ({
 
   return (
     <View style={containerStyle}>
-      <View style={styles.fieldRow}>
-        <CodeField
-          ref={ref}
-          {...props}
-          caretHidden={false}
-          value={value}
-          onChangeText={onChangeText}
-          cellCount={cellCount}
-          rootStyle={styles.codeFieldRoot}
-          textContentType="oneTimeCode"
-          renderCell={renderCell}
-          keyboardType={keyboardType}
-        />
-        <Pressable style={styles.toggle} onPress={toggleMask}>
-          {enableMask ? (
-            <SVGs.OpenEyeIcon color={colors.grayDark3} />
-          ) : (
-            <SVGs.CloseEyeIcon color={colors.grayDark3} />
-          )}
-        </Pressable>
+      <View style={styles.inputContainer}>
+        <View style={styles.fieldRow}>
+          <CodeField
+            autoFocus={autoFocus}
+            ref={ref}
+            {...props}
+            caretHidden={false}
+            value={value}
+            onChangeText={handleChangeText}
+            cellCount={cellCount}
+            rootStyle={styles.codeFieldRoot}
+            textContentType="oneTimeCode"
+            renderCell={renderCell}
+            keyboardType={keyboardType}
+          />
+          <Pressable style={styles.toggle} onPress={toggleMask}>
+            {enableMask ? (
+              <SVGs.OpenEyeIcon color={colors.grayDark3} />
+            ) : (
+              <SVGs.CloseEyeIcon color={colors.grayDark3} />
+            )}
+          </Pressable>
+        </View>
+        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
       </View>
       <Button
         type={ButtonType.primary}
@@ -108,7 +128,6 @@ const SecretCodeForm = ({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     alignSelf: 'center',
     justifyContent: 'center',
   },
@@ -132,6 +151,17 @@ const styles = StyleSheet.create({
   },
   codeFieldRoot: {
     width: 239,
+  },
+  error: {
+    color: colors.redDark,
+    fontFamily: fonts.TT_Bold,
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  inputContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
   },
   fieldRow: {
     marginTop: 20,
