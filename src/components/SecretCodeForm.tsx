@@ -38,6 +38,7 @@ const SecretCodeForm = ({
   handleConfirm,
 }: Props) => {
   const [value, setValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [enableMask, setEnableMask] = useState(true);
   const ref = useBlurOnFulfill({ value, cellCount: cellCount });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -64,9 +65,11 @@ const SecretCodeForm = ({
 
   const toggleMask = () => setEnableMask(f => !f);
 
-  const handleSubmitForm = () => {
-    handleConfirm(value);
-  };
+  const handleSubmitForm = useCallback(async () => {
+    setIsLoading(true);
+    await handleConfirm(value);
+    setIsLoading(false);
+  }, [handleConfirm, value]);
 
   const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
     let textChild = null;
@@ -118,6 +121,7 @@ const SecretCodeForm = ({
       <Button
         type={ButtonType.primary}
         title="Confirm"
+        isLoading={isLoading}
         disabled={isDisabled}
         buttonStyle={styles.buttonStyle}
         onPress={handleSubmitForm}
