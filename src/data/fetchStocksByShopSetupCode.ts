@@ -7,9 +7,7 @@ import {
 import { MobileDevice, SSOStore } from '../stores/SSOStore';
 import {
   SingleSSOAPIResponse,
-  assignDeviceToSSOAPI,
   deviceByRepairFacilityIdAPI,
-  fetchUnassignedDevices,
   getRNTokenAPI,
   shopSetupLoginAPI,
   singleSSOAPI,
@@ -51,7 +49,6 @@ export class FetchShopByShopSetupCodeTask extends Task {
   fetchStocksContext: FetchStocksContext;
   shopSetupCode: string;
   ssoStore: SSOStore;
-
   constructor(
     fetchStocksContext: FetchStocksContext,
     shopSetupCode: string,
@@ -82,7 +79,6 @@ export class FetchShopByShopSetupCodeTask extends Task {
 
 export class FetchStocksByShopTask extends Task {
   fetchStocksContext: FetchStocksContext;
-
   constructor(fetchStocksContext: FetchStocksContext) {
     super();
     this.fetchStocksContext = fetchStocksContext;
@@ -115,28 +111,15 @@ export class FetchSSOMobileDevicesTask extends Task {
         device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
       )
     ) {
-      this.fetchStocksContext.ssoMobileDevices = response;
+      this.ssoStore.setSSOMobileDevices(response);
     } else {
-      const devices = await fetchUnassignedDevices();
-      if (devices) {
-        const currentDevice = devices.find(
-          device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
-        );
-        if (currentDevice) {
-          await assignDeviceToSSOAPI(currentDevice.partyRoleId);
-        } else {
-          throw Error('Devices not found!');
-        }
-      } else {
-        throw Error('Device not found!');
-      }
+      throw Error('Device not assign to Repair facility!');
     }
   }
 }
 
 class FetchRNTokenTask extends Task {
   fetchStocksContext: FetchStocksContext;
-
   constructor(fetchStocksContext: FetchStocksContext) {
     super();
     this.fetchStocksContext = fetchStocksContext;
@@ -145,7 +128,7 @@ class FetchRNTokenTask extends Task {
   async run(): Promise<void> {
     const response = await getRNTokenAPI();
     if (response) {
-      this.fetchStocksContext.rnToken = response;
+      this.fetchStocksContext.rnToken = response.token;
     }
   }
 }
@@ -168,14 +151,9 @@ export class SaveDataToStore extends Task {
 
   async run() {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
-    this.ssoStore.setSSOMobileDevices(this.fetchStocksContext.ssoMobileDevices);
     this.ssoStore.setDeviceConfiguration(true);
-
-    const currentSSO = this.ssoStore.getCurrentSSO;
-    const rnToken = this.fetchStocksContext.rnToken;
-
-    if (currentSSO && rnToken) {
-      await setSSORNToken(rnToken, currentSSO);
+    if (this.ssoStore.getCurrentSSO && this.fetchStocksContext.rnToken) {
+      setSSORNToken(this.fetchStocksContext.rnToken, this.ssoStore.getCurrentSSO);
     }
   }
 }

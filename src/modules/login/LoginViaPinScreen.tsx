@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import { observer } from 'mobx-react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -6,32 +7,19 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
+  SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
-import { Input } from 'src/components';
-import { RoleType, UserType } from 'src/constants/common.enum';
-import { colors, fonts } from 'src/theme';
-import { SearchIcon } from 'src/theme/svgs';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
+import { Button, ButtonType } from 'src/components';
 
-const mockedList = [
-  {
-    Id: 'Id1',
-    B2Cid: 'B2Cid1',
-    FirstName: 'Kamren',
-    LastName: 'Corkery',
-    Role: RoleType.Technician,
-    UserType: UserType.SSO,
-  },
-  {
-    Id: 'Id2',
-    B2Cid: 'B2Cid2',
-    FirstName: 'Andrii',
-    LastName: 'Narn',
-    Role: RoleType.DistributorRegionalManager,
-    UserType: UserType.Distributor,
-  },
-];
+import { fetchSSOUsers } from 'src/data/fetchSSOUsers';
+import { AppNavigator } from 'src/navigation/types';
+import { ssoStore } from 'src/stores';
+import { SSOUser } from 'src/stores/SSOStore';
+import { colors, fonts, SVGs } from 'src/theme';
+import { SearchIcon } from 'src/theme/svgs';
+
+const titleError = 'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.'
 
 interface Props {
   navigation: StackNavigationProp<
@@ -40,17 +28,61 @@ interface Props {
   >;
 }
 
-export const LoginViaPinScreen: React.FC<Props> = ({ navigation }) => {
+export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [input, setInput] = useState('');
 
-  const onPressTab = (index: number) => {
-    if (selectedTabIndex === index) return;
-    setSelectedTabIndex(index);
+  const fetchUsers = () => {
+    fetchSSOUsers(ssoStore)
   };
 
-  const onChangeText = value => {
+  useEffect(() => {
+    fetchUsers()
+  }, [])
+
+  const onPressTab = (index: number) => {
+    if (selectedTabIndex === index) return
+    setSelectedTabIndex(index)
+  };
+
+  const onChangeText = (value: string) => {
     setInput(value);
+  }
+
+  const renderItem = useCallback(({ item }: { item: SSOUser }) => {
+    const title = `${item.firstName} ${item.lastName}`;
+    const onPress = () => {
+      if (!item.isPinRequired) {
+        // TODO
+        return
+      }
+
+      navigation.navigate(AppNavigator.CreatePinScreen, {
+        username: title,
+        b2cUserId: item.B2Cid,
+      });
+    }
+
+    return (
+      <TouchableOpacity style={styles.itemContainer} onPress={onPress}>
+        <Text style={styles.itemTitle}>
+          {title}
+        </Text>
+        <Text style={styles.itemRole}>
+          {item.role}
+        </Text>
+      </TouchableOpacity>
+    )
+  }, [])
+
+  if (!ssoStore.ssoUsersList) {
+    return <ActivityIndicator size="large" style={styles.loading} />;
+  }
+
+  const users = ssoStore.SsoSeparatedUsersList?.[selectedTabIndex]
+
+  const onLoginViaCredentials = () => {
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen);
   };
 
   const renderTabs = () => {
@@ -58,101 +90,115 @@ export const LoginViaPinScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.tabContainer}>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(0);
+            onPressTab(0)
           }}
-          style={[
-            styles.tabButton,
-            selectedTabIndex === 0 && styles.selectedButton,
-          ]}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              selectedTabIndex === 0 && styles.selectedButtonText,
-            ]}
-          >
+          style={
+            [
+              styles.tabButton,
+              selectedTabIndex === 0 && styles.selectedButton
+            ]
+          }>
+          <Text style={[
+            styles.buttonText,
+            selectedTabIndex === 0 && styles.selectedButtonText
+          ]}>
             Repair Facility
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            onPressTab(1);
+            onPressTab(1)
           }}
-          style={[
-            styles.tabButton,
-            selectedTabIndex === 1 && styles.selectedButton,
-          ]}
-        >
-          <Text
-            style={[
-              styles.buttonText,
-              selectedTabIndex === 1 && styles.selectedButtonText,
-            ]}
-          >
+          style={
+            [
+              styles.tabButton,
+              selectedTabIndex === 1 && styles.selectedButton
+            ]
+          }>
+          <Text style={[
+            styles.buttonText,
+            selectedTabIndex === 1 && styles.selectedButtonText
+          ]}>
             Distributors
           </Text>
         </TouchableOpacity>
-      </View>
-    );
-  };
+      </View >
+    )
+  }
 
-  const renderItem = useCallback(
-    ({ item }) => {
-      const title = `${item.FirstName} ${item.LastName}`;
-
-      const openLoginViaPin = () =>
-        navigation.navigate(AppNavigator.CreatePinScreen, {
-          username: title,
-          b2cUserId: item.B2Cid,
-        });
-
-      return (
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={openLoginViaPin}
-        >
-          <Text style={styles.itemTitle}>{title}</Text>
-          <Text style={styles.itemRole}>{item.Role}</Text>
-        </TouchableOpacity>
-      );
-    },
-    [navigation],
-  );
-
-  const filteredList = mockedList.filter(item => {
-    const title = `${item.FirstName} ${item.LastName}`;
-    return title.toLowerCase().includes(input.toLowerCase());
-  });
-
-  return (
-    <View style={styles.screenContainer}>
-      <View style={styles.header}>
-        {renderTabs()}
-        <Text style={styles.subTitle}>Select a User Account</Text>
-        <View>
-          <TextInput
-            value={input}
-            style={styles.input}
-            placeholder="Search User"
-            placeholderTextColor={colors.grayDark2}
-            onChangeText={onChangeText}
-          />
-          <View style={styles.searchWrapper}>
-            <SearchIcon color={colors.black} width={20} height={20} />
-          </View>
-          <View>{/* {filterIcon button here in v2} */}</View>
-        </View>
-        <View style={styles.listTitleContainer}>
-          <Text style={styles.listTitleText}>Employee</Text>
-          <Text style={styles.listTitleText}>Role</Text>
-        </View>
-      </View>
-      <FlatList data={filteredList} renderItem={renderItem} />
+  const renderError = () => {
+    if (ssoStore.ssoUsersList) {
+      return null;
+    }
+    return <View style={styles.errorContainer}>
+      <SVGs.UserNotFound />
+      <Text style={styles.errorText}>
+        {titleError}
+      </Text>
+      <Button
+        type={ButtonType.secondary}
+        title="Retry"
+        onPress={fetchUsers}
+        buttonStyle={styles.retryButton}
+      />
     </View>
-  );
-};
+  }
+
+  const filteredList = users.filter((item) => {
+    const title = `${item.firstName} ${item.lastName}`
+    return title.toLowerCase().includes(input.toLowerCase())
+  })
+
+  return <View style={styles.screenContainer}>
+    <View style={styles.header}>
+      {renderTabs()}
+      <Text style={styles.subTitle}>Select a User Account</Text>
+      <View>
+        <TextInput
+          value={input}
+          style={styles.input}
+          placeholder='Search User'
+          placeholderTextColor={colors.grayDark2}
+          onChangeText={onChangeText}
+        />
+        <View
+          style={styles.searchWrapper}
+        >
+          <SearchIcon color={colors.black} width={20} height={20} />
+        </View>
+        <View>
+          {/* {filterIcon button here in v2} */}
+        </View>
+      </View>
+      <View style={styles.listTitleContainer}>
+        <Text style={styles.listTitleText}>
+          Employee
+        </Text>
+        <Text style={styles.listTitleText}>
+          Role
+        </Text>
+      </View>
+    </View>
+    <FlatList
+      data={filteredList}
+      renderItem={renderItem}
+      ListEmptyComponent={renderError()}
+    />
+    <SafeAreaView style={styles.buttonWrapper}>
+      <Button
+        type={ButtonType.secondary}
+        title='Login with Username'
+        buttonStyle={styles.loginButton}
+        onPress={onLoginViaCredentials}
+      />
+    </SafeAreaView>
+  </View>
+});
 
 const styles = StyleSheet.create({
+  loading: {
+    padding: 16,
+  },
   screenContainer: {
     backgroundColor: colors.grayLight,
     flex: 1,
@@ -242,4 +288,35 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: fonts.TT_Regular,
   },
-});
+  buttonWrapper: {
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    backgroundColor: colors.white,
+  },
+  loginButton: {
+    marginTop: 10,
+    marginHorizontal: 15,
+  },
+  errorText: {
+    fontFamily: fonts.TT_Regular,
+    color: colors.grayDark2,
+    fontSize: 14,
+    textAlign: 'center',
+    lineHeight: 18,
+    marginTop: 14,
+  },
+  errorContainer: {
+    flex: 1,
+    marginTop: '10%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  retryButton: {
+    marginTop: 16,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+  }
+})

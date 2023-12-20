@@ -379,4 +379,10 @@ export class URLProvider {
       `${this.currentEnv.modules.base.apiUri}/map/api/auth/login-link/${b2cUserId}/${pin}`,
     );
   }
+
+  getSSOUsers() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
+
+    return `${this.currentEnv.modules.base.apiUri}/MAP/api/users/${facilityId}`;
+  }
 }
