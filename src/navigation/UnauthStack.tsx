@@ -48,10 +48,10 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.CreatePinScreen}
         component={CreatePinScreen}
         options={getScreenOptions({
-          title: ssoStore.getCurrentSSO?.name ?? '',
+          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
     </Stack.Navigator>
   );
-});
+};
