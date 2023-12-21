@@ -1,14 +1,14 @@
 import { observer } from 'mobx-react';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  TextInput,
+  ActivityIndicator,
   FlatList,
   SafeAreaView,
-  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { Button, ButtonType } from 'src/components';
 
@@ -60,10 +60,15 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
           return;
         }
 
-        return navigation.navigate(AppNavigator.CreatePinScreen, {
-          username: title,
-          b2cUserId: item.b2CId,
-        });
+        return navigation.navigate(
+          item.isPinSet
+            ? AppNavigator.LoginWithPinScreen
+            : AppNavigator.CreatePinScreen,
+          {
+            username: title,
+            b2cUserId: item.b2CId,
+          },
+        );
       };
 
       return (

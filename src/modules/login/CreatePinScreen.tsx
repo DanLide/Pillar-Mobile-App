@@ -7,7 +7,7 @@ import SecretCodeForm from 'src/components/SecretCodeForm';
 import { colors, fonts } from 'src/theme';
 import { InfoTitleBar, InfoTitleBarType } from 'src/components';
 import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
-import { onSetPin } from 'src/data/setPin';
+import { onSetPin } from 'src/data/loginViaPin';
 import { loginLinkStore } from 'src/modules/login/stores';
 import TokenParser from 'src/modules/login/components/TokenParser';
 import { onLoginWithToken } from 'src/data/login';

@@ -9,6 +9,7 @@ import { LoginViaPinScreen } from 'src/modules/login/LoginViaPinScreen';
 import { UpdateShopLocationScreen } from 'src/modules/login/UpdateShopLocationScreen';
 import { CreatePinScreen } from 'src/modules/login/CreatePinScreen';
 import { ssoStore } from 'src/stores';
+import { LoginWithPinScreen } from "src/modules/login/LoginWithPinScreen";
 
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
@@ -47,6 +48,14 @@ export const UnauthStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.CreatePinScreen}
         component={CreatePinScreen}
+        options={getScreenOptions({
+          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
+          leftBarButtonType: LeftBarType.Back,
+        })}
+      />
+      <Stack.Screen
+        name={AppNavigator.LoginWithPinScreen}
+        component={LoginWithPinScreen}
         options={getScreenOptions({
           title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
