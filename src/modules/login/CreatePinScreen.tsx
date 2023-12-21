@@ -47,10 +47,10 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
       setValidationError(false);
     }, []);
 
-    const showSubmitErrorToast = useCallback(
-      () => showToast(errorMessages.submitError, { type: ToastType.Error }),
-      [showToast],
-    );
+    const showSubmitErrorToast = useCallback(() => {
+      showToast(errorMessages.submitError, { type: ToastType.Error });
+      setIsLoading(false);
+    }, [showToast]);
 
     const handleConfirm = useCallback(
       async (pin: string) => {
@@ -66,7 +66,6 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
 
         setIsLoading(true);
         const error = await onSetPin(b2cUserId, pin, loginLinkStoreRef);
-        setIsLoading(false);
 
         if (error) showSubmitErrorToast();
       },
@@ -82,20 +81,15 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
 
     const handleTokenReceived = useCallback(
       async (token: string) => {
-        setIsLoading(true);
         const error = await onLoginWithToken(token, authStoreRef);
-        setIsLoading(false);
 
+        setIsLoading(false);
         loginLinkStoreRef.clear();
 
         if (error) showSubmitErrorToast();
       },
       [authStoreRef, loginLinkStoreRef, showSubmitErrorToast],
     );
-
-    const handleTokenLoadingStart = useCallback(() => setIsLoading(true), []);
-
-    const handleTokenLoadingEnd = useCallback(() => setIsLoading(false), []);
 
     return (
       <KeyboardAvoidingView
@@ -122,8 +116,9 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
         <TokenParser
           magicLink={loginLink}
           onTokenReceived={handleTokenReceived}
-          onLoadStart={handleTokenLoadingStart}
-          onLoadEnd={handleTokenLoadingEnd}
+          onError={showSubmitErrorToast}
+          onHttpError={showSubmitErrorToast}
+          onRequestTimeout={showSubmitErrorToast}
         />
       </KeyboardAvoidingView>
     );
