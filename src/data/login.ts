@@ -68,6 +68,7 @@ export const onLoginWithToken = async (token: string, authStore: AuthStore) => {
     token,
     isTnC: undefined,
     isLanguage: undefined,
+    type: LoginType.LoginShopDevice,
   };
 
   return new TaskExecutor([
