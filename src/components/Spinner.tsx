@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Modal, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import LottieView from 'lottie-react-native';
 import { colors } from 'src/theme';
@@ -9,8 +9,8 @@ interface Props {
 }
 
 export const Spinner: FC<Props> = ({ visible }) => {
-  return (
-    <Modal transparent={true} animationType="slide" visible={visible}>
+  return visible ? (
+    <View style={styles.container}>
       <View style={styles.modalContainer}>
         <View style={styles.spinnerContainer}>
           <LottieView
@@ -22,11 +22,17 @@ export const Spinner: FC<Props> = ({ visible }) => {
           <Text style={styles.text}>Loading...</Text>
         </View>
       </View>
-    </Modal>
-  );
+    </View>
+  ) : null;
 };
 
 const styles = StyleSheet.create({
+  container: {
+    zIndex: 1,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -39,6 +45,8 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: 'center',
     marginBottom: 30,
+    width: 240,
+    height: 172,
   },
   lottie: {
     marginHorizontal: 60,
