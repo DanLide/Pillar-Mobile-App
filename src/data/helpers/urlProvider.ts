@@ -345,12 +345,17 @@ export class URLProvider {
     );
   }
 
-  SSOAssignMobileDevice() {
+  SSOAssignMobileDevice(deviceId: number) {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
-    const deviceId = deviceInfoStore.getDeviceName;
 
     return new URL(
       `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignDevice/${deviceId}/${facilityId}`,
+    );
+  }
+
+  getUnassignedDevices() {
+    return new URL(
+      `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/UnassignedEquipment/34`,
     );
   }
 

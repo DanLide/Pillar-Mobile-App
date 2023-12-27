@@ -39,9 +39,9 @@ export class ResetMasterlockTask extends Task {
     return selectedStocks.reduce<
       Array<{ deviceIdentifier: string; id: number }>
     >((acc, stock) => {
-      if (stock.leanTecSerialNo) {
+      if (stock.controllerSerialNo) {
         acc.push({
-          deviceIdentifier: stock.leanTecSerialNo,
+          deviceIdentifier: stock.controllerSerialNo,
           id: stock.partyRoleId,
         });
       }
