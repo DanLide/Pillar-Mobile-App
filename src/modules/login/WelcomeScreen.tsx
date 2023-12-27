@@ -27,7 +27,11 @@ const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 export const WelcomeScreen = ({ navigation }: Props) => {
   const ssoStoreRef = useRef(ssoStore).current;
 
-  const onPressContinue = () => {};
+  const onPressLoginWithUsername = () => {
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
+      type: LoginType.LoginShopDevice,
+    });
+  };
 
   const handleConfigureDevice = () => {
     navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
@@ -81,7 +85,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               type={ButtonType.secondary}
               buttonStyle={styles.secondaryBtn}
               title="Login with Username"
-              onPress={onPressContinue}
+              onPress={onPressLoginWithUsername}
             />
           </>
         ) : (
