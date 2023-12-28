@@ -19,11 +19,24 @@ export const onSetPin = async (
   return new TaskExecutor([
     new GetRNToken(setPinContext),
     new SetPinTask(setPinContext),
-    new LoginViaPinTask(setPinContext, store),
+    new GetLoginLink(setPinContext, store),
   ]).execute();
 };
 
-export class GetRNToken extends Task {
+export const onLoginWithPin = async (
+  b2cUserId: string,
+  pin: string,
+  store: LoginLinkStore,
+) => {
+  const setPinContext: SetPinContext = { rnToken: '', b2cUserId, pin };
+
+  return new TaskExecutor([
+    new GetRNToken(setPinContext),
+    new GetLoginLink(setPinContext, store),
+  ]).execute();
+};
+
+class GetRNToken extends Task {
   setPinContext: SetPinContext;
 
   constructor(setPinContext: SetPinContext) {
@@ -55,7 +68,7 @@ export class SetPinTask extends Task {
   }
 }
 
-export class LoginViaPinTask extends Task {
+class GetLoginLink extends Task {
   setPinContext: SetPinContext;
   store: LoginLinkStore;
 

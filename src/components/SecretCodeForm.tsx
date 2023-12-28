@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -22,6 +23,7 @@ import { useFocusEffect } from '@react-navigation/native';
 type Props = {
   cellCount: number;
   handleConfirm: (shopSetupCode: string) => void;
+  autoSubmit?: boolean;
   errorMessage?: string | null;
   confirmDisabled?: boolean;
   isLoading?: boolean;
@@ -31,6 +33,7 @@ type Props = {
 const SecretCodeForm = ({
   cellCount,
   autoFocus,
+  autoSubmit,
   keyboardType,
   errorMessage,
   confirmDisabled,
@@ -60,15 +63,28 @@ const SecretCodeForm = ({
     }, [autoFocus, ref]),
   );
 
-  const handleChangeText = (value: string) => {
-    setValue(value);
-  };
+  const InputFooter = useMemo(() => {
+    if (autoSubmit && isLoading) return <ActivityIndicator />;
 
-  const toggleMask = () => setEnableMask(f => !f);
+    return errorMessage ? (
+      <Text style={styles.error}>{errorMessage}</Text>
+    ) : null;
+  }, [autoSubmit, errorMessage, isLoading]);
 
   const handleSubmitForm = useCallback(async () => {
     handleConfirm(value);
   }, [handleConfirm, value]);
+
+  const handleChangeText = useCallback(
+    (value: string) => {
+      setValue(value);
+
+      if (autoSubmit && value.length === cellCount) return handleConfirm(value);
+    },
+    [autoSubmit, cellCount, handleConfirm],
+  );
+
+  const toggleMask = () => setEnableMask(f => !f);
 
   const renderCell = ({ index, symbol, isFocused }: RenderCellOptions) => {
     let textChild = null;
@@ -115,16 +131,18 @@ const SecretCodeForm = ({
             )}
           </Pressable>
         </View>
-        {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+        {InputFooter}
       </View>
-      <Button
-        type={ButtonType.primary}
-        title="Confirm"
-        isLoading={isLoading}
-        disabled={isDisabled}
-        buttonStyle={styles.buttonStyle}
-        onPress={handleSubmitForm}
-      />
+      {!autoSubmit && (
+        <Button
+          type={ButtonType.primary}
+          title="Confirm"
+          isLoading={isLoading}
+          disabled={isDisabled}
+          buttonStyle={styles.buttonStyle}
+          onPress={handleSubmitForm}
+        />
+      )}
     </View>
   );
 };

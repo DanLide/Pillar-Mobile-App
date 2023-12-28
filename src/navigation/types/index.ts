@@ -13,6 +13,7 @@ export enum AppNavigator {
   LoginViaPinScreen = 'LoginViaPinScreen',
   UpdateShopLocationScreen = 'UpdateShopLocationScreen',
   CreatePinScreen = 'CreatePinScreen',
+  LoginWithPinScreen = 'LoginWithPinScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -132,6 +133,7 @@ export type UnauthStackParamsList = {
   [AppNavigator.LoginViaPinScreen]: undefined;
   [AppNavigator.UpdateShopLocationScreen]: undefined;
   [AppNavigator.CreatePinScreen]: PinScreenParams;
+  [AppNavigator.LoginWithPinScreen]: PinScreenParams;
 };
 
 export type HomeStackParamList = {

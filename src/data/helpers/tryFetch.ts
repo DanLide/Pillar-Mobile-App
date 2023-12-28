@@ -5,12 +5,14 @@ import { getLogoutListener } from './getLogoutListener';
 export class BadRequestError extends Error {
   error?: string;
   error_description?: string;
+  errorCode?: number;
 
-  constructor(error: string, error_description?: string) {
+  constructor(error: string, error_description?: string, errorCode?: number) {
     super(error);
 
     this.error = error;
     this.error_description = error_description;
+    this.errorCode = errorCode;
   }
 }
 
