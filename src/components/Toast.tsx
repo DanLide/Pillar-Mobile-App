@@ -50,6 +50,7 @@ const icons: Record<
   [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,
   [ToastType.CreateInvoiceError]: SVGs.RefundErrorIcon,
   [ToastType.UnitsPerContainerError]: SVGs.ProductsErrorIcon,
+  [ToastType.ProfileError]: SVGs.ProfileError,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,

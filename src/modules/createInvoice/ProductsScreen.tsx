@@ -7,12 +7,13 @@ import {
   Button,
   ButtonType,
 } from '../../components';
-import { BaseProductsScreenNavigationProp } from '../../navigation/types';
+import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
 import { createInvoiceStore, CreateInvoiceStore } from './stores';
 import { ProductModalType } from '../productModal';
-import { onCreateInvoice } from '../../data/createInvoice';
-import { fetchProductsByFacilityId } from '../../data/fetchProductsByFacilityId';
+import { onCreateInvoice } from 'src/data/createInvoice';
+import { fetchProductsByFacilityId } from 'src/data/fetchProductsByFacilityId';
 import { SVGs, colors, fonts } from '../../theme';
+import { useBaseProductsScreen } from 'src/hooks';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -22,6 +23,18 @@ export const ProductsScreen = memo(({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
+
+  const {
+    modalParams,
+    product,
+    scannedProductsCount,
+    onPressScan,
+    onProductListItemPress,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+  } = useBaseProductsScreen(store, navigation, ProductModalType.CreateInvoice);
 
   const onComplete = useCallback(() => {
     return onCreateInvoice(store);
@@ -65,8 +78,16 @@ export const ProductsScreen = memo(({ navigation }: Props) => {
   return (
     <BaseProductsScreen
       disableAlert
+      modalParams={modalParams}
+      product={product}
+      scannedProductsCount={scannedProductsCount}
+      onPressScan={onPressScan}
+      onProductListItemPress={onProductListItemPress}
+      onSubmitProduct={onSubmitProduct}
+      setEditableProductQuantity={setEditableProductQuantity}
+      onRemoveProduct={onRemoveProduct}
+      onCloseModal={onCloseModal}
       infoTitle={store.currentJob?.jobNumber}
-      modalType={ProductModalType.CreateInvoice}
       navigation={navigation}
       store={store}
       onComplete={onComplete}

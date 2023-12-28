@@ -12,6 +12,7 @@ import {
 } from '../../stores/types';
 import { BaseProductsScreenNavigationProp } from '../../navigation/types';
 import { SelectedProductsList } from './SelectedProductsList';
+import { useBaseProductsScreen } from 'src/hooks';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -29,9 +30,29 @@ export const RemoveProductsScreen = memo(({ navigation }: Props) => {
     await onRemoveProducts(removeProductsStore);
   }, []);
 
+  const {
+    modalParams,
+    product,
+    scannedProductsCount,
+    onPressScan,
+    onProductListItemPress,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+  } = useBaseProductsScreen(store, navigation, ProductModalType.Remove);
+
   return (
     <BaseProductsScreen
-      modalType={ProductModalType.Remove}
+      modalParams={modalParams}
+      product={product}
+      scannedProductsCount={scannedProductsCount}
+      onPressScan={onPressScan}
+      onProductListItemPress={onProductListItemPress}
+      onSubmitProduct={onSubmitProduct}
+      setEditableProductQuantity={setEditableProductQuantity}
+      onRemoveProduct={onRemoveProduct}
+      onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
       tooltipTitle="Scan to add products to list"
