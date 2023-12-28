@@ -5,13 +5,14 @@ import {
   ScannerModalStoreType,
   StockProductStoreType,
   SyncedProductStoreType,
-} from '../../stores/types';
-import { BaseProductsScreen } from '../../components';
-import { BaseProductsScreenNavigationProp } from '../../navigation/types';
+} from 'src/stores/types';
+import { BaseProductsScreen } from 'src/components';
+import { BaseProductsScreenNavigationProp } from 'src/navigation/types';
 import { returnProductsStore } from './stores';
 import { ProductModalType } from '../productModal';
 import { SelectedProductsList } from './components';
-import { onReturnProducts } from '../../data/returnProducts';
+import { onReturnProducts } from 'src/data/returnProducts';
+import { useBaseProductsScreen } from 'src/hooks';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -25,13 +26,33 @@ type Store = ScannerModalStoreType &
 export const ReturnProductsScreen = memo(({ navigation }: Props) => {
   const store = useRef<Store>(returnProductsStore).current;
 
+  const {
+    modalParams,
+    product,
+    scannedProductsCount,
+    onPressScan,
+    onProductListItemPress,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+  } = useBaseProductsScreen(store, navigation, ProductModalType.Remove);
+
   const onCompleteReturn = useCallback(async () => {
     await onReturnProducts(returnProductsStore);
   }, []);
 
   return (
     <BaseProductsScreen
-      modalType={ProductModalType.Return}
+      modalParams={modalParams}
+      product={product}
+      scannedProductsCount={scannedProductsCount}
+      onPressScan={onPressScan}
+      onProductListItemPress={onProductListItemPress}
+      onSubmitProduct={onSubmitProduct}
+      setEditableProductQuantity={setEditableProductQuantity}
+      onRemoveProduct={onRemoveProduct}
+      onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
       tooltipTitle="Scan to add products to list"

@@ -17,7 +17,12 @@ import {
   StockProductStoreType,
   SyncedProductStoreType,
 } from '../stores/types';
-import { ProductModal, ProductModalType } from '../modules/productModal';
+import {
+  ProductModal,
+  ProductModalParams,
+  ProductModalProps,
+  ProductModalType,
+} from '../modules/productModal';
 import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
@@ -29,7 +34,7 @@ import { colors, SVGs } from '../theme';
 import AlertWrapper from '../contexts/AlertWrapper';
 import { RequestError } from 'src/data/helpers/tryFetch';
 import { ToastType } from 'src/contexts/types';
-import { useSingleToast, useBaseProductsScreen } from 'src/hooks';
+import { useSingleToast } from 'src/hooks';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -47,15 +52,29 @@ interface SelectedProductsListProps {
 }
 
 interface Props {
-  infoTitle?: string;
-  modalType: ProductModalType;
-  navigation: BaseProductsScreenNavigationProp;
   store: Store;
+  modalParams: ProductModalParams;
+  scannedProductsCount: number;
+  navigation: BaseProductsScreenNavigationProp;
   tooltipTitle: string;
   ListComponent: React.FC<SelectedProductsListProps>;
+  ProductModalComponent?: React.FC<ProductModalProps>;
+
+  onPressScan: () => void;
+  onProductListItemPress: (product: ProductModel) => void;
+  onSubmitProduct: (product: ProductModel) => void;
+  setEditableProductQuantity: (quantity: number) => void;
+  onRemoveProduct: (product: ProductModel) => void;
+  onCloseModal: () => void;
+
+  product?: ProductModel;
+  infoTitle?: string;
   primaryButtonTitle?: string;
   disableAlert?: boolean;
   completeErrorMessage?: string;
+
+  onEditPress?: () => void;
+  onCancelPress?: () => void;
   onComplete?: () => Promise<void | RequestError> | void;
 }
 
@@ -71,12 +90,23 @@ const alertMessage =
 
 const BaseProducts = observer(
   ({
+    modalParams,
+    product,
+    scannedProductsCount,
+    onPressScan,
+    onProductListItemPress,
+    onSubmitProduct,
+    setEditableProductQuantity,
+    onRemoveProduct,
+    onCloseModal,
+    onEditPress,
+    onCancelPress,
     infoTitle,
-    modalType,
     navigation,
     store,
     tooltipTitle,
     ListComponent,
+    ProductModalComponent = ProductModal,
     primaryButtonTitle,
     disableAlert,
     onComplete,
@@ -87,16 +117,7 @@ const BaseProducts = observer(
     const [alertVisible, setAlertVisible] = useState(false);
     const isNeedNavigateBack = useRef(false);
 
-    const {
-      modalParams,
-      scannedProductsCount,
-      onPressScan,
-      onEditProduct,
-      onSubmitProduct,
-      setEditableProductQuantity,
-      onRemoveProduct,
-      onCloseModal,
-    } = useBaseProductsScreen(store, navigation, modalType);
+    const modalType = modalParams.type;
 
     const scanButtonType =
       modalType === ProductModalType.ManageProduct && !scannedProductsCount
@@ -209,7 +230,7 @@ const BaseProducts = observer(
           <ListComponent
             modalType={modalType}
             store={store}
-            onEditProduct={onEditProduct}
+            onEditProduct={onProductListItemPress}
           />
 
           <View style={styles.buttons}>
@@ -226,11 +247,13 @@ const BaseProducts = observer(
             {CompleteButton}
           </View>
 
-          <ProductModal
+          <ProductModalComponent
             {...modalParams}
-            product={store.getCurrentProduct}
+            product={product}
             stockName={store.stockName}
             onSubmit={onSubmitProduct}
+            onEditPress={onEditPress}
+            onCancelPress={onCancelPress}
             onClose={onCloseModal}
             onRemove={onRemoveProduct}
             onChangeProductQuantity={setEditableProductQuantity}
