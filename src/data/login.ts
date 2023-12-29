@@ -4,13 +4,13 @@ import { jobsStore } from '../modules/jobsList/stores';
 import { SSOModel } from '../modules/sso/stores/SelectSSOStore';
 import { ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
-import { LoginAPIParams, getRoleManagerAPI, loginAPI } from './api';
+import { getRoleManagerAPI, loginAPI, LoginAPIParams } from './api';
 import {
-  MultiSSOAPIResponse,
-  SingleSSOAPIResponse,
   adminSSOAPI,
   multiSSOAPI,
+  MultiSSOAPIResponse,
   singleSSOAPI,
+  SingleSSOAPIResponse,
 } from './api/ssoAPI';
 import ExtendedError from './error/ExtendedError';
 import { Task, TaskExecutor } from './helpers';
@@ -63,6 +63,22 @@ export const onLogin = async (
   return result;
 };
 
+export const onLoginWithToken = async (token: string, authStore: AuthStore) => {
+  const loginContext: LoginFlowContext = {
+    token,
+    isTnC: undefined,
+    isLanguage: undefined,
+    type: LoginType.LoginShopDevice,
+  };
+
+  return new TaskExecutor([
+    new GetRoleManagerTask(loginContext),
+    new JWTParserTask(loginContext),
+    new GetSSOTask(loginContext),
+    new SaveAuthDataTask(loginContext, authStore),
+  ]).execute();
+};
+
 class LoginTask extends Task {
   loginFlowContext: LoginFlowContext;
   params: LoginAPIParams;
@@ -74,6 +90,8 @@ class LoginTask extends Task {
   }
 
   async run(): Promise<void> {
+    if (this.loginFlowContext.token) return;
+
     const response = await loginAPI(this.params);
     this.loginFlowContext.token = response.access_token;
     this.loginFlowContext.refreshToken = response.refresh_token;

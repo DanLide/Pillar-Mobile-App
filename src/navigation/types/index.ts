@@ -12,6 +12,8 @@ export enum AppNavigator {
   LoginViaCredentialsScreen = 'LoginViaCredentialsScreen',
   LoginViaPinScreen = 'LoginViaPinScreen',
   UpdateShopLocationScreen = 'UpdateShopLocationScreen',
+  CreatePinScreen = 'CreatePinScreen',
+  LoginWithPinScreen = 'LoginWithPinScreen',
 
   // HomeStack
   HomeStack = 'HomeStack',
@@ -109,6 +111,12 @@ type UnlockStockScreenParams = {
   nextScreen?: UnlockStockNextScreenParams;
 };
 
+type PinScreenParams = {
+  username: string;
+  b2cUserId: string;
+  prevPin?: string;
+};
+
 export enum LoginType {
   ConfigureShopDevice,
   LoginShopDevice,
@@ -124,6 +132,8 @@ export type UnauthStackParamsList = {
   [AppNavigator.LoginViaCredentialsScreen]: { type: LoginType } | undefined;
   [AppNavigator.LoginViaPinScreen]: undefined;
   [AppNavigator.UpdateShopLocationScreen]: undefined;
+  [AppNavigator.CreatePinScreen]: PinScreenParams;
+  [AppNavigator.LoginWithPinScreen]: PinScreenParams;
 };
 
 export type HomeStackParamList = {

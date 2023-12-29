@@ -150,7 +150,7 @@ export const fetchUnassignedDevices = () => {
 export const getRNTokenAPI = () => {
   const url = new URLProvider().getRNToken();
 
-  return tryAuthFetch<string>({
+  return tryAuthFetch<{token: string}>({
     url,
     request: {
       method: 'GET',
