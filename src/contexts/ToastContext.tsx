@@ -43,6 +43,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.DetailedScanError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.DetailedScanError}
+          actionType={ToastActionType.Details}
+        />
+      ),
       [ToastType.ProductQuantityError]: toast => (
         <Toast
           {...toast}

@@ -93,7 +93,7 @@ export const ViewProduct = observer(({ product }: Props) => {
         />
         <InfoBadge
           type={BadgeType.Medium}
-          title="Recoverable"
+          title="Recommend to Add to RO"
           subtitle={product?.isRecoverable ? 'Yes' : 'No'}
         />
       </View>

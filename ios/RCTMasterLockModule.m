@@ -36,6 +36,10 @@ NSString *const lockStatus_PendingRelock = @"PENDING_RELOCK";
     return self;
 }
 
++ (BOOL) requiresMainQueueSetup {
+  return NO;
+}
+
 RCT_EXPORT_MODULE(MasterLockModule);
 RCT_EXPORT_METHOD(configure:(NSString *)license
                   resolver:(RCTPromiseResolveBlock)resolve

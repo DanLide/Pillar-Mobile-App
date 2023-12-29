@@ -20,13 +20,16 @@ export const getToastDuration = (type?: string) => {
     case ToastType.SuggestedItemsError:
     case ToastType.UnitsPerContainerError:
       return 0;
+    case ToastType.DetailedScanError:
+      return 15000;
     default:
       return TOAST_DURATION_MS;
   }
 };
 export const useSingleToast = () => {
-  const {show, hideAll} = useToast();
+  const { show, hideAll } = useToast();
   const toastInitialized = show && hideAll
+
   const showToast = useCallback<RNToastType['show']>(
     (message, toastOptions) => {
       hideAll?.();

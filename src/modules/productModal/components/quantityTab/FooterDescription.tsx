@@ -98,7 +98,7 @@ export const FooterDescription: React.FC<Props> = ({
           <View style={styles.container}>
             {hideOnHandCount ? null : (
               <View style={[styles.itemContainer, { marginRight: 16 }]}>
-                <Text style={styles.title}>In Stock</Text>
+                <Text style={styles.title}>On Hand</Text>
                 <Text style={styles.subtitleInStock}>
                   {onHand > 99
                     ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY

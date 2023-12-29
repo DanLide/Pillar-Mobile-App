@@ -32,6 +32,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.DetailedScanError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.ProfileError]: {
     primary: colors.red,
     secondary: colors.redLight,

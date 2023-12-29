@@ -27,3 +27,5 @@ export const idSecondaryButton = (testID: string) =>
   `${testID}:secondaryButton`;
 
 export const idModal = (testID: string) => `${testID}:modal`;
+
+export const idDetailsButton = (testID: string) => `${testID}:idDetailsButton`;
