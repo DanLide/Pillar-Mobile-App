@@ -1,7 +1,7 @@
 import React, { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 
-import { BaseScannerScreen, ScannerScreenError } from '../../components';
+import { BaseScannerScreen, ScannerScreenError, ToastActionType } from '../../components';
 import {
   ScannerModalStoreType,
   CurrentProductStoreType,
@@ -15,6 +15,8 @@ import {
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { BarcodeFormat } from 'vision-camera-code-scanner';
+import AlertWrapper, { AlertWrapperProps as _AlertWrapperProps } from 'src/contexts/AlertWrapper';
+import { StyleSheet, Text } from 'react-native';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -25,9 +27,12 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
+type AlertWrapperProps = Partial<_AlertWrapperProps>
+
 export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
+  const [alertParams, setAlertParams] = useState<AlertWrapperProps>()
 
   const store = useRef<BaseProductsStore>(createInvoiceStore).current;
 
@@ -58,16 +63,48 @@ export const ScannerScreen: React.FC = observer(() => {
     store.setCurrentProduct(currentProduct);
   };
 
+  const handleToastPress = (actionType: ToastActionType) => {
+    switch (actionType) {
+      case ToastActionType.Details: {
+        setAlertParams({
+          message: <Text style={{ textAlign: 'center' }}>Invoicing Settings for this product can be added at repairstack.3m.com > Products</Text>,
+          onPressSecondary: () => {
+            setAlertParams(undefined)
+          }
+        })
+        break;
+      }
+      default: {
+        return null
+      }
+    }
+  }
+
   return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen
-        store={store}
-        modalParams={modalParams}
-        onProductScan={onProductScan}
-        onCloseModal={onCloseModal}
-        onFetchProduct={onFetchProduct}
-        filteredType={BarcodeFormat.UPC_A}
-      />
-    </ToastContextProvider>
+    <AlertWrapper
+      visible={Boolean(alertParams)}
+      message={alertParams?.message ?? ''}
+      onPressSecondary={alertParams?.onPressSecondary}
+      secondaryTitle='Close'
+      hidePrimary
+      alertContainerStyle={styles.alertContainer}
+    >
+      <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON} onPress={handleToastPress}>
+        <BaseScannerScreen
+          store={store}
+          modalParams={modalParams}
+          onProductScan={onProductScan}
+          onCloseModal={onCloseModal}
+          onFetchProduct={onFetchProduct}
+          filteredType={BarcodeFormat.UPC_A}
+        />
+      </ToastContextProvider>
+    </AlertWrapper>
   );
 });
+
+const styles = StyleSheet.create({
+  alertContainer: {
+    width: '70%'
+  }
+})

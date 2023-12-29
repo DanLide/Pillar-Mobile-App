@@ -12,7 +12,7 @@ import { Button, ButtonType } from '../components';
 import { colors, fonts } from '../theme';
 import { testIds } from '../helpers';
 
-type AlertWrapper = {
+export type AlertWrapperProps = {
   children: React.ReactNode;
   visible: boolean;
   message: string | JSX.Element;
@@ -21,12 +21,13 @@ type AlertWrapper = {
   title?: string | JSX.Element;
   primaryTitle?: string;
   secondaryTitle?: string;
+  hidePrimary?: boolean;
   hideSecondary?: boolean;
   alertContainerStyle?: StyleProp<ViewStyle>;
   testID?: string;
 };
 
-const AlertWrapper: React.FC<AlertWrapper> = ({
+const AlertWrapper: React.FC<AlertWrapperProps> = ({
   children,
   visible,
   message,
@@ -36,6 +37,7 @@ const AlertWrapper: React.FC<AlertWrapper> = ({
   secondaryTitle = 'Cancel',
   onPressSecondary,
   hideSecondary,
+  hidePrimary,
   alertContainerStyle,
   testID = 'alertWrapper',
 }) => {
@@ -70,13 +72,15 @@ const AlertWrapper: React.FC<AlertWrapper> = ({
                   onPress={onPressSecondary}
                 />
               )}
-              <Button
-                testID={testIds.idPrimaryButton(testID)}
-                type={ButtonType.primary}
-                title={primaryTitle}
-                buttonStyle={styles.buttonStyle}
-                onPress={onPressPrimary}
-              />
+              {!hidePrimary && (
+                <Button
+                  testID={testIds.idPrimaryButton(testID)}
+                  type={ButtonType.primary}
+                  title={primaryTitle}
+                  buttonStyle={styles.buttonStyle}
+                  onPress={onPressPrimary}
+                />
+              )}
             </View>
           </View>
         </View>

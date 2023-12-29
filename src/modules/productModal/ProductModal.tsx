@@ -211,7 +211,7 @@ export const ProductModal = memo(
           return 'Adjust Quantity';
         }
         case Tabs.LinkJob:
-          return 'Link to Job Number';
+          return 'Link to Repair Order';
         default:
           return '';
       }
