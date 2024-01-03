@@ -32,7 +32,7 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
           {info.section.jobId === OTHER_JOB_ID
             ? 'Other'
-            : `Job ${info.section.jobId}`}
+            : `Job number ${info.section.jobId}`}
         </Text>
         <Text style={styles.sectionTitleRight}>Qty</Text>
       </View>

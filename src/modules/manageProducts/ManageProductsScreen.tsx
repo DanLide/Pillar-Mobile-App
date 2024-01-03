@@ -1,32 +1,38 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback } from 'react';
+import { CommonActions } from '@react-navigation/native';
 
-import {
-  CurrentProductStoreType,
-  ScannerModalStoreType,
-  StockProductStoreType,
-  SyncedProductStoreType,
-} from '../../stores/types';
-import { BaseProductsScreen } from '../../components';
+import { BaseProductsScreen } from 'src/components';
 import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
-} from '../../navigation/types';
+} from 'src/navigation/types';
 import { ProductModalType } from '../productModal';
-import { manageProductsStore } from './stores';
-import { SelectedProductsList } from './components';
-import { CommonActions } from '@react-navigation/native';
+import { ProductModal, SelectedProductsList } from './components';
+import { useManageProducts } from 'src/modules/manageProducts/hooks';
+import { useBaseProductsScreen } from 'src/hooks';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
 }
 
-type ProductStore = ScannerModalStoreType &
-  CurrentProductStoreType &
-  SyncedProductStoreType &
-  StockProductStoreType;
-
 export const ManageProductsScreen = memo(({ navigation }: Props) => {
-  const store = useRef<ProductStore>(manageProductsStore).current;
+  const {
+    modalParams,
+    store,
+    product,
+    onProductListItemPress,
+    onCloseModal,
+    onEditPress,
+    onCancelPress,
+    onSubmit,
+  } = useManageProducts();
+
+  const {
+    scannedProductsCount,
+    onPressScan,
+    onRemoveProduct,
+    setEditableProductQuantity,
+  } = useBaseProductsScreen(store, navigation, ProductModalType.ManageProduct);
 
   const handleHomePress = useCallback(
     () =>
@@ -42,13 +48,24 @@ export const ManageProductsScreen = memo(({ navigation }: Props) => {
   return (
     <BaseProductsScreen
       disableAlert
-      modalType={ProductModalType.ManageProduct}
+      modalParams={modalParams}
+      product={product}
       navigation={navigation}
       store={store}
       tooltipTitle="Scan to find products"
       primaryButtonTitle="Home"
       onComplete={handleHomePress}
+      ProductModalComponent={ProductModal}
       ListComponent={SelectedProductsList}
+      onProductListItemPress={onProductListItemPress}
+      onCloseModal={onCloseModal}
+      onPressScan={onPressScan}
+      onRemoveProduct={onRemoveProduct}
+      onSubmitProduct={onSubmit}
+      scannedProductsCount={scannedProductsCount}
+      setEditableProductQuantity={setEditableProductQuantity}
+      onEditPress={onEditPress}
+      onCancelPress={onCancelPress}
     />
   );
 });

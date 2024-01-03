@@ -43,6 +43,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.Close}
         />
       ),
+      [ToastType.DetailedScanError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.DetailedScanError}
+          actionType={ToastActionType.Details}
+        />
+      ),
       [ToastType.ProductQuantityError]: toast => (
         <Toast
           {...toast}
@@ -114,6 +121,14 @@ export const ToastContextProvider: React.FC<Props> = ({
         <Toast
           {...toast}
           type={ToastType.CreateInvoiceError}
+          actionType={ToastActionType.Retry}
+        />
+      ),
+
+      [ToastType.ProfileError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.ProfileError}
           actionType={ToastActionType.Retry}
         />
       ),

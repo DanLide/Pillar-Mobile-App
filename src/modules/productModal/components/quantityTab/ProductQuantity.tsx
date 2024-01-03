@@ -55,7 +55,7 @@ export const toastMessages: Record<
   JSX.Element | string
 > = {
   [ToastType.ProductQuantityError]:
-    "You cannot remove more products than are 'In Stock' in this stock location. You can update product quantity in Manage Products section",
+    "You cannot remove more products than are 'On Hand' in this stock location. You can update product quantity in Manage Products section",
   [ToastType.ProductUpdateError]:
     'Sorry, there was an issue saving the product update',
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
@@ -270,8 +270,8 @@ export const ProductQuantity = forwardRef(
               <SVGs.RefundIcon color={colors.purple} />
               <Text style={styles.jobText}>
                 {isEdit && jobNumber
-                  ? `Job ${jobNumber}`
-                  : 'Link to Job Number'}
+                  ? `Repair Order ${jobNumber}`
+                  : 'Link to Repair Order'}
               </Text>
             </Pressable>
             {jobSelectable && product.isRecoverable ? (

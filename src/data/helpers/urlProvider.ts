@@ -360,11 +360,29 @@ export class URLProvider {
   }
 
   getRNToken() {
-    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
     const deviceId = this.ssoStore.getCurrentMobileDevice(
       deviceInfoStore.getDeviceName,
     )?.partyRoleId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
+  }
+
+  setPin(b2cUserId: string) {
+    return new URL(
+      `${this.currentEnv.modules.base.apiUri}/map/api/auth/set-pin/${b2cUserId}`,
+    );
+  }
+
+  getLoginLink(b2cUserId: string, pin: string) {
+    return new URL(
+      `${this.currentEnv.modules.base.apiUri}/map/api/auth/login-link/${b2cUserId}/${pin}`,
+    );
+  }
+
+  getSSOUsers() {
+    const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
+
+    return `${this.currentEnv.modules.base.apiUri}/MAP/api/users/${facilityId}`;
   }
 }

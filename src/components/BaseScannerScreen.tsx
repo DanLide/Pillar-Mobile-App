@@ -64,7 +64,7 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
   [ScannerScreenError.NetworkRequestFailed]:
     'Please check your internet connection and retry',
   [ScannerScreenError.ProductIsNotRecoverable]:
-    'Product should Recoverable for Create Invoice',
+    'Cannot add to Invoice.\nMissing pricing info',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -90,7 +90,10 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const scannedProducts = store.getProducts;
 
     const handleScanError = useCallback(
-      (error: ScannerScreenError | BadRequestError) => {
+      (
+        error: ScannerScreenError | BadRequestError,
+        toastType = ToastType.ScanError
+      ) => {
         setIsScannerActive(true);
 
         if (typeof error !== 'string') {
@@ -98,8 +101,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         }
 
         return showToast(scannerErrorMessages[error], {
-          type: ToastType.ScanError,
-          duration: 0,
+          type: toastType,
         });
       },
       [onBadRequestError, showToast],
@@ -115,7 +117,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         }
 
         if (error === ScannerScreenError.ProductIsNotRecoverable) {
-          return handleScanError?.(ScannerScreenError.ProductIsNotRecoverable);
+          return handleScanError?.(ScannerScreenError.ProductIsNotRecoverable, ToastType.DetailedScanError);
         }
 
         if (isBadRequestError(error) && error.error_description) {

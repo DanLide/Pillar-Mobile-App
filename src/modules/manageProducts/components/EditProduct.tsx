@@ -350,7 +350,7 @@ export const EditProduct = observer(
             <Switch
               trackColor={{ true: colors.purple }}
               value={product?.isRecoverable}
-              label="Recoverable"
+              label="Recommend to Add to RO"
               labelStyle={styles.recoverableLabel}
               style={styles.spaceBetweenContainer}
               onPress={() => store.toggleIsRecoverable()}

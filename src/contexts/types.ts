@@ -1,12 +1,14 @@
 export enum ToastType {
   Error = 'Error',
   ScanError = 'ScanError',
+  DetailedScanError = 'DetailedScanError',
   ProductQuantityError = 'ProductQuantityError',
   ProductUpdateError = 'ProductUpdateError',
   UpcUpdateError = 'UpcUpdateError',
   SuggestedItemsError = 'SuggestedItemsError',
   CreateInvoiceError = 'CreateInvoiceError',
   UnitsPerContainerError = 'UnitsPerContainerError',
+  ProfileError = 'ProfileError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',

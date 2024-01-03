@@ -30,7 +30,7 @@ export const SelectJob = () => {
     <SafeAreaView style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
-        title="Select a Job Number"
+        title="Select a Repair Order"
       />
       <JobsList
         itemType={JobListItemType.Select}

@@ -1,14 +1,21 @@
+import { makeObservable, observable, action, computed } from 'mobx';
+import { RoleType, UserType } from 'src/constants/common.enum';
+
 export class SSOStore {
   private currentSSO?: SSOModel;
   private ssoList?: SSOModel[];
+  @observable ssoUsersList: SSOUser[] | null;
   private ssoMobileDevices?: MobileDevice[];
   private isDeviceConfiguredBySSO?: boolean;
 
   constructor() {
+    makeObservable(this);
+
     this.currentSSO = undefined;
     this.ssoList = undefined;
     this.ssoMobileDevices = undefined;
     this.isDeviceConfiguredBySSO = undefined;
+    this.ssoUsersList = null;
   }
 
   public get getMobileDevices() {
@@ -49,6 +56,21 @@ export class SSOStore {
     this.isDeviceConfiguredBySSO = value;
   }
 
+  @computed get SsoSeparatedUsersList() {
+    const initial: Array<SSOUser[]> = [[], []];
+    this.ssoUsersList?.forEach((current: SSOUser) => {
+      const neededArray =
+        current.userType === UserType.SSO ? initial[0] : initial[1];
+      neededArray.push(current)
+    }, []);
+
+    return initial
+  }
+
+  @action setSsoUsersList(list: SSOUser[]) {
+    this.ssoUsersList = list;
+  }
+
   public clear() {
     this.currentSSO = undefined;
     this.ssoList = undefined;
@@ -72,4 +94,15 @@ export interface SSOModel {
   msoPillarId?: string;
   distributorId?: string;
   distributorName?: string;
+}
+
+export interface SSOUser {
+  b2CId: string;
+  firstName: string;
+  id: string;
+  isPinRequired: boolean;
+  isPinSet: boolean;
+  lastName: string;
+  role: RoleType;
+  userType: UserType;
 }

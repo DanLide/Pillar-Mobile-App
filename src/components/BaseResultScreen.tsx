@@ -120,7 +120,7 @@ const BaseResultScreen: React.FC<Props> = observer(
             {info.section
               ? info.section.jobId === OTHER_JOB_ID
                 ? 'Other'
-                : `Job ${info.section.jobId}`
+                : `Job number ${info.section.jobId}`
               : 'Product'}
           </Text>
           <Text style={styles.sectionTitleRight}>Qty</Text>

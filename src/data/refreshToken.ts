@@ -5,7 +5,10 @@ import { authStore } from '../stores';
 import { refreshTokenAPI } from './api/refreshTokenAPI';
 
 export const refreshToken = async () => {
+  if (!authStore.getRefreshToken) return;
+
   const refreshTokenContext: TokenData = {};
+
   const result = await new TaskExecutor([
     new RefreshTokenTask(refreshTokenContext),
     new SaveTokensToStore(refreshTokenContext),

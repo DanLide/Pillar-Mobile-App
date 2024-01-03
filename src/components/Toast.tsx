@@ -29,6 +29,7 @@ export enum ToastActionType {
   Undo = 'Undo',
   Edit = 'Edit',
   OpenSettings = 'OpenSettings',
+  Details = 'Details',
 }
 
 interface Props
@@ -44,12 +45,14 @@ const icons: Record<
 > = {
   [ToastType.Error]: SVGs.ListErrorIcon,
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
+  [ToastType.DetailedScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,
   [ToastType.CreateInvoiceError]: SVGs.RefundErrorIcon,
   [ToastType.UnitsPerContainerError]: SVGs.ProductsErrorIcon,
+  [ToastType.ProfileError]: SVGs.ProfileError,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
@@ -97,6 +100,7 @@ export const Toast: React.FC<Props> = ({
       case ToastType.ProductUpdateSuccess:
       case ToastType.CreateInvoiceError:
       case ToastType.UnitsPerContainerError:
+      case ToastType.DetailedScanError:
         return styles.messageLeft;
       default:
         return null;
@@ -158,6 +162,15 @@ export const Toast: React.FC<Props> = ({
             Open Settings
           </Text>
         );
+      case ToastActionType.Details:
+        return (
+          <Text
+            testID={testIds.idDetailsButton(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Details
+          </Text>
+        );
       default:
         return null;
     }
@@ -178,6 +191,10 @@ export const Toast: React.FC<Props> = ({
       case ToastActionType.Undo:
       case ToastActionType.OpenSettings:
         onPress?.(id);
+        break;
+      case ToastActionType.Details:
+        onPress?.(ToastActionType.Details);
+        onHide();
         break;
       case ToastActionType.Retry:
         setIsLoading(true);
