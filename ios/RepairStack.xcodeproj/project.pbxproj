@@ -1123,6 +1123,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackUAT-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1162,6 +1163,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackUAT-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1315,6 +1317,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 			};
 			name = Debug;
 		};
@@ -1379,6 +1382,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
