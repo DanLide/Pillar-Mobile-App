@@ -79,7 +79,6 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               buttonStyle={styles.continueButton}
               title="Continue"
               onPress={onLoginViaPin}
-              disabled={true}
             />
             <Button
               type={ButtonType.secondary}

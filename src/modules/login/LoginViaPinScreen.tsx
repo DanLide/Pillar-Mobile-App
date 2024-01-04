@@ -14,11 +14,16 @@ import { Button, ButtonType } from 'src/components';
 
 import { fetchSSOUsers } from 'src/data/fetchSSOUsers';
 import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
-import { ssoStore } from 'src/stores';
+import { ssoStore, authStore } from 'src/stores';
 import { SSOUser } from 'src/stores/SSOStore';
 import { colors, fonts, SVGs } from 'src/theme';
 import { SearchIcon } from 'src/theme/svgs';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { onLoginWithToken } from 'src/data/login';
+import TokenParser from './components/TokenParser';
+
+// temp fix after back will be done
+const magicLink = 'https://3maaddev.b2clogin.com/3maaddev.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_Auth_With_UserId&client_id=198e2599-5fe6-45f5-9426-72ff46dbc80b&nonce=defaultNonce&redirect_uri=https%3a%2f%2fjwt.ms%2f&scope=openid&response_type=id_token&prompt=login&user_id='
 
 const titleError =
   'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.';
@@ -33,6 +38,8 @@ interface Props {
 export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [userIdToLoginWithoutPIN, setUserIdToLoginWithoutPIN] = useState<null | string>(null);
 
   const fetchUsers = () => {
     fetchSSOUsers(ssoStore);
@@ -51,12 +58,20 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     setInput(value);
   };
 
+  const handleTokenReceived = async (token: string) => {
+    setIsLoading(true);
+    await onLoginWithToken(token, authStore);
+    setIsLoading(false);
+    setUserIdToLoginWithoutPIN(null);
+    return true;
+  }
+
   const renderItem = useCallback(
     ({ item }: { item: SSOUser }) => {
       const title = `${item.firstName} ${item.lastName}`;
       const onPress = () => {
         if (!item.isPinRequired) {
-          // TODO
+          setUserIdToLoginWithoutPIN(item.id)
           return;
         }
 
@@ -81,7 +96,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     [navigation],
   );
 
-  if (!ssoStore.ssoUsersList) {
+  if (!ssoStore.ssoUsersList || isLoading) {
     return <ActivityIndicator size="large" style={styles.loading} />;
   }
 
@@ -191,6 +206,10 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
           title="Login with Username"
           buttonStyle={styles.loginButton}
           onPress={onLoginViaCredentials}
+        />
+        <TokenParser
+          magicLink={userIdToLoginWithoutPIN ? `${magicLink}${userIdToLoginWithoutPIN}` : userIdToLoginWithoutPIN}
+          onTokenReceived={handleTokenReceived}
         />
       </SafeAreaView>
     </View>
