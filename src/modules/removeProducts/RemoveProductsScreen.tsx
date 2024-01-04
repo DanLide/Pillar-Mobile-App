@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 
 import { removeProductsStore } from './stores';
 import { BaseProductsScreen } from '../../components';
@@ -13,6 +13,7 @@ import {
 import { BaseProductsScreenNavigationProp } from '../../navigation/types';
 import { SelectedProductsList } from './SelectedProductsList';
 import { useBaseProductsScreen } from 'src/hooks';
+import { observer } from 'mobx-react';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -23,7 +24,7 @@ type Store = ScannerModalStoreType &
   SyncedProductStoreType &
   StockProductStoreType;
 
-export const RemoveProductsScreen = memo(({ navigation }: Props) => {
+export const RemoveProductsScreen = observer(({ navigation }: Props) => {
   const store = useRef<Store>(removeProductsStore).current;
 
   const onCompleteRemove = useCallback(async () => {
