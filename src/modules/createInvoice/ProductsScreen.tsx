@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import {
@@ -14,16 +14,16 @@ import { onCreateInvoice } from 'src/data/createInvoice';
 import { fetchProductsByFacilityId } from 'src/data/fetchProductsByFacilityId';
 import { SVGs, colors, fonts } from '../../theme';
 import { useBaseProductsScreen } from 'src/hooks';
+import { observer } from 'mobx-react';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
 }
 
-export const ProductsScreen = memo(({ navigation }: Props) => {
+export const ProductsScreen = observer(({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
-
   const {
     modalParams,
     product,
