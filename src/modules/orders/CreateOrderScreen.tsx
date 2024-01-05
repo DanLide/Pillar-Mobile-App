@@ -174,6 +174,16 @@ const CreateOrderScreen = observer(
       [openResultScreen, ordersStoreRef],
     );
 
+    const isDropdownDisabled = useMemo(() => {
+      if (modalType !== ProductModalType.CreateOrder) {
+        return
+      }
+
+      const products = ordersStore.getNotSyncedProducts
+      // Disabled when there are products
+      return products.length !== 0
+    }, [modalType, ordersStore.getNotSyncedProducts])
+
     return (
       <View style={styles.container}>
         <InfoTitleBar
@@ -188,6 +198,7 @@ const CreateOrderScreen = observer(
             data={suppliers}
             selectedItem={supplier}
             onSelect={item => ordersStoreRef.setSupplier(+item.value)}
+            disabled={isDropdownDisabled}
           />
         </View>
 
