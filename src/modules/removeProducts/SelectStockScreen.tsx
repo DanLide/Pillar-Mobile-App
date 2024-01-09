@@ -33,9 +33,11 @@ const SelectStockScreenBody: React.FC<Props> = observer(({ navigation }) => {
     }
   }, [isFocused, store]);
 
-  const onItemPress = (stock: StockModel) => {
+  const onItemPress = (stock: StockModel, withoutNavigation?: boolean) => {
     store.setCurrentStocks(stock);
-    navigation.navigate(AppNavigator.RemoveProductsScreen);
+    if (!withoutNavigation) {
+      navigation.navigate(AppNavigator.RemoveProductsScreen);
+    }
   };
 
   return (
