@@ -10,12 +10,13 @@ import { ProductModalType } from '../productModal';
 import { ProductModal, SelectedProductsList } from './components';
 import { useManageProducts } from 'src/modules/manageProducts/hooks';
 import { useBaseProductsScreen } from 'src/hooks';
+import { observer } from 'mobx-react';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
 }
 
-export const ManageProductsScreen = memo(({ navigation }: Props) => {
+export const ManageProductsScreen = observer(({ navigation }: Props) => {
   const {
     modalParams,
     store,

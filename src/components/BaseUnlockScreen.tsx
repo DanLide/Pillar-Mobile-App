@@ -79,14 +79,19 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
 
     useEffect(() => {
       if (status !== ExtendedMasterLockStatus.UNLOCKING) {
-        setCanSkipUnlock(false);
         return;
       }
 
-      const timerId = setTimeout(() => setCanSkipUnlock(true), 2000);
+      const timerId = setTimeout(() => {
+        setCanSkipUnlock(true);
+        const hideSkipUnlockTimer = setTimeout(() => {
+          setCanSkipUnlock(false);
+          clearTimeout(hideSkipUnlockTimer);
+        }, 4000);
+      }, 2000);
 
       return () => clearTimeout(timerId);
-    }, [canSkipUnlock, status]);
+    }, [status]);
 
     useLayoutEffect(() => {
       if (
@@ -270,7 +275,17 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
           );
         case LockStatus.UNLOCKED:
           return (
-            <Text style={styles.bottomText}>Open Cabinet to Continue</Text>
+            <View style={styles.buttonsContainer}>
+              <Text style={styles.bottomText}>Open Cabinet to Continue</Text>
+              {canSkipUnlock && (
+                <Button
+                  type={ButtonType.primary}
+                  buttonStyle={styles.primaryButton}
+                  title="Proceed without Unlocking"
+                  onPress={navigateNextScreen}
+                />
+              )}
+            </View>
           );
         case LockStatus.LOCKED:
           return (

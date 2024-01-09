@@ -13,6 +13,7 @@ import { ProductModalType } from '../productModal';
 import { SelectedProductsList } from './components';
 import { onReturnProducts } from 'src/data/returnProducts';
 import { useBaseProductsScreen } from 'src/hooks';
+import { observer } from 'mobx-react';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -23,7 +24,7 @@ type Store = ScannerModalStoreType &
   SyncedProductStoreType &
   StockProductStoreType;
 
-export const ReturnProductsScreen = memo(({ navigation }: Props) => {
+export const ReturnProductsScreen = observer(({ navigation }: Props) => {
   const store = useRef<Store>(returnProductsStore).current;
 
   const {

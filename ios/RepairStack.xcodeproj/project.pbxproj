@@ -10,6 +10,9 @@
 		00E356F31AD99517003FC87E /* RepairStackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RepairStackTests.m */; };
 		0C5A1C7A520DD8AE5BD6D7C8 /* libPods-RepairStackAbstract-RepairStackTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */; };
 		4495D1E214972CDE62C23389 /* libPods-RepairStackAbstract-RepairStackPROD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */; };
+		720EAD7A2B2758A200213574 /* JAMFAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 720EAD792B2758A200213574 /* JAMFAppConfig.m */; };
+		720EAD7B2B2758A200213574 /* JAMFAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 720EAD792B2758A200213574 /* JAMFAppConfig.m */; };
+		720EAD7C2B2758A200213574 /* JAMFAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 720EAD792B2758A200213574 /* JAMFAppConfig.m */; };
 		726995542A79AA03008C7ACB /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		726995552A79AA03008C7ACB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		726995562A79AA03008C7ACB /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
@@ -76,6 +79,10 @@
 		726995B62A79AC14008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
 		726995B72A79AC14008C7ACB /* 3MCircularTT-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */; };
 		726995BC2A79AC14008C7ACB /* MLBluetooth.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		726AA7AB2B2915BB00A7FF0B /* libManagedAppConfigLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 726AA7AA2B2915BB00A7FF0B /* libManagedAppConfigLib.a */; };
+		726AA7AD2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */; };
+		726AA7AE2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */; };
+		726AA7AF2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */; };
 		95ACE4D12A78041C0059C020 /* RCTMasterLockModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 95ACE4CF2A78041C0059C020 /* RCTMasterLockModule.m */; };
 		95ACE4D32A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */; };
 		A3D7796A6881A29F2E5134E1 /* libPods-RepairStackAbstract-RepairStackQA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */; };
@@ -142,12 +149,18 @@
 		643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-BlackItalic.otf"; path = "../assets/fonts/3MCircularTT-BlackItalic.otf"; sourceTree = "<group>"; };
 		6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-LightItalic.otf"; path = "../assets/fonts/3MCircularTT-LightItalic.otf"; sourceTree = "<group>"; };
 		6D4994AFA5A449B3831DAAF6 /* 3MCircularTT-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Regular.otf"; path = "../assets/fonts/3MCircularTT-Regular.otf"; sourceTree = "<group>"; };
+		720EAD792B2758A200213574 /* JAMFAppConfig.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JAMFAppConfig.m; sourceTree = "<group>"; };
 		726995742A79AA03008C7ACB /* RepairStackQA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackQA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726995752A79AA03008C7ACB /* RepairStack qa-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack qa-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack qa-Info.plist"; sourceTree = "<absolute>"; };
 		7269959A2A79ABD1008C7ACB /* RepairStackUAT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackUAT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7269959B2A79ABD1008C7ACB /* RepairStack uat-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack uat-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack uat-Info.plist"; sourceTree = "<absolute>"; };
 		726995C02A79AC14008C7ACB /* RepairStackPROD.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RepairStackPROD.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726995C12A79AC14008C7ACB /* RepairStack prod-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "RepairStack prod-Info.plist"; path = "/Users/dmytro.morhunov/Documents/GitHub/Pillar-Mobile-App/ios/RepairStack prod-Info.plist"; sourceTree = "<absolute>"; };
+		726AA7AA2B2915BB00A7FF0B /* libManagedAppConfigLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libManagedAppConfigLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JAMFAppConfig.swift; sourceTree = "<group>"; };
+		726AA7B02B29193B00A7FF0B /* RepairStackUAT-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepairStackUAT-Bridging-Header.h"; sourceTree = "<group>"; };
+		728399562B45EF2C0069DE89 /* RepairStackQA-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepairStackQA-Bridging-Header.h"; sourceTree = "<group>"; };
+		728A88A22B44658C0083EFB1 /* JAMFAppConfigModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JAMFAppConfigModule.h; sourceTree = "<group>"; };
 		72A711562A576EB900870488 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7B88CC87B172967C9C7AAE3F /* Pods-RepairStack-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Book.otf"; path = "../assets/fonts/3MCircular-Book.otf"; sourceTree = "<group>"; };
@@ -199,6 +212,7 @@
 			files = (
 				7269957F2A79ABD1008C7ACB /* MLBluetooth.xcframework in Frameworks */,
 				F08D5D32A9E5AE537CBE08B5 /* libPods-RepairStackAbstract-RepairStackUAT.a in Frameworks */,
+				726AA7AB2B2915BB00A7FF0B /* libManagedAppConfigLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +258,11 @@
 				72A711562A576EB900870488 /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */,
+				720EAD792B2758A200213574 /* JAMFAppConfig.m */,
+				728A88A22B44658C0083EFB1 /* JAMFAppConfigModule.h */,
+				726AA7B02B29193B00A7FF0B /* RepairStackUAT-Bridging-Header.h */,
+				728399562B45EF2C0069DE89 /* RepairStackQA-Bridging-Header.h */,
 			);
 			name = RepairStack;
 			sourceTree = "<group>";
@@ -272,6 +291,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				726AA7AA2B2915BB00A7FF0B /* libManagedAppConfigLib.a */,
 				95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */,
@@ -443,6 +463,15 @@
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					726995502A79AA03008C7ACB = {
+						LastSwiftMigration = 1430;
+					};
+					726995762A79ABD1008C7ACB = {
+						LastSwiftMigration = 1430;
+					};
+					7269959C2A79AC14008C7ACB = {
+						LastSwiftMigration = 1430;
 					};
 				};
 			};
@@ -897,7 +926,9 @@
 			files = (
 				726995542A79AA03008C7ACB /* AppDelegate.mm in Sources */,
 				726995552A79AA03008C7ACB /* main.m in Sources */,
+				720EAD7A2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				726995562A79AA03008C7ACB /* RCTMasterLockModule.m in Sources */,
+				726AA7AD2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -907,7 +938,9 @@
 			files = (
 				7269957A2A79ABD1008C7ACB /* AppDelegate.mm in Sources */,
 				7269957B2A79ABD1008C7ACB /* main.m in Sources */,
+				720EAD7B2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				7269957C2A79ABD1008C7ACB /* RCTMasterLockModule.m in Sources */,
+				726AA7AE2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -917,7 +950,9 @@
 			files = (
 				726995A02A79AC14008C7ACB /* AppDelegate.mm in Sources */,
 				726995A12A79AC14008C7ACB /* main.m in Sources */,
+				720EAD7C2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				726995A22A79AC14008C7ACB /* RCTMasterLockModule.m in Sources */,
+				726AA7AF2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -986,7 +1021,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack qa-Info.plist";
@@ -1009,6 +1044,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackQA-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1025,7 +1061,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack qa-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -1047,6 +1083,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackQA-Bridging-Header.h";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1062,7 +1099,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack uat-Info.plist";
@@ -1085,6 +1122,8 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackUAT-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1101,7 +1140,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack uat-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -1123,6 +1162,8 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackUAT-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1138,7 +1179,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "RepairStack prod-Info.plist";
@@ -1161,6 +1202,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackPROD-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1177,7 +1219,7 @@
 				CODE_SIGN_ENTITLEMENTS = RepairStack/RepairStack.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 49;
+				CURRENT_PROJECT_VERSION = 50;
 				DEVELOPMENT_TEAM = 35PLJBU685;
 				INFOPLIST_FILE = "RepairStack prod-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Repair Stack";
@@ -1199,6 +1241,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "RepairStackPROD-Bridging-Header.h";
 				SWIFT_VERSION = 5.2;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1274,6 +1317,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 			};
 			name = Debug;
 		};
@@ -1338,6 +1382,7 @@
 				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "RepairStackUAT-Swift.h";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

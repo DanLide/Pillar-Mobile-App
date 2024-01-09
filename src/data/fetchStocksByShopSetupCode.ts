@@ -7,7 +7,9 @@ import {
 import { MobileDevice, SSOStore } from '../stores/SSOStore';
 import {
   SingleSSOAPIResponse,
+  assignDeviceToSSOAPI,
   deviceByRepairFacilityIdAPI,
+  fetchUnassignedDevices,
   getRNTokenAPI,
   shopSetupLoginAPI,
   singleSSOAPI,
@@ -113,7 +115,19 @@ export class FetchSSOMobileDevicesTask extends Task {
     ) {
       this.ssoStore.setSSOMobileDevices(response);
     } else {
-      throw Error('Device not assign to Repair facility!');
+      const devices = await fetchUnassignedDevices();
+      if (devices) {
+        const currentDevice = devices.find(
+          device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
+        );
+        if (currentDevice) {
+          await assignDeviceToSSOAPI(currentDevice.partyRoleId);
+        } else {
+          throw Error('Devices not found!');
+        }
+      } else {
+        throw Error('Device not found!');
+      }
     }
   }
 }
@@ -153,7 +167,10 @@ export class SaveDataToStore extends Task {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
     this.ssoStore.setDeviceConfiguration(true);
     if (this.ssoStore.getCurrentSSO && this.fetchStocksContext.rnToken) {
-      setSSORNToken(this.fetchStocksContext.rnToken, this.ssoStore.getCurrentSSO);
+      setSSORNToken(
+        this.fetchStocksContext.rnToken,
+        this.ssoStore.getCurrentSSO,
+      );
     }
   }
 }
