@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo, useCallback, useRef } from 'react';
 import { CommonActions } from '@react-navigation/native';
 
 import { BaseProductsScreen } from 'src/components';
@@ -11,22 +11,24 @@ import { ProductModal, SelectedProductsList } from './components';
 import { useManageProducts } from 'src/modules/manageProducts/hooks';
 import { useBaseProductsScreen } from 'src/hooks';
 import { observer } from 'mobx-react';
+import { manageProductsStore } from 'src/modules/manageProducts/stores';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
 }
 
 export const ManageProductsScreen = observer(({ navigation }: Props) => {
+  const store = useRef(manageProductsStore).current;
+
   const {
     modalParams,
-    store,
     product,
     onProductListItemPress,
     onCloseModal,
     onEditPress,
     onCancelPress,
     onSubmit,
-  } = useManageProducts();
+  } = useManageProducts(store);
 
   const {
     scannedProductsCount,

@@ -4,24 +4,23 @@ import {
   equals,
   findIndex,
   ifElse,
-  lensPath,
-  set,
+  update,
   whereEq,
 } from 'ramda';
 
-import { ProductModel } from '../../../stores/types';
+import { ProductModel } from 'src/stores/types';
 
 export const addProductToList = (
   product: ProductModel,
   list: ProductModel[],
 ) => {
-  const { productId, reservedCount } = product;
+  const { productId } = product;
 
   const productIndex = findIndex(whereEq({ productId }), list);
 
   return ifElse<[ProductModel[]], ProductModel[], ProductModel[]>(
     always(equals(productIndex, -1)),
     append(product),
-    set(lensPath([productIndex, 'reservedCount']), reservedCount),
+    update(productIndex, product),
   )(list);
 };

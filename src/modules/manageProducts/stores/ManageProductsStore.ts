@@ -29,7 +29,13 @@ export class ManageProductsStore extends BaseProductsStore {
   }
 
   @override addProduct(product: ProductModel) {
-    const scannedProduct = { ...product, isRemoved: false, uuid: uuid() };
+    const scannedProduct = {
+      ...product,
+      onHand: product.reservedCount ?? product.onHand,
+      isRemoved: false,
+      uuid: uuid(),
+    };
+
     this.products = addProductToList(scannedProduct, this.products);
   }
 
