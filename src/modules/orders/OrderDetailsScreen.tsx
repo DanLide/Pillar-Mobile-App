@@ -26,6 +26,7 @@ import { fetchStocks } from 'src/data/fetchStocks';
 import { stocksStore } from '../stocksList/stores';
 import { useSingleToast } from 'src/hooks';
 import { LockStatus, LockVisibility } from 'src/data/masterlock';
+import { permissionProvider } from 'src/data/providers';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -41,6 +42,8 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     useState(false);
   const locationPermission = permissionStore.locationPermission;
   const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
+
+  const { userPermissions } = permissionProvider
 
   const { showToast, hideAll } = useSingleToast();
   const selectedStockId = useRef('');
@@ -194,6 +197,10 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     };
 
     const renderButton = () => {
+      if (!userPermissions.receiveOrder) {
+        return null
+      }
+
       switch (currentOrder.order.status) {
         case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
           return (

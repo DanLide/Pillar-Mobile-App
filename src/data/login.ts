@@ -318,7 +318,7 @@ class SaveAuthDataTask extends Task {
 
       if (
         type === LoginType.ConfigureShopDevice &&
-        !permissionProvider.canConfigureShop()
+        !permissionProvider.userPermissions.configureShop
       ) {
         this.authStore.resetPermissionSet();
         throw new ExtendedError(

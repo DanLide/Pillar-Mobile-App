@@ -14,6 +14,7 @@ import { OrderTitleByStatusType } from './StatusBadge';
 import { OrderStatusType } from '../../../constants/common.enum';
 import { ordersStore } from '../stores';
 import { StockWithProducts } from './StockWithProducts';
+import { permissionProvider } from 'src/data/providers';
 
 interface Props {
   productsByStockId: Record<string, ProductModel[]>;
@@ -26,10 +27,15 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
   ({ productsByStockId, selectedStock, onSelectProducts }) => {
     const ordersStoreRef = useRef(ordersStore).current;
     const { currentOrder } = ordersStoreRef;
+    const { userPermissions } = permissionProvider
 
     if (!currentOrder) return null;
 
     const isOrderReceivable = useMemo(() => {
+      if (!userPermissions.receiveOrder) {
+        return false
+      }
+
       switch (currentOrder.order.status) {
         case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
         case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
@@ -42,7 +48,7 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
         default:
           return false;
       }
-    }, [currentOrder.order.status]);
+    }, [currentOrder.order.status, userPermissions]);
 
     const renderSelectedRadioButton = useCallback(
       (item: string) =>
