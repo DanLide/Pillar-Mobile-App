@@ -29,6 +29,7 @@ export const colors = {
   grayLight2: '#F0F0F0',
   grayDark2: '#58585F',
   grayDark3: '#202024',
+  grayDark4: '#65656D',
   grayText: '#76767E',
   grayWithOpacity: 'rgba(225, 225, 232, 0.5)',
   transparent: 'transparent',

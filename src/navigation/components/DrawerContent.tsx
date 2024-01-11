@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
@@ -9,16 +9,24 @@ import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
 import { AppNavigator } from '../types';
+import SupportAlertWrapper from 'src/navigation/components/DrawerAlertWrappers/SupportAlertWrapper';
 
 export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
+  const [isSupportAlertVisible, setIsSupportAlertVisible] =
+    useState<boolean>(false);
+
   const isNavigationToShopSelectAvailable =
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
   const version = `Version ${deviceInfoStore.version}`;
   const onLogout = () => {
     authStore.logOut();
+  };
+
+  const handleSupportButtonPress = () => {
+    setIsSupportAlertVisible(true);
   };
 
   const onNavigateToSelectShopLocation = () => {
@@ -64,18 +72,27 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
 
       <View style={styles.bottomContainer}>
         <DrawerListButton
+          onPress={handleSupportButtonPress}
+          icon={<SVGs.SupportIcon color={colors.purpleDark3} />}
+          title="Support"
+          subtitle="How to get Assistance"
+          disabled={false}
+        />
+        <DrawerListButton
           onPress={onLogout}
           icon={<SVGs.LogoutIcon2 color={colors.blue} />}
           title="Logout"
           disabled={false}
         />
-        <DrawerListButton
-          icon={<SVGs.SupportIcon color={colors.blue} />}
-          title="Support"
-          subtitle="Contact Information"
-        />
         <Text style={styles.subtitleText}>{version}</Text>
       </View>
+
+      <SupportAlertWrapper
+        visible={isSupportAlertVisible}
+        onPressPrimary={() => {
+          setIsSupportAlertVisible(false);
+        }}
+      />
     </SafeAreaView>
   );
 };
