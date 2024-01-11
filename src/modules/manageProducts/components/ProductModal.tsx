@@ -316,12 +316,7 @@ export const ProductModal = observer(
         topOffset={topOffset}
         semiTitle={isEdit ? 'Edit Product' : 'View Product'}
       >
-        <AlertWrapper
-          visible={alertParams.isVisible}
-          message={alertMessage}
-          onPressPrimary={handleAlertPrimaryPress}
-          onPressSecondary={handleAlertSecondaryPress}
-        >
+        <>
           <ToastContextProvider disableSafeArea offset={35}>
             <KeyboardAvoidingView
               keyboardVerticalOffset={85}
@@ -393,7 +388,14 @@ export const ProductModal = observer(
               </View>
             </KeyboardAvoidingView>
           </ToastContextProvider>
-        </AlertWrapper>
+
+          <AlertWrapper
+            visible={alertParams.isVisible}
+            message={alertMessage}
+            onPressPrimary={handleAlertPrimaryPress}
+            onPressSecondary={handleAlertSecondaryPress}
+          />
+        </>
       </Modal>
     );
   },

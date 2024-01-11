@@ -112,15 +112,7 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
   const closeAlert = useCallback(() => setError(null), []);
 
   return (
-    <AlertWrapper
-      visible={!!error}
-      message={alertMessage}
-      title={alertTitle}
-      primaryTitle="Okay"
-      onPressPrimary={closeAlert}
-      hideSecondary
-      alertContainerStyle={styles.alertContainer}
-    >
+    <>
       <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
         <BaseScannerScreen
           store={store}
@@ -132,7 +124,17 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
           onBadRequestError={onBadRequestError}
         />
       </ToastContextProvider>
-    </AlertWrapper>
+
+      <AlertWrapper
+        visible={!!error}
+        message={alertMessage}
+        title={alertTitle}
+        primaryTitle="Okay"
+        onPressPrimary={closeAlert}
+        hideSecondary
+        alertContainerStyle={styles.alertContainer}
+      />
+    </>
   );
 });
 

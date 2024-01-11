@@ -13,7 +13,6 @@ import { colors, fonts } from '../theme';
 import { testIds } from '../helpers';
 
 export type AlertWrapperProps = {
-  children: React.ReactNode;
   visible: boolean;
   message: string | JSX.Element;
   onPressPrimary?: () => void;
@@ -28,7 +27,6 @@ export type AlertWrapperProps = {
 };
 
 const AlertWrapper: React.FC<AlertWrapperProps> = ({
-  children,
   visible,
   message,
   title,
@@ -47,45 +45,42 @@ const AlertWrapper: React.FC<AlertWrapperProps> = ({
   );
 
   return (
-    <>
-      {children}
-      <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
-        <View style={styles.container}>
-          <View style={mergedAlertContainerStyle}>
-            {typeof title === 'string' ? (
-              <Text style={styles.titleText}>{title}</Text>
-            ) : (
-              title
+    <Modal testID={testIds.idModal(testID)} transparent visible={visible}>
+      <View style={styles.container}>
+        <View style={mergedAlertContainerStyle}>
+          {typeof title === 'string' ? (
+            <Text style={styles.titleText}>{title}</Text>
+          ) : (
+            title
+          )}
+          {typeof message === 'string' ? (
+            <Text style={styles.messageText}>{message}</Text>
+          ) : (
+            message
+          )}
+          <View style={styles.buttonsContainer}>
+            {!hideSecondary && (
+              <Button
+                testID={testIds.idSecondaryButton(testID)}
+                type={ButtonType.secondary}
+                title={secondaryTitle}
+                buttonStyle={styles.buttonStyle}
+                onPress={onPressSecondary}
+              />
             )}
-            {typeof message === 'string' ? (
-              <Text style={styles.messageText}>{message}</Text>
-            ) : (
-              message
+            {!hidePrimary && (
+              <Button
+                testID={testIds.idPrimaryButton(testID)}
+                type={ButtonType.primary}
+                title={primaryTitle}
+                buttonStyle={styles.buttonStyle}
+                onPress={onPressPrimary}
+              />
             )}
-            <View style={styles.buttonsContainer}>
-              {!hideSecondary && (
-                <Button
-                  testID={testIds.idSecondaryButton(testID)}
-                  type={ButtonType.secondary}
-                  title={secondaryTitle}
-                  buttonStyle={styles.buttonStyle}
-                  onPress={onPressSecondary}
-                />
-              )}
-              {!hidePrimary && (
-                <Button
-                  testID={testIds.idPrimaryButton(testID)}
-                  type={ButtonType.primary}
-                  title={primaryTitle}
-                  buttonStyle={styles.buttonStyle}
-                  onPress={onPressPrimary}
-                />
-              )}
-            </View>
           </View>
         </View>
-      </Modal>
-    </>
+      </View>
+    </Modal>
   );
 };
 
