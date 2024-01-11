@@ -18,7 +18,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
 
-  const { userPermissions } = permissionProvider
+  const { userPermissions } = permissionProvider;
 
   const onRemoveProducts = () => {
     navigation.navigate(AppNavigator.RemoveProductsStack);
@@ -45,7 +45,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
   };
 
-  const renderBorderBetweenTheItems = userPermissions.removeProduct && userPermissions.returnProduct;
+  const renderBorderBetweenTheItems =
+    userPermissions.removeProduct && userPermissions.returnProduct;
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -78,14 +80,16 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.shadowWrapper}>
-        <ListItem
-          title="Create Invoice"
-          subtitle="Add materials to a repair order"
-          leftIcon={InvoiceIcon}
-          onPress={onCreateInvoice}
-        />
-      </View>
+      {userPermissions.createInvoice && (
+        <View style={styles.shadowWrapper}>
+          <ListItem
+            title="Create Invoice"
+            subtitle="Add materials to a repair order"
+            leftIcon={InvoiceIcon}
+            onPress={onCreateInvoice}
+          />
+        </View>
+      )}
 
       <View style={styles.shadowWrapper}>
         <ListItem
