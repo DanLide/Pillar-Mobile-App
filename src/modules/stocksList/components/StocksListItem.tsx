@@ -25,7 +25,7 @@ type ScreenNavigationProp = NativeStackNavigationProp<
 
 interface Props {
   item: StockModel;
-  onPressItem?: (stock: StockModel) => void;
+  onPressItem?: (stock: StockModel, withoutNavigation?: boolean) => void;
   containerStyle?: ViewStyle;
   subContainer?: ViewStyle;
   skipNavToUnlockScreen?: boolean;
@@ -67,6 +67,7 @@ export const StocksListItem: React.FC<Props> = observer(
         isDeviceConfiguredBySSO
       ) {
         masterLockStore.unlock(item.controllerSerialNo);
+        onPressItem && onPressItem(item, true);
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
           title: organizationName,
           masterlockId: item.controllerSerialNo,

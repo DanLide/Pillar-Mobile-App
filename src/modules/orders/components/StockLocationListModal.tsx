@@ -3,7 +3,10 @@ import { View, Text, Modal, StyleSheet, Pressable } from 'react-native';
 import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';
-import { StockModel, StockModelWithMLAccess } from 'src/modules/stocksList/stores/StocksStore';
+import {
+  StockModel,
+  StockModelWithMLAccess,
+} from 'src/modules/stocksList/stores/StocksStore';
 import { colors, fonts, SVGs } from 'src/theme';
 import { ordersStore } from '../stores';
 
@@ -37,9 +40,11 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
     stocksStore.setStocks(availableStocks);
   };
 
-  const onItemPress = (stock: StockModel) => {
+  const onItemPress = (stock: StockModel, isCloseModal?: boolean) => {
     ordersStore.setCurrentStocks(stock);
-    closeModal();
+    if (!isCloseModal) {
+      closeModal();
+    }
   };
 
   return (

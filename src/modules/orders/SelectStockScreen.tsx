@@ -37,9 +37,11 @@ const SelectStockScreenBody: React.FC<Props> = observer(
       [],
     );
 
-    const onItemPress = (stock: StockModel) => {
+    const onItemPress = (stock: StockModel, withoutNavigation?: boolean) => {
       store.setCurrentStocks(stock);
-      navigation.navigate(AppNavigator.CreateOrderScreen, { orderType });
+      if (!withoutNavigation) {
+        navigation.navigate(AppNavigator.CreateOrderScreen, { orderType });
+      }
     };
 
     return (
