@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect } from 'react';
+import React, { FC, forwardRef, useEffect, useState } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
@@ -16,12 +16,18 @@ import { ToastType } from 'src/contexts/types';
 import { getProductStepQty } from 'src/data/helpers';
 import { InventoryUseType } from 'src/constants/common.enum';
 import { ProductModel } from 'src/stores/types';
-import { Button, ButtonType, ColoredTooltip } from '../../../../components';
+import {
+  Button,
+  ButtonType,
+  ColoredTooltip,
+  scannerErrorMessages,
+} from 'src/components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { ToastMessage } from 'src/components/ToastMessage';
+import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -106,6 +112,8 @@ export const ProductQuantity = forwardRef(
     const isSpecialOrder =
       product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
+    const [invoicingInfoAlertVisible, setInvoicingInfoAlertVisible] =
+      useState(false);
     const { showToast } = useSingleToast();
 
     useEffect(() => {
@@ -139,6 +147,22 @@ export const ProductQuantity = forwardRef(
 
     const onChange = (quantity: number) => {
       onChangeProductQuantity(quantity);
+    };
+
+    const handleJobButtonPress = () => {
+      if (type === ProductModalType.Remove && !product?.isRecoverable) {
+        showToast(scannerErrorMessages.ProductIsNotRecoverable, {
+          type: ToastType.InvoiceMissingProductPrice,
+          duration: 0,
+          onPress: () => {
+            setInvoicingInfoAlertVisible(true);
+          },
+        });
+
+        return;
+      }
+
+      onJobSelectNavigation?.();
     };
 
     const onPressButton = () => {
@@ -231,59 +255,90 @@ export const ProductQuantity = forwardRef(
     };
 
     return (
-      <View style={[styles.container, style]}>
-        {renderDescription()}
-        <View>
-          <EditQuantity
-            currentValue={currentValue}
-            maxValue={maxValue}
-            minValue={minValue ?? stepQty}
-            stepValue={stepQty}
-            disabled={disabled}
-            hideCount={hideCount}
-            keyboardType={keyboardType}
-            label={getEditQuantityLabel(type)}
-            ref={ref}
-            onChange={onChange}
-            onRemove={onRemove}
-            isHideDecreaseButton={isHideDecreaseButton}
-          />
-          {type === ProductModalType.ManageProduct && isEdit ? null : (
-            <FooterDescription
-              type={type}
-              hideOnHandCount={
-                type === ProductModalType.CreateInvoice ||
-                type === ProductModalType.ManageProduct
-              }
-              product={product}
-              onHand={onHand}
+      <>
+        <View style={[styles.container, style]}>
+          {renderDescription()}
+          <View>
+            <EditQuantity
+              currentValue={currentValue}
+              maxValue={maxValue}
+              minValue={minValue ?? stepQty}
+              stepValue={stepQty}
+              disabled={disabled}
+              hideCount={hideCount}
+              keyboardType={keyboardType}
+              label={getEditQuantityLabel(type)}
+              ref={ref}
+              onChange={onChange}
+              onRemove={onRemove}
+              isHideDecreaseButton={isHideDecreaseButton}
             />
+            {type === ProductModalType.ManageProduct && isEdit ? null : (
+              <FooterDescription
+                type={type}
+                hideOnHandCount={
+                  type === ProductModalType.CreateInvoice ||
+                  type === ProductModalType.ManageProduct
+                }
+                product={product}
+                onHand={onHand}
+              />
+            )}
+          </View>
+
+          {jobSelectable && toastType !== ToastType.ProductQuantityError && (
+            <View>
+              <Pressable
+                onPress={handleJobButtonPress}
+                style={styles.jobContainer}
+              >
+                <SVGs.RefundIcon color={colors.purple} />
+                <Text style={styles.jobText}>
+                  {isEdit && jobNumber
+                    ? `Repair Order ${jobNumber}`
+                    : 'Link to Repair Order'}
+                </Text>
+              </Pressable>
+              {jobSelectable && product.isRecoverable ? (
+                <ColoredTooltip
+                  title="Recommended"
+                  textStyles={styles.tooltip}
+                />
+              ) : null}
+            </View>
           )}
+          {renderCostOfProduct()}
+          {renderBottomButton()}
         </View>
 
-        {jobSelectable && toastType !== ToastType.ProductQuantityError && (
-          <View>
-            <Pressable
-              onPress={onJobSelectNavigation}
-              style={styles.jobContainer}
-            >
-              <SVGs.RefundIcon color={colors.purple} />
-              <Text style={styles.jobText}>
-                {isEdit && jobNumber
-                  ? `Repair Order ${jobNumber}`
-                  : 'Link to Repair Order'}
-              </Text>
-            </Pressable>
-            {jobSelectable && product.isRecoverable ? (
-              <ColoredTooltip title="Recommended" textStyles={styles.tooltip} />
-            ) : null}
-          </View>
-        )}
-        {renderCostOfProduct()}
-        {renderBottomButton()}
-      </View>
+        <InvoicingInfoAlert
+          visible={invoicingInfoAlertVisible}
+          onPressSecondary={() => {
+            setInvoicingInfoAlertVisible(false);
+          }}
+        />
+      </>
     );
   },
+);
+
+type InvoicingInfoAlertProps = Omit<
+  AlertWrapperProps,
+  'message' | 'hidePrimary' | 'secondaryTitle'
+>;
+
+const InvoicingInfoAlert: FC<InvoicingInfoAlertProps> = props => (
+  <AlertWrapper
+    message={
+      <Text style={{ textAlign: 'center' }}>
+        Invoicing Settings for this product can be added at repairstack.3m.com{' '}
+        {'>'} Products
+      </Text>
+    }
+    hidePrimary
+    secondaryTitle="Close"
+    {...props}
+  />
 );
 
 const styles = StyleSheet.create({

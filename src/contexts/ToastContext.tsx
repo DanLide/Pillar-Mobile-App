@@ -58,6 +58,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           style={styles.productQuantityError}
         />
       ),
+      [ToastType.InvoiceMissingProductPrice]: toast => (
+        <Toast
+          {...toast}
+          actionType={ToastActionType.Details}
+          type={ToastType.InvoiceMissingProductPrice}
+        />
+      ),
       [ToastType.ProductUpdateError]: toast => (
         <Toast
           {...toast}

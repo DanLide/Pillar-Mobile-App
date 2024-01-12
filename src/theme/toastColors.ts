@@ -17,6 +17,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.InvoiceMissingProductPrice]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Error]: {
     primary: colors.red,
     secondary: colors.redLight,
