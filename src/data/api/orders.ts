@@ -224,6 +224,18 @@ export const getProductByOrderTypeAndSupplierAPI = (
   });
 };
 
+export const getProductMultipleStocks = (
+  scanCode: string,
+) => {
+  const url = new URLProvider().getProductMultipleStocks(scanCode);
+
+  return tryAuthFetch<GetOrderSummaryProduct[]>({
+    url,
+    request: { method: 'GET' },
+  });
+};
+
+
 export const getSuggestedProductsAPI = () => {
   const url = new URLProvider().getSuggestedProductsAPI();
 

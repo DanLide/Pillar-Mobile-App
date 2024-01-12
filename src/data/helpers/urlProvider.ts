@@ -165,6 +165,12 @@ export class URLProvider {
     );
   }
 
+  getProductMultipleStocks(scanCode: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const supplierId = this.ordersStore.supplierId;
+    return `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/StockLocationByProductUPC/${facilityId}/${supplierId}/${scanCode}`;
+  }
+
   getFetchProductsByFacilityId() {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 

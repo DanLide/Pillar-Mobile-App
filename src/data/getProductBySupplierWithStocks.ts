@@ -6,6 +6,7 @@ import { OrdersStore } from '../modules/orders/stores/OrdersStore';
 import {
   GetOrderSummaryProduct,
   getProductByOrderTypeAndSupplierAPI,
+  getProductMultipleStocks,
 } from './api/orders';
 import { BadRequestError } from './helpers/tryFetch';
 import { getFetchProductByFacilityIdAPI } from './api';
@@ -78,26 +79,33 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
+    let productMultipleStockLocations;
+    let product;
+    try {
+      productMultipleStockLocations = await getProductMultipleStocks(
+        this.scanCode,
+      );
+      product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
+      if (!product && !productMultipleStockLocations?.length) {
 
-    if (!product) return;
-
-    //unlock when fix multiple backorders
-    // if (product.cabinets.length > 1) {
-    //   this.store.setBackorderCabinets(product.cabinets);
-    //   this.store.setCabinetSelection(true);
-    // } else {
-    
-      const availableStocks =
-        stocksStore.stocks.filter(stock =>
-          product.cabinets.find(
-            cabinet => stock.partyRoleId === cabinet.storageAreaId,
-          ),
-        ) || [];
-      this.store.setCurrentStocks(availableStocks[0]);
-    // }
-
-    this.productContext.product = product;
+        return;
+      }
+    } catch (e) {
+    } finally {
+      if (productMultipleStockLocations?.length > 1) {
+        this.store.setBackorderCabinets(productMultipleStockLocations);
+        this.store.setCabinetSelection(true);
+      } else {
+        const availableStocks =
+          stocksStore.stocks.filter(stock =>
+            product.cabinets.find(
+              cabinet => stock.partyRoleId === cabinet.storageAreaId,
+            ),
+          ) || [];
+        this.store.setCurrentStocks(availableStocks[0]);
+        this.productContext.product = product;
+      }
+    }
   }
 }
 
