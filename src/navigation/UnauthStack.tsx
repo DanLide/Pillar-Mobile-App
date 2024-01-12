@@ -9,7 +9,7 @@ import { LoginViaPinScreen } from 'src/modules/login/LoginViaPinScreen';
 import { UpdateShopLocationScreen } from 'src/modules/login/UpdateShopLocationScreen';
 import { CreatePinScreen } from 'src/modules/login/CreatePinScreen';
 import { ssoStore } from 'src/stores';
-import { LoginWithPinScreen } from "src/modules/login/LoginWithPinScreen";
+import { LoginWithPinScreen } from 'src/modules/login/LoginWithPinScreen';
 
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
@@ -33,7 +33,7 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.LoginViaPinScreen}
         component={LoginViaPinScreen}
         options={getScreenOptions({
-          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
+          title: ssoStore.getCurrentSSO?.name || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -49,7 +49,7 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.CreatePinScreen}
         component={CreatePinScreen}
         options={getScreenOptions({
-          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
+          title: ssoStore.getCurrentSSO?.name || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -57,7 +57,7 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.LoginWithPinScreen}
         component={LoginWithPinScreen}
         options={getScreenOptions({
-          title: ssoStore.getCurrentSSO?.address || 'Repair Stack',
+          title: ssoStore.getCurrentSSO?.name || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
       />
