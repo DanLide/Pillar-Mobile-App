@@ -255,7 +255,7 @@ export const updateProductAreaSettingsAPI = (
     max: product?.max,
     replenishedFormId: product?.replenishedFormId,
     StorageAreaId: stockId,
-    InventoryAssignmentId: product?.inventoryAssignmentTypeId,
+    InventoryAssignmentId: product?.inventoryAssignmentId,
   });
 
   return tryAuthFetch<string>({
