@@ -15,6 +15,7 @@ const KNOWN_PERMISSIONS = {
   returnProduct: Permission.InventoryManagement_StockMobile_Return,
   editProduct: Permission.InventoryManagement_StockMobile_Edit,
   editProductInStock: Permission.InventoryManagement_ProductsInStockMobile_Edit,
+  createInvoice: Permission.Planning_Invoices_Create
 }
 const ENUM_BASE = 64; // .NET ULong base
 

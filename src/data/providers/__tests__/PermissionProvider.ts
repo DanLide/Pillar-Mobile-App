@@ -165,4 +165,22 @@ describe('PermissionProvider', () => {
       expect(adminPermissions.configureShop).toBeTruthy();
     });
   })
+
+  describe('Create Invoice', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.createInvoice).toBeTruthy();
+    });
+
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.createInvoice).toBeFalsy();
+    });
+
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.createInvoice).toBeTruthy();
+    });
+
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.createInvoice).toBeTruthy();
+    });
+  })
 });
