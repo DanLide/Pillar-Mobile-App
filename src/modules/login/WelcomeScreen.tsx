@@ -1,6 +1,6 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useRef } from 'react';
-import { Image, StyleSheet, Text, View} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
@@ -63,7 +63,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
         {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <View>
             <Text style={styles.locationText}>
-              {ssoStore.getCurrentSSO?.address}
+              {ssoStore.getCurrentSSO?.name}
             </Text>
             {/* <TouchableOpacity onPress={onUpdateLocation}>
               <Text style={styles.updateLocationBtn}>Update Location</Text>
