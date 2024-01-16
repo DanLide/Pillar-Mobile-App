@@ -92,7 +92,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const handleScanError = useCallback(
       (
         error: ScannerScreenError | BadRequestError,
-        toastType = ToastType.ScanError
+        toastType = ToastType.ScanError,
       ) => {
         setIsScannerActive(true);
 
@@ -117,7 +117,10 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         }
 
         if (error === ScannerScreenError.ProductIsNotRecoverable) {
-          return handleScanError?.(ScannerScreenError.ProductIsNotRecoverable, ToastType.DetailedScanError);
+          return handleScanError?.(
+            ScannerScreenError.ProductIsNotRecoverable,
+            ToastType.DetailedScanError,
+          );
         }
 
         if (isBadRequestError(error) && error.error_description) {
@@ -158,7 +161,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         } else {
           handleScanError?.(ScannerScreenError.ProductNotFound);
         }
-        setIsScannerActive(true);
       },
       [fetchProductByCode, handleScanError],
     );
