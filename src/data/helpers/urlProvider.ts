@@ -22,7 +22,7 @@ export class URLProvider {
   returnProductsStore: ReturnProductsStore;
   ordersStore: OrdersStore;
   currentEnv: {
-    b2c: { clientId: string; authority: string };
+    b2c: { clientId: string; authority: string; magicLink: string };
     modules: {
       pisaJob: { apiUri: string };
       pisaProduct: { apiUri: string };
@@ -384,5 +384,9 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/users/${facilityId}`;
+  }
+
+  getLoginMagicLink(b2cUserId: string) {
+    return `${this.currentEnv.b2c.magicLink}${b2cUserId}`;
   }
 }

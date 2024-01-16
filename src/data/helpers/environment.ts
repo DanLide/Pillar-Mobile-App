@@ -4,6 +4,7 @@ export const environment = {
   b2c: {
     clientId: `${Config.AUTH_CLIENT_ID}`,
     authority: `${Config.AUTH_URL}`,
+    magicLink: `${Config.MAGIC_LINK_URL}`,
   },
   modules: {
     base: {
