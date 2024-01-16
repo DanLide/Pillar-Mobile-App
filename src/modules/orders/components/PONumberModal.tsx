@@ -85,6 +85,67 @@ export const PONumberModal = observer(
         topOffset={topOffset}
         onClose={handleSkipPress}
       >
+        <View style={styles.container}>
+          <View style={styles.content}>
+            <View style={styles.warningBar}>
+              <SVGs.PONumberCautionIcon
+                color={colors.blackSemiLight}
+                primaryColor={colors.orange}
+                secondaryColor={colors.background}
+              />
+              <ToastMessage>
+                <ToastMessage style={styles.warningBarText} bold>
+                  PO number
+                </ToastMessage>{' '}
+                is required for this distributor
+              </ToastMessage>
+            </View>
+
+            <View style={styles.inputInfoContainer}>
+              <Text style={styles.text}>
+                Add one here <Text style={styles.textBold}>or</Text> your
+                manager can{'\n'}
+                <Text style={styles.textBold}>add a PO number</Text> at{' '}
+                <Text style={styles.textItalic}>repairstack.3m.com</Text>
+                {'\n'}for this order to submit to your distributor
+              </Text>
+
+              <Input
+                contextMenuHidden
+                type={InputType.Primary}
+                placeholder="PO Number"
+                value={poNumber}
+                keyboardType="number-pad"
+                onChangeText={handlePONumberChange}
+              />
+
+              <Text style={styles.text}>
+                If you don’t have this information on hand,{'\n'}reach out to
+                your manager.
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.buttons}>
+            <Button
+              type={ButtonType.secondary}
+              title="Skip"
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+              onPress={handleSkipPress}
+            />
+            <Button
+              type={ButtonType.primary}
+              title="Continue"
+              disabled={!poNumber}
+              isLoading={isLoading}
+              buttonStyle={styles.button}
+              textStyle={styles.buttonText}
+              onPress={handleSubmitPress}
+            />
+          </View>
+        </View>
+
         <AlertWrapper
           visible={isAlertVisible}
           message={alertMessage}
@@ -94,68 +155,7 @@ export const PONumberModal = observer(
           onPressPrimary={onSkip}
           onPressSecondary={closeAlert}
           alertContainerStyle={styles.alertContainer}
-        >
-          <View style={styles.container}>
-            <View style={styles.content}>
-              <View style={styles.warningBar}>
-                <SVGs.PONumberCautionIcon
-                  color={colors.blackSemiLight}
-                  primaryColor={colors.orange}
-                  secondaryColor={colors.background}
-                />
-                <ToastMessage>
-                  <ToastMessage style={styles.warningBarText} bold>
-                    PO number
-                  </ToastMessage>{' '}
-                  is required for this distributor
-                </ToastMessage>
-              </View>
-
-              <View style={styles.inputInfoContainer}>
-                <Text style={styles.text}>
-                  Add one here <Text style={styles.textBold}>or</Text> your
-                  manager can{'\n'}
-                  <Text style={styles.textBold}>add a PO number</Text> at{' '}
-                  <Text style={styles.textItalic}>repairstack.3m.com</Text>
-                  {'\n'}for this order to submit to your distributor
-                </Text>
-
-                <Input
-                  contextMenuHidden
-                  type={InputType.Primary}
-                  placeholder="PO Number"
-                  value={poNumber}
-                  keyboardType="number-pad"
-                  onChangeText={handlePONumberChange}
-                />
-
-                <Text style={styles.text}>
-                  If you don’t have this information on hand,{'\n'}reach out to
-                  your manager.
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.buttons}>
-              <Button
-                type={ButtonType.secondary}
-                title="Skip"
-                buttonStyle={styles.button}
-                textStyle={styles.buttonText}
-                onPress={handleSkipPress}
-              />
-              <Button
-                type={ButtonType.primary}
-                title="Continue"
-                disabled={!poNumber}
-                isLoading={isLoading}
-                buttonStyle={styles.button}
-                textStyle={styles.buttonText}
-                onPress={handleSubmitPress}
-              />
-            </View>
-          </View>
-        </AlertWrapper>
+        />
       </Modal>
     );
   },

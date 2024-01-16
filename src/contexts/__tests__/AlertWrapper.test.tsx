@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, act } from '@testing-library/react-native';
-import { Text } from 'react-native';
 
 import AlertWrapper from '../AlertWrapper';
 import { testIds } from '../../helpers';
@@ -9,12 +8,11 @@ const mockPrimaryTitle = 'mockPrimaryTitle';
 const mockSecondaryTitle = 'mockSecondaryTitle';
 const mockTitle = 'mockTitle';
 const mockMessage = 'mockMessage';
-const mockChildrenText = 'mockChildrenText';
 const mockOnPressPrimary = jest.fn();
 const mockOnPressSecondary = jest.fn();
 
 describe('AlertWrapper', () => {
-  it('render title, message and children text', () => {
+  it('should render title and message text', () => {
     const { getByText } = render(
       <AlertWrapper
         visible
@@ -22,16 +20,13 @@ describe('AlertWrapper', () => {
         message={mockMessage}
         onPressPrimary={mockOnPressPrimary}
         onPressSecondary={mockOnPressSecondary}
-      >
-        <Text>{mockChildrenText}</Text>
-      </AlertWrapper>,
+      />
     );
     expect(getByText(mockTitle)).toBeDefined();
     expect(getByText(mockMessage)).toBeDefined();
-    expect(getByText(mockChildrenText)).toBeDefined();
   });
 
-  it('call onPressPrimary and onPressSecondary', () => {
+  it('should call onPressPrimary and onPressSecondary', () => {
     const { getByTestId } = render(
       <AlertWrapper
         visible
@@ -39,9 +34,7 @@ describe('AlertWrapper', () => {
         message={mockMessage}
         onPressPrimary={mockOnPressPrimary}
         onPressSecondary={mockOnPressSecondary}
-      >
-        <Text>{mockChildrenText}</Text>
-      </AlertWrapper>,
+      />
     );
     const primaryButton = getByTestId(
       testIds.idContainer(testIds.idPrimaryButton('alertWrapper')),
@@ -57,7 +50,7 @@ describe('AlertWrapper', () => {
     expect(mockOnPressSecondary).toHaveBeenCalled();
   });
 
-  it('render primalTitle and secondaryTitle', () => {
+  it('should render primalTitle and secondaryTitle', () => {
     const { getByText } = render(
       <AlertWrapper
         visible
@@ -67,9 +60,7 @@ describe('AlertWrapper', () => {
         onPressSecondary={mockOnPressSecondary}
         primaryTitle={mockPrimaryTitle}
         secondaryTitle={mockSecondaryTitle}
-      >
-        <Text>{mockChildrenText}</Text>
-      </AlertWrapper>,
+      />
     );
     expect(getByText(mockPrimaryTitle)).toBeDefined();
     expect(getByText(mockSecondaryTitle)).toBeDefined();
