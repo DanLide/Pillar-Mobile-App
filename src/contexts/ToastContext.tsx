@@ -168,6 +168,13 @@ export const ToastContextProvider: React.FC<Props> = ({
           actionType={ToastActionType.OpenSettings}
         />
       ),
+      [ToastType.SuccessCreateJob]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.SuccessCreateJob}
+          actionType={ToastActionType.Close}
+        />
+      ),
     }),
     [],
   );

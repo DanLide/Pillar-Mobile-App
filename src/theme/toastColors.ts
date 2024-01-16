@@ -94,6 +94,11 @@ export const toastColors: Record<
     secondary: colors.greenLight,
     action: colors.green4,
   },
+  [ToastType.SuccessCreateJob]: {
+    primary: colors.green3,
+    secondary: colors.greenLight,
+    action: colors.green4,
+  },
   [ToastType.SuggestedItemsSuccess]: {
     primary: colors.green3,
     secondary: colors.white3,
