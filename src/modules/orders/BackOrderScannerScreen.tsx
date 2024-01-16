@@ -88,7 +88,12 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
 
   const onCloseModal = () => setModalParams(initModalParams);
 
-  const onCloseSelectCabinetModal = () => {
+  const onCloseSelectCabinetModal = (product) => {
+    setModalParams({
+      type: ProductModalType.ReceiveOrder,
+      maxValue: ordersStore.getMaxValue(),
+      onHand: ordersStore.getOnHand(product),
+    })
     ordersStore.setCabinetSelection(false);
   };
 

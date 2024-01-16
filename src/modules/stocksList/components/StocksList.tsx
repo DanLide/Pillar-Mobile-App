@@ -63,17 +63,17 @@ export const StocksList: React.FC<Props> = observer(
       await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
     }, [stocksStore.stocks, permissionStore.isMasterLockPermissionsGranted]);
 
-    const handleFetchStocks = useCallback(async () => {
-      setIsLoading(true);
+    const handleFetchStocks = async () => {
+      !isLoading && setIsLoading(true);
       const fetchStocksFunction = onFetchStocks ? onFetchStocks : fetchStocks;
       const error = await fetchStocksFunction(stocksStore);
       if (error) {
-        setIsError(true);
+        !isError && setIsError(true);
       } else if (stocksStore.stocks.length) {
         await initMasterLock();
       }
       setIsLoading(false);
-    }, [initMasterLock, onFetchStocks]);
+    }
 
     const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
       ({ item }) => (
@@ -171,7 +171,7 @@ export const StocksList: React.FC<Props> = observer(
       if (isFocused) {
         handleFetchStocks();
       }
-    }, [handleFetchStocks, isFocused]);
+    }, [isFocused]);
 
     if (isLoading) {
       return <ActivityIndicator size="large" />;
