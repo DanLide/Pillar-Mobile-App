@@ -10,66 +10,68 @@ type SupportAlertWrapperProps = Omit<
   'title' | 'message' | 'hideSecondary' | 'primaryTitle'
 >;
 
-const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => (
-  <AlertWrapper
-    title={
-      <View style={styles.titleContainer}>
-        <SVGs.SupportIcon color={colors.grayDark3} style={{ marginRight: 6 }} />
-        <Text style={styles.titleLabel}>Support</Text>
+const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
+  const title = (
+    <View style={styles.titleContainer}>
+      <SVGs.SupportIcon color={colors.grayDark3} style={{ marginRight: 6 }} />
+      <Text style={styles.titleLabel}>Support</Text>
+    </View>
+  );
+
+  const message = (
+    <View style={[styles.container, styles.messageContainer]}>
+      <View>
+        <Text style={[styles.headline, styles.label, { marginLeft: 26 }]}>
+          RepairStack Technical
+        </Text>
+
+        <View style={styles.rowContainer}>
+          <SVGs.TelephoneIcon color={colors.black} style={styles.icon} />
+          <View>
+            <Text style={[styles.label, styles.boldLabel, { lineHeight: 20 }]}>
+              1-833-686-0248
+            </Text>
+            <Text style={styles.label}>Support is available </Text>
+            <Text style={styles.label}>7:00am – 7:00pm CST</Text>
+          </View>
+        </View>
       </View>
-    }
-    message={
-      <View style={[styles.container, styles.messageContainer]}>
+
+      <View style={styles.rowContainer}>
+        <SVGs.EmailIcon color={colors.black} style={styles.icon} />
         <View>
-          <Text style={[styles.headline, styles.label, { marginLeft: 26 }]}>
-            RepairStack Technical
+          <Text style={[styles.label, styles.boldLabel]}>
+            support-repairstack@mmm.com
           </Text>
-
-          <View style={styles.rowContainer}>
-            <SVGs.TelephoneIcon color={colors.black} style={styles.icon} />
-            <View>
-              <Text
-                style={[styles.label, styles.boldLabel, { lineHeight: 20 }]}
-              >
-                1-833-686-0248
-              </Text>
-              <Text style={styles.label}>Support is available </Text>
-              <Text style={styles.label}>7:00am – 7:00pm CST</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.rowContainer}>
-          <SVGs.EmailIcon color={colors.black} style={styles.icon} />
-          <View>
-            <Text style={[styles.label, styles.boldLabel]}>
-              support-repairstack@mmm.com
-            </Text>
-            <Text style={styles.label}>
-              Emails are answered within 24 hours
-            </Text>
-          </View>
-        </View>
-
-        <View style={styles.rowContainer}>
-          <SVGs.TelephoneIcon
-            color={colors.black}
-            style={[styles.icon, { alignSelf: 'flex-end' }]}
-          />
-          <View>
-            <Text style={[styles.headline, styles.label]}>
-              3M AAD General Product
-            </Text>
-            <Text style={[styles.label, styles.boldLabel]}>1-844-204-7071</Text>
-          </View>
+          <Text style={styles.label}>Emails are answered within 24 hours</Text>
         </View>
       </View>
-    }
-    hideSecondary
-    primaryTitle="Close"
-    {...props}
-  />
-);
+
+      <View style={styles.rowContainer}>
+        <SVGs.TelephoneIcon
+          color={colors.black}
+          style={[styles.icon, { alignSelf: 'flex-end' }]}
+        />
+        <View>
+          <Text style={[styles.headline, styles.label]}>
+            3M AAD General Product
+          </Text>
+          <Text style={[styles.label, styles.boldLabel]}>1-844-204-7071</Text>
+        </View>
+      </View>
+    </View>
+  );
+
+  return (
+    <AlertWrapper
+      title={title}
+      message={message}
+      hideSecondary
+      primaryTitle="Close"
+      {...props}
+    />
+  );
+};
 
 export default memo(SupportAlertWrapper);
 
