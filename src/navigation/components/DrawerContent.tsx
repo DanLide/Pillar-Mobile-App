@@ -29,6 +29,10 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
     setIsSupportAlertVisible(true);
   };
 
+  const handleSupportAlertPrimaryPress = () => {
+    setIsSupportAlertVisible(false);
+  };
+
   const onNavigateToSelectShopLocation = () => {
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
   };
@@ -89,9 +93,7 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
 
       <SupportAlertWrapper
         visible={isSupportAlertVisible}
-        onPressPrimary={() => {
-          setIsSupportAlertVisible(false);
-        }}
+        onPressPrimary={handleSupportAlertPrimaryPress}
       />
     </SafeAreaView>
   );

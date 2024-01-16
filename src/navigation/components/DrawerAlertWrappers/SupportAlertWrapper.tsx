@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { FC } from 'react';
+import React, { FC, memo } from 'react';
 
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 
@@ -71,6 +71,8 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => (
   />
 );
 
+export default memo(SupportAlertWrapper);
+
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
@@ -108,5 +110,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-
-export default SupportAlertWrapper;
