@@ -9,8 +9,12 @@ import { JobModel } from '../jobsList/stores/JobsStore';
 import { colors } from '../../theme';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { AppNavigator } from '../../navigation/types';
+import {
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+} from 'src/contexts';
 
-export const SelectJob = () => {
+const SelectJobComponent = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
@@ -37,8 +41,17 @@ export const SelectJob = () => {
         onPressItem={onSelectJob}
         containerStyle={styles.jobListBackground}
         inputContainerStyle={styles.input}
+        isCreateJobAvailable
       />
     </SafeAreaView>
+  );
+};
+
+export const SelectJob = () => {
+  return (
+    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+      <SelectJobComponent />
+    </ToastContextProvider>
   );
 };
 

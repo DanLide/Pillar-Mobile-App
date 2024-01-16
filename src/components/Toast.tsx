@@ -62,7 +62,7 @@ const icons: Record<
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,
   [ToastType.SuggestedItemsSuccess]: SVGs.SuggestedListAffirmativeIcon,
-
+  [ToastType.SuccessCreateJob]: SVGs.SuccessCreateJob,
   [ToastType.Retry]: SVGs.ListErrorIcon,
 
   [ToastType.BluetoothEnabled]: SVGs.BluetoothIconSuccess,
@@ -103,6 +103,7 @@ export const Toast: React.FC<Props> = ({
       case ToastType.UnitsPerContainerError:
       case ToastType.DetailedScanError:
       case ToastType.InvoiceMissingProductPrice:
+      case ToastType.SuccessCreateJob:
         return styles.messageLeft;
       default:
         return null;

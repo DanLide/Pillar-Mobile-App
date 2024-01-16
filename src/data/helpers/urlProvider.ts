@@ -395,4 +395,13 @@ export class URLProvider {
   getLoginMagicLink(b2cUserId: string) {
     return `${this.currentEnv.b2c.magicLink}${b2cUserId}`;
   }
+
+  createJob() {
+    return `${this.currentEnv.modules.base.apiUri}/job/api/Job`;
+  }
+
+  isJobExist(jobNumber: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    return `${this.currentEnv.modules.base.apiUri}/job/api/Job/IsJobNumberExists/${facilityId}/${jobNumber}/0`;
+  }
 }

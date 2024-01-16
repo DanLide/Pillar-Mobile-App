@@ -18,6 +18,7 @@ export enum ToastType {
   Success = 'Success',
   ProductUpdateSuccess = 'ProductUpdateSuccess',
   SuggestedItemsSuccess = 'SuggestedItemsSuccess',
+  SuccessCreateJob = 'SuccessCreateJob',
 
   Retry = 'Retry',
 
