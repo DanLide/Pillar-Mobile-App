@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Modal, StyleSheet, Pressable } from 'react-native';
 import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
-import { SaveProductToStoreTask } from 'src/data/getProductBySupplierWithStocks';
+import { saveCurrentProduct } from 'src/data/getProductBySupplierWithStocks';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';
 import {
@@ -33,21 +33,22 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
 
     const availableStocks =
       stocks.filter(stock =>
-        productCabinets.find(
-          cabinet => {
-            console.warn(stock.partyRoleId, cabinet.cabinets?.[0].storageAreaId)
-            return stock.partyRoleId === cabinet.cabinets?.[0].storageAreaId
-          },
-        ),
+        productCabinets.find(cabinet => {
+          console.warn(stock.partyRoleId, cabinet.cabinets?.[0].storageAreaId);
+          return stock.partyRoleId === cabinet.cabinets?.[0].storageAreaId;
+        }),
       ) || [];
     stocksStore.setStocks(availableStocks);
   };
 
-  const onItemPress = (stock: StockModel, isCloseModal?: boolean) => {
+  const onItemPress = async (stock: StockModel, isCloseModal?: boolean) => {
     ordersStore.setCurrentStocks(stock);
-    const product = ordersStore.backorderCabinets.find((cabinet) => cabinet.cabinets[0].storageAreaId === stock.partyRoleId)
-    const productContext = { product }
-    new SaveProductToStoreTask(productContext, ordersStore,).run()
+    const product = ordersStore.backorderCabinets?.find(
+      cabinet => cabinet.cabinets[0].storageAreaId === stock.partyRoleId,
+    );
+    if (product) {
+      await saveCurrentProduct(product, ordersStore);
+    }
     if (!isCloseModal) {
       closeModal(product);
     }

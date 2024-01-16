@@ -34,6 +34,18 @@ export const getProductBySupplierWithStocks = async (
   ]).execute();
 };
 
+export const saveCurrentProduct = (
+  product: GetOrderSummaryProduct,
+  store: OrdersStore,
+) => {
+  const productContext: FetchProductByOrderTypeAndSupplierContext = {
+    product: product,
+  };
+  return new TaskExecutor([
+    new SaveProductToStoreTask(productContext, store),
+  ]).execute();
+};
+
 const getProductSupplier = async (code: string) => {
   const supplierId = stocksStore.getSupplierIdByUpc(code);
 
@@ -80,17 +92,15 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
     }
 
     let productMultipleStockLocations;
-    let product;
+    let product: GetOrderSummaryProduct | undefined;
     try {
       productMultipleStockLocations = await getProductMultipleStocks(
         this.scanCode,
       );
       product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
       if (!product && !productMultipleStockLocations?.length) {
-
         return;
       }
-    } catch (e) {
     } finally {
       if (productMultipleStockLocations?.length > 1) {
         this.store.setBackorderCabinets(productMultipleStockLocations);
@@ -98,7 +108,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       } else {
         const availableStocks =
           stocksStore.stocks.filter(stock =>
-            product.cabinets.find(
+            product?.cabinets.find(
               cabinet => stock.partyRoleId === cabinet.storageAreaId,
             ),
           ) || [];
