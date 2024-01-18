@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useEffect, useState } from 'react';
+import React, { FC, forwardRef, useEffect, useMemo, useState } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
@@ -28,6 +28,7 @@ import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { ToastMessage } from 'src/components/ToastMessage';
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
+import { isNil } from 'ramda';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -38,6 +39,7 @@ export type ProductQuantityToastType =
 
 interface Props extends ViewProps {
   type?: ProductModalType;
+  value?: number;
   maxValue: number;
   minValue?: number;
   onHand?: number;
@@ -88,6 +90,7 @@ export const ProductQuantity = forwardRef(
   (
     {
       type,
+      value,
       product,
       isEdit,
       jobSelectable,
@@ -114,6 +117,9 @@ export const ProductQuantity = forwardRef(
 
     const [invoicingInfoAlertVisible, setInvoicingInfoAlertVisible] =
       useState(false);
+
+    const isProductQuantityError = toastType === ToastType.ProductQuantityError;
+
     const { showToast } = useSingleToast();
 
     useEffect(() => {
@@ -124,6 +130,22 @@ export const ProductQuantity = forwardRef(
         });
     }, [onToastAction, showToast, toastType]);
 
+    const currentValue = useMemo(() => {
+      if (!product) {
+        return undefined;
+      }
+
+      if (isProductQuantityError) {
+        return product.onHand;
+      }
+
+      if (!isNil(value)) {
+        return value;
+      }
+
+      return product.reservedCount;
+    }, [isProductQuantityError, product, value]);
+
     if (!product) return null;
 
     const {
@@ -131,12 +153,6 @@ export const ProductQuantity = forwardRef(
       inventoryUseTypeId,
       reservedCount = product.receivedQty,
     } = product;
-
-    const isProductQuantityError = toastType === ToastType.ProductQuantityError;
-
-    const currentValue = isProductQuantityError
-      ? product.onHand
-      : reservedCount;
 
     const stepQty = getProductStepQty(inventoryUseTypeId);
 
