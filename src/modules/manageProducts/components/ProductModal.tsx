@@ -114,8 +114,7 @@ export const ProductModal = observer(
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
-    const canEditProduct = permissionProvider.canEditProduct();
-    const canEditProductInStock = permissionProvider.canEditProductInStock();
+    const { userPermissions } = permissionProvider
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 
@@ -317,12 +316,7 @@ export const ProductModal = observer(
         topOffset={topOffset}
         semiTitle={isEdit ? 'Edit Product' : 'View Product'}
       >
-        <AlertWrapper
-          visible={alertParams.isVisible}
-          message={alertMessage}
-          onPressPrimary={handleAlertPrimaryPress}
-          onPressSecondary={handleAlertSecondaryPress}
-        >
+        <>
           <ToastContextProvider disableSafeArea offset={35}>
             <KeyboardAvoidingView
               keyboardVerticalOffset={85}
@@ -348,7 +342,7 @@ export const ProductModal = observer(
                     maxValue={maxValue ?? 0}
                     minValue={0}
                     onHand={onHand}
-                    disabled={!canEditProduct}
+                    disabled={!userPermissions.editProduct}
                     ref={reservedCountInputRef}
                     onToastAction={handleToastAction}
                   />
@@ -375,7 +369,7 @@ export const ProductModal = observer(
                 />
               )}
               <View style={styles.buttons}>
-                {canEditProductInStock && (
+                {userPermissions.editProductInStock && (
                   <Button
                     title={isEdit ? 'Cancel' : 'Edit'}
                     type={ButtonType.secondary}
@@ -394,7 +388,14 @@ export const ProductModal = observer(
               </View>
             </KeyboardAvoidingView>
           </ToastContextProvider>
-        </AlertWrapper>
+
+          <AlertWrapper
+            visible={alertParams.isVisible}
+            message={alertMessage}
+            onPressPrimary={handleAlertPrimaryPress}
+            onPressSecondary={handleAlertSecondaryPress}
+          />
+        </>
       </Modal>
     );
   },

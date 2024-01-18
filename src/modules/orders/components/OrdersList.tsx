@@ -17,6 +17,7 @@ import { fetchOrders } from 'src/data/fetchOrders';
 import { AppNavigator } from 'src/navigation/types';
 import { getScreenName } from 'src/navigation/helpers/getScreenName';
 import permissionStore from '../../permissions/stores/PermissionStore';
+import { permissionProvider } from 'src/data/providers';
 
 interface Props {
   orders?: GetOrdersAPIResponse[];
@@ -37,6 +38,8 @@ export const OrdersList = memo(
   }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
+
+    const { userPermissions } = permissionProvider
 
     const onFetchOrders = useCallback(async () => {
       setIsLoading(true);
@@ -78,12 +81,15 @@ export const OrdersList = memo(
             <RefreshControl refreshing={isLoading} onRefresh={onFetchOrders} />
           }
         />
-        <Pressable style={styles.backorderContainer} onPress={onPressBackorder}>
-          <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
-          <Text style={styles.backborderText}>
-            Order not Found? Receive Backorder
-          </Text>
-        </Pressable>
+
+        {userPermissions.receiveOrder && (
+          <Pressable style={styles.backorderContainer} onPress={onPressBackorder}>
+            <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
+            <Text style={styles.backborderText}>
+              Order not Found? Receive Backorder
+            </Text>
+          </Pressable>
+        )}
 
         <View style={styles.buttons}>
           <Button
@@ -93,13 +99,15 @@ export const OrdersList = memo(
             textStyle={styles.buttonText}
             onPress={onSecondaryPress}
           />
-          <Button
-            type={ButtonType.primary}
-            title="Create Order"
-            buttonStyle={[styles.button, styles.createButton]}
-            textStyle={styles.buttonText}
-            onPress={onPrimaryPress}
-          />
+          {userPermissions.createOrder && (
+            <Button
+              type={ButtonType.primary}
+              title="Create Order"
+              buttonStyle={[styles.button, styles.createButton]}
+              textStyle={styles.buttonText}
+              onPress={onPrimaryPress}
+            />
+          )}
         </View>
       </View>
     );

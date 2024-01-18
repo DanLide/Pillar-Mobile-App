@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -17,14 +17,13 @@ import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
 import { ssoStore, authStore } from 'src/stores';
 import { SSOUser } from 'src/stores/SSOStore';
 import { colors, fonts, SVGs } from 'src/theme';
-import { SearchIcon } from 'src/theme/svgs';
+import { SearchIcon, CloseIcon } from 'src/theme/svgs';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { onLoginWithToken } from 'src/data/login';
 import TokenParser from './components/TokenParser';
+import { URLProvider } from 'src/data/helpers';
 
-// temp fix after back will be done
-const magicLink = 'https://3maaddev.b2clogin.com/3maaddev.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_Auth_With_UserId&client_id=198e2599-5fe6-45f5-9426-72ff46dbc80b&nonce=defaultNonce&redirect_uri=https%3a%2f%2fjwt.ms%2f&scope=openid&response_type=id_token&prompt=login&user_id='
-
+const userNotFound = 'User with such name is not found';
 const titleError =
   'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.';
 
@@ -39,7 +38,18 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [userIdToLoginWithoutPIN, setUserIdToLoginWithoutPIN] = useState<null | string>(null);
+  const [userIdToLoginWithoutPIN, setUserIdToLoginWithoutPIN] = useState<
+    null | string
+  >(null);
+
+  // temp fix after back will be done
+  const loginMagicLink = useMemo(
+    () =>
+      userIdToLoginWithoutPIN
+        ? new URLProvider().getLoginMagicLink(userIdToLoginWithoutPIN)
+        : userIdToLoginWithoutPIN,
+    [userIdToLoginWithoutPIN],
+  );
 
   const fetchUsers = () => {
     fetchSSOUsers(ssoStore);
@@ -64,14 +74,14 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     setIsLoading(false);
     setUserIdToLoginWithoutPIN(null);
     return true;
-  }
+  };
 
   const renderItem = useCallback(
     ({ item }: { item: SSOUser }) => {
       const title = `${item.firstName} ${item.lastName}`;
       const onPress = () => {
         if (!item.isPinRequired) {
-          setUserIdToLoginWithoutPIN(item.id)
+          setUserIdToLoginWithoutPIN(item.id);
           return;
         }
 
@@ -149,9 +159,13 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     );
   };
 
-  const renderError = () => {
-    if (ssoStore.ssoUsersList) {
-      return null;
+  const renderEmptyList = () => {
+    if (ssoStore.ssoUsersList && input) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{userNotFound}</Text>
+        </View>
+      );
     }
     return (
       <View style={styles.errorContainer}>
@@ -172,12 +186,19 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     return title.toLowerCase().includes(input.toLowerCase());
   });
 
+  const onPressClose = () => {
+    onChangeText('');
+  };
+
   return (
     <View style={styles.screenContainer}>
       <View style={styles.header}>
         {renderTabs()}
         <Text style={styles.subTitle}>Select a User Account</Text>
         <View>
+          <View style={styles.searchWrapper}>
+            <SearchIcon color={colors.black} width={20} height={20} />
+          </View>
           <TextInput
             value={input}
             style={styles.input}
@@ -185,9 +206,15 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
             placeholderTextColor={colors.grayDark2}
             onChangeText={onChangeText}
           />
-          <View style={styles.searchWrapper}>
-            <SearchIcon color={colors.black} width={20} height={20} />
-          </View>
+          {input && (
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={onPressClose}
+              hitSlop={20}
+            >
+              <CloseIcon width={9} height={9} color={colors.neutral40} />
+            </TouchableOpacity>
+          )}
           <View>{/* {filterIcon button here in v2} */}</View>
         </View>
         <View style={styles.listTitleContainer}>
@@ -198,7 +225,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
       <FlatList
         data={filteredList}
         renderItem={renderItem}
-        ListEmptyComponent={renderError()}
+        ListEmptyComponent={renderEmptyList()}
       />
       <SafeAreaView style={styles.buttonWrapper}>
         <Button
@@ -208,7 +235,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
           onPress={onLoginViaCredentials}
         />
         <TokenParser
-          magicLink={userIdToLoginWithoutPIN ? `${magicLink}${userIdToLoginWithoutPIN}` : userIdToLoginWithoutPIN}
+          magicLink={loginMagicLink}
           onTokenReceived={handleTokenReceived}
         />
       </SafeAreaView>
@@ -265,15 +292,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     fontSize: 14,
     lineHeight: 18,
-    paddingLeft: 12,
     paddingVertical: 7,
-    paddingRight: 37,
+    paddingHorizontal: 37,
     marginVertical: 8,
   },
   searchWrapper: {
     position: 'absolute',
-    right: '3%',
+    left: '3%',
     top: '30%',
+  },
+  closeButton: {
+    position: 'absolute',
+    right: '5%',
+    top: '42%',
   },
   listTitleText: {
     fontSize: 12,
@@ -319,6 +350,7 @@ const styles = StyleSheet.create({
   loginButton: {
     marginTop: 10,
     marginHorizontal: 15,
+    marginBottom: 16,
   },
   errorText: {
     fontFamily: fonts.TT_Regular,

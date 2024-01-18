@@ -17,8 +17,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const isNavigationToShopSelectAvailable =
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
-  const canRemoveProduct = permissionProvider.canRemoveProduct();
-  const canReturnProduct = permissionProvider.canReturnProduct();
+
+  const { userPermissions } = permissionProvider;
 
   const onRemoveProducts = () => {
     navigation.navigate(AppNavigator.RemoveProductsStack);
@@ -45,7 +45,9 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
     navigation.navigate(AppNavigator.SelectSSOScreen, { isUpdating: true });
   };
 
-  const renderBorderBetweenTheItems = canRemoveProduct && canReturnProduct;
+  const renderBorderBetweenTheItems =
+    userPermissions.removeProduct && userPermissions.returnProduct;
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -61,7 +63,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.infoText}>{authStore.getName}</Text>
       </View>
       <View style={styles.shadowWrapper}>
-        {canRemoveProduct && (
+        {userPermissions.returnProduct && (
           <ListItem
             title="Remove Products"
             subtitle="Check products out of inventory"
@@ -78,14 +80,16 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.shadowWrapper}>
-        <ListItem
-          title="Create Invoice"
-          subtitle="Add materials to a repair order"
-          leftIcon={InvoiceIcon}
-          onPress={onCreateInvoice}
-        />
-      </View>
+      {userPermissions.createInvoice && (
+        <View style={styles.shadowWrapper}>
+          <ListItem
+            title="Create Invoice"
+            subtitle="Add materials to a repair order"
+            leftIcon={InvoiceIcon}
+            onPress={onCreateInvoice}
+          />
+        </View>
+      )}
 
       <View style={styles.shadowWrapper}>
         <ListItem
@@ -96,14 +100,16 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         />
       </View>
 
-      <View style={styles.shadowWrapper}>
-        <ListItem
-          title="Manage Orders"
-          subtitle="Create, edit and receive product orders"
-          leftIcon={ManageOrderIcon}
-          onPress={onOrders}
-        />
-      </View>
+      {userPermissions.viewOrders && (
+        <View style={styles.shadowWrapper}>
+          <ListItem
+            title="Manage Orders"
+            subtitle="Create, edit and receive product orders"
+            leftIcon={ManageOrderIcon}
+            onPress={onOrders}
+          />
+        </View>
+      )}
     </View>
   );
 };

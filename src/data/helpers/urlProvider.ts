@@ -22,7 +22,7 @@ export class URLProvider {
   returnProductsStore: ReturnProductsStore;
   ordersStore: OrdersStore;
   currentEnv: {
-    b2c: { clientId: string; authority: string };
+    b2c: { clientId: string; authority: string; magicLink: string };
     modules: {
       pisaJob: { apiUri: string };
       pisaProduct: { apiUri: string };
@@ -163,6 +163,12 @@ export class URLProvider {
     return new URL(
       `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductByOrderTypeAndSupplier/${facilityId}/${supplierId}/${scanCode}/${orderType}/${stockId}`,
     );
+  }
+
+  getProductMultipleStocks(scanCode: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    const supplierId = this.ordersStore.supplierId;
+    return `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/StockLocationByProductUPC/${facilityId}/${supplierId}/${scanCode}`;
   }
 
   getFetchProductsByFacilityId() {
@@ -384,5 +390,18 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/users/${facilityId}`;
+  }
+
+  getLoginMagicLink(b2cUserId: string) {
+    return `${this.currentEnv.b2c.magicLink}${b2cUserId}`;
+  }
+
+  createJob() {
+    return `${this.currentEnv.modules.base.apiUri}/job/api/Job`;
+  }
+
+  isJobExist(jobNumber: string) {
+    const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
+    return `${this.currentEnv.modules.base.apiUri}/job/api/Job/IsJobNumberExists/${facilityId}/${jobNumber}/0`;
   }
 }

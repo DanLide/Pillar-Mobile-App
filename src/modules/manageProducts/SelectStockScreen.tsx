@@ -44,9 +44,11 @@ const SelectStockScreenBody = observer(({ navigation }: Props) => {
     [],
   );
 
-  const onItemPress = (stock: StockModel) => {
+  const onItemPress = (stock: StockModel, withoutNavigation?: boolean) => {
     store.setCurrentStocks(stock);
-    navigation.navigate(AppNavigator.ManageProductsScreen);
+    if (!withoutNavigation) {
+      navigation.navigate(AppNavigator.ManageProductsScreen);
+    }
   };
 
   return (

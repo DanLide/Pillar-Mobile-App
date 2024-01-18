@@ -203,13 +203,7 @@ const BaseProducts = observer(
     }, [modalType, onCompleteRemove, primaryButtonTitle, scannedProductsCount]);
 
     return (
-      <AlertWrapper
-        visible={alertVisible}
-        message={alertMessage}
-        title="Change Stock Location"
-        onPressPrimary={onPressPrimary}
-        onPressSecondary={onPressSecondary}
-      >
+      <>
         <View style={styles.container}>
           <InfoTitleBar
             type={InfoTitleBarType.Primary}
@@ -259,7 +253,15 @@ const BaseProducts = observer(
             onChangeProductQuantity={setEditableProductQuantity}
           />
         </View>
-      </AlertWrapper>
+
+        <AlertWrapper
+          visible={alertVisible}
+          message={alertMessage}
+          title="Change Stock Location"
+          onPressPrimary={onPressPrimary}
+          onPressSecondary={onPressSecondary}
+        />
+      </>
     );
   },
 );

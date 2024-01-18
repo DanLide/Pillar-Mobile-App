@@ -6,6 +6,7 @@ import { BaseProductsStore } from 'src/stores/BaseProductsStore';
 import { ProductModel } from 'src/stores/types';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
+import { GetOrderSummaryProduct } from 'src/data/api/orders';
 
 export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
@@ -18,7 +19,7 @@ export class OrdersStore extends BaseProductsStore {
   @observable orders?: GetOrdersAPIResponse[];
   @observable supplierId?: number;
   @observable currentStockName?: string;
-  @observable backorderCabinets?: StockModel[];
+  @observable backorderCabinets?: GetOrderSummaryProduct[];
   @observable cabinetSelection: boolean;
 
   constructor() {
@@ -125,7 +126,7 @@ export class OrdersStore extends BaseProductsStore {
     if (this.currentOrder) this.currentOrder.order.customPONumber = poNumber;
   }
 
-  @action setBackorderCabinets(cabinets: StockModel[]) {
+  @action setBackorderCabinets(cabinets: GetOrderSummaryProduct[]) {
     this.backorderCabinets = cabinets;
   }
 

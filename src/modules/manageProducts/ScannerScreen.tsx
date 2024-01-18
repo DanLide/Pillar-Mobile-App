@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react';
 
 import { BaseScannerScreen } from 'src/components';
@@ -8,10 +8,12 @@ import {
   ToastContextProvider,
 } from 'src/contexts';
 import { useManageProducts } from 'src/modules/manageProducts/hooks';
+import { manageProductsStore } from 'src/modules/manageProducts/stores';
 
 const ScannerScreen = observer(() => {
+  const store = useRef(manageProductsStore).current;
+
   const {
-    store,
     modalParams,
     product,
     onProductScan,
@@ -20,7 +22,7 @@ const ScannerScreen = observer(() => {
     onCloseModal,
     onEditPress,
     onCancelPress,
-  } = useManageProducts();
+  } = useManageProducts(store);
 
   return (
     <BaseScannerScreen

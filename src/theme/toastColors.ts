@@ -17,6 +17,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.InvoiceMissingProductPrice]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Error]: {
     primary: colors.red,
     secondary: colors.redLight,
@@ -85,6 +90,11 @@ export const toastColors: Record<
     action: colors.green,
   },
   [ToastType.ProductUpdateSuccess]: {
+    primary: colors.green3,
+    secondary: colors.greenLight,
+    action: colors.green4,
+  },
+  [ToastType.SuccessCreateJob]: {
     primary: colors.green3,
     secondary: colors.greenLight,
     action: colors.green4,

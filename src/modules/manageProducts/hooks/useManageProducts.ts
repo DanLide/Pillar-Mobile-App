@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { assoc, mergeLeft } from 'ramda';
 import { encode as btoa } from 'base-64';
 import { isValid } from 'gtin';
@@ -10,7 +10,10 @@ import { ToastType } from 'src/contexts/types';
 import { ProductModel } from 'src/stores/types';
 import { onUpdateProduct } from 'src/data/updateProduct';
 import { onUpdateProductQuantity } from 'src/data/updateProductQuantity';
-import { manageProductsStore } from 'src/modules/manageProducts/stores';
+import {
+  ManageProductsStore,
+  manageProductsStore,
+} from 'src/modules/manageProducts/stores';
 import { ProductModalParams, ProductModalType } from 'src/modules/productModal';
 import { useSingleToast } from 'src/hooks';
 import { fetchProductDetails } from 'src/data/fetchProductDetails';
@@ -22,11 +25,9 @@ const initModalParams: ProductModalParams = {
   toastType: undefined,
 };
 
-export const useManageProducts = () => {
+export const useManageProducts = (store: ManageProductsStore) => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
-
-  const store = useRef(manageProductsStore).current;
 
   const { showToast } = useSingleToast();
 

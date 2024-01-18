@@ -1,139 +1,186 @@
-import { PermissionProvider } from '../PermissionProvider';
+import { PermissionProvider } from 'src/data/providers/PermissionProvider';
 import {
-  getPermissionsMock,
-  mockedPermissionSets,
+  getRolePermissionProviders
 } from '../__mocks__/PermissionProvider';
 
-const { technician, distributor, mso, admin, empty } = mockedPermissionSets;
-
 describe('PermissionProvider', () => {
-  const technicianPermissionsMock = getPermissionsMock(technician);
-  const distributorPermissionsMock = getPermissionsMock(distributor);
-  const msoPermissionsMock = getPermissionsMock(mso);
-  const adminPermissionsMock = getPermissionsMock(admin);
-  const emptyPermissionsMock = getPermissionsMock(empty);
+  const {
+    adminPermissions,
+    distributorPermissions,
+    emptyPermissions,
+    msoPermissions,
+    technicianPermissions
+  } = getRolePermissionProviders()
 
   it('should NOT grant permission if permission set is undefined', () => {
-    const permissionProvider = new PermissionProvider();
+    const { userPermissions } = new PermissionProvider();
 
-    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
+    expect(userPermissions.removeProduct).toBeFalsy();
   });
 
   it('should NOT grant permission if permission set is empty', () => {
-    const permissionProvider = new PermissionProvider(emptyPermissionsMock);
-
-    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
+    expect(emptyPermissions.removeProduct).toBeFalsy();
   });
 
-  it('should grant Remove Product permission for Technician', () => {
-    const permissionProvider = new PermissionProvider(
-      technicianPermissionsMock,
-    );
+  describe('Remove Product', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.removeProduct).toBeTruthy();
+    });
 
-    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
-  });
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.removeProduct).toBeFalsy();
+    });
 
-  it('should NOT grant Remove Product permission for Distributor', () => {
-    const permissionProvider = new PermissionProvider(
-      distributorPermissionsMock,
-    );
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.removeProduct).toBeTruthy();
+    });
 
-    expect(permissionProvider.canRemoveProduct()).toBeFalsy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.removeProduct).toBeTruthy();
+    });
+  })
 
-  it('should grant Remove Product permission for MSO', () => {
-    const permissionProvider = new PermissionProvider(msoPermissionsMock);
+  describe('Return Product', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.returnProduct).toBeTruthy();
+    });
 
-    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
-  });
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.returnProduct).toBeFalsy();
+    });
 
-  it('should grant Remove Product permission for Admin', () => {
-    const permissionProvider = new PermissionProvider(adminPermissionsMock);
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.returnProduct).toBeTruthy();
+    });
 
-    expect(permissionProvider.canRemoveProduct()).toBeTruthy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.returnProduct).toBeTruthy();
+    });
+  })
 
-  it('should grant Return Product permission for Technician', () => {
-    const permissionProvider = new PermissionProvider(
-      technicianPermissionsMock,
-    );
+  describe('Receive Order', () => {
+    it('should NOT grant permission for Technician', () => {
+      expect(technicianPermissions.receiveOrder).toBeFalsy();
+    });
 
-    expect(permissionProvider.canReturnProduct()).toBeTruthy();
-  });
+    it('should grant permission for Distributor', () => {
+      expect(distributorPermissions.receiveOrder).toBeTruthy();
+    });
 
-  it('should NOT grant Return Product permission for Distributor', () => {
-    const permissionProvider = new PermissionProvider(
-      distributorPermissionsMock,
-    );
+    it('should NOT grant permission for MSO', () => {
+      expect(msoPermissions.receiveOrder).toBeFalsy();
+    });
 
-    expect(permissionProvider.canReturnProduct()).toBeFalsy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.receiveOrder).toBeTruthy();
+    });
+  })
 
-  it('should grant Return Product permission for MSO', () => {
-    const permissionProvider = new PermissionProvider(msoPermissionsMock);
+  describe('Edit Product', () => {
+    it('should NOT grant permission for Technician', () => {
+      expect(technicianPermissions.editProduct).toBeFalsy();
+    });
 
-    expect(permissionProvider.canReturnProduct()).toBeTruthy();
-  });
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.editProduct).toBeFalsy();
+    });
 
-  it('should grant Return Product permission for Admin', () => {
-    const permissionProvider = new PermissionProvider(adminPermissionsMock);
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.editProduct).toBeTruthy();
+    });
 
-    expect(permissionProvider.canReturnProduct()).toBeTruthy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.editProduct).toBeTruthy();
+    });
+  })
 
-  it('should NOT grant Receive Order permission for Technician', () => {
-    const permissionProvider = new PermissionProvider(
-      technicianPermissionsMock,
-    );
+  describe('View Orders', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.viewOrders).toBeTruthy();
+    });
 
-    expect(permissionProvider.canReceiveOrder()).toBeFalsy();
-  });
+    it('should grant permission for Distributor', () => {
+      expect(distributorPermissions.viewOrders).toBeTruthy();
+    });
 
-  it('should grant Receive Order permission for Distributor', () => {
-    const permissionProvider = new PermissionProvider(
-      distributorPermissionsMock,
-    );
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.viewOrders).toBeTruthy();
+    });
 
-    expect(permissionProvider.canReceiveOrder()).toBeTruthy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.viewOrders).toBeTruthy();
+    });
+  })
 
-  it('should NOT grant Receive Order permission for MSO', () => {
-    const permissionProvider = new PermissionProvider(msoPermissionsMock);
+  describe('Create Order', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.createOrder).toBeTruthy();
+    });
 
-    expect(permissionProvider.canReceiveOrder()).toBeFalsy();
-  });
+    it('should grant permission for Distributor', () => {
+      expect(distributorPermissions.createOrder).toBeTruthy();
+    });
 
-  it('should grant Receive Order permission for Admin', () => {
-    const permissionProvider = new PermissionProvider(adminPermissionsMock);
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.createOrder).toBeTruthy();
+    });
 
-    expect(permissionProvider.canReceiveOrder()).toBeTruthy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.createOrder).toBeTruthy();
+    });
+  })
 
-  it('should NOT grant Edit Product permission for Technician', () => {
-    const permissionProvider = new PermissionProvider(
-      technicianPermissionsMock,
-    );
+  describe('Edit Product In Stock', () => {
+    it('should NOT grant permission for Technician', () => {
+      expect(technicianPermissions.editProductInStock).toBeFalsy();
+    });
 
-    expect(permissionProvider.canEditProduct()).toBeFalsy();
-  });
+    it('should grant permission for Distributor', () => {
+      expect(distributorPermissions.editProductInStock).toBeTruthy();
+    });
 
-  it('should NOT grant Edit Product permission for Distributor', () => {
-    const permissionProvider = new PermissionProvider(
-      distributorPermissionsMock,
-    );
+    it('should NOT grant permission for MSO', () => {
+      expect(msoPermissions.editProductInStock).toBeFalsy();
+    });
 
-    expect(permissionProvider.canEditProduct()).toBeFalsy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.editProductInStock).toBeTruthy();
+    });
+  })
 
-  it('should grant Edit Product permission for MSO', () => {
-    const permissionProvider = new PermissionProvider(msoPermissionsMock);
+  describe('Configure Shop', () => {
+    it('should NOT grant permission for Technician', () => {
+      expect(technicianPermissions.configureShop).toBeFalsy();
+    });
 
-    expect(permissionProvider.canEditProduct()).toBeTruthy();
-  });
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.configureShop).toBeFalsy();
+    });
 
-  it('should grant Edit Product permission for Admin', () => {
-    const permissionProvider = new PermissionProvider(adminPermissionsMock);
+    it('should NOT grant permission for MSO', () => {
+      expect(msoPermissions.configureShop).toBeFalsy();
+    });
 
-    expect(permissionProvider.canEditProduct()).toBeTruthy();
-  });
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.configureShop).toBeTruthy();
+    });
+  })
+
+  describe('Create Invoice', () => {
+    it('should grant permission for Technician', () => {
+      expect(technicianPermissions.createInvoice).toBeTruthy();
+    });
+
+    it('should NOT grant permission for Distributor', () => {
+      expect(distributorPermissions.createInvoice).toBeFalsy();
+    });
+
+    it('should grant permission for MSO', () => {
+      expect(msoPermissions.createInvoice).toBeTruthy();
+    });
+
+    it('should grant permission for Admin', () => {
+      expect(adminPermissions.createInvoice).toBeTruthy();
+    });
+  })
 });

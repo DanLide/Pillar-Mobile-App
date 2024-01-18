@@ -64,7 +64,7 @@ export const scannerErrorMessages: Record<ScannerScreenError, string> = {
   [ScannerScreenError.NetworkRequestFailed]:
     'Please check your internet connection and retry',
   [ScannerScreenError.ProductIsNotRecoverable]:
-    'Cannot add to Invoice.\nMissing pricing info',
+    'Cannot add to Invoice.\nInvoicing settings incomplete',
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(

@@ -15,7 +15,7 @@ import {
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
 import { BarcodeFormat } from 'vision-camera-code-scanner';
-import AlertWrapper, { AlertWrapperProps as _AlertWrapperProps } from 'src/contexts/AlertWrapper';
+import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 import { StyleSheet, Text } from 'react-native';
 
 type BaseProductsStore = ScannerModalStoreType &
@@ -26,8 +26,6 @@ const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
   maxValue: undefined,
 };
-
-type AlertWrapperProps = Partial<_AlertWrapperProps>
 
 export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
@@ -67,6 +65,7 @@ export const ScannerScreen: React.FC = observer(() => {
     switch (actionType) {
       case ToastActionType.Details: {
         setAlertParams({
+          visible: true,
           message: <Text style={{ textAlign: 'center' }}>Invoicing Settings for this product can be added at repairstack.3m.com > Products</Text>,
           onPressSecondary: () => {
             setAlertParams(undefined)
@@ -81,14 +80,7 @@ export const ScannerScreen: React.FC = observer(() => {
   }
 
   return (
-    <AlertWrapper
-      visible={Boolean(alertParams)}
-      message={alertParams?.message ?? ''}
-      onPressSecondary={alertParams?.onPressSecondary}
-      secondaryTitle='Close'
-      hidePrimary
-      alertContainerStyle={styles.alertContainer}
-    >
+    <>
       <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON} onPress={handleToastPress}>
         <BaseScannerScreen
           store={store}
@@ -99,7 +91,16 @@ export const ScannerScreen: React.FC = observer(() => {
           filteredType={BarcodeFormat.UPC_A}
         />
       </ToastContextProvider>
-    </AlertWrapper>
+
+      <AlertWrapper
+        visible={Boolean(alertParams)}
+        message={alertParams?.message ?? ''}
+        onPressSecondary={alertParams?.onPressSecondary}
+        secondaryTitle='Close'
+        hidePrimary
+        alertContainerStyle={styles.alertContainer}
+      />
+    </>
   );
 });
 

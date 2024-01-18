@@ -13,8 +13,9 @@ import { ProductModalType } from '../productModal';
 import { onCreateInvoice } from 'src/data/createInvoice';
 import { fetchProductsByFacilityId } from 'src/data/fetchProductsByFacilityId';
 import { SVGs, colors, fonts } from '../../theme';
-import { useBaseProductsScreen } from 'src/hooks';
+import { useBaseProductsScreen, useCustomGoBack } from 'src/hooks';
 import { observer } from 'mobx-react';
+import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -23,6 +24,9 @@ interface Props {
 export const ProductsScreen = observer(({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
+    useState(false);
+
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
   const {
     modalParams,
@@ -35,6 +39,19 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
     onRemoveProduct,
     onCloseModal,
   } = useBaseProductsScreen(store, navigation, ProductModalType.CreateInvoice);
+
+  useCustomGoBack(
+    event => {
+      if (store.getNotSyncedProducts.length) {
+        setEraseProductsAlertVisible(true);
+        return;
+      }
+
+      navigation.dispatch(event.data.action);
+    },
+    undefined,
+    [store.getNotSyncedProducts],
+  );
 
   const onComplete = useCallback(() => {
     return onCreateInvoice(store);
@@ -76,25 +93,39 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
   }
 
   return (
-    <BaseProductsScreen
-      disableAlert
-      modalParams={modalParams}
-      product={product}
-      scannedProductsCount={scannedProductsCount}
-      onPressScan={onPressScan}
-      onProductListItemPress={onProductListItemPress}
-      onSubmitProduct={onSubmitProduct}
-      setEditableProductQuantity={setEditableProductQuantity}
-      onRemoveProduct={onRemoveProduct}
-      onCloseModal={onCloseModal}
-      infoTitle={store.currentJob?.jobNumber}
-      navigation={navigation}
-      store={store}
-      onComplete={onComplete}
-      tooltipTitle="Scan to add products to list"
-      primaryButtonTitle="Submit"
-      ListComponent={BaseSelectedProductsList}
-    />
+    <>
+      <BaseProductsScreen
+        disableAlert
+        modalParams={modalParams}
+        product={product}
+        scannedProductsCount={scannedProductsCount}
+        onPressScan={onPressScan}
+        onProductListItemPress={onProductListItemPress}
+        onSubmitProduct={onSubmitProduct}
+        setEditableProductQuantity={setEditableProductQuantity}
+        onRemoveProduct={onRemoveProduct}
+        onCloseModal={onCloseModal}
+        infoTitle={store.currentJob?.jobNumber}
+        navigation={navigation}
+        store={store}
+        onComplete={onComplete}
+        tooltipTitle="Scan to add products to list"
+        primaryButtonTitle="Submit"
+        ListComponent={BaseSelectedProductsList}
+      />
+
+      <EraseProductsAlert
+        visible={eraseProductsAlertVisible}
+        onPressPrimary={() => {
+          store.setProducts([]);
+          setEraseProductsAlertVisible(false);
+          onPressScan();
+        }}
+        onPressSecondary={() => {
+          setEraseProductsAlertVisible(false);
+        }}
+      />
+    </>
   );
 });
 
