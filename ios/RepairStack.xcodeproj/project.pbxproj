@@ -135,6 +135,7 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = RepairStack/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RepairStack/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = RepairStack/main.m; sourceTree = "<group>"; };
+		171797082B61563D00FB4CCF /* RepairStackPROD-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepairStackPROD-Bridging-Header.h"; sourceTree = "<group>"; };
 		1BC839D3052743DE993896E0 /* 3MCircular-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-LightItalic.otf"; path = "../assets/fonts/3MCircular-LightItalic.otf"; sourceTree = "<group>"; };
 		29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		35687FC0B2B6150FF4C5E22F /* Pods-RepairStack-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -263,6 +264,7 @@
 				728A88A22B44658C0083EFB1 /* JAMFAppConfigModule.h */,
 				726AA7B02B29193B00A7FF0B /* RepairStackUAT-Bridging-Header.h */,
 				728399562B45EF2C0069DE89 /* RepairStackQA-Bridging-Header.h */,
+				171797082B61563D00FB4CCF /* RepairStackPROD-Bridging-Header.h */,
 			);
 			name = RepairStack;
 			sourceTree = "<group>";
