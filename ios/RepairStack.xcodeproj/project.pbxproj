@@ -29,7 +29,6 @@
 		726995642A79AA03008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
 		726995652A79AA03008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
 		726995662A79AA03008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
-		726995672A79AA03008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		726995682A79AA03008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
 		726995692A79AA03008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
 		7269956A2A79AA03008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
@@ -51,7 +50,6 @@
 		7269958A2A79ABD1008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
 		7269958B2A79ABD1008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
 		7269958C2A79ABD1008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
-		7269958D2A79ABD1008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		7269958E2A79ABD1008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
 		7269958F2A79ABD1008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
 		726995902A79ABD1008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
@@ -73,7 +71,6 @@
 		726995B02A79AC14008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 643A588E04464871B8AE8071 /* 3MCircularTT-BlackItalic.otf */; };
 		726995B12A79AC14008C7ACB /* 3MCircularTT-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */; };
 		726995B22A79AC14008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = E61C0CD0FE1E4DB684AF2700 /* 3MCircularTT-BoldItalic.otf */; };
-		726995B32A79AC14008C7ACB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72A711562A576EB900870488 /* GoogleService-Info.plist */; };
 		726995B42A79AC14008C7ACB /* 3MCircularTT-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = A8B95EFBF3234038B5523897 /* 3MCircularTT-Italic.otf */; };
 		726995B52A79AC14008C7ACB /* 3MCircularTT-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 906B686456024369BC8B2FA9 /* 3MCircularTT-Light.otf */; };
 		726995B62A79AC14008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6A44C55829D04C1E9BFAFC2F /* 3MCircularTT-LightItalic.otf */; };
@@ -162,7 +159,6 @@
 		726AA7B02B29193B00A7FF0B /* RepairStackUAT-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepairStackUAT-Bridging-Header.h"; sourceTree = "<group>"; };
 		728399562B45EF2C0069DE89 /* RepairStackQA-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RepairStackQA-Bridging-Header.h"; sourceTree = "<group>"; };
 		728A88A22B44658C0083EFB1 /* JAMFAppConfigModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JAMFAppConfigModule.h; sourceTree = "<group>"; };
-		72A711562A576EB900870488 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		7B88CC87B172967C9C7AAE3F /* Pods-RepairStack-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		80EE3DA5A5A148028FAC9103 /* 3MCircular-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-Book.otf"; path = "../assets/fonts/3MCircular-Book.otf"; sourceTree = "<group>"; };
 		819DE816A4BBCE86598F4F3C /* libPods-RepairStackAbstract-RepairStackQA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackQA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -256,7 +252,6 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				72A711562A576EB900870488 /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				726AA7AC2B29172D00A7FF0B /* JAMFAppConfig.swift */,
@@ -522,7 +517,6 @@
 				726995642A79AA03008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
 				726995652A79AA03008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
 				726995662A79AA03008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
-				726995672A79AA03008C7ACB /* GoogleService-Info.plist in Resources */,
 				726995682A79AA03008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
 				726995692A79AA03008C7ACB /* 3MCircularTT-Light.otf in Resources */,
 				7269956A2A79AA03008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
@@ -546,7 +540,6 @@
 				7269958A2A79ABD1008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
 				7269958B2A79ABD1008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
 				7269958C2A79ABD1008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
-				7269958D2A79ABD1008C7ACB /* GoogleService-Info.plist in Resources */,
 				7269958E2A79ABD1008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
 				7269958F2A79ABD1008C7ACB /* 3MCircularTT-Light.otf in Resources */,
 				726995902A79ABD1008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
@@ -570,7 +563,6 @@
 				726995B02A79AC14008C7ACB /* 3MCircularTT-BlackItalic.otf in Resources */,
 				726995B12A79AC14008C7ACB /* 3MCircularTT-Bold.otf in Resources */,
 				726995B22A79AC14008C7ACB /* 3MCircularTT-BoldItalic.otf in Resources */,
-				726995B32A79AC14008C7ACB /* GoogleService-Info.plist in Resources */,
 				726995B42A79AC14008C7ACB /* 3MCircularTT-Italic.otf in Resources */,
 				726995B52A79AC14008C7ACB /* 3MCircularTT-Light.otf in Resources */,
 				726995B62A79AC14008C7ACB /* 3MCircularTT-LightItalic.otf in Resources */,
