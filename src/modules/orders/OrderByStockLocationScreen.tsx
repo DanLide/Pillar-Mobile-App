@@ -110,7 +110,8 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     setModalParams({
       type: ProductModalType.ReceiveOrder,
       maxValue: item.orderedQty,
-      minValue: item.receivedQty,
+      minValue: 0,
+      value: item.receivedQty,
       currentProduct: item,
     });
   };
@@ -150,10 +151,11 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const onChangeProductQuantity = (quantity: number) => {
     if (!modalParams.currentProduct) return;
 
-    const product = { ...modalParams.currentProduct, reservedCount: quantity };
+    const product = { ...modalParams.currentProduct, receivedQty: quantity };
 
     setModalParams({
       ...modalParams,
+      value: quantity,
       currentProduct: product,
     });
   };
