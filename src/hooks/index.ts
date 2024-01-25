@@ -3,6 +3,7 @@ import { useSingleToast } from './useSingleToast';
 import useSwitchState from './useSwitchState';
 import useTimeout from './useTimeout';
 import useCustomGoBack from './useCustomGoBack';
+import useKeyboard from './useKeyboard';
 
 export {
   useSwitchState,
@@ -10,4 +11,5 @@ export {
   useSingleToast,
   useBaseProductsScreen,
   useCustomGoBack,
+  useKeyboard,
 };

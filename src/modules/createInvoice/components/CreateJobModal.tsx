@@ -3,8 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import { Button, ButtonType, Input, Modal, Text } from 'src/components';
 import { checkIsExistJob, onCreateJob } from 'src/data/createJob';
 import { colors, fonts } from 'src/theme';
-import { useSingleToast } from 'src/hooks';
+import { useKeyboard, useSingleToast } from 'src/hooks';
 import { ToastType } from 'src/contexts/types';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { DEFAULT_TOP_OFFSET } from 'src/components/Modal';
 
 interface Props {
   isVisible: boolean;
@@ -56,12 +58,26 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
     onClose();
   };
 
+  const topOffset = useSharedValue(DEFAULT_TOP_OFFSET);
+
+  useKeyboard({
+    keyboardWillShow: ({ endCoordinates: { height } }) => {
+      topOffset.value = withTiming(DEFAULT_TOP_OFFSET - height, {
+        duration: 300,
+      });
+    },
+    keyboardWillHide: () => {
+      topOffset.value = withTiming(DEFAULT_TOP_OFFSET, { duration: 300 });
+    },
+  });
+
   return (
     <Modal
       isVisible={isVisible}
       onClose={onCloseModal}
       semiTitle="Create Repair Order"
       titleStyle={styles.headerTitle}
+      topOffset={topOffset}
     >
       <View style={styles.container}>
         <Text style={[styles.title, styles.bottomMargin]}>Repair Order</Text>
