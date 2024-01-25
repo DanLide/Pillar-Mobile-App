@@ -13,7 +13,11 @@ import {
 import { Button, ButtonType } from 'src/components';
 
 import { fetchSSOUsers } from 'src/data/fetchSSOUsers';
-import { AppNavigator, UnauthStackParamsList } from 'src/navigation/types';
+import {
+  AppNavigator,
+  LoginType,
+  UnauthStackParamsList,
+} from 'src/navigation/types';
 import { ssoStore, authStore } from 'src/stores';
 import { SSOUser } from 'src/stores/SSOStore';
 import { colors, fonts, SVGs } from 'src/theme';
@@ -113,7 +117,9 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const users = ssoStore.SsoSeparatedUsersList?.[selectedTabIndex];
 
   const onLoginViaCredentials = () => {
-    navigation.navigate(AppNavigator.LoginViaCredentialsScreen);
+    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
+      type: LoginType.LoginShopDevice,
+    });
   };
 
   const renderTabs = () => {
