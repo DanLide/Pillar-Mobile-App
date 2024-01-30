@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,14 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
+
 import { Separator } from 'src/components';
 import { WidthType } from 'src/components/Separator';
 import { colors, fonts } from 'src/theme';
-import { deviceInfoStore } from 'src/stores';
+import { authStore, deviceInfoStore } from 'src/stores';
+import AlertWrapper from 'src/contexts/AlertWrapper';
+import { cleanKeychain } from 'src/helpers/localStorage';
+import { permissionProvider } from 'src/data/providers';
 
 enum Type {
   Button,
@@ -27,22 +31,46 @@ interface Section {
   action?: () => void;
 }
 
+const ItemSeparatorComponent = () => (
+  <Separator widthType={WidthType.MajorPart} />
+);
+
 export const SettingsScreen = () => {
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
+
   const deviceName = deviceInfoStore.getDeviceName;
+  const { userPermissions } = permissionProvider;
 
-  const sections: Section[] = [
-    {
-      title: 'Device Name',
-      subtitle: deviceName,
-      type: Type.Button,
-      buttonTitle: 'Copy',
-      action: () => {
-        Clipboard.setString(deviceName);
+  const openAlert = useCallback(() => setIsAlertVisible(true), []);
+
+  const sections = useMemo<Section[]>(
+    () => [
+      {
+        title: 'Device Name',
+        subtitle: deviceName,
+        type: Type.Button,
+        buttonTitle: 'Copy',
+        action: () => {
+          Clipboard.setString(deviceName);
+        },
       },
-    },
-  ];
+      ...(userPermissions.configureShop
+        ? [
+            {
+              title: 'Factory Reset App',
+              subtitle:
+                'Restore app settings to default values.\nThis is irreversible.',
+              type: Type.Button,
+              buttonTitle: 'Reset',
+              action: openAlert,
+            },
+          ]
+        : []),
+    ],
+    [deviceName, openAlert, userPermissions.configureShop],
+  );
 
-  const renderItemActionType = (section: Section) => {
+  const renderItemActionType = useCallback((section: Section) => {
     switch (section.type) {
       case Type.Button: {
         return (
@@ -55,26 +83,44 @@ export const SettingsScreen = () => {
       case Type.Empty:
         return null;
     }
-  };
+  }, []);
 
-  const renderSectionItem = ({ item }: ListRenderItemInfo<Section>) => (
-    <View style={styles.sectionContainer}>
-      <View>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.subTitle}>{item.subtitle}</Text>
+  const renderSectionItem = useCallback(
+    ({ item }: ListRenderItemInfo<Section>) => (
+      <View style={styles.sectionContainer}>
+        <View>
+          <Text style={styles.title}>{item.title}</Text>
+          <Text style={styles.subTitle}>{item.subtitle}</Text>
+        </View>
+        {renderItemActionType(item)}
       </View>
-      {renderItemActionType(item)}
-    </View>
+    ),
+    [renderItemActionType],
   );
+
+  const closeAlert = useCallback(() => setIsAlertVisible(false), []);
+
+  const handleResetConfirm = useCallback(async () => {
+    await cleanKeychain();
+    closeAlert();
+    authStore.logOut();
+  }, [closeAlert]);
 
   return (
     <View style={styles.container}>
       <FlatList
         data={sections}
         renderItem={renderSectionItem}
-        ItemSeparatorComponent={() => (
-          <Separator widthType={WidthType.MajorPart} />
-        )}
+        ItemSeparatorComponent={ItemSeparatorComponent}
+      />
+      <AlertWrapper
+        visible={isAlertVisible}
+        message="Would you like to factory reset this application?"
+        title="Are you sure?"
+        primaryTitle="Yes"
+        secondaryTitle="No"
+        onPressPrimary={handleResetConfirm}
+        onPressSecondary={closeAlert}
       />
     </View>
   );
