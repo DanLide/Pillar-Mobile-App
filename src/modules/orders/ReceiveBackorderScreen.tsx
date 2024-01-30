@@ -60,7 +60,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     modalParams,
     scannedProductsCount,
     onPressScan,
-    onEditProduct,
+    onProductListItemPress,
     onSubmitProduct,
     setEditableProductQuantity,
     onRemoveProduct,
@@ -179,7 +179,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
 
       <View style={styles.productsContainer}>
         <SelectedProductsList
-          onItemPress={onEditProduct}
+          onItemPress={onProductListItemPress}
           withStockLocation
           nextNavigationGoBack
         />

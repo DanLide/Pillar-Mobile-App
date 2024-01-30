@@ -1,4 +1,11 @@
-import React, { useCallback, useRef, useState, useMemo, memo } from 'react';
+import React, {
+  useCallback,
+  useRef,
+  useState,
+  useMemo,
+  memo,
+  useEffect,
+} from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
@@ -11,7 +18,7 @@ import {
 } from './components/quantityTab';
 import { SelectProductJob } from './components/SelectProductJob';
 
-import { colors, fonts } from 'src/theme';
+import { SVGs, colors, fonts } from 'src/theme';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -19,6 +26,9 @@ import {
 } from 'src/contexts';
 import { ProductModel } from 'src/stores/types';
 import { ToastType } from 'src/contexts/types';
+import { StockLocationListModal } from '../orders/components';
+import { StockModel } from '../stocksList/stores/StocksStore';
+import { ordersStore } from '../orders/stores';
 
 export enum ProductModalType {
   Remove,
@@ -29,6 +39,7 @@ export enum ProductModalType {
   CreateOrder,
   ReturnOrder,
   Hidden,
+  ReceiveBackOrder,
 }
 
 export interface ProductModalParams {
@@ -52,6 +63,7 @@ export interface ProductModalProps extends ProductModalParams {
   onCancelPress?: () => void;
   onClose: () => void;
   onSubmit: (product: ProductModel) => void | unknown;
+  onSelectStock?: (stock: StockModel) => void;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -59,6 +71,7 @@ const { width, height } = Dimensions.get('window');
 export enum Tabs {
   EditQuantity,
   LinkJob,
+  StockList,
 }
 
 const getTabs = (type: ProductModalType): Tabs[] => {
@@ -69,6 +82,8 @@ const getTabs = (type: ProductModalType): Tabs[] => {
     case ProductModalType.CreateOrder:
     case ProductModalType.ReturnOrder:
       return [Tabs.EditQuantity];
+    case ProductModalType.ReceiveBackOrder:
+      return [Tabs.StockList, Tabs.EditQuantity];
     default:
       return [Tabs.EditQuantity, Tabs.LinkJob];
   }
@@ -92,9 +107,14 @@ export const ProductModal = memo(
     onSubmit,
     onRemove,
     onChangeProductQuantity,
+    onSelectStock,
   }: ProductModalProps) => {
+    const tabs = useMemo(() => getTabs(type), [type]);
     const carouselRef = useRef<ICarouselInstance>(null);
-    const [selectedTab, setSelectedTab] = useState<number>(0);
+    const [selectedTab, setSelectedTab] = useState<number>(tabs[0]);
+    useEffect(() => {
+      setSelectedTab(tabs[0]);
+    }, [tabs]);
 
     const headerHeight = useHeaderHeight();
 
@@ -102,8 +122,6 @@ export const ProductModal = memo(
       () => ({ value: headerHeight }),
       [headerHeight],
     );
-
-    const tabs = useMemo(() => getTabs(type), [type]);
 
     const onJobSelectNavigation = useCallback(() => {
       setSelectedTab(Tabs.LinkJob);
@@ -125,8 +143,18 @@ export const ProductModal = memo(
       clearProductModalStoreOnClose();
     }, [clearProductModalStoreOnClose, product, onRemove]);
 
+    const onSelectStockAndNavigateToEditQuantity = useCallback(
+      async (stock: StockModel) => {
+        onSelectStock(stock);
+        carouselRef.current?.next();
+        ordersStore.setCurrentStocks(stock);
+        setSelectedTab(tabs[1]);
+      },
+      [onSelectStock, tabs],
+    );
+
     const renderItem = useCallback(
-      ({ index }: { index: number }) => {
+      ({ item }: { item: number }) => {
         const onPressAdd = (job?: JobModel) => {
           if (!product) return;
 
@@ -141,7 +169,7 @@ export const ProductModal = memo(
           clearProductModalStoreOnClose();
         };
 
-        switch (index) {
+        switch (item) {
           case Tabs.EditQuantity:
             return (
               <ProductQuantity
@@ -175,6 +203,12 @@ export const ProductModal = memo(
                 onPressAdd={onPressAdd}
               />
             );
+          case Tabs.StockList:
+            return (
+              <StockLocationListModal
+                onSelectStock={onSelectStockAndNavigateToEditQuantity}
+              />
+            );
           default:
             return <View />;
         }
@@ -195,6 +229,7 @@ export const ProductModal = memo(
         onRemoveAlert,
         selectedTab,
         isHideDecreaseButton,
+        onSelectStockAndNavigateToEditQuantity,
       ],
     );
 
@@ -204,11 +239,14 @@ export const ProductModal = memo(
           if (
             type === ProductModalType.ReceiveOrder ||
             type === ProductModalType.CreateOrder ||
-            type === ProductModalType.ReturnOrder
+            type === ProductModalType.ReturnOrder ||
+            type === ProductModalType.ReceiveBackOrder
           ) {
             return (
               <Text style={styles.title} ellipsizeMode="middle">
-                {product?.product}
+                {type === ProductModalType.ReceiveBackOrder
+                  ? product.nameDetails
+                  : product?.product}
               </Text>
             );
           }
@@ -216,16 +254,33 @@ export const ProductModal = memo(
         }
         case Tabs.LinkJob:
           return 'Link to Repair Order';
+        case Tabs.StockList:
+          return (
+            <View style={styles.upcContainer}>
+              <SVGs.CodeIcon width={24} height={16} color={colors.black} />
+              <Text style={styles.upcTitle}>UPC</Text>
+              <Text style={styles.upc}>{product.upc}</Text>
+            </View>
+          );
         default:
           return '';
       }
     }, [selectedTab, type, product]);
 
+    const renderStockName = useMemo(() => {
+      switch (type) {
+        case ProductModalType.ReceiveBackOrder:
+          return 'Choose Stock Location for Item';
+        default:
+          return stockName;
+      }
+    }, [stockName, type]);
+
     return (
       <Modal
         isVisible={type !== ProductModalType.Hidden}
         onClose={clearProductModalStoreOnClose}
-        title={stockName}
+        title={renderStockName}
         titleContainerStyle={styles.titleContainer}
         topOffset={topOffset}
         semiTitle={title}
@@ -265,5 +320,22 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Bold,
     lineHeight: 20,
     color: colors.grayDark3,
+  },
+  upcContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  upcTitle: {
+    fontSize: 17,
+    fontFamily: fonts.TT_Bold,
+    lineHeight: 20,
+    paddingLeft: 8,
+    paddingRight: 14,
+  },
+  upc: {
+    fontSize: 17,
+    fontFamily: fonts.TT_Regular,
+    lineHeight: 25.5,
+    color: colors.grayDark2,
   },
 });
