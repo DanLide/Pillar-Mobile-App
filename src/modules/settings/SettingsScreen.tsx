@@ -12,7 +12,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { Separator } from 'src/components';
 import { WidthType } from 'src/components/Separator';
 import { colors, fonts } from 'src/theme';
-import { authStore, deviceInfoStore } from 'src/stores';
+import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { cleanKeychain } from 'src/helpers/localStorage';
 import { permissionProvider } from 'src/data/providers';
@@ -103,6 +103,7 @@ export const SettingsScreen = () => {
   const handleResetConfirm = useCallback(async () => {
     await cleanKeychain();
     closeAlert();
+    ssoStore.setDeviceConfiguration(false);
     authStore.logOut();
   }, [closeAlert]);
 
