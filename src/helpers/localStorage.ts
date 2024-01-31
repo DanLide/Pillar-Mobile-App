@@ -44,5 +44,6 @@ export const setUsernames = async (username: string) => {
 };
 
 export const cleanKeychain = async () => {
-  return await AsyncStorage.removeItem('rnToken');
+  await AsyncStorage.removeItem('usernames');
+  await AsyncStorage.removeItem('rnToken');
 };
