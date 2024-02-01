@@ -47,6 +47,7 @@ const icons: Record<
   [ToastType.ScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.DetailedScanError]: SVGs.BarcodeErrorIcon,
   [ToastType.ProductQuantityError]: SVGs.ProductErrorIcon,
+  [ToastType.SpecialOrderError]: SVGs.ProductErrorIcon,
   [ToastType.ProductUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.UpcUpdateError]: SVGs.ProductErrorIcon,
   [ToastType.SuggestedItemsError]: SVGs.SuggestedListErrorIcon,

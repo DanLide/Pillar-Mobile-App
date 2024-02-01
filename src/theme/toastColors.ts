@@ -32,6 +32,11 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
+  [ToastType.SpecialOrderError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.ScanError]: {
     primary: colors.red,
     secondary: colors.redLight,

@@ -13,6 +13,7 @@ export const getToastDuration = (type?: string) => {
     case ToastType.Error:
     case ToastType.ScanError:
     case ToastType.ProductQuantityError:
+    case ToastType.SpecialOrderError:
     case ToastType.ProductUpdateError:
     case ToastType.UpcUpdateError:
     case ToastType.BluetoothDisabled:
@@ -28,7 +29,7 @@ export const getToastDuration = (type?: string) => {
 };
 export const useSingleToast = () => {
   const { show, hideAll } = useToast();
-  const toastInitialized = show && hideAll
+  const toastInitialized = show && hideAll;
 
   const showToast = useCallback<RNToastType['show']>(
     (message, toastOptions) => {

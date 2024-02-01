@@ -58,6 +58,14 @@ export const ToastContextProvider: React.FC<Props> = ({
           style={styles.productQuantityError}
         />
       ),
+      [ToastType.SpecialOrderError]: toast => (
+        <Toast
+          {...toast}
+          type={ToastType.SpecialOrderError}
+          actionType={ToastActionType.Close}
+          style={styles.productQuantityError}
+        />
+      ),
       [ToastType.InvoiceMissingProductPrice]: toast => (
         <Toast
           {...toast}

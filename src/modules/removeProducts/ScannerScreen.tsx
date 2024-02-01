@@ -18,6 +18,7 @@ import {
   StockProductStoreType,
 } from '../../stores/types';
 import { ToastType } from '../../contexts/types';
+import { InventoryUseType } from 'src/constants/common.enum';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -42,10 +43,23 @@ export const ScannerScreen: React.FC = observer(() => {
 
       const minQty = getProductStepQty(product.inventoryUseTypeId);
 
-      const toastType =
-        removedProductCount >= product.onHand || product.onHand < minQty
-          ? ToastType.ProductQuantityError
-          : undefined;
+      const calculateToastType = () => {
+        const quantityError =
+          removedProductCount >= product.onHand || product.onHand < minQty;
+
+        if (!quantityError) {
+          return undefined;
+        }
+
+        const isSpecialOrder =
+          product?.inventoryUseTypeId === InventoryUseType.NonStock;
+
+        return isSpecialOrder
+          ? ToastType.SpecialOrderError
+          : ToastType.ProductQuantityError;
+      };
+
+      const toastType = calculateToastType();
 
       setModalParams({
         type: ProductModalType.Remove,
