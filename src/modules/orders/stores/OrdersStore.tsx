@@ -21,6 +21,7 @@ export class OrdersStore extends BaseProductsStore {
   @observable currentStockName?: string;
   @observable backorderCabinets?: GetOrderSummaryProduct[];
   @observable cabinetSelection: boolean;
+  @observable productUPC?: string;
 
   constructor() {
     super();
@@ -84,6 +85,14 @@ export class OrdersStore extends BaseProductsStore {
     )(this.products);
   }
 
+  @computed get getProductUPC() {
+    return this.productUPC;
+  }
+
+  @computed get getCabinetSelection() {
+    return this.cabinetSelection;
+  }
+
   @action setCurrentOrder(orderDetails: CurrentOrder) {
     this.currentOrder = orderDetails;
   }
@@ -133,5 +142,9 @@ export class OrdersStore extends BaseProductsStore {
   @action clearCreateOrReceiveBackOrder() {
     this.supplierId = undefined;
     this.clear();
+  }
+
+  @action setProductUPC(upc: string) {
+    this.productUPC = upc;
   }
 }

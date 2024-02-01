@@ -1,7 +1,7 @@
 import { v1 as uuid } from 'uuid';
 
 import { getProductStepQty, Task, TaskExecutor } from './helpers';
-import { CurrentProductStoreType, ProductModel } from '../stores/types';
+import { ProductModel } from '../stores/types';
 import { OrdersStore } from '../modules/orders/stores/OrdersStore';
 import {
   GetOrderSummaryProduct,
@@ -9,7 +9,10 @@ import {
   getProductMultipleStocks,
 } from './api/orders';
 import { BadRequestError } from './helpers/tryFetch';
-import { getFetchProductByFacilityIdAPI } from './api';
+import {
+  getFetchProductByFacilityIdAPI,
+  getFetchProductsByFacilityIdAPI,
+} from './api';
 import { stocksStore } from '../modules/stocksList/stores';
 
 interface FetchProductByOrderTypeAndSupplierContext {
@@ -28,22 +31,11 @@ export const getProductBySupplierWithStocks = async (
   const productContext: FetchProductByOrderTypeAndSupplierContext = {
     product: undefined,
   };
-  return new TaskExecutor([
+  const result = await new TaskExecutor([
     new FetchProductByOrderTypeAndSupplier(productContext, scanCode, store),
-    new SaveProductToStoreTask(productContext, store),
   ]).execute();
-};
 
-export const saveCurrentProduct = (
-  product: GetOrderSummaryProduct,
-  store: OrdersStore,
-) => {
-  const productContext: FetchProductByOrderTypeAndSupplierContext = {
-    product: product,
-  };
-  return new TaskExecutor([
-    new SaveProductToStoreTask(productContext, store),
-  ]).execute();
+  return result;
 };
 
 const getProductSupplier = async (code: string) => {
@@ -73,15 +65,12 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
   async run(): Promise<void> {
     const productSupplier = await getProductSupplier(this.scanCode);
-
     if (!this.store.supplierId) {
       this.store.setSupplier(productSupplier);
     }
 
     const selectedSupplier = this.store.supplierId;
-
     if (!productSupplier) return;
-
     if (selectedSupplier !== productSupplier) {
       const supplierName = stocksStore.getSupplierNameById(productSupplier);
 
@@ -91,57 +80,43 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
 
-    let productMultipleStockLocations;
-    let product: GetOrderSummaryProduct | undefined;
-    try {
-      productMultipleStockLocations = await getProductMultipleStocks(
-        this.scanCode,
+    const products = await getFetchProductsByFacilityIdAPI();
+    const productUPC = products?.find(
+      product => product.productId === +this.scanCode.replace('~~', ''),
+    ).upc;
+
+    const productMultipleStockLocations = await getProductMultipleStocks(
+      productUPC,
+    );
+    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
+
+    if (productMultipleStockLocations?.length > 1) {
+      this.store.setBackorderCabinets(productMultipleStockLocations);
+      this.store.setCabinetSelection(true);
+      this.store.setProductUPC(productUPC);
+      this.store.setCurrentProduct(
+        this.mapProductResponse(product, productUPC),
       );
-      product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
-      if (!product && !productMultipleStockLocations?.length) {
-        return;
-      }
-    } finally {
-      if (productMultipleStockLocations?.length > 1) {
-        this.store.setBackorderCabinets(productMultipleStockLocations);
-        this.store.setCabinetSelection(true);
-      } else {
-        const availableStocks =
-          stocksStore.stocks.filter(stock =>
-            product?.cabinets.find(
-              cabinet => stock.partyRoleId === cabinet.storageAreaId,
-            ),
-          ) || [];
-        this.store.setCurrentStocks(availableStocks[0]);
-        this.productContext.product = product;
-      }
+    } else {
+      this.store.setCabinetSelection(false);
+      this.store.setProductUPC(undefined);
+      const availableStocks =
+        stocksStore.stocks.filter(stock =>
+          product?.cabinets.find(
+            cabinet => stock.partyRoleId === cabinet.storageAreaId,
+          ),
+        ) || [];
+      this.store.setCurrentStocks(availableStocks[0]);
+      this.store.setCurrentProduct(
+        this.mapProductResponse(product, productUPC),
+      );
     }
   }
-}
-
-export class SaveProductToStoreTask extends Task {
-  productContext: FetchProductByOrderTypeAndSupplierContext;
-  currentProductStore: CurrentProductStoreType;
-
-  constructor(
-    productContext: FetchProductByOrderTypeAndSupplierContext,
-    currentProductStore: CurrentProductStoreType,
-  ) {
-    super();
-    this.productContext = productContext;
-    this.currentProductStore = currentProductStore;
-  }
-
-  async run(): Promise<void> {
-    const { product } = this.productContext;
-
-    this.currentProductStore.setCurrentProduct(
-      product && this.mapProductResponse(product),
-    );
-  }
-
-  private mapProductResponse(product: GetOrderSummaryProduct): ProductModel {
-    const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
+  private mapProductResponse(
+    product: GetOrderSummaryProduct,
+    upc: string,
+  ): ProductModel {
+    const { inventoryUseTypeId, manufactureCode, partNo, size } = product;
 
     return {
       ...product,
@@ -150,6 +125,7 @@ export class SaveProductToStoreTask extends Task {
       nameDetails: [manufactureCode, partNo, size].join(' '),
       uuid: uuid(),
       isRecoverable: false,
+      upc,
     };
   }
 }

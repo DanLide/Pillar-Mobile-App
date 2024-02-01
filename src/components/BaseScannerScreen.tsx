@@ -52,6 +52,7 @@ interface Props {
     void | RequestError | ScannerScreenError.ProductIsNotRecoverable
   >;
   onBadRequestError?: (error: BadRequestError) => void;
+  onChangeProductQuantity?: (qty?: number) => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
   filteredType?: BarcodeFormat;
 }
@@ -80,6 +81,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onCloseModal,
     onFetchProduct,
     onBadRequestError,
+    onChangeProductQuantity,
     ProductModalComponent = ProductModal,
     filteredType,
   }) => {
@@ -205,6 +207,10 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       }, 350);
     };
 
+    const onSelectStock = stock => {
+      store.setCurrentStocks(stock);
+    };
+
     return (
       <View style={styles.container}>
         <InfoTitleBar
@@ -226,7 +232,10 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onEditPress={onEditPress}
           onCancelPress={onCancelPress}
           onClose={handleCloseModal}
-          onChangeProductQuantity={setEditableProductQuantity}
+          onChangeProductQuantity={
+            onChangeProductQuantity || setEditableProductQuantity
+          }
+          onSelectStock={onSelectStock}
         />
       </View>
     );

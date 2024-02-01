@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 
-import { Button, ButtonType } from '../../components';
+import { Button, ButtonType, DropdownItem } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
 
 import { ordersStore } from './stores';
@@ -9,6 +9,8 @@ import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { SelectedProductsList } from 'src/modules/orders/components/SelectedProductsList';
 import { TotalCostBar } from 'src/modules/orders/components';
+import { find, whereEq } from 'ramda';
+import { stocksStore } from '../stocksList/stores';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -19,13 +21,20 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
   const order = ordersStore.currentOrder?.order;
 
   const orderId = order?.orderId;
-  const supplierName = order?.supplierName;
+  const supplier = useMemo<DropdownItem | undefined>(
+    () =>
+      find(
+        whereEq({ value: ordersStore.supplierId }),
+        stocksStore.suppliersRenderFormat,
+      ),
+    [],
+  );
 
   useEffect(() => {
     return () => {
       ordersStore.clearCreateOrReceiveBackOrder();
-    }
-  }, [])
+    };
+  }, []);
 
   const distributorAndPOTextStyle = useMemo<StyleProp<TextStyle>>(
     () => [styles.distributorAndPOTitle, styles.distributorAndPOText],
@@ -49,14 +58,12 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <SVGs.CheckMark color={colors.green3} />
-            <Text style={styles.title}>
-              Products Received
-            </Text>
+            <Text style={styles.title}>Products Received</Text>
           </View>
 
           <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>
-              You have successfully submitted the following items
+              You have successfully submixtted the following items
             </Text>
           </View>
 
@@ -64,16 +71,14 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
             <View style={styles.distributorAndPOContent}>
               <Text style={styles.distributorAndPOTitle}>Distributor</Text>
               <Text numberOfLines={1} style={distributorAndPOTextStyle}>
-                {supplierName}
+                {supplier.label}
               </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.table}>
-          <SelectedProductsList
-            itemTitleColor={colors.grayDark3}
-          />
+          <SelectedProductsList itemTitleColor={colors.grayDark3} />
         </View>
       </View>
 
