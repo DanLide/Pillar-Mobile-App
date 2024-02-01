@@ -35,7 +35,8 @@ export type ProductQuantityToastType =
   | ToastType.ProductUpdateError
   | ToastType.ProductUpdateSuccess
   | ToastType.UpcUpdateError
-  | ToastType.UnitsPerContainerError;
+  | ToastType.UnitsPerContainerError
+  | ToastType.SpecialOrderError;
 
 interface Props extends ViewProps {
   type?: ProductModalType;
@@ -62,8 +63,14 @@ export const toastMessages: Record<
   ProductQuantityToastType,
   JSX.Element | string
 > = {
-  [ToastType.ProductQuantityError]:
-    "You cannot remove more products than are 'On Hand' in this stock location. You can update product quantity in Manage Products section",
+  [ToastType.ProductQuantityError]: (
+    <ToastMessage style={{ textAlign: 'left', marginHorizontal: 8 }}>
+      You cannot remove more products than are '
+      <ToastMessage bold>On Hand</ToastMessage>' in this stock location. You can
+      update product quantity in the{' '}
+      <ToastMessage bold>Manage Products</ToastMessage> section
+    </ToastMessage>
+  ),
   [ToastType.ProductUpdateError]:
     'Sorry, there was an issue saving the product update',
   [ToastType.ProductUpdateSuccess]: 'Product Updated',
@@ -73,6 +80,13 @@ export const toastMessages: Record<
     <ToastMessage>
       <ToastMessage bold>Pieces Per Container</ToastMessage> cannot be saved
       less than 1
+    </ToastMessage>
+  ),
+  [ToastType.SpecialOrderError]: (
+    <ToastMessage style={{ textAlign: 'left', marginHorizontal: 8 }}>
+      Product listed as '<ToastMessage bold>Special Order</ToastMessage>'. You
+      can create a new order in the{' '}
+      <ToastMessage bold>Manage Orders</ToastMessage> section
     </ToastMessage>
   ),
 };
@@ -270,6 +284,11 @@ export const ProductQuantity = forwardRef(
       }
     };
 
+    const showJob =
+      jobSelectable &&
+      toastType !== ToastType.ProductQuantityError &&
+      toastType !== ToastType.SpecialOrderError;
+
     return (
       <>
         <View style={[styles.container, style]}>
@@ -302,7 +321,7 @@ export const ProductQuantity = forwardRef(
             )}
           </View>
 
-          {jobSelectable && toastType !== ToastType.ProductQuantityError && (
+          {showJob && (
             <View>
               <Pressable
                 onPress={handleJobButtonPress}

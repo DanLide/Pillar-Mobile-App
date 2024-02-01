@@ -10,6 +10,7 @@ export enum ToastType {
   InvoiceMissingProductPrice = 'InvoiceMissingProductPrice',
   UnitsPerContainerError = 'UnitsPerContainerError',
   ProfileError = 'ProfileError',
+  SpecialOrderError = 'SpecialOrderError',
 
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',

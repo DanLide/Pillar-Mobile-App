@@ -149,7 +149,10 @@ export const ProductModal = memo(
                 product={product}
                 onChangeProductQuantity={onChangeProductQuantity}
                 isEdit={isEdit}
-                disabled={toastType === ToastType.ProductQuantityError}
+                disabled={
+                  toastType === ToastType.ProductQuantityError ||
+                  toastType === ToastType.SpecialOrderError
+                }
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
                 value={value}
