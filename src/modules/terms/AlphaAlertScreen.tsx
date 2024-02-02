@@ -4,8 +4,6 @@ import { authStore } from 'src/stores';
 import { getUsernames, setUsernames } from 'src/helpers/localStorage';
 import Pdf from 'react-native-pdf';
 
-import WebView from 'react-native-webview';
-
 import AlphaBetaAgreement from '../../../assets/pdf/AlphaBetaAgreement.pdf';
 
 export const AlphaAlertScreen = () => {
@@ -25,22 +23,7 @@ export const AlphaAlertScreen = () => {
   }, [updateUsernames]);
   return (
     <View style={styles.container}>
-      <Pdf
-        source={AlphaBetaAgreement}
-        onLoadComplete={(numberOfPages, filePath) => {
-          console.log(`Number of pages: ${numberOfPages}`);
-        }}
-        onPageChanged={(page, numberOfPages) => {
-          console.log(`Current page: ${page}`);
-        }}
-        onError={error => {
-          console.log(error);
-        }}
-        onPressLink={uri => {
-          console.log(`Link pressed: ${uri}`);
-        }}
-        style={styles.container}
-      />
+      <Pdf source={AlphaBetaAgreement} style={styles.container} />
     </View>
   );
 };

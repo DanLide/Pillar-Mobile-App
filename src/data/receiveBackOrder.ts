@@ -6,15 +6,9 @@ import {
   receiveBackOrderAPI,
 } from 'src/data/api/orders';
 import { ProductModel } from 'src/stores/types';
-import {
-  OrderMethodType,
-  OrderStatusType,
-  OrderType,
-} from 'src/constants/common.enum';
+import { OrderMethodType, OrderType } from 'src/constants/common.enum';
 import { SSOStore } from 'src/stores/SSOStore';
 import { ssoStore } from 'src/stores';
-import { assoc } from 'ramda';
-import { stocksStore, StockStore } from 'src/modules/stocksList/stores';
 
 interface CreateOrderContext {
   orderResponse?: GetOrdersAPIResponse;
@@ -64,7 +58,7 @@ class CreateOrderTask extends Task {
       taxStatus: '',
     };
 
-    receiveBackOrderAPI(param);
+    await receiveBackOrderAPI(param);
   }
 
   mapProducts(products: ProductModel[]): OrderDetailsProduct[] {

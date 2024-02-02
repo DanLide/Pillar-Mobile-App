@@ -243,6 +243,7 @@ export const ProductQuantity = forwardRef(
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
         case ProductModalType.ReturnOrder:
+        case ProductModalType.ReceiveBackOrder:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}
@@ -258,6 +259,7 @@ export const ProductQuantity = forwardRef(
         case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
         case ProductModalType.ReturnOrder:
+        case ProductModalType.ReceiveBackOrder:
           return (
             <View style={styles.costOfProduct}>
               {!isSpecialOrder && (

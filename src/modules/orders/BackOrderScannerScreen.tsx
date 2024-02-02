@@ -14,7 +14,6 @@ import {
   getProductBySupplierWithStocks,
   ProductByOrderTypeAndSupplierError,
 } from 'src/data/getProductBySupplierWithStocks';
-import { StockLocationListModal } from './components/StockLocationListModal';
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { colors, fonts, SVGs } from '../../theme';
 
@@ -37,7 +36,8 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
     useState<ProductModalParams>(initModalParams);
   const [error, setError] = useState<BadRequestError | null>(null);
 
-  const fetchProduct = async (code: string) => getProductBySupplierWithStocks(ordersStore, code)
+  const fetchProduct = async (code: string) =>
+    getProductBySupplierWithStocks(ordersStore, code);
 
   const alertTitle = useMemo(() => {
     const title = getAlertTitle(error?.error);
@@ -76,25 +76,27 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
   const closeAlert = useCallback(() => setError(null), []);
 
   const onBadRequestError = (error: BadRequestError) => {
-    setError(error)
-  }
-
-  const onProductScan = async (product: ProductModel) =>
-    setModalParams({
-      type: ProductModalType.ReceiveOrder,
-      maxValue: ordersStore.getMaxValue(),
-      onHand: ordersStore.getOnHand(product),
-    })
+    setError(error);
+  };
 
   const onCloseModal = () => setModalParams(initModalParams);
 
-  const onCloseSelectCabinetModal = (product) => {
+  const onProductScan = (product: ProductModel) => {
+    const type = ordersStore.getCabinetSelection
+      ? ProductModalType.ReceiveBackOrder
+      : ProductModalType.ReceiveOrder;
     setModalParams({
-      type: ProductModalType.ReceiveOrder,
-      maxValue: ordersStore.getMaxValue(),
-      onHand: ordersStore.getOnHand(product),
-    })
-    ordersStore.setCabinetSelection(false);
+      type,
+      maxValue: ordersStore.getCurrentProduct.onHand,
+      minValue: 0,
+      onHand: ordersStore.getCurrentProduct.onHand,
+      value: product.reservedCount,
+      currentProduct: product,
+    });
+  };
+
+  const onHandleProduct = (value: number) => {
+    setModalParams({ ...modalParams, value });
   };
 
   return (
@@ -108,10 +110,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onProductScan={onProductScan}
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
-        />
-        <StockLocationListModal
-          visible={ordersStore.cabinetSelection}
-          closeModal={onCloseSelectCabinetModal}
+          onChangeProductQuantity={onHandleProduct}
         />
       </ToastContextProvider>
 
