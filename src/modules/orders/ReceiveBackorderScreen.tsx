@@ -65,8 +65,14 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     setEditableProductQuantity,
     onRemoveProduct,
     onCloseModal,
-  } = useBaseProductsScreen(ordersStore, navigation, ProductModalType.ReceiveOrder, true);
-  const [isLocationPermissionRequested, setIsLocationPermissionRequested] = useState(false);
+  } = useBaseProductsScreen(
+    ordersStore,
+    navigation,
+    ProductModalType.ReceiveOrder,
+    true,
+  );
+  const [isLocationPermissionRequested, setIsLocationPermissionRequested] =
+    useState(false);
 
   useEffect(() => {
     if (
@@ -83,30 +89,30 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       return;
     }
     hideAll && hideAll();
-  }, [
-    showToast,
-    locationPermission,
-    isLocationPermissionRequested,
-    hideAll,
-  ]);
+  }, [showToast, locationPermission, isLocationPermissionRequested, hideAll]);
 
   useEffect(() => {
-    fetchOrdersStocks(stocksStore)
-  }, [])
+    ordersStore.clear();
+    fetchOrdersStocks(stocksStore);
+  }, []);
 
   useEffect(() => {
-    const lister = AppState.addEventListener('change', (state) => {
+    const lister = AppState.addEventListener('change', state => {
       if (state === 'active') {
         setIsLocationPermissionRequested(false);
       }
     });
     return () => {
-      lister.remove()
-    }
+      lister.remove();
+    };
   }, []);
 
   const supplier = useMemo<DropdownItem | undefined>(
-    () => find(whereEq({ value: ordersStore.supplierId }), stocksStore.suppliersRenderFormat),
+    () =>
+      find(
+        whereEq({ value: ordersStore.supplierId }),
+        stocksStore.suppliersRenderFormat,
+      ),
     [ordersStore.supplierId, stocksStore.suppliersRenderFormat],
   );
 
@@ -124,21 +130,24 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     [navigation],
   );
 
-  if ((
-    locationPermission === RESULTS.UNAVAILABLE ||
-    locationPermission === RESULTS.DENIED ||
-    locationPermission === RESULTS.BLOCKED
-  ) && !isLocationPermissionRequested) {
+  if (
+    (locationPermission === RESULTS.UNAVAILABLE ||
+      locationPermission === RESULTS.DENIED ||
+      locationPermission === RESULTS.BLOCKED) &&
+    !isLocationPermissionRequested
+  ) {
     const requestPerm = async () => {
-      await permissionStore.requestPermission(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      await permissionStore.requestPermission(
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      );
       setIsLocationPermissionRequested(true);
-    }
+    };
     requestPerm();
     return (
       <SafeAreaView style={styles.container}>
-        <ActivityIndicator size='large' />
+        <ActivityIndicator size="large" />
       </SafeAreaView>
-    )
+    );
   }
 
   const onReceiveOrder = async () => {
@@ -172,9 +181,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
 
       <TouchableOpacity style={styles.noteContainer}>
         <SVGs.InvoiceIcon />
-        <Text style={styles.noteText}>
-          Add Notes
-        </Text>
+        <Text style={styles.noteText}>Add Notes</Text>
       </TouchableOpacity>
 
       <View style={styles.productsContainer}>

@@ -81,7 +81,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onCloseModal,
     onFetchProduct,
     onBadRequestError,
-    onChangeProductQuantity,
     ProductModalComponent = ProductModal,
     filteredType,
   }) => {
@@ -232,9 +231,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           onEditPress={onEditPress}
           onCancelPress={onCancelPress}
           onClose={handleCloseModal}
-          onChangeProductQuantity={
-            onChangeProductQuantity || setEditableProductQuantity
-          }
+          onChangeProductQuantity={setEditableProductQuantity}
           onSelectStock={onSelectStock}
         />
       </View>

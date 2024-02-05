@@ -40,7 +40,6 @@ export type ProductQuantityToastType =
 
 interface Props extends ViewProps {
   type?: ProductModalType;
-  value?: number;
   maxValue: number;
   minValue?: number;
   onHand?: number;
@@ -104,7 +103,6 @@ export const ProductQuantity = forwardRef(
   (
     {
       type,
-      value,
       product,
       isEdit,
       jobSelectable,
@@ -153,12 +151,8 @@ export const ProductQuantity = forwardRef(
         return product.onHand;
       }
 
-      if (!isNil(value)) {
-        return value;
-      }
-
       return product.reservedCount;
-    }, [isProductQuantityError, product, value]);
+    }, [isProductQuantityError, product]);
 
     if (!product) return null;
 

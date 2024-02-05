@@ -35,6 +35,7 @@ import {
 import { MissingItemsModal } from './components/MissingItemsModal';
 import { ProductModel } from '../../stores/types';
 import { receiveOrder } from '../../data/receiveOrder';
+import { getProductStepQty } from 'src/data/helpers';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -110,8 +111,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     setModalParams({
       type: ProductModalType.ReceiveOrder,
       maxValue: item.orderedQty,
-      minValue: 0,
-      value: item.receivedQty,
+      minValue: item.receivedQty + getProductStepQty(item.inventoryUseTypeId),
       currentProduct: item,
     });
   };
@@ -151,11 +151,10 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const onChangeProductQuantity = (quantity: number) => {
     if (!modalParams.currentProduct) return;
 
-    const product = { ...modalParams.currentProduct, receivedQty: quantity };
+    const product = { ...modalParams.currentProduct, reservedCount: quantity };
 
     setModalParams({
       ...modalParams,
-      value: quantity,
       currentProduct: product,
     });
   };

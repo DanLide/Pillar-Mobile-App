@@ -45,7 +45,6 @@ export enum ProductModalType {
 export interface ProductModalParams {
   type: ProductModalType;
   isEdit?: boolean;
-  value?: number;
   maxValue?: number;
   onHand?: number;
   toastType?: ProductQuantityToastType;
@@ -98,7 +97,6 @@ export const ProductModal = memo(
     stockName,
     toastType,
     isEdit,
-    value,
     maxValue = 0,
     minValue,
     onHand = 0,
@@ -183,7 +181,6 @@ export const ProductModal = memo(
                 }
                 jobSelectable={type === ProductModalType.Remove}
                 toastType={toastType}
-                value={value}
                 maxValue={maxValue}
                 minValue={minValue}
                 style={styles.productQuantityContainer}
@@ -217,7 +214,6 @@ export const ProductModal = memo(
         }
       },
       [
-        value,
         product,
         onSubmit,
         clearProductModalStoreOnClose,

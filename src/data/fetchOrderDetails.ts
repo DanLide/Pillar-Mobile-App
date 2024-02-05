@@ -69,7 +69,7 @@ export class SaveOrdersToStoreTask extends Task {
             ? orderProduct.shippedQty
             : orderProduct.orderedQty === orderProduct.receivedQty
             ? orderProduct.receivedQty
-            : orderProduct.orderedQty - orderProduct.receivedQty,
+            : orderProduct.orderedQty,
         nameDetails: '',
         isRecoverable: false,
       } as ProductModel;

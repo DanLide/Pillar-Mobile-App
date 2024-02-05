@@ -115,19 +115,23 @@ export const StocksListItem: React.FC<Props> = observer(
             {renderIcon()}
             <Text style={styles.title}>{organizationName}</Text>
           </View>
-          <Pressable
-            hitSlop={UNLOCK_BUTTON_HIT_SLOP}
-            onPress={unlockMasterlock}
-            style={styles.statusContainer}
-          >
-            {itemRightText && (
+          {itemRightText ? (
+            <View style={styles.statusContainer}>
               <Text style={styles.statusText}>{itemRightText}</Text>
-            )}
-            {isDeviceConfiguredBySSO && isLocked && !itemRightText && (
-              <Text style={styles.statusText}>Unlock</Text>
-            )}
-            <SVGs.ChevronIcon color={colors.purpleDark} />
-          </Pressable>
+              <SVGs.ChevronIcon color={colors.purpleDark} />
+            </View>
+          ) : (
+            <Pressable
+              hitSlop={UNLOCK_BUTTON_HIT_SLOP}
+              onPress={unlockMasterlock}
+              style={styles.statusContainer}
+            >
+              {isDeviceConfiguredBySSO && isLocked && (
+                <Text style={styles.statusText}>Unlock</Text>
+              )}
+              <SVGs.ChevronIcon color={colors.purpleDark} />
+            </Pressable>
+          )}
         </View>
       </TouchableOpacity>
     );

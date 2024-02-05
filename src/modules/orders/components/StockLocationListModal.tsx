@@ -16,12 +16,7 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
   onSelectStock,
 }) => {
   const fetchStocks = async () => {
-    let stocks: StockModelWithMLAccess[] | undefined = [];
-    try {
-      stocks = await getFetchStockByDeviceNameAPI();
-    } catch (error) {
-      stocks = await getFetchStockAPI();
-    }
+    const stocks = await getFetchStockAPI();
     const productCabinets = ordersStore.backorderCabinets;
 
     const availableStocks =

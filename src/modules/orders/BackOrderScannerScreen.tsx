@@ -16,6 +16,7 @@ import {
 } from 'src/data/getProductBySupplierWithStocks';
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { colors, fonts, SVGs } from '../../theme';
+import { getProductStepQty } from 'src/data/helpers';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -85,18 +86,12 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
     const type = ordersStore.getCabinetSelection
       ? ProductModalType.ReceiveBackOrder
       : ProductModalType.ReceiveOrder;
+
     setModalParams({
       type,
-      maxValue: ordersStore.getCurrentProduct.onHand,
-      minValue: 0,
-      onHand: ordersStore.getCurrentProduct.onHand,
-      value: product.reservedCount,
-      currentProduct: product,
+      maxValue: product.onHand,
+      minValue: getProductStepQty(product.inventoryUseTypeId),
     });
-  };
-
-  const onHandleProduct = (value: number) => {
-    setModalParams({ ...modalParams, value });
   };
 
   return (
@@ -110,7 +105,6 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onProductScan={onProductScan}
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
-          onChangeProductQuantity={onHandleProduct}
         />
       </ToastContextProvider>
 

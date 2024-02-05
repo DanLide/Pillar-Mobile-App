@@ -14,6 +14,7 @@ import {
   getFetchProductsByFacilityIdAPI,
 } from './api';
 import { stocksStore } from '../modules/stocksList/stores';
+import { checkUPC } from 'src/helpers/isUPC';
 
 interface FetchProductByOrderTypeAndSupplierContext {
   product?: GetOrderSummaryProduct;
@@ -81,14 +82,24 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
     }
 
     const products = await getFetchProductsByFacilityIdAPI();
-    const productUPC = products?.find(
-      product => product.productId === +this.scanCode.replace('~~', ''),
-    ).upc;
+    const productUPC = this.getUpcCode(products, this.scanCode);
 
-    const productMultipleStockLocations = await getProductMultipleStocks(
-      productUPC,
-    );
-    const product = await getProductByOrderTypeAndSupplierAPI(this.scanCode);
+    let productMultipleStockLocations = [];
+    if (productUPC) {
+      productMultipleStockLocations = await getProductMultipleStocks(
+        productUPC,
+      );
+    }
+
+    const productId = products.find(product => {
+      if (checkUPC(this.scanCode)) {
+        return product.productId === productMultipleStockLocations[0].productId;
+      } else {
+        return product.productId === +this.scanCode.replace('~~', '');
+      }
+    })?.productId;
+
+    const product = await getProductByOrderTypeAndSupplierAPI(`~~${productId}`);
 
     if (productMultipleStockLocations?.length > 1) {
       this.store.setBackorderCabinets(productMultipleStockLocations);
@@ -102,7 +113,7 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       this.store.setProductUPC(undefined);
       const availableStocks =
         stocksStore.stocks.filter(stock =>
-          product?.cabinets.find(
+          productMultipleStockLocations?.cabinets.find(
             cabinet => stock.partyRoleId === cabinet.storageAreaId,
           ),
         ) || [];
@@ -112,6 +123,18 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       );
     }
   }
+
+  private getUpcCode(products: ProductModel[], scanCode: string) {
+    const isUpc = checkUPC(scanCode);
+    if (isUpc) {
+      return scanCode;
+    } else {
+      return products.find(
+        product => product.productId === +this.scanCode.replace('~~', ''),
+      ).upc;
+    }
+  }
+
   private mapProductResponse(
     product: GetOrderSummaryProduct,
     upc: string,

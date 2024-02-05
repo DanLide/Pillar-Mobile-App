@@ -13,6 +13,7 @@ import {
   BaseProductsScreenNavigationProp,
 } from 'src/navigation/types';
 import { ProductModalParams, ProductModalType } from 'src/modules/productModal';
+import { getReservedCountById } from 'src/stores/helpers';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -56,14 +57,23 @@ export const useBaseProductsScreen = (
   const onProductListItemPress = useCallback(
     (product: ProductModel) => {
       store.setCurrentProduct(product);
+      // Temporary solution remove it after update backorder store
+      const maxValue =
+        product.onHand -
+        getReservedCountById(store.getProducts, product.productId) +
+        (product.reservedCount ?? 0);
+
+      const onHand =
+        product.onHand -
+        getReservedCountById(store.getProducts, product.productId);
       setModalParams({
         isEdit: true,
-        maxValue: store.getEditableMaxValue(product),
-        onHand: store.getEditableOnHand(product),
+        maxValue: backorder ? maxValue : store.getEditableMaxValue(product),
+        onHand: backorder ? onHand : store.getEditableOnHand(product),
         type: type ?? ProductModalType.CreateOrder,
       });
     },
-    [store, type],
+    [backorder, store, type],
   );
 
   const onSubmitProduct = useCallback(

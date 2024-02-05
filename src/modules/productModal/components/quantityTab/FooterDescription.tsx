@@ -45,6 +45,7 @@ export const FooterDescription: React.FC<Props> = ({
       case ProductModalType.ReceiveOrder:
       case ProductModalType.CreateOrder:
       case ProductModalType.ReturnOrder:
+      case ProductModalType.ReceiveBackOrder:
         return (
           <View style={styles.container}>
             {type === ProductModalType.CreateOrder && isEachPiece && (
@@ -123,9 +124,9 @@ export const FooterDescription: React.FC<Props> = ({
     product.inventoryUseTypeId,
     product.onHand,
     product.onOrder,
-    product.orderMultiple,
     product.reservedCount,
     product.unitsPer,
+    shipmentQuantity,
     type,
   ]);
 };
