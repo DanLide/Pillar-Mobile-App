@@ -94,6 +94,14 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
     });
   };
 
+  const onSubmit = (product: ProductModel) => {
+    if (ordersStore.getProductByIdAndStorageId(product)) {
+      ordersStore.updateProductByIdAndStorageId(product);
+    } else {
+      ordersStore.addBackOrderProduct(product);
+    }
+  };
+
   return (
     <>
       <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
@@ -105,6 +113,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onProductScan={onProductScan}
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
+          onSubmit={onSubmit}
         />
       </ToastContextProvider>
 

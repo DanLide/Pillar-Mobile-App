@@ -113,13 +113,13 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
       this.store.setProductUPC(undefined);
       const availableStocks =
         stocksStore.stocks.filter(stock =>
-          productMultipleStockLocations?.cabinets.find(
+          productMultipleStockLocations?.cabinets?.find(
             cabinet => stock.partyRoleId === cabinet.storageAreaId,
           ),
         ) || [];
       this.store.setCurrentStocks(availableStocks[0]);
       this.store.setCurrentProduct(
-        this.mapProductResponse(product, productUPC),
+        this.mapProductResponse(product, productUPC, true),
       );
     }
   }
@@ -138,13 +138,17 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
   private mapProductResponse(
     product: GetOrderSummaryProduct,
     upc: string,
+    isSingleStockLocation?: boolean,
   ): ProductModel {
     const { inventoryUseTypeId, manufactureCode, partNo, size } = product;
-
+    const reservedCount = isSingleStockLocation
+      ? this.store.getProductByIdAndStorageId(product)?.reservedCount ||
+        getProductStepQty(inventoryUseTypeId)
+      : getProductStepQty(inventoryUseTypeId);
     return {
       ...product,
       isRemoved: false,
-      reservedCount: getProductStepQty(inventoryUseTypeId),
+      reservedCount,
       nameDetails: [manufactureCode, partNo, size].join(' '),
       uuid: uuid(),
       isRecoverable: false,
