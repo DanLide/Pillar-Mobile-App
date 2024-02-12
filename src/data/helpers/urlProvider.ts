@@ -404,4 +404,8 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
     return `${this.currentEnv.modules.base.apiUri}/job/api/Job/IsJobNumberExists/${facilityId}/${jobNumber}/0`;
   }
+
+  removeDeviceFromSSO(id: string) {
+    return `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignedDevice/${id}`;
+  }
 }

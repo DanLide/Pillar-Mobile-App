@@ -16,6 +16,7 @@ import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { cleanKeychain } from 'src/helpers/localStorage';
 import { permissionProvider } from 'src/data/providers';
+import { onRemoveDeviceFromSSO } from 'src/data/removeDeviceFromSSO';
 
 enum Type {
   Button,
@@ -101,6 +102,7 @@ export const SettingsScreen = () => {
   const closeAlert = useCallback(() => setIsAlertVisible(false), []);
 
   const handleResetConfirm = useCallback(async () => {
+    await onRemoveDeviceFromSSO();
     await cleanKeychain();
     closeAlert();
     ssoStore.setDeviceConfiguration(false);
