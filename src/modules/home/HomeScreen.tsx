@@ -63,7 +63,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         <Text style={styles.infoText}>{authStore.getName}</Text>
       </View>
       <View style={styles.shadowWrapper}>
-        {userPermissions.returnProduct && (
+        {userPermissions.removeProduct && (
           <ListItem
             title="Remove Products"
             subtitle="Check products out of inventory"
@@ -72,12 +72,14 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           />
         )}
         {renderBorderBetweenTheItems && <View style={styles.separator} />}
-        <ListItem
-          title="Return Products"
-          subtitle="Check products back into inventory"
-          leftIcon={ArrowBottomIcon}
-          onPress={onReturnProducts}
-        />
+        {userPermissions.returnProduct && (
+          <ListItem
+            title="Return Products"
+            subtitle="Check products back into inventory"
+            leftIcon={ArrowBottomIcon}
+            onPress={onReturnProducts}
+          />
+        )}
       </View>
 
       {userPermissions.createInvoice && (
