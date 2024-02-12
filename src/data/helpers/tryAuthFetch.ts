@@ -12,6 +12,7 @@ interface TryAuthFetchParams extends TryFetchParams {
 export const tryAuthFetch = async <ResponseType>({
   url,
   request,
+  disableLogoutOnUnauthorized,
   authToken = getAuthToken(),
   logoutListener = getLogoutListener(),
 }: TryAuthFetchParams) => {
@@ -27,5 +28,6 @@ export const tryAuthFetch = async <ResponseType>({
       `Bearer ${authToken?.getToken ?? ''}`,
       request,
     ),
+    disableLogoutOnUnauthorized,
   });
 };

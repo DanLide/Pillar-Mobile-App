@@ -15,6 +15,7 @@ export const getFetchStockByDeviceNameAPI = () => {
   return tryAuthFetch<StockModelWithMLAccess[]>({
     url,
     request: { method: 'GET' },
+    disableLogoutOnUnauthorized: true,
   });
 };
 
