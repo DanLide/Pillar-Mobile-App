@@ -28,12 +28,14 @@ export type RequestError = BadRequestError | AuthError | Error;
 export interface TryFetchParams {
   url: string | URL;
   request: RequestInit;
+  disableLogoutOnUnauthorized?: boolean;
   logoutListener?: LogoutListener;
 }
 
 export const tryFetch = async <ResponseType>({
   url,
   request,
+  disableLogoutOnUnauthorized,
   logoutListener = getLogoutListener(),
 }: TryFetchParams) => {
   try {
@@ -49,7 +51,7 @@ export const tryFetch = async <ResponseType>({
     if (response.ok) {
       return data as ResponseType;
     } else if (response.status === 401 || response.status === 403) {
-      logoutListener.onServerLogout();
+      if (!disableLogoutOnUnauthorized) logoutListener.onServerLogout();
       throw new AuthError(data?.message || 'Unauthorized');
     } else if (response.status === 400) {
       throw data as BadRequestError;
