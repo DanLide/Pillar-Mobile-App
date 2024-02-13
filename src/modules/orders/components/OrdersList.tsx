@@ -39,7 +39,7 @@ export const OrdersList = memo(
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
 
-    const { userPermissions } = permissionProvider
+    const { userPermissions } = permissionProvider;
 
     const onFetchOrders = useCallback(async () => {
       setIsLoading(true);
@@ -58,8 +58,7 @@ export const OrdersList = memo(
       navigation.navigate(AppNavigator.BluetoothPermissionScreen, {
         nextRoute: AppNavigator.ReceiveBackorderScreen,
       });
-
-    }
+    };
 
     return (
       <View style={styles.container}>
@@ -83,7 +82,10 @@ export const OrdersList = memo(
         />
 
         {userPermissions.receiveOrder && (
-          <Pressable style={styles.backorderContainer} onPress={onPressBackorder}>
+          <Pressable
+            style={styles.backorderContainer}
+            onPress={onPressBackorder}
+          >
             <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
             <Text style={styles.backborderText}>
               Order not Found? Receive Backorder
@@ -91,15 +93,15 @@ export const OrdersList = memo(
           </Pressable>
         )}
 
-        <View style={styles.buttons}>
-          <Button
-            type={ButtonType.secondary}
-            title="Return Order"
-            buttonStyle={[styles.button, styles.returnButton]}
-            textStyle={styles.buttonText}
-            onPress={onSecondaryPress}
-          />
-          {userPermissions.createOrder && (
+        {userPermissions.createOrder && (
+          <View style={styles.buttons}>
+            <Button
+              type={ButtonType.secondary}
+              title="Return Order"
+              buttonStyle={[styles.button, styles.returnButton]}
+              textStyle={styles.buttonText}
+              onPress={onSecondaryPress}
+            />
             <Button
               type={ButtonType.primary}
               title="Create Order"
@@ -107,8 +109,8 @@ export const OrdersList = memo(
               textStyle={styles.buttonText}
               onPress={onPrimaryPress}
             />
-          )}
-        </View>
+          </View>
+        )}
       </View>
     );
   },
