@@ -1,5 +1,6 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
 import { includes, isNil, map, pipe, sum } from 'ramda';
+import { v1 as uuid } from 'uuid';
 
 import { GetOrderDetailsResponse, GetOrdersAPIResponse } from 'src/data/api';
 import { BaseProductsStore } from 'src/stores/BaseProductsStore';
@@ -7,6 +8,7 @@ import { ProductModel } from 'src/stores/types';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { GetOrderSummaryProduct } from 'src/data/api/orders';
+import { getProductStepQty } from 'src/data/helpers';
 
 export interface CurrentOrder extends Pick<GetOrderDetailsResponse, 'order'> {
   productList: ProductModel[];
@@ -93,6 +95,16 @@ export class OrdersStore extends BaseProductsStore {
     return this.cabinetSelection;
   }
 
+  @computed get getProductByIdAndStorageId() {
+    return (currentProduct: GetOrderSummaryProduct) => {
+      return this.products.find(
+        product =>
+          product.productId === currentProduct.productId &&
+          product.storageAreaId === currentProduct.storageAreaId,
+      );
+    };
+  }
+
   @action setCurrentOrder(orderDetails: CurrentOrder) {
     this.currentOrder = orderDetails;
   }
@@ -146,5 +158,36 @@ export class OrdersStore extends BaseProductsStore {
 
   @action setProductUPC(upc: string) {
     this.productUPC = upc;
+  }
+
+  @action updateProductByIdAndStorageId(currentProduct: ProductModel) {
+    const products = this.products.map(product => {
+      if (
+        product.productId === currentProduct.productId &&
+        product.storageAreaId === currentProduct.storageAreaId
+      ) {
+        product.reservedCount = currentProduct.reservedCount;
+      }
+      return product;
+    });
+    this.products = products;
+  }
+
+  @action updateCurrentProductStock(stock: StockModel) {
+    const updatedProduct = {
+      ...this.currentProduct,
+      storageAreaName: stock.organizationName,
+      storageAreaId: stock.partyRoleId,
+    };
+    const reservedCount =
+      this.getProductByIdAndStorageId(updatedProduct)?.reservedCount ||
+      getProductStepQty(this.currentProduct.inventoryUseTypeId);
+
+    this.currentProduct = { ...updatedProduct, reservedCount };
+  }
+
+  @action addBackOrderProduct(product: ProductModel) {
+    const removedProduct = { ...product, isRemoved: false, uuid: uuid() };
+    this.products = [...this.products, removedProduct];
   }
 }

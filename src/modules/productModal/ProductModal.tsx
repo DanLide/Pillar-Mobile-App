@@ -146,6 +146,7 @@ export const ProductModal = memo(
         onSelectStock(stock);
         carouselRef.current?.next();
         ordersStore.setCurrentStocks(stock);
+        ordersStore.updateCurrentProductStock(stock);
         setSelectedTab(tabs[1]);
       },
       [onSelectStock, tabs],
