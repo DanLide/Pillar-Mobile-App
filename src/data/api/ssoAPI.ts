@@ -63,6 +63,12 @@ export interface GetUnassignedDevicesResponse {
   territories: [];
 }
 
+interface RemoveDeviceFromSSOBody {
+  partyRelationshipType: [
+    { id: number; fromPartyRoleId: number; toPartyRoleId: number },
+  ];
+}
+
 export const singleSSOAPI = (token: string, facilityID: string) => {
   const url = new URLProvider().getSingleSSOUrl(facilityID);
 
@@ -150,10 +156,25 @@ export const fetchUnassignedDevices = () => {
 export const getRNTokenAPI = () => {
   const url = new URLProvider().getRNToken();
 
-  return tryAuthFetch<{token: string}>({
+  return tryAuthFetch<{ token: string }>({
     url,
     request: {
       method: 'GET',
+    },
+  });
+};
+
+export const removeDeviceFromSSO = (
+  id: string,
+  body: RemoveDeviceFromSSOBody,
+) => {
+  const url = new URLProvider().removeDeviceFromSSO(id);
+
+  return tryAuthFetch<string>({
+    url,
+    request: {
+      method: 'PUT',
+      body: JSON.stringify(body),
     },
   });
 };
