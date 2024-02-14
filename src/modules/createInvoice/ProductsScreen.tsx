@@ -16,6 +16,7 @@ import { SVGs, colors, fonts } from '../../theme';
 import { useBaseProductsScreen, useCustomGoBack } from 'src/hooks';
 import { observer } from 'mobx-react';
 import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
+import { Flows } from '../types';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -112,6 +113,7 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
         tooltipTitle="Scan to add products to list"
         primaryButtonTitle="Submit"
         ListComponent={BaseSelectedProductsList}
+        flow={Flows.CreateInvoice}
       />
 
       <EraseProductsAlert

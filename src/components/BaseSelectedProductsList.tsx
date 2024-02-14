@@ -11,6 +11,7 @@ import {
   SyncedProductStoreType,
 } from '../stores/types';
 import { ProductModalType } from '../modules/productModal';
+import { Flows } from 'src/modules/types';
 
 type Store =
   | (ScannerModalStoreType &
@@ -23,12 +24,13 @@ interface Props {
   modalType?: ProductModalType;
   store?: Store;
   onEditProduct: (item: ProductModel) => void;
+  flow?: Flows;
 }
 
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const BaseSelectedProductsList: React.FC<Props> = observer(
-  ({ store, modalType, onEditProduct }) => {
+  ({ store, modalType, onEditProduct, flow }) => {
     const syncedStore = useRef<Store>(store).current;
 
     const renderItem = useCallback(
@@ -37,6 +39,7 @@ export const BaseSelectedProductsList: React.FC<Props> = observer(
           hideOnHandCount={modalType === ProductModalType.CreateInvoice}
           item={item}
           onPress={onEditProduct}
+          flow={flow}
         />
       ),
       [modalType, onEditProduct],

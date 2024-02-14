@@ -9,21 +9,30 @@ import {
 
 import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
+import { Flows } from 'src/modules/types';
 
 interface Props {
   item: ProductModel;
   disabled?: boolean;
   hideOnHandCount?: boolean;
   onPress?: (item: ProductModel) => void;
+  flow?: Flows;
 }
 
 const { width } = Dimensions.get('window');
 
 export const SelectedProductsListItem = memo(
-  ({ item, disabled, hideOnHandCount, onPress }: Props) => {
+  ({ item, disabled, hideOnHandCount, onPress, flow }: Props) => {
     const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
     const handlePress = useCallback(() => onPress?.(item), [item, onPress]);
+
+    const OnHandCount = () => {
+      if (flow === Flows.CreateInvoice) {
+        return <Text style={styles.qtyLabel}> Qty</Text>;
+      }
+      return <Text style={styles.onHand}>/{onHand}</Text>;
+    };
 
     return (
       <TouchableOpacity
@@ -42,7 +51,7 @@ export const SelectedProductsListItem = memo(
         <View style={styles.rightContainer}>
           <Text style={styles.reservedCount}>
             {reservedCount}
-            {!hideOnHandCount && <Text style={styles.onHand}>/{onHand}</Text>}
+            {!hideOnHandCount && <OnHandCount />}
           </Text>
         </View>
         <View style={styles.borderLine} />
@@ -80,6 +89,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: colors.blackSemiLight,
+    fontFamily: fonts.TT_Regular,
+  },
+  qtyLabel: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: colors.grayDark2,
     fontFamily: fonts.TT_Regular,
   },
   rightContainer: {

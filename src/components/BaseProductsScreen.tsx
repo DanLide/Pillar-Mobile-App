@@ -39,6 +39,7 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from 'src/contexts';
+import { Flows } from 'src/modules/types';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -46,6 +47,7 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 interface SelectedProductsListProps {
+  flow?: Flows;
   modalType?: ProductModalType;
   store?: Store;
   onEditProduct: (item: ProductModel) => void;
@@ -54,6 +56,7 @@ interface SelectedProductsListProps {
 interface Props {
   store: Store;
   modalParams: ProductModalParams;
+  flow: Flows;
   scannedProductsCount: number;
   navigation: BaseProductsScreenNavigationProp;
   tooltipTitle: string;
@@ -110,6 +113,7 @@ const BaseProducts = observer(
     primaryButtonTitle,
     disableAlert,
     onComplete,
+    flow,
   }: Props) => {
     const { showToast } = useSingleToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -225,6 +229,7 @@ const BaseProducts = observer(
             modalType={modalType}
             store={store}
             onEditProduct={onProductListItemPress}
+            flow={flow}
           />
 
           <View style={styles.buttons}>
