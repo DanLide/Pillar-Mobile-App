@@ -30,6 +30,7 @@ export enum ToastActionType {
   Edit = 'Edit',
   OpenSettings = 'OpenSettings',
   Details = 'Details',
+  Return = 'Return',
 }
 
 interface Props
@@ -105,6 +106,7 @@ export const Toast: React.FC<Props> = ({
       case ToastType.DetailedScanError:
       case ToastType.InvoiceMissingProductPrice:
       case ToastType.SuccessCreateJob:
+      case ToastType.ProfileError:
         return styles.messageLeft;
       default:
         return null;
@@ -175,6 +177,15 @@ export const Toast: React.FC<Props> = ({
             Details
           </Text>
         );
+      case ToastActionType.Return:
+        return (
+          <Text
+            testID={testIds.idDetailsButton(testID)}
+            style={[styles.action, { color: action }]}
+          >
+            Return
+          </Text>
+        );
       default:
         return null;
     }
@@ -189,6 +200,7 @@ export const Toast: React.FC<Props> = ({
     switch (actionType) {
       case ToastActionType.Close:
       case ToastActionType.Edit:
+      case ToastActionType.Return:
         onPress?.(id);
         onHide();
         break;
