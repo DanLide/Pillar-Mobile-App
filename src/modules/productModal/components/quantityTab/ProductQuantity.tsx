@@ -217,7 +217,9 @@ export const ProductQuantity = forwardRef(
           ? 'Next'
           : 'Done';
 
-      const disabled = isProductQuantityError || currentValue === 0;
+      const disabled = type === ProductModalType.ReceiveOrder
+        ? isProductQuantityError
+        : isProductQuantityError || currentValue === 0;
 
       return (
         <Button
