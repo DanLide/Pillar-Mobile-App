@@ -55,11 +55,26 @@ const Input = forwardRef(
       onRightIconPress,
       style,
       testID = 'input',
+      onChangeText,
       ...props
     }: Props,
     ref: React.ForwardedRef<TextInput>,
   ) => {
     const [isFocused, setIsFocused] = useState(false);
+
+    const handleChangeText = useCallback(
+      (text: string) => {
+        if (!onChangeText) return;
+
+        const updatedText = text.replace(
+          /[\u0400-\u04FF\u0500-\u052F\uA640-\uA69F]+/g, // Exclude Cyrillic
+          '',
+        );
+
+        onChangeText(updatedText);
+      },
+      [onChangeText],
+    );
 
     const mergedContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
       switch (type) {
@@ -151,6 +166,7 @@ const Input = forwardRef(
           onFocus={handleFocus}
           onBlur={handleBlur}
           ref={ref}
+          onChangeText={handleChangeText}
           {...props}
         />
         {InputRightIcon}
