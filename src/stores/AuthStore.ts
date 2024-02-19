@@ -179,8 +179,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isLoggedIn = false;
     stocksStore.clear();
     removeProductsStore.clear();
-    if (!ssoStore.getIsDeviceConfiguredBySSO) {
-      ssoStore.clear();
-    }
+    ssoStore.clear();
   }
 }
