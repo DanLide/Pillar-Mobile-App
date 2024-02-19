@@ -84,7 +84,7 @@ const CreateOrderScreen = observer(
       modalParams,
       scannedProductsCount,
       onPressScan,
-      onEditProduct,
+      onProductListItemPress,
       onSubmitProduct,
       setEditableProductQuantity,
       onRemoveProduct,
@@ -204,7 +204,7 @@ const CreateOrderScreen = observer(
 
         <View style={styles.productsContainer}>
           <SelectedProductsList
-            onItemPress={onEditProduct}
+            onItemPress={onProductListItemPress}
             isLoading={isSuggestedProductsLoading}
           />
 
