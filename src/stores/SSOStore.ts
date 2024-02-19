@@ -61,10 +61,10 @@ export class SSOStore {
     this.ssoUsersList?.forEach((current: SSOUser) => {
       const neededArray =
         current.userType === UserType.SSO ? initial[0] : initial[1];
-      neededArray.push(current)
+      neededArray.push(current);
     }, []);
 
-    return initial
+    return initial;
   }
 
   @action setSsoUsersList(list: SSOUser[]) {
@@ -72,6 +72,11 @@ export class SSOStore {
   }
 
   public clear() {
+    if (this.getIsDeviceConfiguredBySSO) {
+      this.ssoUsersList = null;
+      return;
+    }
+
     this.currentSSO = undefined;
     this.ssoList = undefined;
     this.isDeviceConfiguredBySSO = false;
