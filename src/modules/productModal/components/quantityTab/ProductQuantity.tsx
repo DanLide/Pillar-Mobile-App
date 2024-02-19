@@ -269,9 +269,9 @@ export const ProductQuantity = forwardRef(
                   </View>
                 </View>
               )}
-              <Text style={styles.cost}>Cost Per: ${product.cost}</Text>
+              <Text style={styles.cost}>Cost Per: ${product.cost?.toFixed(2)}</Text>
               <Text style={styles.totalCost}>
-                Total Cost: ${getProductTotalCost(product)}
+                Total Cost: ${getProductTotalCost(product).toFixed(2)}
               </Text>
             </View>
           );
