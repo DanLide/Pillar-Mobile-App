@@ -47,6 +47,16 @@ export const SettingsScreen = () => {
   const sections = useMemo<Section[]>(
     () => [
       {
+        title: 'App version',
+        subtitle: deviceInfoStore.version,
+        type: Type.Empty,
+      },
+      {
+        title: 'Language',
+        subtitle: 'English',
+        type: Type.Empty,
+      },
+      {
         title: 'Device Name',
         subtitle: deviceName,
         type: Type.Button,
