@@ -34,7 +34,9 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
 
     const isJobExist = await checkIsExistJob(number);
     if (isJobExist)
-      return handleError(`Repair Order "${number}" is already exist`);
+      return handleError(
+        `The Repair order with such ${number} already exists.`,
+      );
 
     const error = await onCreateJob(number, comment);
     if (error) return handleError('Something went wrong. Please, retry');
@@ -94,7 +96,8 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
           style={styles.comment}
           multiline
           value={comment}
-          onChangeText={value => setComment(value)}
+          onChangeText={setComment}
+          maxLength={1000}
         />
         <View style={styles.buttons}>
           <Button

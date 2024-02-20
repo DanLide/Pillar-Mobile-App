@@ -35,7 +35,7 @@ export const JobListItem: React.FC<Props> = ({
               ) : null}
             </View>
 
-            <View style={styles.textContainer}>
+            <View style={[styles.textContainer, styles.toggleTextContainer]}>
               <Text style={styles.title}>{item.jobNumber}</Text>
               <Text style={styles.description}>{item.jobDescription}</Text>
             </View>
@@ -47,7 +47,7 @@ export const JobListItem: React.FC<Props> = ({
       return (
         <TouchableOpacity style={styles.container} onPress={handlePress}>
           <View style={[styles.underlineContainer, styles.selectTextContainer]}>
-            <View>
+            <View style={styles.textContainer}>
               <Text style={styles.title}>{item.jobNumber}</Text>
               <Text style={styles.description}>{item.jobDescription}</Text>
             </View>
@@ -66,15 +66,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   underlineContainer: {
-    height: 46,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: colors.gray,
     alignItems: 'center',
   },
-
+  toggleTextContainer: {
+    marginLeft: 4,
+  },
   textContainer: {
-    marginLeft: 12,
+    width: 0,
+    flexGrow: 1,
+    flex: 1,
+    padding: 8,
   },
   selectTextContainer: {
     marginHorizontal: 12,
