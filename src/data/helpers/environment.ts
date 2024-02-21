@@ -41,4 +41,7 @@ export const environment = {
       apiUri: `${Config.API_URL}/shopsetup`,
     },
   },
+  features: {
+    editProductROSwitch: false
+  }
 };

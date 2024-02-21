@@ -32,7 +32,7 @@ import {
 import { InventoryUseType } from 'src/constants/common.enum';
 import { colors, fonts, SVGs } from 'src/theme';
 import { EditQuantity } from 'src/modules/productModal/components/quantityTab';
-import { getProductStepQty } from 'src/data/helpers';
+import { environment, getProductStepQty } from 'src/data/helpers';
 import { manageProductsStore } from '../stores';
 import { ProductModalProps } from 'src/modules/productModal';
 import { UpcScanner } from './UpcScanner';
@@ -347,14 +347,16 @@ export const EditProduct = observer(
                 onPress={() => setIsUpcActive(true)}
               />
             </View>
-            <Switch
-              trackColor={{ true: colors.purple }}
-              value={product?.isRecoverable}
-              label="Recommend to Add to RO"
-              labelStyle={styles.recoverableLabel}
-              style={styles.spaceBetweenContainer}
-              onPress={() => store.toggleIsRecoverable()}
-            />
+            {environment.features.editProductROSwitch && (
+              <Switch
+                trackColor={{ true: colors.purple }}
+                value={product?.isRecoverable}
+                label="Recommend to Add to RO"
+                labelStyle={styles.recoverableLabel}
+                style={styles.spaceBetweenContainer}
+                onPress={() => store.toggleIsRecoverable()}
+              />
+            )}
           </View>
           <UpcScanner
             isActive={isUpcActive}
@@ -372,8 +374,10 @@ const styles = StyleSheet.create({
   bottomSection: {
     alignSelf: 'stretch',
     gap: 24,
-    paddingBottom: 16,
+    paddingBottom: 24,
     paddingHorizontal: 16,
+    borderBottomColor: colors.neutral40,
+    borderBottomWidth: 1,
   },
   categories: {
     marginHorizontal: 16,
