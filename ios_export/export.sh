@@ -42,10 +42,6 @@ rm -Rf build/ExportOptions.plist
 rm -Rf build/Packaging.log
 rm -Rf build/RepairStack.xcarchive
 
-xcodebuild -workspace ../ios/RepairStack.xcworkspace  -scheme "$target" -archivePath build/RepairStack.xcarchive archive
-
-xcodebuild -exportArchive -archivePath build/RepairStack.xcarchive -exportPath build -exportOptionsPlist src/ExportOptions.plist
-
 # where $2 is a dropbox key
 #python src/upload_manifest.py --v "$stringVersion" --t "$2" --n "$target"
 
