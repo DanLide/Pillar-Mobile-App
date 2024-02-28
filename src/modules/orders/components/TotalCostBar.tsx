@@ -39,7 +39,7 @@ export const TotalCostBar = observer(({ orderType, style }: Props) => {
         {isReturnOrder ? returnOrderText : purchaseOrderText}:{' '}
       </Text>
       <Text style={styles.count}>
-        {costSign}${totalCost}
+        {costSign}${totalCost.toFixed(2)}
       </Text>
     </View>
   );

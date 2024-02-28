@@ -122,7 +122,7 @@ export const SelectedProductsList: React.FC<Props> = observer(
               </View>
               <Text style={styles.itemCounter}>{reservedCount}</Text>
               <Text style={[styles.itemCounter, styles.itemCounterRight]}>
-                ${getProductTotalCost(item)}
+                ${getProductTotalCost(item).toFixed(2)}
               </Text>
             </View>
           </Pressable>
