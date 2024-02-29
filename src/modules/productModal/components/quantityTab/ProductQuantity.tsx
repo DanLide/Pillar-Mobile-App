@@ -130,6 +130,7 @@ export const ProductQuantity = forwardRef(
       useState(false);
 
     const isProductQuantityError = toastType === ToastType.ProductQuantityError;
+    const isSpecialOrderError = toastType === ToastType.SpecialOrderError;
 
     const { showToast } = useSingleToast();
 
@@ -150,12 +151,12 @@ export const ProductQuantity = forwardRef(
         return product.onHand;
       }
 
-      if (type === ProductModalType.Remove && isSpecialOrder) {
+      if (isSpecialOrderError) {
         return 0;
       }
 
       return product.reservedCount || product.receivedQty;
-    }, [isProductQuantityError, isSpecialOrder, product, type]);
+    }, [isProductQuantityError, isSpecialOrderError, product]);
 
     if (!product) return null;
 
@@ -282,9 +283,7 @@ export const ProductQuantity = forwardRef(
     };
 
     const showJob =
-      jobSelectable &&
-      toastType !== ToastType.ProductQuantityError &&
-      toastType !== ToastType.SpecialOrderError;
+      jobSelectable && isProductQuantityError && isSpecialOrderError;
 
     return (
       <>
