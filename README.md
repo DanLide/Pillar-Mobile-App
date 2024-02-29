@@ -80,6 +80,14 @@ yarn generate-ipa
 
 Generated IPA can be found in the `build` directory.
 
+### Create IPA from xcode
+
+Product -> Archive
+
+After successfully building 
+
+Distribute App -> Enterprise -> Automatically manage signing -> Export
+
 ## Run app locally
 
 ### Install required packages
