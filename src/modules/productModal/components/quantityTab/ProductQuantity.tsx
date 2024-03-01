@@ -28,7 +28,6 @@ import { useSingleToast } from 'src/hooks';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { ToastMessage } from 'src/components/ToastMessage';
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
-import { isNil } from 'ramda';
 
 export type ProductQuantityToastType =
   | ToastType.ProductQuantityError
@@ -131,6 +130,7 @@ export const ProductQuantity = forwardRef(
       useState(false);
 
     const isProductQuantityError = toastType === ToastType.ProductQuantityError;
+    const isSpecialOrderError = toastType === ToastType.SpecialOrderError;
 
     const { showToast } = useSingleToast();
 
@@ -151,16 +151,16 @@ export const ProductQuantity = forwardRef(
         return product.onHand;
       }
 
-      return product.reservedCount;
-    }, [isProductQuantityError, product]);
+      if (isSpecialOrderError) {
+        return 0;
+      }
+
+      return product.reservedCount || product.receivedQty;
+    }, [isProductQuantityError, isSpecialOrderError, product]);
 
     if (!product) return null;
 
-    const {
-      isRecoverable,
-      inventoryUseTypeId,
-      reservedCount = product.receivedQty,
-    } = product;
+    const { isRecoverable, inventoryUseTypeId } = product;
 
     const stepQty = getProductStepQty(inventoryUseTypeId);
 
@@ -202,7 +202,7 @@ export const ProductQuantity = forwardRef(
         return null;
       }
 
-      if (isEdit && reservedCount === 0) {
+      if (isEdit && currentValue === 0) {
         return (
           <Pressable style={styles.deleteButton} onPress={onRemove}>
             <SVGs.TrashIcon color={colors.redDark} />
@@ -217,7 +217,7 @@ export const ProductQuantity = forwardRef(
           ? 'Next'
           : 'Done';
 
-      const disabled = isProductQuantityError || reservedCount === 0;
+      const disabled = isProductQuantityError || currentValue === 0;
 
       return (
         <Button
@@ -269,7 +269,9 @@ export const ProductQuantity = forwardRef(
                   </View>
                 </View>
               )}
-              <Text style={styles.cost}>Cost Per: ${product.cost?.toFixed(2)}</Text>
+              <Text style={styles.cost}>
+                Cost Per: ${product.cost?.toFixed(2)}
+              </Text>
               <Text style={styles.totalCost}>
                 Total Cost: ${getProductTotalCost(product).toFixed(2)}
               </Text>
@@ -281,9 +283,7 @@ export const ProductQuantity = forwardRef(
     };
 
     const showJob =
-      jobSelectable &&
-      toastType !== ToastType.ProductQuantityError &&
-      toastType !== ToastType.SpecialOrderError;
+      jobSelectable && isProductQuantityError && isSpecialOrderError;
 
     return (
       <>
