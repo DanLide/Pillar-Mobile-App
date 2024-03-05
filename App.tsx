@@ -28,6 +28,10 @@ import { colors, fonts } from './src/theme';
 import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 
+if (__DEV__) {
+  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+}
+
 const { width, height } = Dimensions.get('window');
 const backgroundImageSize = {
   width,
