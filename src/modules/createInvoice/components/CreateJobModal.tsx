@@ -35,7 +35,7 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
     const isJobExist = await checkIsExistJob(number);
     if (isJobExist)
       return handleError(
-        `The Repair order with such ${number} already exists.`,
+        "The Repair order with such number already exists",
       );
 
     const error = await onCreateJob(number, comment);
