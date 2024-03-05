@@ -342,7 +342,7 @@ export const ProductModal = observer(
                     maxValue={maxValue ?? 0}
                     minValue={0}
                     onHand={onHand}
-                    disabled={!userPermissions.editProduct}
+                    disabled={!userPermissions.editProductInStock}
                     ref={reservedCountInputRef}
                     onToastAction={handleToastAction}
                   />
