@@ -13,6 +13,7 @@ import {
   ProductModal,
   ProductModalParams,
   ProductModalProps,
+  ProductQuantityToastType,
 } from '../modules/productModal';
 import {
   CurrentProductStoreType,
@@ -42,7 +43,7 @@ interface Props {
   product?: ProductModel;
   disableScanner?: boolean;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: (product: ProductModel) => void | unknown;
+  onSubmit?: (product: ProductModel, customToastType?: ProductQuantityToastType) => void | unknown;
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;
@@ -167,9 +168,9 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     );
 
     const onProductSubmit = useCallback(
-      (product: ProductModel) => {
+      (product: ProductModel, customToastType?: ProductQuantityToastType) => {
         if (onSubmit) {
-          return onSubmit(product);
+          return onSubmit(product, customToastType);
         }
 
         const { nameDetails, reservedCount } = product;

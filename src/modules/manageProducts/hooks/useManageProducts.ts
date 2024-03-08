@@ -14,7 +14,7 @@ import {
   ManageProductsStore,
   manageProductsStore,
 } from 'src/modules/manageProducts/stores';
-import { ProductModalParams, ProductModalType } from 'src/modules/productModal';
+import { ProductModalParams, ProductModalType, ProductQuantityToastType } from 'src/modules/productModal';
 import { useSingleToast } from 'src/hooks';
 import { fetchProductDetails } from 'src/data/fetchProductDetails';
 
@@ -96,7 +96,12 @@ export const useManageProducts = (store: ManageProductsStore) => {
   );
 
   const onSubmit = useCallback(
-    async (product: ProductModel) => {
+    async (product: ProductModel, customToast?: ProductQuantityToastType) => {
+      if (customToast) {
+        setModalParams(assoc('toastType', customToast));
+        return
+      }
+
       setModalParams(assoc('toastType', undefined));
 
       if (!store.isProductChanged) return;

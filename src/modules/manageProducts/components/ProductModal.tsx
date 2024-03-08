@@ -186,8 +186,9 @@ export const ProductModal = observer(
             (x, y) => resolve(y - QUANTITY_PICKER_HEIGHT),
           ),
         );
-
         setIsUnitsPerContainerError(true);
+        onSubmit(product, ToastType.UnitsPerContainerError);
+
         scrollViewRef.current?.scrollTo({ y, animated: true });
         return;
       }
