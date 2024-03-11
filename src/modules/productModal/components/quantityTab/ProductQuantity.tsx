@@ -171,7 +171,9 @@ export const ProductQuantity = forwardRef(
     const { isRecoverable, inventoryUseTypeId } = product;
 
     const stepQty = getProductStepQty(inventoryUseTypeId, {
-      disableDecimals: type === ProductModalType.CreateOrder,
+      disableDecimals:
+        type === ProductModalType.CreateOrder ||
+        type === ProductModalType.ReturnOrder,
     });
 
     const keyboardType: KeyboardTypeOptions =
