@@ -170,7 +170,9 @@ export const ProductQuantity = forwardRef(
 
     const { isRecoverable, inventoryUseTypeId } = product;
 
-    const stepQty = getProductStepQty(inventoryUseTypeId);
+    const stepQty = getProductStepQty(inventoryUseTypeId, {
+      disableDecimals: type === ProductModalType.CreateOrder,
+    });
 
     const keyboardType: KeyboardTypeOptions =
       inventoryUseTypeId === InventoryUseType.Percent

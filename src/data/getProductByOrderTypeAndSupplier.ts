@@ -39,7 +39,7 @@ export const getProductByOrderTypeAndSupplier = async (
       orderType,
       store,
     ),
-    new SaveProductToStoreTask(productContext, store),
+    new SaveProductToStoreTask(productContext, orderType, store),
   ]).execute();
 };
 
@@ -138,14 +138,17 @@ export class FetchProductByOrderTypeAndSupplier extends Task {
 
 export class SaveProductToStoreTask extends Task {
   productContext: FetchProductByOrderTypeAndSupplierContext;
+  orderType: OrderType;
   currentProductStore: CurrentProductStoreType;
 
   constructor(
     productContext: FetchProductByOrderTypeAndSupplierContext,
+    orderType: OrderType,
     currentProductStore: CurrentProductStoreType,
   ) {
     super();
     this.productContext = productContext;
+    this.orderType = orderType;
     this.currentProductStore = currentProductStore;
   }
 
@@ -153,17 +156,24 @@ export class SaveProductToStoreTask extends Task {
     const { product } = this.productContext;
 
     this.currentProductStore.setCurrentProduct(
-      product && this.mapProductResponse(product),
+      product && this.mapProductResponse(product, this.orderType),
     );
   }
 
-  private mapProductResponse(product: GetOrderSummaryProduct): ProductModel {
+  private mapProductResponse(
+    product: GetOrderSummaryProduct,
+    orderType: OrderType,
+  ): ProductModel {
     const { manufactureCode, partNo, size, inventoryUseTypeId } = product;
+
+    const reservedCount = getProductStepQty(inventoryUseTypeId, {
+      disableDecimals: orderType === OrderType.Purchase,
+    });
 
     return {
       ...product,
       isRemoved: false,
-      reservedCount: getProductStepQty(inventoryUseTypeId),
+      reservedCount,
       nameDetails: [manufactureCode, partNo, size].join(' '),
       uuid: uuid(),
       isRecoverable: false,
