@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { CommonActions } from '@react-navigation/native';
 
 import { BaseProductsScreen } from 'src/components';
@@ -12,6 +12,7 @@ import { useManageProducts } from 'src/modules/manageProducts/hooks';
 import { useBaseProductsScreen } from 'src/hooks';
 import { observer } from 'mobx-react';
 import { manageProductsStore } from 'src/modules/manageProducts/stores';
+import { Flows } from 'src/modules/types';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -69,6 +70,7 @@ export const ManageProductsScreen = observer(({ navigation }: Props) => {
       setEditableProductQuantity={setEditableProductQuantity}
       onEditPress={onEditPress}
       onCancelPress={onCancelPress}
+      flow={Flows.ManageProduct}
     />
   );
 });

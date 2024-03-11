@@ -1,4 +1,5 @@
-import React, { memo, useCallback, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
+import { observer } from 'mobx-react';
 
 import {
   CurrentProductStoreType,
@@ -13,7 +14,7 @@ import { ProductModalType } from '../productModal';
 import { SelectedProductsList } from './components';
 import { onReturnProducts } from 'src/data/returnProducts';
 import { useBaseProductsScreen } from 'src/hooks';
-import { observer } from 'mobx-react';
+import { Flows } from 'src/modules/types';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -59,6 +60,7 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
       tooltipTitle="Scan to add products to list"
       onComplete={onCompleteReturn}
       ListComponent={SelectedProductsList}
+      flow={Flows.Return}
     />
   );
 });

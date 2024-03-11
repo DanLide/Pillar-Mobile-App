@@ -1,4 +1,5 @@
 import React, { useCallback, useRef } from 'react';
+import { observer } from 'mobx-react';
 
 import { removeProductsStore } from './stores';
 import { BaseProductsScreen } from '../../components';
@@ -13,7 +14,7 @@ import {
 import { BaseProductsScreenNavigationProp } from '../../navigation/types';
 import { SelectedProductsList } from './SelectedProductsList';
 import { useBaseProductsScreen } from 'src/hooks';
-import { observer } from 'mobx-react';
+import { Flows } from 'src/modules/types';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -59,6 +60,7 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
       tooltipTitle="Scan to add products to list"
       onComplete={onCompleteRemove}
       ListComponent={SelectedProductsList}
+      flow={Flows.Remove}
     />
   );
 });
