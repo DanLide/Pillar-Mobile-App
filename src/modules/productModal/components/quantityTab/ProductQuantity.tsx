@@ -95,6 +95,14 @@ const getEditQuantityLabel = (type?: ProductModalType) => {
       return 'Order Quantity';
     case ProductModalType.ReturnOrder:
       return 'Return Quantity';
+    case ProductModalType.ManageProduct:
+      return 'On Hand';
+    case ProductModalType.Remove:
+      return 'Remove Quantity';
+    case ProductModalType.Return:
+      return 'Return Quantity';
+    case ProductModalType.CreateInvoice:
+      return 'Invoice Quantity';
   }
 };
 
