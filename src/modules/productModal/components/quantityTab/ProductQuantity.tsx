@@ -225,9 +225,10 @@ export const ProductQuantity = forwardRef(
           ? 'Next'
           : 'Done';
 
-      const disabled = type === ProductModalType.ReceiveOrder
-        ? isProductQuantityError
-        : isProductQuantityError || currentValue === 0;
+      const disabled =
+        type === ProductModalType.ReceiveOrder
+          ? isProductQuantityError
+          : isProductQuantityError || currentValue === 0;
 
       return (
         <Button
@@ -293,7 +294,7 @@ export const ProductQuantity = forwardRef(
     };
 
     const showJob =
-      jobSelectable && isProductQuantityError && isSpecialOrderError;
+      jobSelectable && !isProductQuantityError && !isSpecialOrderError;
 
     return (
       <>
