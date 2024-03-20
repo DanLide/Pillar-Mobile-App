@@ -57,12 +57,22 @@ interface Props extends ViewProps {
   onToastAction?: () => void;
 }
 
+const toastStyles = StyleSheet.create({
+  unitsPerContainerError: {
+    textAlign: 'left'
+  },
+  default: {
+    textAlign: 'left',
+    marginHorizontal: 8
+  }
+})
+
 export const toastMessages: Record<
   ProductQuantityToastType,
   JSX.Element | string
 > = {
   [ToastType.ProductQuantityError]: (
-    <ToastMessage style={{ textAlign: 'left', marginHorizontal: 8 }}>
+    <ToastMessage style={toastStyles.default}>
       You cannot remove more products than are '
       <ToastMessage bold>On Hand</ToastMessage>' in this stock location. You can
       update product quantity in the{' '}
@@ -75,13 +85,13 @@ export const toastMessages: Record<
   [ToastType.UpcUpdateError]:
     'This UPC already exists in the stock location of this product. Please, use another one',
   [ToastType.UnitsPerContainerError]: (
-    <ToastMessage>
-      <ToastMessage bold>Pieces Per Container</ToastMessage> cannot be saved
+    <ToastMessage style={toastStyles.unitsPerContainerError}>
+      <ToastMessage bold style={toastStyles.unitsPerContainerError}>Pieces Per Container</ToastMessage> cannot be saved
       less than 1
     </ToastMessage>
   ),
   [ToastType.SpecialOrderError]: (
-    <ToastMessage style={{ textAlign: 'left', marginHorizontal: 8 }}>
+    <ToastMessage style={toastStyles.default}>
       Product listed as '<ToastMessage bold>Special Order</ToastMessage>'. You
       can create a new order in the{' '}
       <ToastMessage bold>Manage Orders</ToastMessage> section

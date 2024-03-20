@@ -19,7 +19,6 @@ export const getToastDuration = (type?: string) => {
     case ToastType.BluetoothDisabled:
     case ToastType.LocationDisabled:
     case ToastType.SuggestedItemsError:
-    case ToastType.UnitsPerContainerError:
       return 0;
     case ToastType.DetailedScanError:
       return 15000;
