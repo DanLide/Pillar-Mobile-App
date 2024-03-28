@@ -55,6 +55,7 @@ interface Props extends ViewProps {
   onPressAddToList?: () => void;
   onJobSelectNavigation?: () => void;
   onToastAction?: () => void;
+  onClose?: () => void
 }
 
 const toastStyles = StyleSheet.create({
@@ -136,6 +137,7 @@ export const ProductQuantity = forwardRef(
       onJobSelectNavigation,
       onRemove,
       onToastAction,
+      onClose
     }: Props,
     ref: React.ForwardedRef<TextInput>,
   ) => {
@@ -212,6 +214,11 @@ export const ProductQuantity = forwardRef(
     };
 
     const onPressButton = () => {
+      if (currentValue === 0 && onClose) {
+        onClose();
+        return;
+      }
+
       if (jobSelectable && isRecoverable) {
         onJobSelectNavigation?.();
       } else {
@@ -224,6 +231,34 @@ export const ProductQuantity = forwardRef(
         return null;
       }
 
+      const calculateButtonLabel = () => {
+        if (type === ProductModalType.Remove && currentValue === 0) return 'Cancel';
+
+        return (jobSelectable && isRecoverable) ||
+          type === ProductModalType.CreateInvoice
+          ? 'Next'
+          : 'Done';
+      };
+
+      const calculateDisabled = () => {
+        if (
+          type === ProductModalType.Remove ||
+          type === ProductModalType.ReceiveOrder
+        ) {
+          return isProductQuantityError
+        }
+    
+        return isProductQuantityError || currentValue === 0;
+      };
+
+      const calculateButtonType = () => {
+        if (type === ProductModalType.Remove && currentValue === 0) {
+          return ButtonType.secondaryRed;
+        }
+
+        return ButtonType.primary;
+      }
+
       if (isEdit && currentValue === 0) {
         return (
           <Pressable style={styles.deleteButton} onPress={onRemove}>
@@ -233,21 +268,14 @@ export const ProductQuantity = forwardRef(
         );
       }
 
-      const buttonLabel =
-        (jobSelectable && isRecoverable) ||
-        type === ProductModalType.CreateInvoice
-          ? 'Next'
-          : 'Done';
-
-      const disabled =
-        type === ProductModalType.ReceiveOrder
-          ? isProductQuantityError
-          : isProductQuantityError || currentValue === 0;
+      const buttonType = calculateButtonType();
+      const buttonLabel = calculateButtonLabel();
+      const disabled = calculateDisabled();
 
       return (
         <Button
           disabled={disabled}
-          type={ButtonType.primary}
+          type={buttonType}
           buttonStyle={styles.continueButton}
           title={buttonLabel}
           onPress={onPressButton}

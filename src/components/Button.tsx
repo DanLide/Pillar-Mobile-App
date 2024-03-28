@@ -23,6 +23,7 @@ type ButtonProps = TouchableOpacityProps & TextProps;
 export enum ButtonType {
   primary,
   secondary,
+  secondaryRed
 }
 
 interface ExtendedButtonProps extends ButtonProps {
@@ -59,6 +60,8 @@ const Button: React.FC<ExtendedButtonProps> = ({
           ];
         case ButtonType.secondary:
           return styles.secondaryContainer;
+        case ButtonType.secondaryRed:
+          return styles.secondaryRedContainer;
         default:
           return [
             styles.button,
@@ -77,6 +80,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
         case ButtonType.primary:
           return iconProps?.color ?? colors.white;
         case ButtonType.secondary:
+        case ButtonType.secondaryRed:
           if (isDisabled) return colors.grayDark;
           return pressed ? colors.white : iconProps?.color ?? colors.black;
       }
@@ -105,6 +109,8 @@ const Button: React.FC<ExtendedButtonProps> = ({
             styles.secondaryText,
             isDisabled ? styles.secondaryTextDisabled : undefined,
           ];
+        case ButtonType.secondaryRed:
+          return styles.secondaryRedText
         default:
           return styles.buttonText;
       }
@@ -206,8 +212,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
   },
+  secondaryRedContainer: {
+    borderWidth: 1,
+    borderColor: colors.red,
+    borderRadius: 8,
+    backgroundColor: colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50,
+  },
   secondaryText: {
     color: colors.purpleDark,
+    fontSize: 23.5,
+    fontFamily: fonts.TT_Bold,
+  },
+  secondaryRedText: {
+    color: colors.red,
     fontSize: 23.5,
     fontFamily: fonts.TT_Bold,
   },

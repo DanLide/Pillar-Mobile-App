@@ -346,6 +346,7 @@ export const ProductModal = observer(
                     disabled={!userPermissions.editProductInStock}
                     ref={reservedCountInputRef}
                     onToastAction={handleToastAction}
+                    onClose={onClose}
                   />
                   {isEdit ? (
                     <EditProduct
