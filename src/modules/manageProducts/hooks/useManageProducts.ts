@@ -99,6 +99,10 @@ export const useManageProducts = (store: ManageProductsStore) => {
     async (product: ProductModel, customToast?: ProductQuantityToastType) => {
       if (customToast) {
         setModalParams(assoc('toastType', customToast));
+        setTimeout(() => {
+          // Workaround to drop the toast type, otherwise the toast will reappear on each render
+          setModalParams(assoc('toastType', undefined));
+        }, 0)
         return
       }
 

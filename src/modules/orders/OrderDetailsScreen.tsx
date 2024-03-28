@@ -350,10 +350,9 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    width: '30%',
+    marginHorizontal: 16,
+    marginTop: 'auto',
+    marginBottom: 16,
   },
   buttonText: {
     fontSize: 15,

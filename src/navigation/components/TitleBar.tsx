@@ -17,6 +17,5 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontFamily: fonts.TT_Bold,
     color: colors.white,
-    width: '100%',
   },
 });
