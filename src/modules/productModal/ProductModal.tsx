@@ -190,6 +190,7 @@ export const ProductModal = memo(
                 onJobSelectNavigation={onJobSelectNavigation}
                 onRemove={onRemoveAlert}
                 isHideDecreaseButton={isHideDecreaseButton}
+                onClose={onClose}
               />
             );
           case Tabs.LinkJob:
@@ -230,6 +231,7 @@ export const ProductModal = memo(
         selectedTab,
         isHideDecreaseButton,
         onSelectStockAndNavigateToEditQuantity,
+        onClose
       ],
     );
 
