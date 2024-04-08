@@ -7,6 +7,7 @@ import { AuthStore } from '../stores/AuthStore';
 import { getRoleManagerAPI, loginAPI, LoginAPIParams } from './api';
 import {
   adminSSOAPI,
+  distributorSSOAPI,
   multiSSOAPI,
   MultiSSOAPIResponse,
   singleSSOAPI,
@@ -17,6 +18,8 @@ import { Task, TaskExecutor } from './helpers';
 import { Utils } from './helpers/utils';
 import { permissionProvider } from './providers';
 import { LoginType } from 'src/navigation/types';
+import { RoleType } from 'src/constants/common.enum';
+import { includes } from 'ramda';
 
 export interface TokenData {
   token?: string;
@@ -37,6 +40,7 @@ export interface LoginFlowContext extends TokenData {
   msoID?: number;
   facilityID?: string;
   name?: string;
+  roleTypeId?: number;
   roleTypeDescription?: string;
 }
 
@@ -113,10 +117,11 @@ class GetRoleManagerTask extends Task {
     }
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
-    this.loginFlowContext.isTnC = !!response.isTermsAccepted;
+    this.loginFlowContext.isTnC = !!response.languageTypeId;
     this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
-    this.loginFlowContext.partyRoleId = response.partyRoleId;
+    this.loginFlowContext.partyRoleId = response.orgPartyRoleID;
     this.loginFlowContext.roleTypeDescription = response.roleTypeDescription;
+    this.loginFlowContext.roleTypeId = response.roleTypeId;
   }
 }
 
@@ -199,7 +204,9 @@ class GetSSOTask extends Task {
   }
 
   private async fetchSSOList(): Promise<SSOModel[] | undefined> {
-    const { facilityID, token } = this.loginFlowContext;
+    const { facilityID, token, roleTypeId, partyRoleId } =
+      this.loginFlowContext;
+
     if (facilityID && token) {
       // is SSO user
       const response: SingleSSOAPIResponse = await singleSSOAPI(
@@ -217,6 +224,20 @@ class GetSSOTask extends Task {
       );
       const res = this.mapMulti(response);
       return res;
+    } else if (
+      includes(roleTypeId, [
+        RoleType.DistributorStandard,
+        RoleType.BranchDriver,
+        RoleType.BranchManager,
+        RoleType.DistributorRegionalManager,
+      ])
+    ) {
+      // is Distributor user
+      const response: MultiSSOAPIResponse = await distributorSSOAPI(
+        token!,
+        partyRoleId!,
+      );
+      return this.mapMulti(response);
     } else {
       // TODO add extra check if it is Admin. If not - throw exception
       const response: MultiSSOAPIResponse = await adminSSOAPI(
