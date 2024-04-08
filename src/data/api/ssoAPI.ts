@@ -111,6 +111,21 @@ export const adminSSOAPI = (token: string) => {
   });
 };
 
+export const distributorSSOAPI = (token: string, partyRoleId: number) => {
+  const url = new URLProvider().getDistributorSSOUrl(partyRoleId);
+
+  url.search = decodeURIComponent(url.search);
+
+  return tryFetch<MultiSSOAPIResponse>({
+    url,
+    request: {
+      method: 'GET',
+      // TODO remove this
+      headers: { authorization: `Bearer ${token}` },
+    },
+  });
+};
+
 export const shopSetupLoginAPI = (shopSetupCode: string) => {
   const url = new URLProvider().getShopSetupLoginUrl();
 
