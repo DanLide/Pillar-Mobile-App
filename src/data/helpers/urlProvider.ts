@@ -34,7 +34,7 @@ export class URLProvider {
       inventory: { apiUri: string };
       order: { apiUri: string };
       shopSetup: { apiUri: string };
-      shopSetupAuthentication: { apiUri: string },
+      shopSetupAuthentication: { apiUri: string };
       base: { apiUri: string };
     };
   };
@@ -69,7 +69,7 @@ export class URLProvider {
 
   getRoleModelUrl() {
     return new URL(
-      `${this.currentEnv.modules.pisaUser.apiUri}/api/RoleManager`,
+      `${this.currentEnv.modules.pisaUser.apiUri}/api/Mobile/RoleManager`,
     );
   }
 
@@ -78,6 +78,12 @@ export class URLProvider {
 
     return new URL(
       `${this.currentEnv.modules.common.apiUri}/api/Common/partySetting/${partyRoleId}`,
+    );
+  }
+
+  getDistributorSSOUrl(partyRoleId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaCompanyLocation.apiUri}/api/RepairFacility/${partyRoleId}/8`,
     );
   }
 
@@ -119,7 +125,9 @@ export class URLProvider {
   }
 
   getShopSetupLoginUrl() {
-    return new URL(`${this.currentEnv.modules.shopSetupAuthentication.apiUri}/api/login`);
+    return new URL(
+      `${this.currentEnv.modules.shopSetupAuthentication.apiUri}/api/login`,
+    );
   }
 
   getDeviceByRepairFacilityIdUrl() {
