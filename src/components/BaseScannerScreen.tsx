@@ -43,7 +43,10 @@ interface Props {
   product?: ProductModel;
   disableScanner?: boolean;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: (product: ProductModel, customToastType?: ProductQuantityToastType) => void | unknown;
+  onSubmit?: (
+    product: ProductModel,
+    customToastType?: ProductQuantityToastType,
+  ) => void | unknown;
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;

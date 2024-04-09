@@ -73,7 +73,7 @@ export const StocksList: React.FC<Props> = observer(
         await initMasterLock();
       }
       setIsLoading(false);
-    }
+    };
 
     const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
       ({ item }) => (

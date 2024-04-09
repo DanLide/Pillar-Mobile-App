@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 import { colors, fonts, SVGs } from '../../theme';
 
@@ -15,7 +10,7 @@ type DrawerListItemProps = {
   disabled?: boolean;
   onPress?: () => void;
   showChevron?: boolean;
-}
+};
 
 export const DrawerListItem: React.FC<DrawerListItemProps> = ({
   title,
@@ -37,24 +32,22 @@ export const DrawerListItem: React.FC<DrawerListItemProps> = ({
           <Text style={styles.infoText} numberOfLines={1}>
             {title}
           </Text>
-          {subtitle &&
+          {subtitle && (
             <Text style={styles.subtitleText} numberOfLines={1}>
               {subtitle}
             </Text>
-          }
+          )}
         </View>
         {showChevron && (
           <View style={styles.chevron}>
-            <SVGs.ChevronIcon
-              color={colors.purpleDark}
-            />
+            <SVGs.ChevronIcon color={colors.purpleDark} />
           </View>
         )}
       </View>
       <View style={styles.separator} />
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   itemContainer: {
@@ -73,7 +66,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.TT_Regular,
     color: colors.blackSemiLight,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subtitleText: {
     marginTop: 6,
@@ -86,5 +79,5 @@ const styles = StyleSheet.create({
   chevron: {
     marginLeft: 'auto',
     paddingHorizontal: 15,
-  }
+  },
 });

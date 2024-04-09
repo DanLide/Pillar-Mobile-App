@@ -20,8 +20,10 @@ class FetchSSOUsers extends Task {
   }
 
   async run() {
-    const rnTokenData = await getSSORNToken()
-    const usersList: SSOUser[] = rnTokenData ? await getSSOUsers(rnTokenData.rnToken) : [];
+    const rnTokenData = await getSSORNToken();
+    const usersList: SSOUser[] = rnTokenData
+      ? await getSSOUsers(rnTokenData.rnToken)
+      : [];
     this.ssoStore.setSsoUsersList(usersList);
   }
 }

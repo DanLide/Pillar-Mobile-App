@@ -114,7 +114,7 @@ export const ProductModal = observer(
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
-    const { userPermissions } = permissionProvider
+    const { userPermissions } = permissionProvider;
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 

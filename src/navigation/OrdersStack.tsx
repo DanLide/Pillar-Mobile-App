@@ -24,7 +24,6 @@ import ReceiveBackorderScreen from 'src/modules/orders/ReceiveBackorderScreen';
 import { BackOrderScannerScreen } from 'src/modules/orders/BackOrderScannerScreen';
 import { BackOrderResultScreen } from 'src/modules/orders/BackorderResultScreen';
 
-
 const Stack = createStackNavigator<OrdersParamsList>();
 
 const getsScreenTitleByOrderType = (orderType?: OrderType) => {

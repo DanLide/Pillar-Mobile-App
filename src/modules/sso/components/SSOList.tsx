@@ -1,9 +1,4 @@
-import React, { 
-  memo, 
-  useCallback,
-  forwardRef,
-  LegacyRef,
-} from 'react';
+import React, { memo, useCallback, forwardRef, LegacyRef } from 'react';
 import { FlatList, FlatListProps, ListRenderItem } from 'react-native';
 
 import { SSOModel } from '../stores/SelectSSOStore';
@@ -17,37 +12,35 @@ export interface SSOListProps
 
 const keyExtractor = (item: SSOModel) => String(item.pisaId);
 
-const SSOList = forwardRef((
-  {
-    selectedSSOId,
-    onPressItem,
-    ...props
-  }: SSOListProps,
-  ref: LegacyRef<FlatList<SSOModel>>,
-) => {
-  const renderItem = useCallback<ListRenderItem<SSOModel>>(
-    ({ item }) => {
-      const isSelected = item.pisaId === selectedSSOId;
+const SSOList = forwardRef(
+  (
+    { selectedSSOId, onPressItem, ...props }: SSOListProps,
+    ref: LegacyRef<FlatList<SSOModel>>,
+  ) => {
+    const renderItem = useCallback<ListRenderItem<SSOModel>>(
+      ({ item }) => {
+        const isSelected = item.pisaId === selectedSSOId;
 
-      return (
-        <SSOListItem
-          item={item}
-          isSelected={isSelected}
-          onPressItem={onPressItem}
-        />
-      );
-    },
-    [onPressItem, selectedSSOId],
-  );
+        return (
+          <SSOListItem
+            item={item}
+            isSelected={isSelected}
+            onPressItem={onPressItem}
+          />
+        );
+      },
+      [onPressItem, selectedSSOId],
+    );
 
-  return (
-    <FlatList
-      ref={ref}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      {...props}
-    />
-  );
-});
+    return (
+      <FlatList
+        ref={ref}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        {...props}
+      />
+    );
+  },
+);
 
 export default memo(SSOList);

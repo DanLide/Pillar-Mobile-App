@@ -1,9 +1,9 @@
-import { TaskExecutor, Task } from "../taskExecutor";
+import { TaskExecutor, Task } from '../taskExecutor';
 
 const createTask = (
   successMock: () => void,
   cancelMock: () => void,
-  isFailed = false
+  isFailed = false,
 ) => {
   class BaseTask extends Task {
     constructor() {
@@ -11,9 +11,9 @@ const createTask = (
     }
 
     async run() {
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         if (isFailed) {
-          throw "error";
+          throw 'error';
         } else {
           successMock();
           resolve();
@@ -29,7 +29,7 @@ const createTask = (
   return new BaseTask();
 };
 
-describe("taskExecutor", () => {
+describe('taskExecutor', () => {
   const mockFirstTaskExecuted = jest.fn();
   const mockSecondTaskExecuted = jest.fn();
   const mockThirdTaskExecuted = jest.fn();
@@ -42,30 +42,30 @@ describe("taskExecutor", () => {
 
   const mockSuccessFirstTask = createTask(
     mockFirstTaskExecuted,
-    mockFirstCancelTaskExecuted
+    mockFirstCancelTaskExecuted,
   );
   const mockSuccessSecondTask = createTask(
     mockSecondTaskExecuted,
-    mockSecondCancelTaskExecuted
+    mockSecondCancelTaskExecuted,
   );
   const mockFailedTask = createTask(
     mockThirdTaskExecuted,
     mockThirdCancelTaskExecuted,
-    true
+    true,
   );
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should run success tasks and return true", async () => {
+  it('should run success tasks and return true', async () => {
     // execute method should NOT crash
     await new TaskExecutor(
       [mockSuccessFirstTask, mockSuccessSecondTask],
-      mockCleanupFunction
+      mockCleanupFunction,
     )
       .execute()
-      .catch((error) => expect(error).toBe(undefined));
+      .catch(error => expect(error).toBe(undefined));
 
     // should NOT call cleanup function
     expect(mockFirstCancelTaskExecuted).not.toBeCalled();
@@ -73,14 +73,14 @@ describe("taskExecutor", () => {
     expect(mockCleanupFunction).not.toBeCalled();
   });
 
-  it("should NOT run tasks after failed and cancel next tasks", async () => {
+  it('should NOT run tasks after failed and cancel next tasks', async () => {
     // should crash
     await new TaskExecutor(
       [mockSuccessFirstTask, mockFailedTask, mockSuccessSecondTask],
-      mockCleanupFunction
+      mockCleanupFunction,
     )
       .execute()
-      .catch((error) => expect(error).not.toBe(undefined));
+      .catch(error => expect(error).not.toBe(undefined));
 
     expect(mockFirstTaskExecuted).toBeCalled();
     expect(mockThirdTaskExecuted).not.toBeCalled();

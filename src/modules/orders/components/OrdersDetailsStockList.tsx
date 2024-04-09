@@ -27,13 +27,13 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
   ({ productsByStockId, selectedStock, onSelectProducts }) => {
     const ordersStoreRef = useRef(ordersStore).current;
     const { currentOrder } = ordersStoreRef;
-    const { userPermissions } = permissionProvider
+    const { userPermissions } = permissionProvider;
 
     if (!currentOrder) return null;
 
     const isOrderReceivable = useMemo(() => {
       if (!userPermissions.receiveOrder) {
-        return false
+        return false;
       }
 
       switch (currentOrder.order.status) {
@@ -67,7 +67,7 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
     const renderStockList = useCallback(
       ({ item }: ListRenderItemInfo<string>) => {
         const products = productsByStockId[item];
-        const stockName = products[0].stockLocationName || ''
+        const stockName = products[0].stockLocationName || '';
         return (
           <Pressable
             style={styles.stockContainer}

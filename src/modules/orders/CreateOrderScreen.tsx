@@ -176,13 +176,13 @@ const CreateOrderScreen = observer(
 
     const isDropdownDisabled = useMemo(() => {
       if (modalType !== ProductModalType.CreateOrder) {
-        return
+        return;
       }
 
-      const products = ordersStore.getNotSyncedProducts
+      const products = ordersStore.getNotSyncedProducts;
       // Disabled when there are products
-      return products.length !== 0
-    }, [modalType, ordersStore.getNotSyncedProducts])
+      return products.length !== 0;
+    }, [modalType, ordersStore.getNotSyncedProducts]);
 
     return (
       <View style={styles.container}>

@@ -36,15 +36,14 @@ export const OrdersListItem = memo(({ item, isFiltered }: Props) => {
       item.status === OrderStatusType.SUBMITTED ||
       item.status === OrderStatusType.RECEIVING
     ) {
-      const isNeedNavToPermission = permissionStore.bluetoothPermission !== RESULTS.GRANTED;
+      const isNeedNavToPermission =
+        permissionStore.bluetoothPermission !== RESULTS.GRANTED;
       if (isNeedNavToPermission) {
-        navigation.navigate(
-          AppNavigator.BluetoothPermissionScreen, {
+        navigation.navigate(AppNavigator.BluetoothPermissionScreen, {
           nextRoute: AppNavigator.OrderDetailsScreen,
           orderId: item.orderId.toString(),
-        }
-        );
-        return
+        });
+        return;
       }
     }
     navigation.navigate(AppNavigator.OrderDetailsScreen, {

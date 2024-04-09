@@ -43,7 +43,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const locationPermission = permissionStore.locationPermission;
   const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
 
-  const { userPermissions } = permissionProvider
+  const { userPermissions } = permissionProvider;
 
   const { showToast, hideAll } = useSingleToast();
   const selectedStockId = useRef('');
@@ -198,7 +198,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
 
     const renderButton = () => {
       if (!userPermissions.receiveOrder) {
-        return null
+        return null;
       }
 
       switch (currentOrder.order.status) {

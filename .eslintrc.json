@@ -19,13 +19,17 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "react-hooks", "@typescript-eslint", "import"],
+  "plugins": ["react",  "react-native", "react-hooks", "@typescript-eslint", "prettier"],
   "rules": {
+    "prettier/prettier": "error",
     "react/display-name": "off",
-    "import/no-cycle": 1
+    "react-native/no-unused-styles": 2,
+    "react-native/split-platform-components": 2,
+    "react-native/no-inline-styles": 1,
+    "react-native/no-single-element-style-arrays": 2
   },
   "settings": {
     "import/resolver": {

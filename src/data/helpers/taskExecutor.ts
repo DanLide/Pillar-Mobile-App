@@ -1,4 +1,4 @@
-import { RequestError } from "./tryFetch";
+import { RequestError } from './tryFetch';
 
 export abstract class Task {
   isCanceled: boolean;
@@ -43,7 +43,7 @@ export class TaskExecutor {
   }
 
   async cancel(): Promise<void> {
-    this.taskList.forEach((task) => task.cancel());
+    this.taskList.forEach(task => task.cancel());
 
     if (this.cleanUpOnFailTask) {
       await this.cleanUpOnFailTask();

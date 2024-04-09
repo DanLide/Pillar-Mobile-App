@@ -4,7 +4,7 @@ import { Permission } from '../../constants';
 type PermissionMap = {
   [K in keyof typeof KNOWN_PERMISSIONS]: boolean;
 };
-type PermissionKey = keyof typeof KNOWN_PERMISSIONS
+type PermissionKey = keyof typeof KNOWN_PERMISSIONS;
 
 const KNOWN_PERMISSIONS = {
   viewOrders: Permission.InventoryManagement_OrderMobile_View,
@@ -15,8 +15,8 @@ const KNOWN_PERMISSIONS = {
   returnProduct: Permission.InventoryManagement_StockMobile_Return,
   editProduct: Permission.InventoryManagement_StockMobile_Edit,
   editProductInStock: Permission.InventoryManagement_ProductsInStockMobile_Edit,
-  createInvoice: Permission.Planning_Invoices_Create
-}
+  createInvoice: Permission.Planning_Invoices_Create,
+};
 const ENUM_BASE = 64; // .NET ULong base
 
 export class PermissionProvider {
@@ -28,10 +28,10 @@ export class PermissionProvider {
 
   get userPermissions() {
     return Object.entries(KNOWN_PERMISSIONS).reduce((acc, [key, value]) => {
-      acc[key as PermissionKey] = this.hasPermission(value)
+      acc[key as PermissionKey] = this.hasPermission(value);
 
-      return acc
-    }, {} as PermissionMap)
+      return acc;
+    }, {} as PermissionMap);
   }
 
   private hasPermission(permission: Permission): boolean {
