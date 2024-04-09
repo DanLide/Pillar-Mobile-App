@@ -1,5 +1,5 @@
 import { isNil } from 'ramda';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import {
   View,
   Text,

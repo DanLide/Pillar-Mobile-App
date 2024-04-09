@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-  memo,
-  useEffect,
-} from 'react';
+import { useCallback, useRef, useState, useMemo, memo, useEffect } from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';

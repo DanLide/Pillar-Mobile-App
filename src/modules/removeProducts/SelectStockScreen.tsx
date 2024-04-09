@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { RouteProp, useIsFocused } from '@react-navigation/native';
 import { observer } from 'mobx-react';

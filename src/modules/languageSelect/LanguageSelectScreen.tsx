@@ -1,4 +1,3 @@
-import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 

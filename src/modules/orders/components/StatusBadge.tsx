@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { View, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 
 import { ColoredTooltip } from '../../../components';

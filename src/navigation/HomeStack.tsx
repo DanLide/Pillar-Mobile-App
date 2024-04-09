@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
+
 import { isNil } from 'ramda';
 
 import { HomeScreen } from '../modules/home/HomeScreen';

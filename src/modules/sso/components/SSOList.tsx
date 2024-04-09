@@ -1,4 +1,4 @@
-import React, { memo, useCallback, forwardRef, LegacyRef } from 'react';
+import { memo, useCallback, forwardRef, LegacyRef } from 'react';
 import { FlatList, FlatListProps, ListRenderItem } from 'react-native';
 
 import { SSOModel } from '../stores/SelectSSOStore';

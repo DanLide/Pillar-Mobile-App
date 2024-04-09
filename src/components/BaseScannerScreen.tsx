@@ -1,6 +1,6 @@
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { BarcodeFormat } from 'vision-camera-code-scanner';

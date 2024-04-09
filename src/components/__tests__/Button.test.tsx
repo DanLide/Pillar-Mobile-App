@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { render } from '@testing-library/react-native';
 import Svg, { SvgProps } from 'react-native-svg';
 

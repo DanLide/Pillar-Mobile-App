@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { StyleSheet, FlatList, ListRenderItemInfo } from 'react-native';
 import { observer } from 'mobx-react';
 

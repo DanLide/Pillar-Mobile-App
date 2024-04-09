@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -207,7 +207,7 @@ const BaseResultScreen: React.FC<Props> = observer(
           <View style={styles.errorTitleContainer}>
             <SVGs.ErrorProduct />
             <View style={styles.errorTitleWrapper}>
-              <Text style={[styles.errorListTitle]}>
+              <Text style={styles.errorListTitle}>
                 {errorListTitle}
                 {!!errorListTitlePartBolt && (
                   <Text style={[styles.errorListTitle, styles.boltText]}>

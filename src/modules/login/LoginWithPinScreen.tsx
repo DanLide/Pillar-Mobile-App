@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { observer } from 'mobx-react';

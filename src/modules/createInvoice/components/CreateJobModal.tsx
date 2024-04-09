@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, ButtonType, Input, Modal, Text } from 'src/components';
 import { checkIsExistJob, onCreateJob } from 'src/data/createJob';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';

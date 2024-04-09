@@ -1,4 +1,3 @@
-import React from 'react';
 import { View } from 'react-native';
 import { render, act } from '@testing-library/react-native';
 import { SharedValue } from 'react-native-reanimated';

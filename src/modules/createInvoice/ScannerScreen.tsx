@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 
 import { BaseScannerScreen, ScannerScreenError, ToastActionType } from '../../components';

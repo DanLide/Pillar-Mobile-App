@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { FC, memo } from 'react';
+import { FC, memo } from 'react';
 
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 

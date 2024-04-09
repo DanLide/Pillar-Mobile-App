@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { CommonActions } from '@react-navigation/native';
 
 import { BaseProductsScreen } from 'src/components';

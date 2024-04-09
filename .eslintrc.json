@@ -6,6 +6,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
@@ -26,15 +27,20 @@
   "rules": {
     "prettier/prettier": "error",
     "react/display-name": "off",
+    "react/prop-types": 0,
     "react-native/no-unused-styles": 2,
     "react-native/split-platform-components": 2,
     "react-native/no-inline-styles": 1,
-    "react-native/no-single-element-style-arrays": 2
+    "react-native/no-single-element-style-arrays": 2,
+    "import/no-named-as-default": 0
   },
   "settings": {
     "import/resolver": {
       "typescript": true,
       "node": true
+    },
+    "react": {
+      "version": "detect"
     }
   }
 }

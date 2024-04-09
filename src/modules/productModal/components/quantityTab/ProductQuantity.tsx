@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useEffect, useMemo, useState } from 'react';
+import { FC, forwardRef, useEffect, useMemo, useState } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,

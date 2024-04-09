@@ -1,4 +1,3 @@
-import React from 'react';
 import { View, Text, Pressable, Alert, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
 

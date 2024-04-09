@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 
 import { Button, ButtonType } from '../../../components';

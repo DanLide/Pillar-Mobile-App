@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { authStore } from 'src/stores';
 import { getUsernames, setUsernames } from 'src/helpers/localStorage';
