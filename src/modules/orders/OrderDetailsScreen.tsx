@@ -4,7 +4,6 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { groupBy } from 'ramda';
-import { autorun } from 'mobx';
 import { masterLockStore, ssoStore } from 'src/stores';
 
 import { ordersStore } from './stores';
@@ -43,7 +42,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const locationPermission = permissionStore.locationPermission;
   const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
 
-  const { userPermissions } = permissionProvider
+  const { userPermissions } = permissionProvider;
 
   const { showToast, hideAll } = useSingleToast();
   const selectedStockId = useRef('');
@@ -198,7 +197,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
 
     const renderButton = () => {
       if (!userPermissions.receiveOrder) {
-        return null
+        return null;
       }
 
       switch (currentOrder.order.status) {
@@ -259,17 +258,16 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
           </View>
         </View>
 
-        <View style={styles.table}>
-          <View style={styles.stockHeader}>
-            <Text style={styles.headerText}>Stock Location</Text>
-            <Text style={styles.headerText}>Received/Ordered</Text>
-          </View>
-          <OrdersDetailsStockList
-            productsByStockId={orderProductsByStockId}
-            selectedStock={selectedStock}
-            onSelectProducts={onSelectProducts}
-          />
+        <View style={styles.stockHeader}>
+          <Text style={styles.headerText}>Stock Location</Text>
+          <Text style={styles.headerText}>Received/Ordered</Text>
         </View>
+        <OrdersDetailsStockList
+          productsByStockId={orderProductsByStockId}
+          selectedStock={selectedStock}
+          onSelectProducts={onSelectProducts}
+          contentContainerStyle={styles.contentContainer}
+        />
         {renderButton() ? (
           <View
             style={{
@@ -324,7 +322,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     color: colors.grayDark2,
   },
-  table: {
+  contentContainer: {
     backgroundColor: colors.white,
     paddingBottom: 8,
   },
