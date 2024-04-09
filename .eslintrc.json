@@ -6,6 +6,7 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
@@ -19,18 +20,20 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint", "import"],
   "rules": {
-    "react/display-name": "off",
-    "import/no-cycle": 1
+    "react/display-name": "off"
   },
   "settings": {
     "import/resolver": {
       "typescript": true,
       "node": true
+    },
+    "react": {
+      "version": "detect"
     }
   }
 }
