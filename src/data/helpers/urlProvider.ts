@@ -26,6 +26,10 @@ export class URLProvider {
     modules: {
       pisaJob: { apiUri: string };
       pisaProduct: { apiUri: string };
+      pisaProductSync: { apiUri: string };
+      pisaProductCrimpAndCatalog: { apiUri: string };
+      pisaProductInventory: { apiUri: string };
+      pisaProductSupplier: { apiUri: string };
       pisaUser: { apiUri: string };
       common: { apiUri: string };
       companies: { apiUri: string };
@@ -157,7 +161,7 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Sync/${facilityId}/products/${scanCode}`,
+      `${this.currentEnv.modules.pisaProductSync.apiUri}/api/Sync/${facilityId}/products/${scanCode}`,
     );
   }
 
@@ -170,7 +174,7 @@ export class URLProvider {
     const stockId = 0;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ProductByOrderTypeAndSupplier/${facilityId}/${supplierId}/${scanCode}/${orderType}/${stockId}`,
+      `${this.currentEnv.modules.pisaProductSupplier.apiUri}/api/Product/ProductByOrderTypeAndSupplier/${facilityId}/${supplierId}/${scanCode}/${orderType}/${stockId}`,
     );
   }
 
@@ -192,7 +196,7 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryClassificationType/InventoryClassification/${facilityId}`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/InventoryClassificationType/InventoryClassification/${facilityId}`,
     );
   }
 
@@ -208,13 +212,13 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/${facilityId}`,
+      `${this.currentEnv.modules.pisaProductSupplier.apiUri}/api/ProductSupplier/${facilityId}`,
     );
   }
 
   getEnabledSuppliersByProductId(productId?: number) {
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/ProductSupplier/GetSupplierListByProductID/${productId}/true`,
+      `${this.currentEnv.modules.pisaProductSupplier.apiUri}/api/ProductSupplier/GetSupplierListByProductID/${productId}/true`,
     );
   }
 
@@ -231,11 +235,11 @@ export class URLProvider {
 
     if (typeof jobId === 'number') {
       return new URL(
-        `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${jobId}/${quantity}`,
+        `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${jobId}/${quantity}`,
       );
     }
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${quantity}`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/RemoveProduct/${partyRoleID}/${productId}/${quantity}`,
     );
   }
 
@@ -243,7 +247,7 @@ export class URLProvider {
     const partyRoleID = this.returnProductsStore.currentStock?.partyRoleId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
     );
   }
 
@@ -256,7 +260,7 @@ export class URLProvider {
 
   updateProductQuantity() {
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/InventoryTransaction`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/InventoryTransaction`,
     );
   }
 
@@ -282,7 +286,7 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProduct.apiUri}/api/product/GetAllProduct/${facilityId}/-1`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/product/GetAllProduct/${facilityId}/-1`,
     );
   }
 

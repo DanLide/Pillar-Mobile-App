@@ -28,6 +28,18 @@ export const environment = {
     pisaProduct: {
       apiUri: `${Config.API_URL}/im-product`,
     },
+    pisaProductSync: {
+      apiUri: `${Config.API_URL}/im-productsync`,
+    },
+    pisaProductCrimpAndCatalog: {
+      apiUri: `${Config.API_URL}/im-productcrimpandcatalog`,
+    },
+    pisaProductInventory: {
+      apiUri: `${Config.API_URL}/im-productinventory`,
+    },
+    pisaProductSupplier: {
+      apiUri: `${Config.API_URL}/im-productsupplier`,
+    },
     pisaJob: {
       apiUri: `${Config.API_URL}/job`,
     },
