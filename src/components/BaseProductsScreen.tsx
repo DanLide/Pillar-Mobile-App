@@ -194,6 +194,7 @@ const BaseProducts = observer(
       ) {
         return (
           <Button
+            disabled={!scannedProductsCount && (flow !== Flows.ManageProduct)}
             type={ButtonType.primary}
             buttonStyle={styles.buttonContainer}
             title={primaryButtonTitle ?? 'Complete'}
