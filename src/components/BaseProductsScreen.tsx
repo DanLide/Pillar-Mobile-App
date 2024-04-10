@@ -194,7 +194,6 @@ const BaseProducts = observer(
       ) {
         return (
           <Button
-            disabled={!scannedProductsCount}
             type={ButtonType.primary}
             buttonStyle={styles.buttonContainer}
             title={primaryButtonTitle ?? 'Complete'}
