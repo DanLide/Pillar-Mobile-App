@@ -3,12 +3,11 @@ import { URLProvider, tryFetch } from '../helpers';
 export interface GetRoleManagerAPIResponse {
   username: string;
   roleTypeId: number;
-  orgPartyRoleID: number;
   partyRoleId: number;
+  orgPartyRoleID: number;
   languageTypeId: number;
   roleTypeDescription?: string;
   isTermsAccepted?: boolean;
-  isLanguageSelected?: boolean;
 }
 
 export const getRoleManagerAPI = (token: string) => {

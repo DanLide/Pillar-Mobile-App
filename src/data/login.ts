@@ -33,6 +33,7 @@ export interface LoginFlowContext extends TokenData {
   isTnC?: boolean;
   isLanguage?: boolean;
   partyRoleId?: number;
+  orgPartyRoleId?: number;
   username?: string;
   companyNumber?: string;
   permissionSet1?: string;
@@ -115,11 +116,13 @@ class GetRoleManagerTask extends Task {
     if (!this.loginFlowContext.token) {
       throw new Error('Login failed!');
     }
+
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
-    this.loginFlowContext.isTnC = !!response.languageTypeId;
-    this.loginFlowContext.isLanguage = !!response.isLanguageSelected;
-    this.loginFlowContext.partyRoleId = response.orgPartyRoleID;
+    this.loginFlowContext.isTnC = !!response.isTermsAccepted;
+    this.loginFlowContext.isLanguage = !!response.languageTypeId;
+    this.loginFlowContext.partyRoleId = response.partyRoleId;
+    this.loginFlowContext.orgPartyRoleId = response.orgPartyRoleID;
     this.loginFlowContext.roleTypeDescription = response.roleTypeDescription;
     this.loginFlowContext.roleTypeId = response.roleTypeId;
   }
@@ -204,7 +207,7 @@ class GetSSOTask extends Task {
   }
 
   private async fetchSSOList(): Promise<SSOModel[] | undefined> {
-    const { facilityID, token, roleTypeId, partyRoleId } =
+    const { facilityID, token, roleTypeId, orgPartyRoleId } =
       this.loginFlowContext;
 
     if (facilityID && token) {
@@ -225,6 +228,7 @@ class GetSSOTask extends Task {
       const res = this.mapMulti(response);
       return res;
     } else if (
+      orgPartyRoleId &&
       includes(roleTypeId, [
         RoleType.DistributorStandard,
         RoleType.BranchDriver,
@@ -235,7 +239,7 @@ class GetSSOTask extends Task {
       // is Distributor user
       const response: MultiSSOAPIResponse = await distributorSSOAPI(
         token!,
-        partyRoleId!,
+        orgPartyRoleId,
       );
       return this.mapMulti(response);
     } else {
