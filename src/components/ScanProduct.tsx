@@ -148,7 +148,7 @@ const QRButton: React.FC<QRButtonProps> = ({
 
 const oneBarcodeToolTipText = 'Point camera at product code';
 const multipleBarcodeToolTipText = 'Tap the code you want to scan';
-const upcToolTipText = 'Scan UPC for product editing';
+const upcToolTipText = 'Scan UPC';
 
 const soundAndVibrate = async () => {
   await VolumeManager.setVolume(1);
