@@ -61,7 +61,10 @@ export interface ProductModalProps extends ProductModalParams {
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onClose: () => void;
-  onSubmit: (product: ProductModel, customToastType?: ProductQuantityToastType) => void | unknown;
+  onSubmit: (
+    product: ProductModel,
+    customToastType?: ProductQuantityToastType,
+  ) => void | unknown;
   onSelectStock?: (stock: StockModel) => void;
 }
 
@@ -143,7 +146,7 @@ export const ProductModal = memo(
 
     const onSelectStockAndNavigateToEditQuantity = useCallback(
       async (stock: StockModel) => {
-        onSelectStock(stock);
+        onSelectStock?.(stock);
         carouselRef.current?.next();
         ordersStore.setCurrentStocks(stock);
         ordersStore.updateCurrentProductStock(stock);
@@ -231,7 +234,7 @@ export const ProductModal = memo(
         selectedTab,
         isHideDecreaseButton,
         onSelectStockAndNavigateToEditQuantity,
-        onClose
+        onClose,
       ],
     );
 
@@ -247,9 +250,20 @@ export const ProductModal = memo(
             return (
               <Text style={styles.title} ellipsizeMode="middle">
                 {type === ProductModalType.ReceiveBackOrder
-                  ? product.nameDetails
+                  ? product?.nameDetails
                   : product?.product}
               </Text>
+            );
+          } else if (
+            type === ProductModalType.Return ||
+            type === ProductModalType.Remove ||
+            type === ProductModalType.CreateInvoice
+          ) {
+            return (
+              <Text
+                style={styles.title}
+                ellipsizeMode="middle"
+              >{`${product?.manufactureCode} ${product?.partNo}`}</Text>
             );
           }
           return 'Adjust Quantity';
@@ -261,7 +275,7 @@ export const ProductModal = memo(
             <View style={styles.upcContainer}>
               <SVGs.CodeIcon width={24} height={16} color={colors.black} />
               <Text style={styles.upcTitle}>UPC</Text>
-              <Text style={styles.upc}>{product.upc}</Text>
+              <Text style={styles.upc}>{product?.upc}</Text>
             </View>
           );
         default:
