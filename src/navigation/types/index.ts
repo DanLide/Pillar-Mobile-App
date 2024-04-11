@@ -1,5 +1,8 @@
-import { CompositeNavigationProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+} from '@react-navigation/native';
+import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { OrderType } from 'src/constants/common.enum';
 import { ProductModalType } from 'src/modules/productModal';
@@ -276,4 +279,14 @@ export type BluetoothPermissionScreenProps = NativeStackScreenProps<
     ManageProductsStackParamList &
     OrdersParamsList,
   AppNavigator.BluetoothPermissionScreen
+>;
+
+export type THomeNavScreenProps<TScreenName extends keyof HomeStackParamList> =
+  StackScreenProps<HomeStackParamList, TScreenName>;
+
+export type TManageProductsNavScreenProps<
+  TScreenName extends keyof ManageProductsStackParamList,
+> = CompositeScreenProps<
+  StackScreenProps<ManageProductsStackParamList, TScreenName>,
+  THomeNavScreenProps<keyof HomeStackParamList>
 >;
