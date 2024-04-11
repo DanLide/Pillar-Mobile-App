@@ -73,6 +73,12 @@ export class URLProvider {
 
   getRoleModelUrl() {
     return new URL(
+      `${this.currentEnv.modules.pisaUser.apiUri}/api/RoleManager`,
+    );
+  }
+
+  getRoleModelMobileUrl() {
+    return new URL(
       `${this.currentEnv.modules.pisaUser.apiUri}/api/Mobile/RoleManager`,
     );
   }
