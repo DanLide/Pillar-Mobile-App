@@ -291,6 +291,9 @@ export const ProductQuantity = forwardRef(
         case ProductModalType.CreateOrder:
         case ProductModalType.ReturnOrder:
         case ProductModalType.ReceiveBackOrder:
+        case ProductModalType.Remove:
+        case ProductModalType.Return:
+        case ProductModalType.CreateInvoice:
           return (
             <Text style={styles.description} ellipsizeMode="middle">
               {product.name}

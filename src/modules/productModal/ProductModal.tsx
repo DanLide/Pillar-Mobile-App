@@ -155,6 +155,11 @@ export const ProductModal = memo(
       [onSelectStock, tabs],
     );
 
+    const isReturnRemoveCreateInvoice =
+      ProductModalType.Return ||
+      type === ProductModalType.Remove ||
+      type === ProductModalType.CreateInvoice;
+
     const renderItem = useCallback(
       ({ item }: { item: number }) => {
         const onPressAdd = (job?: JobModel) => {
@@ -187,7 +192,10 @@ export const ProductModal = memo(
                 toastType={toastType}
                 maxValue={maxValue}
                 minValue={minValue}
-                style={styles.productQuantityContainer}
+                style={[
+                  !isReturnRemoveCreateInvoice &&
+                    styles.productQuantityContainer,
+                ]}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
@@ -222,6 +230,7 @@ export const ProductModal = memo(
         product,
         onSubmit,
         clearProductModalStoreOnClose,
+        isReturnRemoveCreateInvoice,
         type,
         onChangeProductQuantity,
         isEdit,
@@ -254,16 +263,11 @@ export const ProductModal = memo(
                   : product?.product}
               </Text>
             );
-          } else if (
-            type === ProductModalType.Return ||
-            type === ProductModalType.Remove ||
-            type === ProductModalType.CreateInvoice
-          ) {
+          } else if (isReturnRemoveCreateInvoice) {
             return (
-              <Text
-                style={styles.title}
-                ellipsizeMode="middle"
-              >{`${product?.manufactureCode} ${product?.partNo}`}</Text>
+              <Text style={styles.title} ellipsizeMode="middle">{`${
+                `${product?.manufactureCode} ` ?? ''
+              }${product?.partNo ?? ''}`}</Text>
             );
           }
           return 'Adjust Quantity';
@@ -281,7 +285,7 @@ export const ProductModal = memo(
         default:
           return '';
       }
-    }, [selectedTab, type, product]);
+    }, [selectedTab, type, product, isReturnRemoveCreateInvoice]);
 
     const renderStockName = useMemo(() => {
       switch (type) {
