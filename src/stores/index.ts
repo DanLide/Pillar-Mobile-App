@@ -7,6 +7,6 @@ import permissionStoreInstance from 'src/modules/permissions/stores/PermissionSt
 const authStore = new AuthStore();
 const ssoStore = new SSOStore();
 const deviceInfoStore = new DeviceInfoStore();
-const masterLockStore = new MasterLockStore(permissionStoreInstance)
+const masterLockStore = new MasterLockStore(permissionStoreInstance);
 
 export { authStore, ssoStore, deviceInfoStore, masterLockStore };

@@ -1,5 +1,5 @@
-import { Task, TaskExecutor } from "./helpers";
-import { getRoleManagerAPI } from "./api";
+import { Task, TaskExecutor } from './helpers';
+import { getRoleManagerAPI } from './api';
 
 interface GetRoleManagerContext {
   token?: string;

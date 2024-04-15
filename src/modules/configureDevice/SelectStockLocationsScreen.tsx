@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   FlatList,
   StyleSheet,

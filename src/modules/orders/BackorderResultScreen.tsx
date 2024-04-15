@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useEffect } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 
 import { Button, ButtonType, DropdownItem } from '../../components';

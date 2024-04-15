@@ -9,9 +9,10 @@
     "paths": {
       "src/*": ["src/*"],
     },
-    "jsx": "react",
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     /* Completeness */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     "types": ["node", "jest"]

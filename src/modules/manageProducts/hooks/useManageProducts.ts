@@ -14,7 +14,11 @@ import {
   ManageProductsStore,
   manageProductsStore,
 } from 'src/modules/manageProducts/stores';
-import { ProductModalParams, ProductModalType, ProductQuantityToastType } from 'src/modules/productModal';
+import {
+  ProductModalParams,
+  ProductModalType,
+  ProductQuantityToastType,
+} from 'src/modules/productModal';
 import { useSingleToast } from 'src/hooks';
 import { fetchProductDetails } from 'src/data/fetchProductDetails';
 
@@ -102,8 +106,8 @@ export const useManageProducts = (store: ManageProductsStore) => {
         setTimeout(() => {
           // Workaround to drop the toast type, otherwise the toast will reappear on each render
           setModalParams(assoc('toastType', undefined));
-        }, 0)
-        return
+        }, 0);
+        return;
       }
 
       setModalParams(assoc('toastType', undefined));

@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';

@@ -57,6 +57,6 @@ export const environment = {
     },
   },
   features: {
-    editProductROSwitch: false
-  }
+    editProductROSwitch: false,
+  },
 };

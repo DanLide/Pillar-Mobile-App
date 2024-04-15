@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';

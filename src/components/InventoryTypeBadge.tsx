@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { ColoredTooltip } from './ColoredTooltip';
 import { InventoryUseType } from '../constants/common.enum';
 import { colors } from '../theme';

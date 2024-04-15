@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
 import { authStore, ssoStore } from '../../stores';

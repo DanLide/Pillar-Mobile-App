@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { observer } from 'mobx-react';
 
 import { ProductModalType, ProductModalParams } from '../productModal';

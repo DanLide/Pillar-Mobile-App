@@ -1,29 +1,33 @@
-import { StockModelWithMLAccess } from './../../modules/stocksList/stores/StocksStore';
+import {
+  StockModelWithMLAccess,
+  StockStore,
+} from './../../modules/stocksList/stores/StocksStore';
 import {
   fetchStocks,
   FetchStocksTask,
   SaveStocksToStore,
 } from '../fetchStocks';
 
-import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from '../api/stocksAPI';
-
 import {
-  StockStore,
-} from '../../modules/stocksList/stores/StocksStore';
+  getFetchStockAPI,
+  getFetchStockByDeviceNameAPI,
+} from '../api/stocksAPI';
 
 jest.mock('../api/stocksAPI');
 
-const mockStockResponse: StockModelWithMLAccess[] = [{
-  equipment:{
-    organizationName: 'organizationName',
-    partyRoleId: 1,
-    roleTypeId: 1,
-    leanTecSerialNo: 'leanTecSerialNo',
+const mockStockResponse: StockModelWithMLAccess[] = [
+  {
+    equipment: {
+      organizationName: 'organizationName',
+      partyRoleId: 1,
+      roleTypeId: 1,
+      leanTecSerialNo: 'leanTecSerialNo',
+    },
+    mlAccessData: null,
   },
-  mlAccessData: null,
-}];
+];
 
-const mockExpected = mockStockResponse
+const mockExpected = mockStockResponse;
 
 const mockSetStock = jest.fn();
 
@@ -39,10 +43,14 @@ describe('fetchStocks', () => {
   });
 
   it('should execute FetchStocksTask task', async () => {
-    (getFetchStockByDeviceNameAPI as jest.Mock).mockReturnValue(mockStockResponse);
+    (getFetchStockByDeviceNameAPI as jest.Mock).mockReturnValue(
+      mockStockResponse,
+    );
     const fetchStocksTask = new FetchStocksTask({ stocks: [] });
     await expect(fetchStocksTask.run()).resolves.not.toThrow();
-    expect(fetchStocksTask.fetchStocksContext.stocks).toStrictEqual(mockExpected);
+    expect(fetchStocksTask.fetchStocksContext.stocks).toStrictEqual(
+      mockExpected,
+    );
     expect(getFetchStockByDeviceNameAPI).toHaveBeenCalled();
   });
 
@@ -61,9 +69,7 @@ describe('fetchStocks', () => {
       mockStockStore,
     );
     expect(saveStocksToStore.run()).resolves.not.toThrow();
-    expect(mockSetStock).toHaveBeenCalledWith(
-      mockStockResponse,
-    );
+    expect(mockSetStock).toHaveBeenCalledWith(mockStockResponse);
   });
 
   it('should call fetchStocks with empty stocks in stocksStore', async () => {

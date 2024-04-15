@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 
 import { JobListItemType } from '../jobsList/components/JobsListItem';

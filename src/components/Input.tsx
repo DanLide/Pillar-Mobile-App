@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import {
   Insets,
   StyleProp,

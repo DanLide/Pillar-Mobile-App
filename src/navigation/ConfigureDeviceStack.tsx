@@ -1,5 +1,4 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react';
 
 import { getScreenOptions } from './helpers';
 import { AppNavigator, ConfigureDeviceStackParams, LeftBarType } from './types';

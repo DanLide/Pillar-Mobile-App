@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { RouteProp, useIsFocused } from '@react-navigation/native';

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { getScreenOptions } from './helpers';
@@ -23,7 +22,6 @@ import { ProductModalType } from 'src/modules/productModal';
 import ReceiveBackorderScreen from 'src/modules/orders/ReceiveBackorderScreen';
 import { BackOrderScannerScreen } from 'src/modules/orders/BackOrderScannerScreen';
 import { BackOrderResultScreen } from 'src/modules/orders/BackorderResultScreen';
-
 
 const Stack = createStackNavigator<OrdersParamsList>();
 

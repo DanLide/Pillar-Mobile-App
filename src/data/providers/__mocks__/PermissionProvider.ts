@@ -15,30 +15,30 @@ export const getPermissionsMock = (permissionSet: bigint[]): Permissions => ({
 
 export const getRolePermissionProviders = () => {
   const technicianPermissions = new PermissionProvider(
-    getPermissionsMock(mockedPermissionSets.technician)
-  ).userPermissions
+    getPermissionsMock(mockedPermissionSets.technician),
+  ).userPermissions;
 
   const adminPermissions = new PermissionProvider(
-    getPermissionsMock(mockedPermissionSets.admin)
-  ).userPermissions
+    getPermissionsMock(mockedPermissionSets.admin),
+  ).userPermissions;
 
   const distributorPermissions = new PermissionProvider(
-    getPermissionsMock(mockedPermissionSets.distributor)
-  ).userPermissions
+    getPermissionsMock(mockedPermissionSets.distributor),
+  ).userPermissions;
 
   const emptyPermissions = new PermissionProvider(
-    getPermissionsMock(mockedPermissionSets.empty)
-  ).userPermissions
+    getPermissionsMock(mockedPermissionSets.empty),
+  ).userPermissions;
 
   const msoPermissions = new PermissionProvider(
-    getPermissionsMock(mockedPermissionSets.mso)
-  ).userPermissions
+    getPermissionsMock(mockedPermissionSets.mso),
+  ).userPermissions;
 
   return {
     technicianPermissions,
     adminPermissions,
     distributorPermissions,
     emptyPermissions,
-    msoPermissions
-  }
-}
+    msoPermissions,
+  };
+};

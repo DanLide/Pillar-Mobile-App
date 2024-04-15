@@ -1,4 +1,3 @@
-import React from 'react';
 import { ViewStyle } from 'react-native';
 
 import { LeftBarButton, RightBarButton, TitleBar } from '../components';

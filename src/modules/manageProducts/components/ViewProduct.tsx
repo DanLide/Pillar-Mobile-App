@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';

@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { colors, fonts, SVGs } from '../theme';
 import { StyleSheet, Text, View } from 'react-native';
 import { ProductModel } from '../stores/types';

@@ -1,11 +1,5 @@
 import { isNil } from 'ramda';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Dimensions,
   LayoutChangeEvent,
@@ -472,7 +466,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           exiting={FadeOutDown}
         />
       )}
-      <View style={[styles.scanner]}>
+      <View style={styles.scanner}>
         <Scanner
           torch={isTorchOn ? 'on' : 'off'}
           zoom={isZoomToggled ? ZOOM_IN : NORMAL_ZOOM}

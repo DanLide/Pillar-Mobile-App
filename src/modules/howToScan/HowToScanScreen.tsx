@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 
 import QRCode from '../../../assets/images/QRCode.png';

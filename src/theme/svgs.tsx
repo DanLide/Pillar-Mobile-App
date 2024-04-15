@@ -1,7 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { G, Line, Mask, Path, Rect, SvgProps } from 'react-native-svg';
-import { colors } from '.';
+import { colors } from './colors';
 
 export interface SvgPropsWithColors extends SvgProps {
   primaryColor?: string;
@@ -1561,6 +1561,28 @@ export const SuccessCreateJob = memo((props: SvgProps) => (
     />
   </Svg>
 ));
+
+export const HomeIcon = (props: SvgProps) => (
+  <Svg width={24} height={24} fill="none" {...props}>
+    <Path
+      fill="#fff"
+      fillRule="evenodd"
+      d="M11.772 2 1 12.481l1.047 1.075 1.774-1.725v10.238h6.487v-6.648h2.932v6.648h6.486V11.832l1.774 1.724 1.047-1.075L11.774 2h-.002Zm-6.451 8.37 6.452-6.277 6.454 6.278V20.57H14.74v-6.649H8.807v6.649H5.321v-10.2Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+);
+
+export const QuestionIcon = (props: SvgProps) => (
+  <Svg width={24} height={25} fill="none" {...props}>
+    <Path
+      fill="#fff"
+      fillRule="evenodd"
+      d="M11.09 15.771c0 .372 0 .695.075.944h1.364a6.99 6.99 0 0 1-.05-.793c0-.944.248-1.96 1.166-2.629l1.116-.818c1.463-1.092 2.48-2.454 2.48-4.266 0-2.403-1.86-4.709-5.059-4.709C8.638 3.5 7 6.053 7 8.383c0 .445.051.844.2 1.266l1.511.223a5.137 5.137 0 0 1-.197-1.34c0-1.858 1.164-3.644 3.668-3.644 2.282 0 3.495 1.587 3.495 3.348 0 1.213-.668 2.255-1.711 3.047l-1.089.845c-1.264.967-1.787 2.107-1.787 3.643Zm.77 3.273c-.694 0-1.24.545-1.24 1.24 0 .67.546 1.216 1.24 1.216.695 0 1.24-.546 1.24-1.216 0-.695-.545-1.24-1.24-1.24Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+);
 
 const styles = StyleSheet.create({
   iconRelative: { position: 'relative' },

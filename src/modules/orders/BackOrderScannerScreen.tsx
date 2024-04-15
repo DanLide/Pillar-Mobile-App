@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Text, View, StyleSheet } from 'react-native';
 import { BaseScannerScreen } from '../../components';

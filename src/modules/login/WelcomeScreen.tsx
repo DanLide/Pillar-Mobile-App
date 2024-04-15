@@ -1,5 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';

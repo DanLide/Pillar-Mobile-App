@@ -167,7 +167,10 @@ export class SaveDataToStore extends Task {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
     this.ssoStore.setDeviceConfiguration(true);
     if (this.ssoStore.getCurrentSSO && this.fetchStocksContext.rnToken) {
-      setSSORNToken(this.fetchStocksContext.rnToken, this.ssoStore.getCurrentSSO);
+      setSSORNToken(
+        this.fetchStocksContext.rnToken,
+        this.ssoStore.getCurrentSSO,
+      );
     }
   }
 }

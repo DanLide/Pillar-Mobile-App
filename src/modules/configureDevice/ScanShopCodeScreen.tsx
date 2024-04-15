@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import { useCallback, useRef, useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   Dimensions,

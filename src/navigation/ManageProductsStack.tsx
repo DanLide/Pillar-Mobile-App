@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
@@ -6,24 +5,31 @@ import {
   AppNavigator,
   LeftBarType,
   ManageProductsStackParamList,
-  RightBarType,
 } from './types';
 import { getScreenOptions } from './helpers';
 import { SelectStockScreen } from '../modules/manageProducts/SelectStockScreen';
 import { ManageProductsScreen } from '../modules/manageProducts/ManageProductsScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
-import { BluetoothPermissionScreen, CameraPermissionScreen } from '../modules/permissions';
+import {
+  BluetoothPermissionScreen,
+  CameraPermissionScreen,
+} from '../modules/permissions';
 import ScannerScreen from '../modules/manageProducts/ScannerScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 import { getScreenName } from './helpers/getScreenName';
 import permissionStore from '../modules/permissions/stores/PermissionStore';
+import { DEFAULT_STACK_OPTIONS } from './navigation.const';
+import { ScannerHeaderRightButtons } from './components/ScannerHeaderRightButtons';
 
 const Stack = createStackNavigator<ManageProductsStackParamList>();
 
 export const ManageProductsStack: React.FC = observer(() => {
   return (
-    <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
-       <Stack.Screen
+    <Stack.Navigator
+      screenOptions={DEFAULT_STACK_OPTIONS}
+      initialRouteName={getScreenName(permissionStore)}
+    >
+      <Stack.Screen
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
         options={getScreenOptions({
@@ -48,16 +54,18 @@ export const ManageProductsStack: React.FC = observer(() => {
           leftBarButtonType: LeftBarType.Back,
         })}
       />
-       <Stack.Screen
+      <Stack.Screen
         name={AppNavigator.BaseUnlockScreen}
         component={BaseUnlockScreen}
-        options={({ route }) => getScreenOptions({
-          title: route.params?.title || '',
-          leftBarButtonType: LeftBarType.Back,
-          style: {
-            shadowColor: 'transparent',
-          }
-        })}
+        options={({ route }) =>
+          getScreenOptions({
+            title: route.params?.title || '',
+            leftBarButtonType: LeftBarType.Back,
+            style: {
+              shadowColor: 'transparent',
+            },
+          })
+        }
         initialParams={{ nextScreen: AppNavigator.ManageProductsScreen }}
       />
       <Stack.Screen
@@ -79,13 +87,11 @@ export const ManageProductsStack: React.FC = observer(() => {
       <Stack.Screen
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
-        options={getScreenOptions({
+        options={{
           title: 'Manage Products',
-          leftBarButtonType: LeftBarType.Back,
-          rightBarButtonType: RightBarType.QuestionMark
-        })}
+          headerRight: () => <ScannerHeaderRightButtons />,
+        }}
       />
     </Stack.Navigator>
   );
 });
-

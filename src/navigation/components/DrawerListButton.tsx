@@ -1,10 +1,4 @@
-import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 
 import { colors, fonts } from '../../theme';
 
@@ -12,9 +6,9 @@ type DrawerListButtonProps = {
   title: string;
   icon: React.ReactElement;
   disabled?: boolean;
-  subtitle?: string,
+  subtitle?: string;
   onPress?: () => void;
-}
+};
 
 export const DrawerListButton: React.FC<DrawerListButtonProps> = ({
   title,
@@ -29,21 +23,16 @@ export const DrawerListButton: React.FC<DrawerListButtonProps> = ({
       onPress={onPress}
       disabled={disabled}
     >
-      <View style={styles.iconWrapper}>
-        {icon}
-      </View>
+      <View style={styles.iconWrapper}>{icon}</View>
       <View style={styles.textContainer}>
         <Text style={styles.infoText} numberOfLines={1}>
           {title}
         </Text>
-        {subtitle && <Text style={styles.subtitle}>
-          {subtitle}
-        </Text>
-        }
+        {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   button: {
@@ -65,7 +54,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.TT_Regular,
     color: colors.blackSemiLight,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   iconWrapper: {
     paddingVertical: 13,
@@ -73,5 +62,5 @@ const styles = StyleSheet.create({
   subtitle: {
     marginTop: 6,
     color: colors.blackLight,
-  }
+  },
 });

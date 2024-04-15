@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { JobModel } from '../stores/JobsStore';
 import { SVGs, colors, fonts } from '../../../theme';

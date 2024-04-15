@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { ActivityIndicator, StyleSheet, View, ViewProps } from 'react-native';
 
 const Loading: React.FC<ViewProps> = props => (
