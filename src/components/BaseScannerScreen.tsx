@@ -1,6 +1,6 @@
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { BarcodeFormat } from 'vision-camera-code-scanner';
@@ -43,7 +43,10 @@ interface Props {
   product?: ProductModel;
   disableScanner?: boolean;
   onProductScan?: (product: ProductModel) => void;
-  onSubmit?: (product: ProductModel, customToastType?: ProductQuantityToastType) => void | unknown;
+  onSubmit?: (
+    product: ProductModel,
+    customToastType?: ProductQuantityToastType,
+  ) => void | unknown;
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onCloseModal?: () => void;

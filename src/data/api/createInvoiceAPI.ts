@@ -63,7 +63,6 @@ export const createJobAPI = (
     partyRoleID: partyRoleID,
   };
 
-
   return tryAuthFetch<string>({
     url,
     request: {

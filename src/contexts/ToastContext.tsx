@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useMemo } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 import { Props as ToastProviderProps } from 'react-native-toast-notifications/lib/typescript/toast-container';

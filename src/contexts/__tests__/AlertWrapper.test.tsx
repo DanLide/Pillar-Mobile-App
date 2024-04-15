@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, act } from '@testing-library/react-native';
 
 import AlertWrapper from '../AlertWrapper';
@@ -20,7 +19,7 @@ describe('AlertWrapper', () => {
         message={mockMessage}
         onPressPrimary={mockOnPressPrimary}
         onPressSecondary={mockOnPressSecondary}
-      />
+      />,
     );
     expect(getByText(mockTitle)).toBeDefined();
     expect(getByText(mockMessage)).toBeDefined();
@@ -34,7 +33,7 @@ describe('AlertWrapper', () => {
         message={mockMessage}
         onPressPrimary={mockOnPressPrimary}
         onPressSecondary={mockOnPressSecondary}
-      />
+      />,
     );
     const primaryButton = getByTestId(
       testIds.idContainer(testIds.idPrimaryButton('alertWrapper')),
@@ -60,7 +59,7 @@ describe('AlertWrapper', () => {
         onPressSecondary={mockOnPressSecondary}
         primaryTitle={mockPrimaryTitle}
         secondaryTitle={mockSecondaryTitle}
-      />
+      />,
     );
     expect(getByText(mockPrimaryTitle)).toBeDefined();
     expect(getByText(mockSecondaryTitle)).toBeDefined();

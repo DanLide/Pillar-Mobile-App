@@ -70,7 +70,7 @@ export class StockStore {
     return this.suppliers.map(item => ({
       label: item.name,
       value: item.partyRoleId,
-    }))
+    }));
   }
 
   @action setFacilityProducts(products: FacilityProductModel[]) {

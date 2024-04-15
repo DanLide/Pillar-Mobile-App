@@ -1,7 +1,7 @@
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 
 import { View, Text, StyleSheet } from 'react-native';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { fonts } from 'src/theme';
 
 type Props = Omit<AlertWrapperProps, 'message'>;

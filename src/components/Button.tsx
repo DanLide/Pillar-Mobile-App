@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import {
   StyleSheet,
   TouchableOpacityProps,
@@ -23,7 +23,7 @@ type ButtonProps = TouchableOpacityProps & TextProps;
 export enum ButtonType {
   primary,
   secondary,
-  secondaryRed
+  secondaryRed,
 }
 
 interface ExtendedButtonProps extends ButtonProps {
@@ -110,7 +110,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
             isDisabled ? styles.secondaryTextDisabled : undefined,
           ];
         case ButtonType.secondaryRed:
-          return styles.secondaryRedText
+          return styles.secondaryRedText;
         default:
           return styles.buttonText;
       }

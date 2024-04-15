@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
   FlatList,
   ActivityIndicator,
@@ -73,7 +73,7 @@ export const StocksList: React.FC<Props> = observer(
         await initMasterLock();
       }
       setIsLoading(false);
-    }
+    };
 
     const renderStockListItem = useCallback<ListRenderItem<StockModel>>(
       ({ item }) => (

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import 'react-native-url-polyfill/auto';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -29,7 +29,7 @@ import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 
 if (__DEV__) {
-  import("./ReactotronConfig").then(() => console.log("Reactotron Configured"));
+  import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
 }
 
 const { width, height } = Dimensions.get('window');

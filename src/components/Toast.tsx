@@ -1,9 +1,4 @@
-import React, {
-  NamedExoticComponent,
-  useCallback,
-  useMemo,
-  useState,
-} from 'react';
+import { NamedExoticComponent, useCallback, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Dimensions,

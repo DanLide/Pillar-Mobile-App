@@ -2,11 +2,13 @@ module.exports = {
   preset: 'react-native',
   resetMocks: false,
   collectCoverage: true,
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node', 'd.ts'],
   moduleDirectories: ['node_modules'],
   setupFilesAfterEnv: ['./jest-setup.ts'],
-  transformIgnorePatterns: ['node_modules/(?!jest-?@react-native-reanimated|react-native-vision-camera)/'],
+  transformIgnorePatterns: [
+    'node_modules/(?!jest-?@react-native-reanimated|react-native-vision-camera)/',
+  ],
   moduleNameMapper: {
     '^uuid$': require.resolve('uuid'),
     'react-dom': 'react-native',

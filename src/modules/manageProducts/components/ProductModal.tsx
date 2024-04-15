@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -114,7 +114,7 @@ export const ProductModal = observer(
     const modalCollapsedOffset = useHeaderHeight();
     const { top: modalExpandedOffset } = useSafeAreaInsets();
 
-    const { userPermissions } = permissionProvider
+    const { userPermissions } = permissionProvider;
 
     const topOffset = useSharedValue(modalCollapsedOffset);
 

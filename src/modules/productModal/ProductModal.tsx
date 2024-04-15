@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useRef,
-  useState,
-  useMemo,
-  memo,
-  useEffect,
-} from 'react';
+import { useCallback, useRef, useState, useMemo, memo, useEffect } from 'react';
 import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
@@ -61,7 +54,10 @@ export interface ProductModalProps extends ProductModalParams {
   onEditPress?: () => void;
   onCancelPress?: () => void;
   onClose: () => void;
-  onSubmit: (product: ProductModel, customToastType?: ProductQuantityToastType) => void | unknown;
+  onSubmit: (
+    product: ProductModel,
+    customToastType?: ProductQuantityToastType,
+  ) => void | unknown;
   onSelectStock?: (stock: StockModel) => void;
 }
 
@@ -231,7 +227,7 @@ export const ProductModal = memo(
         selectedTab,
         isHideDecreaseButton,
         onSelectStockAndNavigateToEditQuantity,
-        onClose
+        onClose,
       ],
     );
 

@@ -6,7 +6,7 @@ export const AUTO_LOGOUT_TIMEOUT = 300000; // 5 minutes
 class AutoLogoutService {
   _logoutListener: null | LogoutListener = null;
   timeOutId: NodeJS.Timeout | null = null;
-  lastTouchTimeStamp: Date | null = null
+  lastTouchTimeStamp: Date | null = null;
 
   constructor(logoutListener: LogoutListener) {
     this._logoutListener = logoutListener;
@@ -18,7 +18,7 @@ class AutoLogoutService {
       () => this.logOutCallBack(),
       AUTO_LOGOUT_TIMEOUT,
     );
-    this.lastTouchTimeStamp= new Date()
+    this.lastTouchTimeStamp = new Date();
   };
 
   logOutCallBack() {

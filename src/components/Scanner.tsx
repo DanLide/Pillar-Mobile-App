@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, memo } from 'react';
+import { useEffect, useRef, useState, memo } from 'react';
 import {
   ActivityIndicator,
   Dimensions,
@@ -79,8 +79,6 @@ const Scanner: React.FC<ScannerProps> = ({
     [onRead, isActive, isFocused],
   );
 
-  const [hasPermission, setHasPermission] = React.useState(false);
-
   !format.current &&
     device?.formats.forEach(obj => {
       if (
@@ -91,10 +89,6 @@ const Scanner: React.FC<ScannerProps> = ({
         format.current = obj;
       }
     });
-
-  useEffect(() => {
-    checkCameraPermission();
-  }, []);
 
   useEffect(() => {
     if (!layout) return;
@@ -109,11 +103,6 @@ const Scanner: React.FC<ScannerProps> = ({
 
     return () => clearInterval(timerId);
   }, [layout]);
-
-  const checkCameraPermission = async () => {
-    const status = await Camera.getCameraPermissionStatus();
-    setHasPermission(status === 'authorized');
-  };
 
   if (!device) return <ActivityIndicator />;
 

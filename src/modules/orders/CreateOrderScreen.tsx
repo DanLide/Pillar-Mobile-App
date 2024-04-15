@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
@@ -176,13 +176,13 @@ const CreateOrderScreen = observer(
 
     const isDropdownDisabled = useMemo(() => {
       if (modalType !== ProductModalType.CreateOrder) {
-        return
+        return;
       }
 
-      const products = ordersStore.getNotSyncedProducts
+      const products = ordersStore.getNotSyncedProducts;
       // Disabled when there are products
-      return products.length !== 0
-    }, [modalType, ordersStore.getNotSyncedProducts])
+      return products.length !== 0;
+    }, [modalType, ordersStore.getNotSyncedProducts]);
 
     return (
       <View style={styles.container}>

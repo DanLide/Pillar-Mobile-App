@@ -1,7 +1,5 @@
 import { PermissionProvider } from 'src/data/providers/PermissionProvider';
-import {
-  getRolePermissionProviders
-} from '../__mocks__/PermissionProvider';
+import { getRolePermissionProviders } from '../__mocks__/PermissionProvider';
 
 describe('PermissionProvider', () => {
   const {
@@ -9,8 +7,8 @@ describe('PermissionProvider', () => {
     distributorPermissions,
     emptyPermissions,
     msoPermissions,
-    technicianPermissions
-  } = getRolePermissionProviders()
+    technicianPermissions,
+  } = getRolePermissionProviders();
 
   it('should NOT grant permission if permission set is undefined', () => {
     const { userPermissions } = new PermissionProvider();
@@ -38,7 +36,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.removeProduct).toBeTruthy();
     });
-  })
+  });
 
   describe('Return Product', () => {
     it('should grant permission for Technician', () => {
@@ -56,7 +54,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.returnProduct).toBeTruthy();
     });
-  })
+  });
 
   describe('Receive Order', () => {
     it('should NOT grant permission for Technician', () => {
@@ -74,7 +72,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.receiveOrder).toBeTruthy();
     });
-  })
+  });
 
   describe('Edit Product', () => {
     it('should NOT grant permission for Technician', () => {
@@ -92,7 +90,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.editProduct).toBeTruthy();
     });
-  })
+  });
 
   describe('View Orders', () => {
     it('should grant permission for Technician', () => {
@@ -110,7 +108,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.viewOrders).toBeTruthy();
     });
-  })
+  });
 
   describe('Create Order', () => {
     it('should grant permission for Technician', () => {
@@ -128,7 +126,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.createOrder).toBeTruthy();
     });
-  })
+  });
 
   describe('Edit Product In Stock', () => {
     it('should NOT grant permission for Technician', () => {
@@ -146,7 +144,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.editProductInStock).toBeTruthy();
     });
-  })
+  });
 
   describe('Configure Shop', () => {
     it('should NOT grant permission for Technician', () => {
@@ -164,7 +162,7 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.configureShop).toBeTruthy();
     });
-  })
+  });
 
   describe('Create Invoice', () => {
     it('should grant permission for Technician', () => {
@@ -182,5 +180,5 @@ describe('PermissionProvider', () => {
     it('should grant permission for Admin', () => {
       expect(adminPermissions.createInvoice).toBeTruthy();
     });
-  })
+  });
 });

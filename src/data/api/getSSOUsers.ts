@@ -1,5 +1,5 @@
-import { SSOUser } from "src/stores/SSOStore";
-import { tryFetch, URLProvider } from "../helpers";
+import { SSOUser } from 'src/stores/SSOStore';
+import { tryFetch, URLProvider } from '../helpers';
 
 export const getSSOUsers = async (rn_token: string): Promise<SSOUser> => {
   const url = new URLProvider().getSSOUsers();

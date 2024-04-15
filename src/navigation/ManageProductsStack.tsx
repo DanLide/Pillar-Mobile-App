@@ -1,4 +1,3 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
@@ -11,7 +10,10 @@ import { getScreenOptions } from './helpers';
 import { SelectStockScreen } from '../modules/manageProducts/SelectStockScreen';
 import { ManageProductsScreen } from '../modules/manageProducts/ManageProductsScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
-import { BluetoothPermissionScreen, CameraPermissionScreen } from '../modules/permissions';
+import {
+  BluetoothPermissionScreen,
+  CameraPermissionScreen,
+} from '../modules/permissions';
 import ScannerScreen from '../modules/manageProducts/ScannerScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 import { getScreenName } from './helpers/getScreenName';
@@ -52,16 +54,18 @@ export const ManageProductsStack: React.FC = observer(() => {
           leftBarButtonType: LeftBarType.Back,
         })}
       />
-       <Stack.Screen
+      <Stack.Screen
         name={AppNavigator.BaseUnlockScreen}
         component={BaseUnlockScreen}
-        options={({ route }) => getScreenOptions({
-          title: route.params?.title || '',
-          leftBarButtonType: LeftBarType.Back,
-          style: {
-            shadowColor: 'transparent',
-          }
-        })}
+        options={({ route }) =>
+          getScreenOptions({
+            title: route.params?.title || '',
+            leftBarButtonType: LeftBarType.Back,
+            style: {
+              shadowColor: 'transparent',
+            },
+          })
+        }
         initialParams={{ nextScreen: AppNavigator.ManageProductsScreen }}
       />
       <Stack.Screen
@@ -85,7 +89,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         component={ScannerScreen}
         options={{
           title: 'Manage Products',
-          headerRight: () => <ScannerHeaderRightButtons />
+          headerRight: () => <ScannerHeaderRightButtons />,
         }}
       />
     </Stack.Navigator>

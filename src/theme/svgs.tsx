@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { G, Line, Mask, Path, Rect, SvgProps } from 'react-native-svg';
 import { colors } from './colors';

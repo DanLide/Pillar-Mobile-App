@@ -27,5 +27,4 @@ describe('getRoleManager', () => {
     await onGetRoleManager(mockToken);
     expect(getRoleManagerAPI).toHaveBeenCalledWith(mockToken);
   });
-
 });

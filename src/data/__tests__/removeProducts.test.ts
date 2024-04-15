@@ -70,5 +70,4 @@ describe('removeProducts', () => {
     await onRemoveProducts(mockRemoveProductStore);
     expect(removeProductAPI).toHaveBeenCalled();
   });
-
 });

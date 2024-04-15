@@ -1,14 +1,21 @@
-import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
 
 import { SelectStockScreen } from '../modules/returnProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
-import { AppNavigator, LeftBarType, ReturnStackParamList, RightBarType } from './types';
+import {
+  AppNavigator,
+  LeftBarType,
+  ReturnStackParamList,
+  RightBarType,
+} from './types';
 import { ReturnProductsScreen } from '../modules/returnProducts/ReturnProductsScreen';
 import { ScannerScreen } from '../modules/returnProducts/ScannerScreen';
 import { HowToScanScreen } from '../modules/howToScan/HowToScanScreen';
-import { BluetoothPermissionScreen, CameraPermissionScreen } from '../modules/permissions';
+import {
+  BluetoothPermissionScreen,
+  CameraPermissionScreen,
+} from '../modules/permissions';
 import { ResultScreen } from '../modules/returnProducts/ResultScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 import permissionStore from '../modules/permissions/stores/PermissionStore';
@@ -19,7 +26,6 @@ const Stack = createStackNavigator<ReturnStackParamList>();
 export const ReturnStack: React.FC = observer(() => {
   return (
     <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
-      
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
@@ -28,16 +34,18 @@ export const ReturnStack: React.FC = observer(() => {
           leftBarButtonType: LeftBarType.Back,
         })}
       />
-       <Stack.Screen
+      <Stack.Screen
         name={AppNavigator.BaseUnlockScreen}
         component={BaseUnlockScreen}
-        options={({ route }) => getScreenOptions({
-          title: route.params?.title || '',
-          leftBarButtonType: LeftBarType.Back,
-          style: {
-            shadowColor: 'transparent',
-          }
-        })}
+        options={({ route }) =>
+          getScreenOptions({
+            title: route.params?.title || '',
+            leftBarButtonType: LeftBarType.Back,
+            style: {
+              shadowColor: 'transparent',
+            },
+          })
+        }
         initialParams={{ nextScreen: AppNavigator.ReturnProductsScreen }}
       />
       <Stack.Screen

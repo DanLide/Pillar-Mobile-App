@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, ButtonType, Input, Modal, Text } from 'src/components';
 import { checkIsExistJob, onCreateJob } from 'src/data/createJob';
@@ -34,9 +34,7 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
 
     const isJobExist = await checkIsExistJob(number);
     if (isJobExist)
-      return handleError(
-        "The Repair order with such number already exists",
-      );
+      return handleError('The Repair order with such number already exists');
 
     const error = await onCreateJob(number, comment);
     if (error) return handleError('Something went wrong. Please, retry');

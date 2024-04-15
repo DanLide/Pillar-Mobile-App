@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
@@ -194,7 +188,7 @@ const BaseProducts = observer(
       ) {
         return (
           <Button
-            disabled={!scannedProductsCount && (flow !== Flows.ManageProduct)}
+            disabled={!scannedProductsCount && flow !== Flows.ManageProduct}
             type={ButtonType.primary}
             buttonStyle={styles.buttonContainer}
             title={primaryButtonTitle ?? 'Complete'}

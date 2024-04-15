@@ -1,4 +1,4 @@
-import React, { FC, forwardRef, useEffect, useMemo, useState } from 'react';
+import { FC, forwardRef, useEffect, useMemo, useState } from 'react';
 import {
   KeyboardTypeOptions,
   Pressable,
@@ -55,18 +55,18 @@ interface Props extends ViewProps {
   onPressAddToList?: () => void;
   onJobSelectNavigation?: () => void;
   onToastAction?: () => void;
-  onClose?: () => void
+  onClose?: () => void;
 }
 
 const toastStyles = StyleSheet.create({
   unitsPerContainerError: {
-    textAlign: 'left'
+    textAlign: 'left',
   },
   default: {
     textAlign: 'left',
-    marginHorizontal: 8
-  }
-})
+    marginHorizontal: 8,
+  },
+});
 
 export const toastMessages: Record<
   ProductQuantityToastType,
@@ -87,8 +87,10 @@ export const toastMessages: Record<
     'This UPC already exists in the stock location of this product. Please, use another one',
   [ToastType.UnitsPerContainerError]: (
     <ToastMessage style={toastStyles.unitsPerContainerError}>
-      <ToastMessage bold style={toastStyles.unitsPerContainerError}>Pieces Per Container</ToastMessage> cannot be saved
-      less than 1
+      <ToastMessage bold style={toastStyles.unitsPerContainerError}>
+        Pieces Per Container
+      </ToastMessage>{' '}
+      cannot be saved less than 1
     </ToastMessage>
   ),
   [ToastType.SpecialOrderError]: (
@@ -137,7 +139,7 @@ export const ProductQuantity = forwardRef(
       onJobSelectNavigation,
       onRemove,
       onToastAction,
-      onClose
+      onClose,
     }: Props,
     ref: React.ForwardedRef<TextInput>,
   ) => {
@@ -232,7 +234,8 @@ export const ProductQuantity = forwardRef(
       }
 
       const calculateButtonLabel = () => {
-        if (type === ProductModalType.Remove && currentValue === 0) return 'Cancel';
+        if (type === ProductModalType.Remove && currentValue === 0)
+          return 'Cancel';
 
         return (jobSelectable && isRecoverable) ||
           type === ProductModalType.CreateInvoice
@@ -245,9 +248,9 @@ export const ProductQuantity = forwardRef(
           type === ProductModalType.Remove ||
           type === ProductModalType.ReceiveOrder
         ) {
-          return isProductQuantityError
+          return isProductQuantityError;
         }
-    
+
         return isProductQuantityError || currentValue === 0;
       };
 
@@ -257,7 +260,7 @@ export const ProductQuantity = forwardRef(
         }
 
         return ButtonType.primary;
-      }
+      };
 
       if (isEdit && currentValue === 0) {
         return (
