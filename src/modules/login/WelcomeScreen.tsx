@@ -77,12 +77,13 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             <Button
               type={ButtonType.primary}
               buttonStyle={styles.continueButton}
-              title="Continue"
+              title="Start"
               onPress={onLoginViaPin}
             />
             <Button
-              type={ButtonType.secondary}
-              buttonStyle={styles.secondaryBtn}
+              type={ButtonType.primary}
+              buttonStyle={styles.loginWithUserNameButton}
+              textStyle={styles.loginWithUserNameText}
               title="Login with Username"
               onPress={onPressLoginWithUsername}
             />
@@ -146,6 +147,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: fonts.TT_Bold,
     lineHeight: 18,
+    color: colors.purpleDark,
+  },
+  loginWithUserNameButton: {
+    backgroundColor: 'transparent',
+    marginTop: 24,
+  },
+  loginWithUserNameText: {
+    fontSize: 20,
+    fontFamily: fonts.TT_Bold,
+    lineHeight: 26,
     color: colors.purpleDark,
   },
   image: {

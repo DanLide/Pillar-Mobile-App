@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Pressable,
   ListRenderItemInfo,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
 
@@ -21,10 +23,16 @@ interface Props {
   selectedStock?: string;
 
   onSelectProducts: (stockName: string, stockId: string) => void;
+  contentContainerStyle: StyleProp<ViewStyle>;
 }
 
 export const OrdersDetailsStockList: React.FC<Props> = observer(
-  ({ productsByStockId, selectedStock, onSelectProducts }) => {
+  ({
+    productsByStockId,
+    selectedStock,
+    onSelectProducts,
+    contentContainerStyle,
+  }) => {
     const ordersStoreRef = useRef(ordersStore).current;
     const { currentOrder } = ordersStoreRef;
     const { userPermissions } = permissionProvider;
@@ -99,6 +107,7 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
 
     return (
       <FlatList
+        contentContainerStyle={contentContainerStyle}
         data={Object.keys(productsByStockId)}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         renderItem={renderStockList}

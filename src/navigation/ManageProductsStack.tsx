@@ -5,7 +5,6 @@ import {
   AppNavigator,
   LeftBarType,
   ManageProductsStackParamList,
-  RightBarType,
 } from './types';
 import { getScreenOptions } from './helpers';
 import { SelectStockScreen } from '../modules/manageProducts/SelectStockScreen';
@@ -19,12 +18,17 @@ import ScannerScreen from '../modules/manageProducts/ScannerScreen';
 import { BaseUnlockScreen } from '../components/BaseUnlockScreen';
 import { getScreenName } from './helpers/getScreenName';
 import permissionStore from '../modules/permissions/stores/PermissionStore';
+import { DEFAULT_STACK_OPTIONS } from './navigation.const';
+import { ScannerHeaderRightButtons } from './components/ScannerHeaderRightButtons';
 
 const Stack = createStackNavigator<ManageProductsStackParamList>();
 
 export const ManageProductsStack: React.FC = observer(() => {
   return (
-    <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
+    <Stack.Navigator
+      screenOptions={DEFAULT_STACK_OPTIONS}
+      initialRouteName={getScreenName(permissionStore)}
+    >
       <Stack.Screen
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
@@ -83,11 +87,10 @@ export const ManageProductsStack: React.FC = observer(() => {
       <Stack.Screen
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
-        options={getScreenOptions({
+        options={{
           title: 'Manage Products',
-          leftBarButtonType: LeftBarType.Back,
-          rightBarButtonType: RightBarType.QuestionMark,
-        })}
+          headerRight: () => <ScannerHeaderRightButtons />
+        }}
       />
     </Stack.Navigator>
   );

@@ -39,13 +39,14 @@ export const GET_ROLE_MANAGER_RESPONSE: GetRoleManagerAPI.GetRoleManagerAPIRespo
     username: 'test',
     roleTypeId: 14,
     partyRoleId: 22273,
+    orgPartyRoleID: 653,
     isTermsAccepted: false,
-    isLanguageSelected: false,
+    languageTypeId: 0,
   };
 
 export const LOGIN_CONTEXT: LoginFlowContext = {
   token: LOGIN_RESPONSE.access_token,
-  isLanguage: GET_ROLE_MANAGER_RESPONSE.isLanguageSelected,
+  isLanguage: !!GET_ROLE_MANAGER_RESPONSE.languageTypeId,
   isTnC: GET_ROLE_MANAGER_RESPONSE.isTermsAccepted,
 };
 
