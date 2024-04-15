@@ -1,7 +1,11 @@
 import { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 
-import { BaseScannerScreen, ScannerScreenError, ToastActionType } from '../../components';
+import {
+  BaseScannerScreen,
+  ScannerScreenError,
+  ToastActionType,
+} from '../../components';
 import {
   ScannerModalStoreType,
   CurrentProductStoreType,
@@ -30,7 +34,7 @@ const initModalParams: ProductModalParams = {
 export const ScannerScreen: React.FC = observer(() => {
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
-  const [alertParams, setAlertParams] = useState<AlertWrapperProps>()
+  const [alertParams, setAlertParams] = useState<AlertWrapperProps>();
 
   const store = useRef<BaseProductsStore>(createInvoiceStore).current;
 
@@ -66,22 +70,30 @@ export const ScannerScreen: React.FC = observer(() => {
       case ToastActionType.Details: {
         setAlertParams({
           visible: true,
-          message: <Text style={{ textAlign: 'center' }}>Invoicing Settings for this product can be added at repairstack.3m.com > Products</Text>,
+          message: (
+            <Text style={{ textAlign: 'center' }}>
+              Invoicing Settings for this product can be added at
+              repairstack.3m.com {'>'} Products
+            </Text>
+          ),
           onPressSecondary: () => {
-            setAlertParams(undefined)
-          }
-        })
+            setAlertParams(undefined);
+          },
+        });
         break;
       }
       default: {
-        return null
+        return null;
       }
     }
-  }
+  };
 
   return (
     <>
-      <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON} onPress={handleToastPress}>
+      <ToastContextProvider
+        offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}
+        onPress={handleToastPress}
+      >
         <BaseScannerScreen
           store={store}
           modalParams={modalParams}
@@ -96,7 +108,7 @@ export const ScannerScreen: React.FC = observer(() => {
         visible={Boolean(alertParams)}
         message={alertParams?.message ?? ''}
         onPressSecondary={alertParams?.onPressSecondary}
-        secondaryTitle='Close'
+        secondaryTitle="Close"
         hidePrimary
         alertContainerStyle={styles.alertContainer}
       />
@@ -106,6 +118,6 @@ export const ScannerScreen: React.FC = observer(() => {
 
 const styles = StyleSheet.create({
   alertContainer: {
-    width: '70%'
-  }
-})
+    width: '70%',
+  },
+});

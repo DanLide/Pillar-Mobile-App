@@ -89,7 +89,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         component={ScannerScreen}
         options={{
           title: 'Manage Products',
-          headerRight: () => <ScannerHeaderRightButtons />
+          headerRight: () => <ScannerHeaderRightButtons />,
         }}
       />
     </Stack.Navigator>
