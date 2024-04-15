@@ -10,9 +10,7 @@
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:import/warnings",
     "plugin:import/recommended",
-    "plugin:import/errors",
     "plugin:import/typescript"
   ],
   "parser": "@typescript-eslint/parser",
@@ -21,18 +19,20 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
   "plugins": ["react",  "react-native", "react-hooks", "@typescript-eslint", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "react/display-name": "off",
-    "react/prop-types": 0,
-    "react-native/no-unused-styles": 2,
+    "react/prop-types": "off",
+    "import/no-named-as-default": "off",
+    "react/no-unescaped-entities": "off",
+    "react-native/no-unused-styles": 1,
     "react-native/split-platform-components": 2,
     "react-native/no-inline-styles": 1,
-    "react-native/no-single-element-style-arrays": 2,
-    "import/no-named-as-default": 0
+    "react-native/no-single-element-style-arrays": 2
   },
   "settings": {
     "import/resolver": {
