@@ -126,13 +126,8 @@ class SaveOrderDataTask extends Task {
       ? this.stocksStore.getSupplierNameById(supplierId)
       : undefined;
 
-    const order =
-      this.orderType === OrderType.Return
-        ? assoc('status', OrderStatusType.SUBMITTED, orderResponse)
-        : orderResponse;
-
     this.ordersStore.setCurrentOrder({
-      order: assoc('supplierName', supplierName, order),
+      order: assoc('supplierName', supplierName, orderResponse),
       productList,
     });
   }
