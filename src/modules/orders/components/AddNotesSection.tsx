@@ -38,7 +38,7 @@ export const AddNotesSection = observer(
 
 const styles = StyleSheet.create({
   notesInput: {
-    height: 128,
+    height: '100%',
     fontSize: 16,
     lineHeight: 20,
   },
