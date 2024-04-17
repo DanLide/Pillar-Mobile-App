@@ -24,6 +24,7 @@ export class OrdersStore extends BaseProductsStore {
   @observable backorderCabinets?: GetOrderSummaryProduct[];
   @observable cabinetSelection: boolean;
   @observable productUPC?: string;
+  @observable comments?: string;
 
   constructor() {
     super();
@@ -141,6 +142,10 @@ export class OrdersStore extends BaseProductsStore {
 
   @action setSupplier(supplierId?: number) {
     this.supplierId = supplierId;
+  }
+
+  @action setComments(comments: string) {
+    this.comments = comments;
   }
 
   @action setPONumber(poNumber?: string) {
