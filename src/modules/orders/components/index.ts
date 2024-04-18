@@ -8,6 +8,7 @@ import { StatusBadge } from './StatusBadge';
 import { StockLocationListModal } from './StockLocationListModal';
 import { StockWithProducts } from './StockWithProducts';
 import { TotalCostBar } from './TotalCostBar';
+export { AddNotesSection } from './AddNotesSection';
 
 export {
   MissingItemsModal,
