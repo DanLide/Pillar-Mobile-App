@@ -139,7 +139,7 @@ export const ProductModal = memo(
 
     const onSelectStockAndNavigateToEditQuantity = useCallback(
       async (stock: StockModel) => {
-        onSelectStock(stock);
+        onSelectStock?.(stock);
         carouselRef.current?.next();
         ordersStore.setCurrentStocks(stock);
         ordersStore.updateCurrentProductStock(stock);
@@ -147,6 +147,11 @@ export const ProductModal = memo(
       },
       [onSelectStock, tabs],
     );
+
+    const isReturnRemoveCreateInvoice =
+      ProductModalType.Return ||
+      type === ProductModalType.Remove ||
+      type === ProductModalType.CreateInvoice;
 
     const renderItem = useCallback(
       ({ item }: { item: number }) => {
@@ -180,7 +185,10 @@ export const ProductModal = memo(
                 toastType={toastType}
                 maxValue={maxValue}
                 minValue={minValue}
-                style={styles.productQuantityContainer}
+                style={[
+                  !isReturnRemoveCreateInvoice &&
+                    styles.productQuantityContainer,
+                ]}
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}
@@ -215,6 +223,7 @@ export const ProductModal = memo(
         product,
         onSubmit,
         clearProductModalStoreOnClose,
+        isReturnRemoveCreateInvoice,
         type,
         onChangeProductQuantity,
         isEdit,
@@ -243,9 +252,15 @@ export const ProductModal = memo(
             return (
               <Text style={styles.title} ellipsizeMode="middle">
                 {type === ProductModalType.ReceiveBackOrder
-                  ? product.nameDetails
+                  ? product?.nameDetails
                   : product?.product}
               </Text>
+            );
+          } else if (isReturnRemoveCreateInvoice) {
+            return (
+              <Text style={styles.title} ellipsizeMode="middle">{`${
+                `${product?.manufactureCode} ` ?? ''
+              }${product?.partNo ?? ''}`}</Text>
             );
           }
           return 'Adjust Quantity';
@@ -257,13 +272,13 @@ export const ProductModal = memo(
             <View style={styles.upcContainer}>
               <SVGs.CodeIcon width={24} height={16} color={colors.black} />
               <Text style={styles.upcTitle}>UPC</Text>
-              <Text style={styles.upc}>{product.upc}</Text>
+              <Text style={styles.upc}>{product?.upc}</Text>
             </View>
           );
         default:
           return '';
       }
-    }, [selectedTab, type, product]);
+    }, [selectedTab, type, product, isReturnRemoveCreateInvoice]);
 
     const renderStockName = useMemo(() => {
       switch (type) {
