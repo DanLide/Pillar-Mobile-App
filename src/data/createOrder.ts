@@ -64,7 +64,7 @@ class CreateOrderTask extends Task {
 
     this.createOrderContext.orderResponse = head(
       (await createOrderAPI({
-        comments: '',
+        comments: this.ordersStore.comments ?? '',
         customPoNumber: '',
         orderArea: '',
         orderDetails,
