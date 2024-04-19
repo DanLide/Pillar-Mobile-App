@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
-  TouchableOpacity,
   StyleSheet,
   View,
-  Text,
   SafeAreaView,
   ActivityIndicator,
   AppState,
@@ -20,7 +18,7 @@ import {
   InfoTitleBarType,
 } from 'src/components';
 import Button from '../../components/Button';
-import { colors, fonts, SVGs } from '../../theme';
+import { colors, SVGs } from '../../theme';
 import { ordersStore } from './stores';
 import { stocksStore } from '../stocksList/stores';
 import {
@@ -34,7 +32,11 @@ import {
   ToastContextProvider,
 } from 'src/contexts';
 import { ToastType } from 'src/contexts/types';
-import { SelectedProductsList, TotalCostBar } from './components';
+import {
+  AddNotesSection,
+  SelectedProductsList,
+  TotalCostBar,
+} from './components';
 import { fetchOrdersStocks } from 'src/data/fetchOrdersStocks';
 import { receiveBackOrder } from 'src/data/receiveBackOrder';
 import { OrderType } from 'src/constants/common.enum';
@@ -168,7 +170,6 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         type={InfoTitleBarType.Primary}
         title={ordersStore.currentStock?.organizationName}
       />
-
       <View style={styles.topContainer}>
         <Dropdown
           label="Distributor"
@@ -178,12 +179,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           onSelect={item => ordersStore.setSupplier(+item.value)}
         />
       </View>
-
-      <TouchableOpacity style={styles.noteContainer}>
-        <SVGs.InvoiceIcon />
-        <Text style={styles.noteText}>Add Notes</Text>
-      </TouchableOpacity>
-
+      <AddNotesSection orderStore={ordersStore} />
       <View style={styles.productsContainer}>
         <SelectedProductsList
           onItemPress={onProductListItemPress}
@@ -191,9 +187,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           nextNavigationGoBack
         />
       </View>
-
       <TotalCostBar orderType={OrderType.Purchase} />
-
       <View style={styles.buttons}>
         <Button
           type={ButtonType.secondary}
@@ -214,7 +208,6 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           onPress={onReceiveOrder}
         />
       </View>
-
       <ProductModal
         {...modalParams}
         product={ordersStore.getCurrentProduct}
@@ -256,36 +249,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  recommendedProductsButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-  },
-  recommendedProductsButtonText: {
-    color: colors.purpleDark3,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 13,
-    lineHeight: 18,
-  },
-  toastSuccessMessage: {
-    textAlign: 'left',
-  },
   topContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 24,
-  },
-  noteContainer: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    marginBottom: 18,
-  },
-  noteText: {
-    color: colors.purpleDark3,
-    fontFamily: fonts.TT_Bold,
-    fontSize: 16,
-    lineHeight: 20,
-    alignSelf: 'center',
-    marginLeft: 8,
+    paddingTop: 24,
   },
 });
 

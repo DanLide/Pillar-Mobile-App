@@ -33,6 +33,7 @@ import { ToastType } from 'src/contexts/types';
 import { getProductsReservedCount } from 'src/modules/orders/helpers';
 import { createOrder } from 'src/data/createOrder';
 import {
+  AddNotesSection,
   PONumberModal,
   SelectedProductsList,
   TotalCostBar,
@@ -201,7 +202,7 @@ const CreateOrderScreen = observer(
             disabled={isDropdownDisabled}
           />
         </View>
-
+        <AddNotesSection orderStore={ordersStoreRef} />
         <View style={styles.productsContainer}>
           <SelectedProductsList
             onItemPress={onProductListItemPress}
@@ -308,7 +309,7 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 24,
+    paddingTop: 24,
   },
 });
 

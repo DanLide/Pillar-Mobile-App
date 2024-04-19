@@ -124,6 +124,7 @@ export interface ReceiveOrderRequestProduct {
   transactionTypeId: number;
   unitCost: number;
   quantityReceived: number;
+  comments: string;
 }
 
 export interface CreateOrderRequestPayload

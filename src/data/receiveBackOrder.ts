@@ -44,7 +44,7 @@ class CreateOrderTask extends Task {
     const repairFacilityId = this.ssoStore.getCurrentSSO?.pisaId;
     const supplierId = this.ordersStore.supplierId;
     const param = {
-      comments: '',
+      comments: this.ordersStore.comments ?? '',
       customPoNumber: '',
       orderArea: '',
       orderDetails,
