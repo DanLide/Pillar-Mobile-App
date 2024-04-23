@@ -111,7 +111,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     setModalParams({
       type: ProductModalType.ReceiveOrder,
       maxValue: item.orderedQty,
-      minValue: item.receivedQty + getProductStepQty(item.inventoryUseTypeId),
+      minValue: item.receivedQty,
       currentProduct: item,
     });
   };
@@ -185,6 +185,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         onClose={onCloseModal}
         onChangeProductQuantity={onChangeProductQuantity}
         isHideDecreaseButton={modalParams.maxValue === modalParams.minValue}
+        isAllowZeroValue={true}
       />
       <MissingItemsModal
         onSubmit={onUpdateOrder}

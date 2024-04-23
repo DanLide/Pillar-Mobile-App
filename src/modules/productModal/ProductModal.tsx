@@ -48,6 +48,7 @@ export interface ProductModalProps extends ProductModalParams {
   product?: ProductModel;
   stockName?: string;
   isHideDecreaseButton?: boolean;
+  isAllowZeroValue?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: (product: ProductModel) => void;
@@ -97,6 +98,7 @@ export const ProductModal = memo(
     minValue,
     onHand = 0,
     isHideDecreaseButton,
+    isAllowZeroValue,
     onClose,
     onSubmit,
     onRemove,
@@ -185,6 +187,7 @@ export const ProductModal = memo(
                 toastType={toastType}
                 maxValue={maxValue}
                 minValue={minValue}
+                isAllowZeroValue={isAllowZeroValue}
                 style={[
                   !isReturnRemoveCreateInvoice &&
                     styles.productQuantityContainer,
@@ -235,6 +238,7 @@ export const ProductModal = memo(
         onRemoveAlert,
         selectedTab,
         isHideDecreaseButton,
+        isAllowZeroValue,
         onSelectStockAndNavigateToEditQuantity,
         onClose,
       ],

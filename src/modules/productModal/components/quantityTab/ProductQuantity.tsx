@@ -49,6 +49,7 @@ interface Props extends ViewProps {
   disabled?: boolean;
   hideCount?: boolean;
   isHideDecreaseButton?: boolean;
+  isAllowZeroValue?: boolean;
 
   onChangeProductQuantity: (quantity: number) => void;
   onRemove?: () => void;
@@ -134,6 +135,7 @@ export const ProductQuantity = forwardRef(
       hideCount,
       style,
       isHideDecreaseButton,
+      isAllowZeroValue,
       onChangeProductQuantity,
       onPressAddToList,
       onJobSelectNavigation,
@@ -217,7 +219,7 @@ export const ProductQuantity = forwardRef(
     };
 
     const onPressButton = () => {
-      if (currentValue === 0 && onClose) {
+      if (currentValue === 0 && onClose && !isAllowZeroValue) {
         onClose();
         return;
       }
