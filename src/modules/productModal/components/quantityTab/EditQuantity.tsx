@@ -193,7 +193,7 @@ export const EditQuantity = forwardRef(
       if (isInputDisabled) return <View style={styles.quantityButton} />;
 
       if (
-        !(currentValue === minValue && minValue === 0) &&
+        !(currentValue === minValue) &&
         currentValue >= minValue &&
         !isHideDecreaseButton
       ) {
