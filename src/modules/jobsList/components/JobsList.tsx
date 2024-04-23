@@ -104,29 +104,6 @@ const JobsListComponent: React.FC<Props> = observer(
       }
     };
 
-    const RenderFooterComponent = memo(() => {
-      if (footerComponent) return footerComponent;
-      if (isCreateJobAvailable) {
-        return (
-          <>
-            <View style={styles.buttons}>
-              <Button
-                title="Create Repair Order"
-                type={ButtonType.secondary}
-                buttonStyle={styles.createJobButton}
-                onPress={() => setIsCreateJobModalVisible(true)}
-              />
-            </View>
-            <CreateJobModal
-              isVisible={isCreateJobModalVisible}
-              onClose={onCloseModal}
-            />
-          </>
-        );
-      }
-      return null;
-    });
-
     if (isLoading) {
       return <ActivityIndicator size="large" style={styles.loading} />;
     }
@@ -170,7 +147,24 @@ const JobsListComponent: React.FC<Props> = observer(
           renderItem={renderJobListItem}
           ref={listRef}
         />
-        <RenderFooterComponent />
+        {footerComponent
+          ? footerComponent
+          : isCreateJobAvailable && (
+              <>
+                <View style={styles.buttons}>
+                  <Button
+                    title="Create Repair Order"
+                    type={ButtonType.secondary}
+                    buttonStyle={styles.createJobButton}
+                    onPress={() => setIsCreateJobModalVisible(true)}
+                  />
+                </View>
+                <CreateJobModal
+                  isVisible={isCreateJobModalVisible}
+                  onClose={onCloseModal}
+                />
+              </>
+            )}
       </>
     );
   },
