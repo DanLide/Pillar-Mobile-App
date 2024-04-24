@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
-import { isNil } from 'ramda';
+import { isNil, forEach } from 'ramda';
 
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
@@ -35,7 +35,6 @@ import {
 import { MissingItemsModal } from './components/MissingItemsModal';
 import { ProductModel } from '../../stores/types';
 import { receiveOrder } from '../../data/receiveOrder';
-import { getProductStepQty } from 'src/data/helpers';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -51,8 +50,10 @@ const initModalParams: OrderProductModal = {
   maxValue: undefined,
 };
 
+const keyExtractor = (item: ProductModel): string => item.uuid;
+
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modalParams, setModalParams] =
     useState<OrderProductModal>(initModalParams);
   const [isProductsMissingModal, setIsProductsMissingModal] =
@@ -62,16 +63,6 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const stockName =
     getCurrentProductsByStockName &&
     getCurrentProductsByStockName[0].stockLocationName;
-
-  const renderHeader = () => (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>Product</Text>
-      <Text style={[styles.headerText, styles.headerCenter]}>
-        Received/Ordered
-      </Text>
-      <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
-    </View>
-  );
 
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) =>
     !isNil(item.receivedQty) && !isNil(item.reservedCount) ? (
@@ -95,6 +86,25 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     ) : null;
 
   useEffect(() => {
+    //Decrease reservedCount: max count, what we can receiving, depends on the shippedQty
+    if (getCurrentProductsByStockName) {
+      forEach((product: ProductModel) => {
+        const maxReservedCount = Math.min(
+          product.orderedQty ?? 0,
+          product.shippedQty ?? 0,
+        );
+
+        ordersStoreRef.updateCurrentOrderProduct({
+          ...product,
+          reservedCount: maxReservedCount,
+        });
+      }, getCurrentProductsByStockName);
+      setIsLoading(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (currentOrder?.order.orderId) {
       navigation.setOptions(
         getScreenOptions({
@@ -106,11 +116,18 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   }, [currentOrder, navigation]);
 
   const onSelectProduct = (item: ProductModel) => {
-    if (isNil(item.orderedQty) || isNil(item.receivedQty)) return;
+    if (
+      isNil(item.orderedQty) ||
+      isNil(item.receivedQty) ||
+      isNil(item.shippedQty)
+    )
+      return;
+
+    const maxValue = Math.min(item.orderedQty, item.shippedQty);
 
     setModalParams({
       type: ProductModalType.ReceiveOrder,
-      maxValue: item.orderedQty,
+      maxValue: maxValue,
       minValue: item.receivedQty,
       currentProduct: item,
     });
@@ -162,11 +179,17 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       <InfoTitleBar type={InfoTitleBarType.Primary} title={stockName} />
-      {renderHeader()}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Product</Text>
+        <Text style={[styles.headerText, styles.headerCenter]}>
+          Received/Ordered
+        </Text>
+        <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
+      </View>
       <FlatList
         data={getCurrentProductsByStockName}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={keyExtractor}
         ItemSeparatorComponent={Separator}
       />
       <View style={styles.button}>
