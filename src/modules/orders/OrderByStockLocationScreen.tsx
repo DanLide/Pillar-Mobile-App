@@ -62,16 +62,6 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     getCurrentProductsByStockName &&
     getCurrentProductsByStockName[0].stockLocationName;
 
-  const renderHeader = () => (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>Product</Text>
-      <Text style={[styles.headerText, styles.headerCenter]}>
-        Received/Ordered
-      </Text>
-      <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
-    </View>
-  );
-
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) =>
     !isNil(item.receivedQty) && !isNil(item.reservedCount) ? (
       <Pressable style={styles.item} onPress={() => onSelectProduct(item)}>
@@ -184,14 +174,22 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     });
   };
 
+  const keyExtractor = (item: ProductModel): string => item.uuid;
+
   return (
     <View style={styles.container}>
       <InfoTitleBar type={InfoTitleBarType.Primary} title={stockName} />
-      {renderHeader()}
+      <View style={styles.header}>
+        <Text style={styles.headerText}>Product</Text>
+        <Text style={[styles.headerText, styles.headerCenter]}>
+          Received/Ordered
+        </Text>
+        <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
+      </View>
       <FlatList
         data={getCurrentProductsByStockName}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={keyExtractor}
         ItemSeparatorComponent={Separator}
       />
       <View style={styles.button}>
