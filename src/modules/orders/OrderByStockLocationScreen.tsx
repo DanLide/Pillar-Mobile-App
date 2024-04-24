@@ -50,6 +50,8 @@ const initModalParams: OrderProductModal = {
   maxValue: undefined,
 };
 
+const keyExtractor = (item: ProductModel): string => item.uuid;
+
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modalParams, setModalParams] =
@@ -173,8 +175,6 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       currentProduct: product,
     });
   };
-
-  const keyExtractor = (item: ProductModel): string => item.uuid;
 
   return (
     <View style={styles.container}>
