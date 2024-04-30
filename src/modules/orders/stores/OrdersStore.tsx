@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
-import { includes, isNil, map, pipe, sum } from 'ramda';
+import { includes, isNil, map, pipe, sum, forEach, keys, filter } from 'ramda';
 import { v1 as uuid } from 'uuid';
 
 import { GetOrderDetailsResponse, GetOrdersAPIResponse } from 'src/data/api';
@@ -104,6 +104,23 @@ export class OrdersStore extends BaseProductsStore {
           product.storageAreaId === currentProduct.storageAreaId,
       );
     };
+  }
+
+  @computed get getNotReceivedMultipleStockList() {
+    if (isNil(this.currentOrder?.productList)) return [];
+
+    const listOfStocks: { [name: string]: number } = {};
+
+    forEach(product => {
+      if (product.stockLocationId && !isNil(product.receivedQty)) {
+        listOfStocks[product.stockLocationId] =
+          (listOfStocks[product.stockLocationId]
+            ? listOfStocks[product.stockLocationId]
+            : 0) + product.receivedQty;
+      }
+    }, this.currentOrder?.productList);
+
+    return keys(filter(count => count === 0, listOfStocks));
   }
 
   @action setCurrentOrder(orderDetails: CurrentOrder) {

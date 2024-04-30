@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,7 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
-import { isNil } from 'ramda';
+import { isNil, filter } from 'ramda';
 
 import {
   Button,
@@ -32,8 +32,27 @@ type Props = NativeStackScreenProps<
   AppNavigator.ResultScreen
 >;
 
+const keyExtractor = (item: ProductModel): string => item.uuid;
+
 export const ResultScreen = ({ navigation }: Props) => {
   const ordersStoreRef = useRef(ordersStore).current;
+
+  const isNextStock = useMemo(() => {
+    if (isNil(ordersStoreRef.getCurrentProductsByStockName)) return false;
+
+    const currentStockId =
+      ordersStoreRef.getCurrentProductsByStockName[0].stockLocationId;
+
+    return (
+      filter(
+        id => id != currentStockId,
+        ordersStoreRef.getNotReceivedMultipleStockList,
+      ).length !== 0
+    );
+  }, [
+    ordersStoreRef.getCurrentProductsByStockName,
+    ordersStoreRef.getNotReceivedMultipleStockList,
+  ]);
 
   const renderItem = ({ item }: ListRenderItemInfo<ProductModel>) => {
     if (isNil(item.receivedQty) || isNil(item.reservedCount)) return null;
@@ -105,7 +124,7 @@ export const ResultScreen = ({ navigation }: Props) => {
           style={styles.flatList}
           data={ordersStoreRef.getCurrentProductsByStockName}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={keyExtractor}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
         />
       </View>
@@ -135,10 +154,10 @@ export const ResultScreen = ({ navigation }: Props) => {
         />
         <Button
           type={ButtonType.primary}
-          title="Home"
+          title={isNextStock ? 'Continue' : 'Home'}
           buttonStyle={[styles.button, styles.homeButton]}
           textStyle={styles.buttonText}
-          onPress={onNavigateToHome}
+          onPress={isNextStock ? onNavigateToOrderView : onNavigateToHome}
         />
       </View>
     </View>
