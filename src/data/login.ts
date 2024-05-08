@@ -18,7 +18,7 @@ import { Task, TaskExecutor } from './helpers';
 import { Utils } from './helpers/utils';
 import { permissionProvider } from './providers';
 import { LoginType } from 'src/navigation/types';
-import { RoleType } from 'src/constants/common.enum';
+import { RoleType, PartyRelationshipType } from 'src/constants/common.enum';
 import { includes } from 'ramda';
 
 export interface TokenData {
@@ -237,10 +237,18 @@ class GetSSOTask extends Task {
       ])
     ) {
       // is Distributor user
-      const response: MultiSSOAPIResponse = await distributorSSOAPI(
-        token!,
-        orgPartyRoleId,
-      );
+      let roleTypeFacilityId = PartyRelationshipType.BranchToRepairFacility;
+      if (
+        roleTypeId === RoleType.DistributorRegionalManager ||
+        roleTypeId === RoleType.DistributorAdmin
+      ) {
+        roleTypeFacilityId = PartyRelationshipType.DistributorToRepairFacility;
+      }
+      const response: MultiSSOAPIResponse = await distributorSSOAPI({
+        token: token!,
+        partyRoleId: orgPartyRoleId,
+        roleTypeFacilityId,
+      });
       return this.mapMulti(response);
     } else {
       // TODO add extra check if it is Admin. If not - throw exception

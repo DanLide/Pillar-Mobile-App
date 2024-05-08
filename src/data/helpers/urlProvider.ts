@@ -91,9 +91,9 @@ export class URLProvider {
     );
   }
 
-  getDistributorSSOUrl(partyRoleId: number) {
+  getDistributorSSOUrl(partyRoleId: number, roleTypeFacilityId: number) {
     return new URL(
-      `${this.currentEnv.modules.pisaCompanyLocation.apiUri}/api/RepairFacility/${partyRoleId}/8`,
+      `${this.currentEnv.modules.pisaCompanyLocation.apiUri}/api/RepairFacility/${partyRoleId}/${roleTypeFacilityId}`,
     );
   }
 

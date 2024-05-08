@@ -111,8 +111,19 @@ export const adminSSOAPI = (token: string) => {
   });
 };
 
-export const distributorSSOAPI = (token: string, partyRoleId: number) => {
-  const url = new URLProvider().getDistributorSSOUrl(partyRoleId);
+export const distributorSSOAPI = ({
+  token,
+  partyRoleId,
+  roleTypeFacilityId,
+}: {
+  token: string;
+  partyRoleId: number;
+  roleTypeFacilityId: number;
+}) => {
+  const url = new URLProvider().getDistributorSSOUrl(
+    partyRoleId,
+    roleTypeFacilityId,
+  );
 
   url.search = decodeURIComponent(url.search);
 
