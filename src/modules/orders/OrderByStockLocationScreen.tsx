@@ -35,6 +35,8 @@ import {
 import { MissingItemsModal } from './components/MissingItemsModal';
 import { ProductModel } from '../../stores/types';
 import { receiveOrder } from '../../data/receiveOrder';
+import { OrderTitleByStatusType } from 'src/modules/orders/components/StatusBadge';
+import { OrderStatusType } from 'src/constants/common.enum';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,
@@ -87,18 +89,23 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
 
   useEffect(() => {
     //Decrease reservedCount: max count, what we can receiving, depends on the shippedQty
-    if (getCurrentProductsByStockName) {
-      forEach((product: ProductModel) => {
-        const maxReservedCount = Math.min(
-          product.orderedQty ?? 0,
-          product.shippedQty ?? 0,
-        );
+    //For OrderStatusType = SHIPPED
+    if (
+      currentOrder?.order.status ===
+      OrderTitleByStatusType[OrderStatusType.SHIPPED]
+    ) {
+      if (getCurrentProductsByStockName) {
+        forEach((product: ProductModel) => {
+          const maxReservedCount = product.shippedQty ?? 0;
 
-        ordersStoreRef.updateCurrentOrderProduct({
-          ...product,
-          reservedCount: maxReservedCount,
-        });
-      }, getCurrentProductsByStockName);
+          ordersStoreRef.updateCurrentOrderProduct({
+            ...product,
+            reservedCount: maxReservedCount,
+          });
+        }, getCurrentProductsByStockName);
+        setIsLoading(false);
+      }
+    } else {
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,11 +130,13 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     )
       return;
 
-    const maxValue = Math.min(item.orderedQty, item.shippedQty);
-
     setModalParams({
       type: ProductModalType.ReceiveOrder,
-      maxValue: maxValue,
+      maxValue:
+        currentOrder?.order.status ===
+        OrderTitleByStatusType[OrderStatusType.SHIPPED]
+          ? item.shippedQty ?? 0
+          : item.orderedQty,
       minValue: item.receivedQty,
       currentProduct: item,
     });
