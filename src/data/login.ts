@@ -234,6 +234,7 @@ class GetSSOTask extends Task {
         RoleType.BranchDriver,
         RoleType.BranchManager,
         RoleType.DistributorRegionalManager,
+        RoleType.DistributorAdmin,
       ])
     ) {
       // is Distributor user
