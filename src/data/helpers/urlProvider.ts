@@ -292,7 +292,7 @@ export class URLProvider {
     const facilityId = this.ssoStore.getCurrentSSO?.pisaId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/product/GetAllProduct/${facilityId}/-1`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/product/GetAllProduct/${facilityId}/0`,
     );
   }
 
