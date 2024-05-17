@@ -253,7 +253,7 @@ export class URLProvider {
     const partyRoleID = this.returnProductsStore.currentStock?.partyRoleId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}/0`,
     );
   }
 
