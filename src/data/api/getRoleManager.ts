@@ -8,6 +8,7 @@ export interface GetRoleManagerAPIResponse {
   languageTypeId: number;
   roleTypeDescription?: string;
   isTermsAccepted?: boolean;
+  orgRoleTypeID?: number;
 }
 
 export const getRoleManagerAPI = (token: string) => {

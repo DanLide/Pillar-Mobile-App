@@ -119,6 +119,15 @@ class GetRoleManagerTask extends Task {
 
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
 
+    // Application should not allow to login other shop RF manager users for a configured Shop.
+    if (
+      ssoStore?.getCurrentSSO?.pisaId &&
+      response.orgRoleTypeID === RoleType.RepairFacility &&
+      response.orgPartyRoleID !== ssoStore?.getCurrentSSO?.pisaId
+    ) {
+      throw new Error('Login failed!');
+    }
+
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
     this.loginFlowContext.isLanguage = !!response.languageTypeId;
     this.loginFlowContext.partyRoleId = response.partyRoleId;
