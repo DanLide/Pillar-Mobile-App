@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import { colors, fonts, SVGs } from '../theme';
 import { testIds } from '../helpers';
@@ -17,6 +18,7 @@ interface Props extends Omit<TouchableOpacityProps, 'children'> {
   count?: number;
   containerStyle?: StyleProp<ViewStyle>;
   testID?: string;
+  buttonListTitle?: string;
 }
 
 const COUNTER_SIZE = 20;
@@ -26,8 +28,10 @@ const ProductListButton: React.FC<Props> = ({
   containerStyle,
   style,
   testID = 'productListButton',
+  buttonListTitle,
   ...props
 }) => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const buttonStyle = useMemo<StyleProp<ViewStyle>>(
@@ -46,7 +50,9 @@ const ProductListButton: React.FC<Props> = ({
         testID={testIds.idButton(testID)}
       >
         <SVGs.ProductListIcon color={colors.purpleDark} />
-        <Text style={styles.titleText}>List</Text>
+        <Text style={styles.titleText}>
+          {buttonListTitle ? buttonListTitle : t('list')}
+        </Text>
       </TouchableOpacity>
       {count ? (
         <View style={styles.countContainer}>

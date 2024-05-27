@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Button, ButtonType, Input, Modal, Text } from 'src/components';
 import { checkIsExistJob, onCreateJob } from 'src/data/createJob';
 import { colors, fonts } from 'src/theme';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const CreateJobModal = ({ isVisible, onClose }: Props) => {
+  const { t } = useTranslation();
   const { showToast } = useSingleToast();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -33,16 +35,15 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
     setIsLoading(true);
 
     const isJobExist = await checkIsExistJob(number);
-    if (isJobExist)
-      return handleError('The Repair order with such number already exists');
+    if (isJobExist) return handleError(t('orderWithSuchNumberExists'));
 
     const error = await onCreateJob(number, comment);
-    if (error) return handleError('Something went wrong. Please, retry');
+    if (error) return handleError(t('somethingWentWrong'));
 
     setIsLoading(false);
     onClose(true);
 
-    showToast(`New Job Number ${number} is created.`, {
+    showToast(t('newJobNumberCreated', { number }), {
       type: ToastType.SuccessCreateJob,
     });
   };
@@ -75,21 +76,21 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
     <Modal
       isVisible={isVisible}
       onClose={onCloseModal}
-      semiTitle="Create Repair Order"
+      semiTitle={t('createRepairOrder')}
       titleStyle={styles.headerTitle}
       topOffset={topOffset}
     >
       <View style={styles.container}>
         <Text style={[styles.title, styles.bottomMargin]}>Repair Order</Text>
         <Input
-          placeholder="Number"
+          placeholder={t('number')}
           containerStyle={styles.bottomMargin}
           value={number}
           onChangeText={value => setNumber(value)}
-          rightLabel="Required"
+          rightLabel={t('required')}
         />
         <Input
-          placeholder="Comments"
+          placeholder={t('comments')}
           containerStyle={[styles.bottomMargin, styles.commentContainer]}
           style={styles.comment}
           multiline
@@ -99,13 +100,13 @@ export const CreateJobModal = ({ isVisible, onClose }: Props) => {
         />
         <View style={styles.buttons}>
           <Button
-            title="Cancel"
+            title={t('cancel')}
             type={ButtonType.secondary}
             buttonStyle={styles.button}
             onPress={onCloseModal}
           />
           <Button
-            title="Create"
+            title={t('create')}
             type={ButtonType.primary}
             buttonStyle={styles.button}
             onPress={onCreateRepairOrder}

@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { ProductModalType, ProductModalParams } from '../productModal';
 import { BaseScannerScreen } from '../../components';
@@ -30,6 +31,7 @@ type BaseProductsStore = ScannerModalStoreType &
   StockProductStoreType;
 
 export const ScannerScreen: React.FC = observer(() => {
+  const { t } = useTranslation();
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
@@ -80,6 +82,7 @@ export const ScannerScreen: React.FC = observer(() => {
         modalParams={modalParams}
         onProductScan={onProductScan}
         onCloseModal={onCloseModal}
+        buttonListTitle={t('cart')}
       />
     </ToastContextProvider>
   );

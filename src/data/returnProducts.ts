@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { clone } from 'ramda';
 
 import { Task } from './helpers';
@@ -40,6 +41,6 @@ export class ReturnProductTask extends Task {
 
     this.returnProductsStore.setProducts(products);
 
-    if (this.hasError) throw Error('Request failed!');
+    if (this.hasError) throw Error(i18n.t('requestFailed'));
   }
 }

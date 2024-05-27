@@ -8,6 +8,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
@@ -36,6 +37,7 @@ export const OrdersList = memo(
     setFetchError,
     isFiltered,
   }: Props) => {
+    const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(false);
     const navigation = useNavigation();
 
@@ -63,11 +65,13 @@ export const OrdersList = memo(
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={[styles.headerOrderId, styles.headerText]}>Order</Text>
-          <Text style={[styles.headerDistributor, styles.headerText]}>
-            Distributor
+          <Text style={[styles.headerOrderId, styles.headerText]}>
+            {t('order')}
           </Text>
-          <Text style={styles.headerText}>Status</Text>
+          <Text style={[styles.headerDistributor, styles.headerText]}>
+            {t('distributor')}
+          </Text>
+          <Text style={styles.headerText}>{t('status')}</Text>
         </View>
         <FlatList
           style={styles.container}
@@ -88,7 +92,7 @@ export const OrdersList = memo(
           >
             <SVGs.ReceiveBackorderIcon color={colors.purpleDark} />
             <Text style={styles.backborderText}>
-              Order not Found? Receive Backorder
+              {t('orderNotFoundReceiveBackorder')}
             </Text>
           </Pressable>
         )}
@@ -97,7 +101,7 @@ export const OrdersList = memo(
           <View style={styles.buttons}>
             <Button
               type={ButtonType.secondary}
-              title="Return Order"
+              title={t('returnOrder')}
               buttonStyle={[styles.button, styles.returnButton]}
               textStyle={styles.buttonText}
               onPress={onSecondaryPress}

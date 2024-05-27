@@ -17,6 +17,7 @@ import TrackPlayer from 'react-native-track-player';
 import SplashScreen from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 
+import { initI18n } from 'src/libs/translation';
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
@@ -42,6 +43,10 @@ const version = `Version ${deviceInfoStore.version}`;
 
 const App = observer(() => {
   const [appState, setAppState] = useState('active');
+
+  useEffect(() => {
+    initI18n();
+  }, []);
 
   useEffect(() => {
     SplashScreen.hide();

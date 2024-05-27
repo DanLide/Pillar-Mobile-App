@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { useTranslation } from 'react-i18next';
 
 import { authStore, ssoStore, deviceInfoStore } from '../../stores';
 import { colors, fonts, SVGs } from '../../theme';
@@ -14,13 +15,14 @@ import SupportAlertWrapper from 'src/navigation/components/DrawerAlertWrappers/S
 export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [isSupportAlertVisible, setIsSupportAlertVisible] =
     useState<boolean>(false);
 
   const isNavigationToShopSelectAvailable =
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
-  const version = `Version ${deviceInfoStore.version}`;
+  const version = `${t('version')} ${deviceInfoStore.version}`;
   const onLogout = () => {
     authStore.logOut();
   };
@@ -67,7 +69,7 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
         disabled={!isNavigationToShopSelectAvailable}
       />
       <DrawerListItem
-        title={'Settings'}
+        title={t('settings')}
         icon={<SVGs.SettingsIcon />}
         showChevron
         onPress={onNavigationToSettings}
@@ -78,14 +80,14 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
         <DrawerListButton
           onPress={handleSupportButtonPress}
           icon={<SVGs.SupportIcon color={colors.purpleDark3} />}
-          title="Support"
-          subtitle="How to get Assistance"
+          title={t('support')}
+          subtitle={t('howToGetAssistance')}
           disabled={false}
         />
         <DrawerListButton
           onPress={onLogout}
           icon={<SVGs.LogoutIcon2 color={colors.blue} />}
-          title="Logout"
+          title={t('logout')}
           disabled={false}
         />
         <Text style={styles.subtitleText}>{version}</Text>

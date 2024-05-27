@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { FC, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 
@@ -11,10 +12,11 @@ type SupportAlertWrapperProps = Omit<
 >;
 
 const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
+  const { t } = useTranslation();
   const title = (
     <View style={styles.titleContainer}>
       <SVGs.SupportIcon color={colors.grayDark3} style={{ marginRight: 6 }} />
-      <Text style={styles.titleLabel}>Support</Text>
+      <Text style={styles.titleLabel}>{t('support')}</Text>
     </View>
   );
 
@@ -22,7 +24,7 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
     <View style={[styles.container, styles.messageContainer]}>
       <View>
         <Text style={[styles.headline, styles.label, { marginLeft: 26 }]}>
-          RepairStack Technical
+          {t('repairStackTechnical')}
         </Text>
 
         <View style={styles.rowContainer}>
@@ -31,7 +33,7 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
             <Text style={[styles.label, styles.boldLabel, { lineHeight: 20 }]}>
               1-833-686-0248
             </Text>
-            <Text style={styles.label}>Support is available </Text>
+            <Text style={styles.label}>{t('supportIsAvailable')} </Text>
             <Text style={styles.label}>7:00am – 7:00pm CST</Text>
           </View>
         </View>
@@ -43,7 +45,7 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
           <Text style={[styles.label, styles.boldLabel]}>
             support-repairstack@mmm.com
           </Text>
-          <Text style={styles.label}>Emails are answered within 24 hours</Text>
+          <Text style={styles.label}>{t('emailsAreAnswered24Hours')}</Text>
         </View>
       </View>
 
@@ -54,7 +56,7 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
         />
         <View>
           <Text style={[styles.headline, styles.label]}>
-            3M AAD General Product
+            {t('generalProduct')}
           </Text>
           <Text style={[styles.label, styles.boldLabel]}>1-844-204-7071</Text>
         </View>
@@ -67,7 +69,7 @@ const SupportAlertWrapper: FC<SupportAlertWrapperProps> = props => {
       title={title}
       message={message}
       hideSecondary
-      primaryTitle="Close"
+      primaryTitle={t('Close')}
       {...props}
     />
   );

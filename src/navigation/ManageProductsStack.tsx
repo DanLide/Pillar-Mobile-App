@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   AppNavigator,
@@ -24,6 +25,7 @@ import { ScannerHeaderRightButtons } from './components/ScannerHeaderRightButton
 const Stack = createStackNavigator<ManageProductsStackParamList>();
 
 export const ManageProductsStack: React.FC = observer(() => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator
       screenOptions={DEFAULT_STACK_OPTIONS}
@@ -33,7 +35,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
         options={getScreenOptions({
-          title: 'Bluetooth Connection',
+          title: t('bluetoothConnection'),
           leftBarButtonType: LeftBarType.Back,
         })}
         initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
@@ -42,7 +44,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
         options={getScreenOptions({
-          title: 'Manage Products',
+          title: t('manageProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -50,7 +52,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.ManageProductsScreen}
         component={ManageProductsScreen}
         options={getScreenOptions({
-          title: 'Manage Products',
+          title: t('manageProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -72,7 +74,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.HowToScanScreen}
         component={HowToScanScreen}
         options={getScreenOptions({
-          title: 'How to Scan',
+          title: t('howToScan'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -80,7 +82,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -88,7 +90,7 @@ export const ManageProductsStack: React.FC = observer(() => {
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={{
-          title: 'Manage Products',
+          title: t('manageProducts'),
           headerRight: () => <ScannerHeaderRightButtons />,
         }}
       />

@@ -8,18 +8,26 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useTranslation } from 'react-i18next';
+import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
 import { Separator } from 'src/components';
 import { WidthType } from 'src/components/Separator';
-import { colors, fonts } from 'src/theme';
+import { colors, fonts, SVGs } from 'src/theme';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { cleanKeychain } from 'src/helpers/localStorage';
 import { permissionProvider } from 'src/data/providers';
 import { onRemoveDeviceFromSSO } from 'src/data/removeDeviceFromSSO';
+import { AppNavigator } from 'src/navigation/types';
+
+interface Props {
+  navigation: NavigationProp<ParamListBase>;
+}
 
 enum Type {
   Button,
+  Chevron,
   Switch,
   Empty,
 }
@@ -36,7 +44,8 @@ const ItemSeparatorComponent = () => (
   <Separator widthType={WidthType.MajorPart} />
 );
 
-export const SettingsScreen = () => {
+export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const deviceName = deviceInfoStore.getDeviceName;
@@ -47,20 +56,25 @@ export const SettingsScreen = () => {
   const sections = useMemo<Section[]>(
     () => [
       {
-        title: 'App version',
+        title: t('appVersion'),
         subtitle: deviceInfoStore.version,
         type: Type.Empty,
       },
       {
-        title: 'Language',
-        subtitle: 'English',
-        type: Type.Empty,
+        title: t('language'),
+        subtitle: t(i18n.language),
+        type: Type.Chevron,
+        action: () => {
+          navigation.navigate(AppNavigator.LanguageSelectScreen, {
+            isSettings: true,
+          });
+        },
       },
       {
-        title: 'Device Name',
+        title: t('deviceName'),
         subtitle: deviceName,
         type: Type.Button,
-        buttonTitle: 'Copy',
+        buttonTitle: t('copy'),
         action: () => {
           Clipboard.setString(deviceName);
         },
@@ -68,17 +82,23 @@ export const SettingsScreen = () => {
       ...(userPermissions.configureShop
         ? [
             {
-              title: 'Factory Reset App',
-              subtitle:
-                'Restore app settings to default values.\nThis is irreversible.',
+              title: t('factoryResetApp'),
+              subtitle: t('restoreAppSettings'),
               type: Type.Button,
-              buttonTitle: 'Reset',
+              buttonTitle: t('reset'),
               action: openAlert,
             },
           ]
         : []),
     ],
-    [deviceName, openAlert, userPermissions.configureShop],
+    [
+      t,
+      i18n.language,
+      deviceName,
+      userPermissions.configureShop,
+      openAlert,
+      navigation,
+    ],
   );
 
   const renderItemActionType = useCallback((section: Section) => {
@@ -87,6 +107,13 @@ export const SettingsScreen = () => {
         return (
           <TouchableOpacity style={styles.button} onPress={section.action}>
             <Text style={styles.buttonText}>{section.buttonTitle}</Text>
+          </TouchableOpacity>
+        );
+      }
+      case Type.Chevron: {
+        return (
+          <TouchableOpacity style={styles.button} onPress={section.action}>
+            <SVGs.ChevronIcon color={colors.purpleDark} />
           </TouchableOpacity>
         );
       }
@@ -128,10 +155,10 @@ export const SettingsScreen = () => {
       />
       <AlertWrapper
         visible={isAlertVisible}
-        message="Would you like to factory reset this application?"
-        title="Are you sure?"
-        primaryTitle="Yes"
-        secondaryTitle="No"
+        message={t('wouldYouLikeFactoryReset')}
+        title={t('areYouSure')}
+        primaryTitle={t('yes')}
+        secondaryTitle={t('no')}
         onPressPrimary={handleResetConfirm}
         onPressSecondary={closeAlert}
       />

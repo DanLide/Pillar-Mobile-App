@@ -10,6 +10,7 @@ import {
   Vibration,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import Animated, {
   FadeInUp,
   FadeOutDown,
@@ -46,6 +47,7 @@ export type ScanProductProps = {
   isUPC?: boolean;
   scannedProductCount?: number;
   tooltipText?: string;
+  buttonListTitle?: string;
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -140,10 +142,6 @@ const QRButton: React.FC<QRButtonProps> = ({
   );
 };
 
-const oneBarcodeToolTipText = 'Point camera at product code';
-const multipleBarcodeToolTipText = 'Tap the code you want to scan';
-const upcToolTipText = 'Scan UPC';
-
 const soundAndVibrate = async () => {
   await VolumeManager.setVolume(1);
   Vibration.vibrate();
@@ -157,7 +155,9 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   scannedProductCount,
   tooltipText,
   filteredType,
+  buttonListTitle,
 }) => {
+  const { t } = useTranslation();
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
   const ratio = useRef<number | null>(null);
@@ -378,12 +378,12 @@ const ScanProduct: React.FC<ScanProductProps> = ({
   };
 
   const getTooltipText = useMemo<string>(() => {
-    if (isUPC) return upcToolTipText;
+    if (isUPC) return t('scanUPC');
 
     return barcodesLength > 1
-      ? multipleBarcodeToolTipText
-      : oneBarcodeToolTipText;
-  }, [barcodesLength, isUPC]);
+      ? t('tapCodeYouWantToScan')
+      : t('pointCameraAtProductCode');
+  }, [barcodesLength, isUPC, t]);
 
   const renderCenterScanSquare = useMemo(
     () => (
@@ -496,6 +496,7 @@ const ScanProduct: React.FC<ScanProductProps> = ({
           <ProductListButton
             containerStyle={styles.listButtonContainer}
             count={scannedProductCount}
+            buttonListTitle={buttonListTitle}
           />
         )}
         <TouchableOpacity

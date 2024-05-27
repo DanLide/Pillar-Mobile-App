@@ -13,7 +13,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @observable isLoggedIn?: boolean;
   private token?: string;
   private isTnC?: boolean;
-  private isLanguage?: boolean;
   private partyRoleId?: number;
   private roleTypeDescription?: string;
   private username?: string;
@@ -29,7 +28,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   constructor() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguage = undefined;
     this.permissionSet = undefined;
     this.roleTypeDescription = undefined;
     this.isLoggedIn = false;
@@ -51,11 +49,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @computed
   get isTnCSelected() {
     return this.isTnC;
-  }
-
-  @computed
-  get isLanguageSelected() {
-    return this.isLanguage;
   }
 
   @computed
@@ -123,10 +116,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     this.isTnC = isTnC;
   }
 
-  @action setIsLanguage(isLanguage: boolean) {
-    this.isLanguage = isLanguage;
-  }
-
   @action setLoggedIn(value: boolean) {
     this.isLoggedIn = value;
   }
@@ -174,7 +163,6 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   @action logOut() {
     this.token = undefined;
     this.isTnC = undefined;
-    this.isLanguage = undefined;
     this.permissionSet = undefined;
     this.isLoggedIn = false;
     stocksStore.clear();

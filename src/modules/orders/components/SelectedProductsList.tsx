@@ -11,6 +11,7 @@ import {
   TextStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { ProductModel, SyncedProductStoreType } from 'src/stores/types';
 import { ProductEmptyList, Separator } from 'src/components';
@@ -43,18 +44,17 @@ export const SelectedProductsList: React.FC<Props> = observer(
     withStockLocation,
     nextNavigationGoBack,
   }) => {
+    const { t } = useTranslation();
     const store = useRef<SyncedProductStoreType>(ordersStore).current;
-
     const products = isLoading ? [] : store.getNotSyncedProducts;
-
     const isPurchaseOrder = orderType === OrderType.Purchase;
 
     const ListHeader = useMemo(
       () => (
         <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerTitleLeft}>Product</Text>
-          <Text style={styles.headerTitleRight}>Quantity</Text>
-          <Text style={styles.headerTitleRight}>Cost</Text>
+          <Text style={styles.headerTitleLeft}>{t('product')}</Text>
+          <Text style={styles.headerTitleRight}>{t('quantity')}</Text>
+          <Text style={styles.headerTitleRight}>{t('cost')}</Text>
         </View>
       ),
       [],
@@ -77,11 +77,11 @@ export const SelectedProductsList: React.FC<Props> = observer(
         ) : (
           <ProductEmptyList
             hideTitle
-            subtitle="No Products added"
+            subtitle={t('noProductsAdded')}
             style={isPurchaseOrder && styles.emptyContainer}
           />
         ),
-      [isLoading, isPurchaseOrder],
+      [isLoading, isPurchaseOrder, t],
     );
 
     const itemTitleStyle = useMemo<StyleProp<TextStyle>>(

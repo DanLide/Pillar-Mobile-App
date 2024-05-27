@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { authStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const HomeScreen: React.FC<Props> = ({ navigation }) => {
+  const { t } = useTranslation();
   const isNavigationToShopSelectAvailable =
     (ssoStore.getSSOList?.length || 0) > 1 &&
     !ssoStore.getIsDeviceConfiguredBySSO;
@@ -65,8 +67,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.shadowWrapper}>
         {userPermissions.removeProduct && (
           <ListItem
-            title="Remove Products"
-            subtitle="Check products out of inventory"
+            title={t('removeProducts')}
+            subtitle={t('checkProductsOutOfInventory')}
             leftIcon={ArrowTopIcon}
             onPress={onRemoveProducts}
           />
@@ -74,8 +76,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         {renderBorderBetweenTheItems && <View style={styles.separator} />}
         {userPermissions.returnProduct && (
           <ListItem
-            title="Return Products"
-            subtitle="Check products back into inventory"
+            title={t('returnProducts')}
+            subtitle={t('checkProductsBackIntoInventory')}
             leftIcon={ArrowBottomIcon}
             onPress={onReturnProducts}
           />
@@ -85,8 +87,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       {userPermissions.createInvoice && (
         <View style={styles.shadowWrapper}>
           <ListItem
-            title="Create Invoice"
-            subtitle="Add materials to a repair order"
+            title={t('createInvoice')}
+            subtitle={t('addMaterialsToOrder')}
             leftIcon={InvoiceIcon}
             onPress={onCreateInvoice}
           />
@@ -95,8 +97,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
       <View style={styles.shadowWrapper}>
         <ListItem
-          title="Manage Products"
-          subtitle="View and edit product details"
+          title={t('manageProducts')}
+          subtitle={t('viewAndEditProductDetails')}
           leftIcon={ManageProductIcon}
           onPress={onManageProducts}
         />
@@ -105,8 +107,8 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       {userPermissions.viewOrders && (
         <View style={styles.shadowWrapper}>
           <ListItem
-            title="Manage Orders"
-            subtitle="Create, edit and receive product orders"
+            title={t('manageOrders')}
+            subtitle={t('createEditReceiveOrders')}
             leftIcon={ManageOrderIcon}
             onPress={onOrders}
           />

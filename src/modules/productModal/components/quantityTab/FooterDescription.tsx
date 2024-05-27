@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { colors, fonts } from 'src/theme';
 import { InventoryTypeBadge } from 'src/components';
@@ -22,6 +23,7 @@ export const FooterDescription: React.FC<Props> = ({
   product,
   onHand = 0,
 }) => {
+  const { t } = useTranslation();
   const isEachPiece = product?.inventoryUseTypeId === InventoryUseType.Each;
 
   const renderValue = (value?: number) =>
@@ -51,7 +53,8 @@ export const FooterDescription: React.FC<Props> = ({
             {type === ProductModalType.CreateOrder && isEachPiece && (
               <Text style={styles.piecesCount}>
                 {product.unitsPer} x {product.reservedCount} ={' '}
-                {(product.unitsPer ?? 0) * (product.reservedCount ?? 0)} pieces
+                {(product.unitsPer ?? 0) * (product.reservedCount ?? 0)}{' '}
+                {t('pieces')}
               </Text>
             )}
             <View style={styles.wrappedContainer}>
@@ -64,7 +67,7 @@ export const FooterDescription: React.FC<Props> = ({
 
               {isEachPiece && (
                 <View style={[styles.itemContainer, { margin: 8 }]}>
-                  <Text style={styles.title}>Pieces Per Container</Text>
+                  <Text style={styles.title}>{t('piecesPerContainer')}</Text>
                   <Text style={styles.subtitleInStock}>
                     {renderValue(product.unitsPer)}
                   </Text>
@@ -72,21 +75,21 @@ export const FooterDescription: React.FC<Props> = ({
               )}
 
               <View style={[styles.itemContainer, { margin: 8 }]}>
-                <Text style={styles.title}>Shipment Quantity</Text>
+                <Text style={styles.title}>{t('shipmentQuantity')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(shipmentQuantity)}
                 </Text>
               </View>
 
               <View style={[styles.itemContainer, { margin: 8 }]}>
-                <Text style={styles.title}>On Hand</Text>
+                <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onHand)}
                 </Text>
               </View>
 
               <View style={[styles.itemContainer, { margin: 8 }]}>
-                <Text style={styles.title}>On Order</Text>
+                <Text style={styles.title}>{t('onOrder')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onOrder)}
                 </Text>
@@ -99,7 +102,7 @@ export const FooterDescription: React.FC<Props> = ({
           <View style={styles.container}>
             {hideOnHandCount ? null : (
               <View style={[styles.itemContainer, { marginRight: 16 }]}>
-                <Text style={styles.title}>On Hand</Text>
+                <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {onHand > 99
                     ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY
@@ -109,7 +112,7 @@ export const FooterDescription: React.FC<Props> = ({
             )}
 
             <View style={styles.itemContainer}>
-              <Text style={styles.title}>Remove by</Text>
+              <Text style={styles.title}>{t('removeBy')}</Text>
               <InventoryTypeBadge
                 inventoryUseTypeId={product.inventoryUseTypeId}
               />
@@ -128,6 +131,7 @@ export const FooterDescription: React.FC<Props> = ({
     product.unitsPer,
     shipmentQuantity,
     type,
+    t,
   ]);
 };
 

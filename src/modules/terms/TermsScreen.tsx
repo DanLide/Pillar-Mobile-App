@@ -2,8 +2,9 @@ import { useCallback, useRef, useState } from 'react';
 import { Alert, SafeAreaView, StyleSheet, View, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
-import { handleExternalLinkInBrowser, TERMS_SOURCE } from './helpers';
+import { handleExternalLinkInBrowser } from './helpers';
 import {
   Button,
   Checkbox,
@@ -19,13 +20,26 @@ import { NavigationProp, ParamListBase } from '@react-navigation/native';
 import Loading from '../../components/Loading';
 import { colors, fonts } from '../../theme';
 
+import en_US_Terms from 'src/strings/terms/en_US_Terms';
+import fr_CA_Terms from 'src/strings/terms/fr_CA_Terms';
+
 interface Props {
   navigation: NavigationProp<ParamListBase>;
 }
 
+type termsType = {
+  [key: string]: string;
+};
+
+const allLanguageTerms: termsType = {
+  en_US: en_US_Terms,
+  fr_CA: fr_CA_Terms,
+};
+
 const renderLoading = () => <Loading />;
 
 const TermsScreen: React.FC<Props> = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
   const store = useRef(authStore).current;
 
   const [isWebViewLoading, setIsWebViewLoading] = useState(false);
@@ -40,7 +54,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
     setIsLoading(false);
 
     if (error)
-      return Alert.alert('Error', error.message || 'Accept Terms failed!');
+      return Alert.alert('Error', error.message || t('acceptTermsfailed'));
     if (!ssoStore.getCurrentSSO) {
       return navigation.navigate(AppNavigator.SelectSSOScreen);
     }
@@ -49,7 +63,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
       index: 0,
       routes: [{ name: AppNavigator.Drawer }],
     });
-  }, [navigation, store]);
+  }, [navigation, store, t]);
 
   const startWebViewLoading = useCallback(() => setIsWebViewLoading(true), []);
   const endWebViewLoading = useCallback(() => setIsWebViewLoading(false), []);
@@ -58,7 +72,7 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <InfoTitleBar type={InfoTitleBarType.Secondary} title={store.getName} />
       <WebView
-        source={TERMS_SOURCE}
+        source={{ html: allLanguageTerms[i18n.language] }}
         onShouldStartLoadWithRequest={handleExternalLinkInBrowser}
         startInLoadingState
         renderLoading={renderLoading}
@@ -72,11 +86,11 @@ const TermsScreen: React.FC<Props> = ({ navigation }) => {
             isChecked={isTermsAccepted}
             onChange={toggleTermsAccepted}
           />
-          <Text style={styles.checkboxTitle}>Accept Terms & Conditions</Text>
+          <Text style={styles.checkboxTitle}>{t('acceptTermsConditions')}</Text>
         </View>
         <Button
           type={ButtonType.primary}
-          title="Next"
+          title={t('next')}
           disabled={isSubmitDisabled}
           buttonStyle={styles.submitButton}
           onPress={onSubmitTerms}

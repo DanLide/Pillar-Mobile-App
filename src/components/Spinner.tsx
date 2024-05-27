@@ -1,14 +1,17 @@
 import { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import LottieView from 'lottie-react-native';
 import { colors } from 'src/theme';
+import { lt } from 'ramda';
 
 interface Props {
   visible: boolean;
 }
 
 export const Spinner: FC<Props> = ({ visible }) => {
+  const { t } = useTranslation();
   return visible ? (
     <View style={styles.container}>
       <View style={styles.modalContainer}>
@@ -19,7 +22,7 @@ export const Spinner: FC<Props> = ({ visible }) => {
             autoPlay
             loop
           />
-          <Text style={styles.text}>Loading...</Text>
+          <Text style={styles.text}>{t('loading')}</Text>
         </View>
       </View>
     </View>

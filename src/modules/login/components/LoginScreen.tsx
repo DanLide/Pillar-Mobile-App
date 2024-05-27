@@ -1,5 +1,6 @@
 import { useRef, useState, useCallback, useMemo } from 'react';
 import { StyleSheet, View, Alert, TouchableOpacity, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { observer } from 'mobx-react';
 
@@ -9,6 +10,7 @@ import { authStore } from '../../../stores';
 import LoginWithPIN, { LoginWithPINProps } from './LoginWithPIN';
 
 export const LoginScreen = observer(() => {
+  const { t } = useTranslation();
   const store = useRef(authStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoginWithPIN, setIsLoginWithPIN] = useState(false);
@@ -30,9 +32,9 @@ export const LoginScreen = observer(() => {
         const message =
           ('error_description' in error && error.error_description) ||
           error.message ||
-          'Login Failed!';
+          t('loginFailed');
 
-        Alert.alert('Error', message);
+        Alert.alert(t('error'), message);
       }
     },
     [store],
@@ -50,11 +52,11 @@ export const LoginScreen = observer(() => {
     <View style={styles.container}>
       <View style={switchContainerStyle}>
         <TouchableOpacity onPress={onPressForm}>
-          <Text style={styles.switchText}>Form</Text>
+          <Text style={styles.switchText}>{t('form')}</Text>
         </TouchableOpacity>
         <View style={styles.separator} />
         <TouchableOpacity onPress={onPressPIN}>
-          <Text style={styles.switchText}>PIN</Text>
+          <Text style={styles.switchText}>{t('pin')}</Text>
         </TouchableOpacity>
       </View>
       {isLoginWithPIN ? (

@@ -6,6 +6,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
 import { colors } from '../../../theme';
 import { LeftBarButton, TitleBar } from '../../../navigation/components';
 import { LeftBarType } from '../../../navigation/types';
@@ -25,6 +27,7 @@ interface Props extends ScanProductProps {
 
 export const UpcScanner = memo(
   ({ isActive, stockName, onScan, onClose }: Props) => {
+    const { t } = useTranslation();
     const headerHeight = useHeaderHeight();
     const { top } = useSafeAreaInsets();
 
@@ -47,7 +50,7 @@ export const UpcScanner = memo(
             onPress={onClose}
             style={styles.backButton}
           />
-          <TitleBar title="Edit Product" />
+          <TitleBar title={t('editProduct')} />
         </View>
         <View style={styles.container}>
           <InfoTitleBar type={InfoTitleBarType.Primary} title={stockName} />

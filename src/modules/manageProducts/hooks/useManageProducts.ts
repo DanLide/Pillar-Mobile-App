@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { assoc, mergeLeft } from 'ramda';
 import { encode as btoa } from 'base-64';
 import { isValid } from 'gtin';
@@ -30,6 +31,7 @@ const initModalParams: ProductModalParams = {
 };
 
 export const useManageProducts = (store: ManageProductsStore) => {
+  const { t } = useTranslation();
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
 
@@ -134,7 +136,9 @@ export const useManageProducts = (store: ManageProductsStore) => {
       if (modalParams.isEdit) {
         setModalParams(assoc('toastType', ToastType.ProductUpdateSuccess));
       } else {
-        showToast('Product Updated', { type: ToastType.ProductUpdateSuccess });
+        showToast(t('productUpdated'), {
+          type: ToastType.ProductUpdateSuccess,
+        });
       }
     },
     [modalParams.isEdit, showToast, store, validateUpc],

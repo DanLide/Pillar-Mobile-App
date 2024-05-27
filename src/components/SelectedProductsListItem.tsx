@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-
+import { useTranslation } from 'react-i18next';
 import { ProductModel } from '../stores/types';
 import { colors, fonts } from '../theme';
 import { Flows } from 'src/modules/types';
@@ -23,13 +23,14 @@ const { width } = Dimensions.get('window');
 
 export const SelectedProductsListItem = memo(
   ({ item, disabled, hideOnHandCount, onPress, flow }: Props) => {
+    const { t } = useTranslation();
     const { name, manufactureCode, partNo, size, reservedCount, onHand } = item;
 
     const handlePress = useCallback(() => onPress?.(item), [item, onPress]);
 
     const OnHandCount = () => {
       if (flow === Flows.CreateInvoice) {
-        return <Text style={styles.qtyLabel}> Qty</Text>;
+        return <Text style={styles.qtyLabel}>{t('qty')}</Text>;
       }
       return <Text style={styles.onHand}>/{onHand}</Text>;
     };

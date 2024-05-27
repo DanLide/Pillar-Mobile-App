@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import SecretCodeForm from 'src/components/SecretCodeForm';
 import { colors, fonts } from 'src/theme';
@@ -26,12 +27,8 @@ enum ErrorCodes {
   PinNotValid = 4,
 }
 
-const errorMessages = {
-  validationError: 'Incorrect PIN code',
-  submitError: 'Something went wrong. Please, retry',
-};
-
 const LoginWithPinScreenBase: React.FC<Props> = observer(({ route }) => {
+  const { t } = useTranslation();
   const authStoreRef = useRef(authStore).current;
   const loginLinkStoreRef = useRef(loginLinkStore).current;
 
@@ -49,7 +46,7 @@ const LoginWithPinScreenBase: React.FC<Props> = observer(({ route }) => {
   }, []);
 
   const showSubmitErrorToast = useCallback(() => {
-    showToast(errorMessages.submitError, { type: ToastType.Error });
+    showToast(t('somethingWentWrong'), { type: ToastType.Error });
     setIsLoading(false);
   }, [showToast]);
 
@@ -93,17 +90,14 @@ const LoginWithPinScreenBase: React.FC<Props> = observer(({ route }) => {
       behavior="padding"
       style={styles.container}
     >
-      <InfoTitleBar
-        type={InfoTitleBarType.Secondary}
-        title="Please enter your PIN code"
-      />
+      <InfoTitleBar type={InfoTitleBarType.Secondary} title={t('enterPin')} />
       <Text style={styles.username}>{username}</Text>
       <SecretCodeForm
         autoFocus
         autoSubmit
         cellCount={4}
         keyboardType="number-pad"
-        errorMessage={validationError ? errorMessages.validationError : null}
+        errorMessage={validationError ? t('incorrectPin') : null}
         confirmDisabled={validationError}
         isLoading={isLoading}
         style={styles.codeForm}

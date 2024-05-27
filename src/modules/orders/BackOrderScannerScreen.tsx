@@ -1,6 +1,9 @@
 import { useMemo, useState, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Text, View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
+import i18n from 'i18next';
 import { BaseScannerScreen } from '../../components';
 import { ProductModel } from '../../stores/types';
 import {
@@ -26,13 +29,14 @@ const initModalParams: ProductModalParams = {
 const getAlertTitle = (error?: string) => {
   switch (error) {
     case ProductByOrderTypeAndSupplierError.NotAssignedToDistributor:
-      return 'Multiple Distributors';
+      return i18n.t('multipleDistributors');
     case ProductByOrderTypeAndSupplierError.NotAssignedToStock:
-      return 'Multiple Stock Locations';
+      return i18n.t('multipleStockLocations');
   }
 };
 
 export const BackOrderScannerScreen: React.FC = observer(() => {
+  const { t } = useTranslation();
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
   const [error, setError] = useState<BadRequestError | null>(null);
@@ -55,16 +59,16 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
     () => (
       <>
         <Text style={styles.alertMessage}>
-          The code for the product you scanned is associated with{' '}
+          {t('codeForProductAssociated')}{' '}
           <Text style={styles.alertMessageBold}>
             {error?.error_description}
           </Text>
         </Text>
         <Text style={styles.alertMessage}>
-          <Text>• </Text> Try scanning a different code for this product
+          <Text>• </Text> {t('tryScanningDifferentCodeProduct')}
         </Text>
         <Text style={styles.alertMessage}>
-          <Text>• </Text> Complete this order, and create a new order for{' '}
+          <Text>• </Text> {t('completeOrderAndCeateNew')}{' '}
           <Text style={styles.alertMessageBold}>
             {error?.error_description}
           </Text>
@@ -114,6 +118,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
           onSubmit={onSubmit}
+          buttonListTitle={t('reviewOrder')}
         />
       </ToastContextProvider>
 
@@ -121,7 +126,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
         visible={!!error}
         message={alertMessage}
         title={alertTitle}
-        primaryTitle="Okay"
+        primaryTitle={t('okay')}
         onPressPrimary={closeAlert}
         hideSecondary
         alertContainerStyle={styles.alertContainer}

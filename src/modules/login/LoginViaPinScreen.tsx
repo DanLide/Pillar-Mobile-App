@@ -10,8 +10,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Button, ButtonType } from 'src/components';
+import { useTranslation } from 'react-i18next';
 
+import { Button, ButtonType } from 'src/components';
 import { fetchSSOUsers } from 'src/data/fetchSSOUsers';
 import {
   AppNavigator,
@@ -27,10 +28,6 @@ import { onLoginWithToken } from 'src/data/login';
 import TokenParser from './components/TokenParser';
 import { URLProvider } from 'src/data/helpers';
 
-const userNotFound = 'User with such name is not found';
-const titleError =
-  'Sorry, we are unable to identify the users at this shop location right now. To continue, you may choose to login with your username.';
-
 interface Props {
   navigation: StackNavigationProp<
     UnauthStackParamsList,
@@ -39,6 +36,7 @@ interface Props {
 }
 
 export const LoginViaPinScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const [selectedTabIndex, setSelectedTabIndex] = useState(0);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -140,7 +138,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
               selectedTabIndex === 0 && styles.selectedButtonText,
             ]}
           >
-            Repair Facility
+            {t('repairFacility')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -169,17 +167,17 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     if (ssoStore.ssoUsersList && input) {
       return (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>{userNotFound}</Text>
+          <Text style={styles.errorText}>{t('userWithSuchNameNotFound')}</Text>
         </View>
       );
     }
     return (
       <View style={styles.errorContainer}>
         <SVGs.UserNotFound />
-        <Text style={styles.errorText}>{titleError}</Text>
+        <Text style={styles.errorText}>{t('unableToIdentifyShopUsers')}</Text>
         <Button
           type={ButtonType.secondary}
-          title="Retry"
+          title={t('retry')}
           onPress={fetchUsers}
           buttonStyle={styles.retryButton}
         />
@@ -200,7 +198,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     <View style={styles.screenContainer}>
       <View style={styles.header}>
         {renderTabs()}
-        <Text style={styles.subTitle}>Select a User Account</Text>
+        <Text style={styles.subTitle}>{t('selectUserAccount')}</Text>
         <View>
           <View style={styles.searchWrapper}>
             <SearchIcon color={colors.black} width={20} height={20} />
@@ -208,7 +206,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
           <TextInput
             value={input}
             style={styles.input}
-            placeholder="Search User"
+            placeholder={t('searchUser')}
             placeholderTextColor={colors.grayDark2}
             onChangeText={onChangeText}
           />
@@ -224,8 +222,8 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
           <View>{/* {filterIcon button here in v2} */}</View>
         </View>
         <View style={styles.listTitleContainer}>
-          <Text style={styles.listTitleText}>Employee</Text>
-          <Text style={styles.listTitleText}>Role</Text>
+          <Text style={styles.listTitleText}>{t('employee')}</Text>
+          <Text style={styles.listTitleText}>{t('role')}</Text>
         </View>
       </View>
       <FlatList
@@ -236,7 +234,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
       <SafeAreaView style={styles.buttonWrapper}>
         <Button
           type={ButtonType.secondary}
-          title="Login with Username"
+          title={t('loginWithUsername')}
           buttonStyle={styles.loginButton}
           onPress={onLoginViaCredentials}
         />

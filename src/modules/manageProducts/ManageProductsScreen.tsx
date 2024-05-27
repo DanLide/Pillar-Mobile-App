@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { CommonActions } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import { BaseProductsScreen } from 'src/components';
 import {
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export const ManageProductsScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const store = useRef(manageProductsStore).current;
 
   const {
@@ -56,8 +58,8 @@ export const ManageProductsScreen = observer(({ navigation }: Props) => {
       product={product}
       navigation={navigation}
       store={store}
-      tooltipTitle="Scan to find products"
-      primaryButtonTitle="Home"
+      tooltipTitle={t('scanToFindProducts')}
+      primaryButtonTitle={t('home')}
       onComplete={handleHomePress}
       ProductModalComponent={ProductModal}
       ListComponent={SelectedProductsList}

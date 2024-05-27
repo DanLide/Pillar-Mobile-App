@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   StockProductStoreType,
@@ -16,17 +17,18 @@ interface Props {
 type ProductsStore = SyncedProductStoreType & StockProductStoreType;
 
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
+  const { t } = useTranslation();
   const store = useRef<ProductsStore>(returnProductsStore).current;
 
   return (
     <BaseResultScreen
       navigation={navigation}
       store={store}
-      contextTitle="Return Complete"
-      contextBody="You have successfully returned the following items from"
-      errorListTitle="The following products were "
-      errorListTitlePartBolt="not returned"
-      errorToastMessage="Sorry, some of the products on your list were not returned from inventory"
+      contextTitle={t('returnComplete')}
+      contextBody={t('youHaveSuccessfullyReturnedItems')}
+      errorListTitle={t('followingProductsWere')}
+      errorListTitlePartBolt={t('notReturned')}
+      errorToastMessage={t('sorrySomeProductsWereNotReturned')}
     />
   );
 });

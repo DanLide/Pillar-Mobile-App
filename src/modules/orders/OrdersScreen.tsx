@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
+import { useTranslation } from 'react-i18next';
 
 import { OrdersList } from './components/OrdersList';
 import { ordersStore } from './stores';
@@ -22,6 +23,7 @@ interface Props {
 }
 
 export const OrdersScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
   const ordersStoreRef = useRef(ordersStore).current;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -81,13 +83,11 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
       <View style={styles.errorContainer}>
         <View style={styles.image}>
           <SVGs.JobListErrorIcon />
-          <Text style={styles.text}>
-            Sorry, there was an issue loading a list of orders.
-          </Text>
+          <Text style={styles.text}>{t('sorryIssueLoadingOrders')}</Text>
         </View>
         <Button
           type={ButtonType.secondary}
-          title="Retry"
+          title={t('retry')}
           onPress={onFetchOrders}
           buttonStyle={styles.button}
         />
@@ -100,7 +100,7 @@ export const OrdersScreen = observer(({ navigation }: Props) => {
         <Input
           containerStyle={styles.inputContainer}
           style={styles.input}
-          placeholder="Search by order or product number"
+          placeholder={t('searchByOrderOrProductNumber')}
           rightIcon={filterValue ? SVGs.CloseIcon : SVGs.SearchIcon}
           onChangeText={setFilterValue}
           value={filterValue}

@@ -8,6 +8,7 @@ import {
   request,
   openSettings,
 } from 'react-native-permissions';
+import { useTranslation } from 'react-i18next';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
@@ -15,6 +16,7 @@ import { CameraPermissionScreenProps } from 'src/navigation/types';
 
 export const CameraPermissionScreen = memo(
   ({ navigation, route }: CameraPermissionScreenProps) => {
+    const { t } = useTranslation();
     const [cameraPermission, setCameraPermission] = useState<PermissionStatus>(
       RESULTS.DENIED,
     );
@@ -50,22 +52,21 @@ export const CameraPermissionScreen = memo(
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>Camera Access</Text>
+          <Text style={styles.title}>{t('cameraAccess')}</Text>
           <Text style={styles.subtitle}>
-            RepairStack would like to access to your camera, so that you can
-            easily scan products.
+            {t('repairStackWouldLikeToConnectCamera')}
           </Text>
           <SVGs.CameraIcon color={colors.black} style={styles.icon} />
           {cameraPermission === RESULTS.BLOCKED ? (
             <Text style={styles.subtitle}>
-              <Text>Allow camera access in{'\n'}</Text>
-              <Text style={styles.bold}>Settings {'>'} RepairStack</Text>
+              <Text>
+                {t('allowCameraAccess')}
+                {'\n'}
+              </Text>
+              <Text style={styles.bold}>{t('settingsRepairStack')}</Text>
             </Text>
           ) : (
-            <Text style={styles.subtitle}>
-              Without camera access, you will not be able to proceed with the
-              app features
-            </Text>
+            <Text style={styles.subtitle}>{t('withoutCameraAccess')}</Text>
           )}
         </View>
         <Button

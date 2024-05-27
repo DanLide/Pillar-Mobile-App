@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 import { find, whereEq } from 'ramda';
 
 import { ProductModalProps } from '../../productModal';
@@ -12,6 +13,7 @@ import { colors, fonts } from '../../../theme';
 type Props = Pick<ProductModalProps, 'product'>;
 
 export const ViewProduct = observer(({ product }: Props) => {
+  const { t } = useTranslation();
   const isSpecialOrder =
     product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
@@ -45,13 +47,13 @@ export const ViewProduct = observer(({ product }: Props) => {
         <View style={styles.minMaxContainer}>
           <InfoBadge
             type={BadgeType.Large}
-            title="Minimum Quantity"
+            title={t('minimumQuantity')}
             subtitle={product?.min ?? 0}
           />
           <Text style={styles.slash}>/</Text>
           <InfoBadge
             type={BadgeType.Large}
-            title="Maximum Quantity"
+            title={t('maximumQuantity')}
             subtitle={product?.max ?? 0}
           />
         </View>
@@ -59,42 +61,42 @@ export const ViewProduct = observer(({ product }: Props) => {
       <View style={styles.orderSettings}>
         {product?.inventoryUseTypeId === InventoryUseType.Each && (
           <InfoBadge
-            title="Pieces Per"
-            titleWithNewLine="Container"
+            title={t('piecesPer')}
+            titleWithNewLine={t('container')}
             subtitle={product?.unitsPerContainer}
           />
         )}
         {!isSpecialOrder && (
           <InfoBadge
-            title="Shipment"
-            titleWithNewLine="Quantity"
+            title={t('shipment')}
+            titleWithNewLine={t('quantity')}
             subtitle={product?.orderMultiple ?? '-'}
           />
         )}
-        <InfoBadge title="On Order" subtitle={product?.onOrder} />
+        <InfoBadge title={t('onOrder')} subtitle={product?.onOrder} />
       </View>
       <View style={styles.bottomInfo}>
         <InfoBadge
           type={BadgeType.Medium}
-          title="Distributor"
+          title={t('distributor')}
           subtitle={supplier?.name}
         />
         {!isSpecialOrder && (
           <InfoBadge
             type={BadgeType.Medium}
-            title="Restock From"
+            title={t('restockFrom')}
             subtitle={restockFrom?.name}
           />
         )}
         <InfoBadge
           type={BadgeType.Medium}
-          title="UPC"
+          title={t('upc')}
           subtitle={product?.upc || '-'}
         />
         <InfoBadge
           type={BadgeType.Medium}
-          title="Recommend to Add to RO"
-          subtitle={product?.isRecoverable ? 'Yes' : 'No'}
+          title={t('recommendedToAddToRO')}
+          subtitle={product?.isRecoverable ? t('yes') : t('no')}
         />
       </View>
     </>

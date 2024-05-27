@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import { useCallback, useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
   Dimensions,
@@ -9,6 +10,7 @@ import {
 } from 'react-native';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 
+import i18n from 'i18next';
 import { Button, ButtonType } from '../../components';
 
 import { ToastType } from 'src/contexts/types';
@@ -37,11 +39,15 @@ export enum ScannerScreenError {
   NetworkRequestFailed,
 }
 
-export const scannerErrorMessages: Record<ScannerScreenError, string> = {
-  [ScannerScreenError.IncorrectQRCode]:
-    'Invalid Code, make sure the QR code is for the correct repair facility.',
-  [ScannerScreenError.NetworkRequestFailed]:
-    'Please check your internet connection and retry',
+const getScannerErrorMessages = (error: ScannerScreenError) => {
+  const scannerErrorMessages: Record<ScannerScreenError, string> = {
+    [ScannerScreenError.IncorrectQRCode]: i18n.t('invalidFacilityQrCode'),
+    [ScannerScreenError.NetworkRequestFailed]: i18n.t(
+      'checkYourInternetConnection',
+    ),
+  };
+
+  return scannerErrorMessages[error];
 };
 
 interface Props {
@@ -54,6 +60,7 @@ interface Props {
 const { width, height } = Dimensions.get('window');
 
 const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const stocksStoreRef = useRef(stocksStore).current;
   const [isScannerActive, setIsScannerActive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -81,7 +88,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
       setIsLoading(false);
       setIsScannerActive(true);
 
-      showToast(scannerErrorMessages[error], {
+      showToast(getScannerErrorMessages(error), {
         type: ToastType.ScanError,
         duration: 0,
       });
@@ -144,15 +151,15 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
         <ScanProduct
           onScan={onScanShopCode}
           isActive={isScannerActive}
-          tooltipText={'Looking for code'}
+          tooltipText={t('lookingForCode')}
         />
         <View style={styles.footer}>
-          <Text style={styles.text}>QR Code not working?</Text>
+          <Text style={styles.text}>{t('qrCodeNotWorking')}</Text>
           <Button
             type={ButtonType.primary}
             buttonStyle={styles.shopCodeButton}
             textStyle={styles.shopCodeButtonText}
-            title="Enter 5 character Repair Facility code instead"
+            title={t('enterFacilityCodeInstead')}
             onPress={onPressEnterShopCode}
           />
         </View>

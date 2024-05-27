@@ -6,6 +6,7 @@ export const colors = {
   purpleLight: '#DBC2F9',
   purpleDisabled: '#C7A8E9',
   purpleWithOpacity: 'rgba(150,87,217,0.5)',
+  purpleWhite: '#EBDBFF',
   magnolia: '#F6EFFE',
   background: '#F2F2F5',
   white: '#FFFFFF',

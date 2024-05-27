@@ -1,6 +1,7 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
@@ -25,6 +26,7 @@ interface Props {
 const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
 export const WelcomeScreen = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   const ssoStoreRef = useRef(ssoStore).current;
 
   const onPressLoginWithUsername = () => {
@@ -59,7 +61,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <View style={styles.continueContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
-        <Text style={styles.text}>Welcome to RepairStack!</Text>
+        <Text style={styles.text}>{t('welcomeToRepairStack')}</Text>
         {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <View>
             <Text style={styles.locationText}>
@@ -70,21 +72,21 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             </TouchableOpacity> */}
           </View>
         ) : (
-          <Text style={styles.locationText}>(Location not set)</Text>
+          <Text style={styles.locationText}>({t('locationNotSet')})</Text>
         )}
         {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <>
             <Button
               type={ButtonType.primary}
               buttonStyle={styles.continueButton}
-              title="Start"
+              title={t('start')}
               onPress={onLoginViaPin}
             />
             <Button
               type={ButtonType.primary}
               buttonStyle={styles.loginWithUserNameButton}
               textStyle={styles.loginWithUserNameText}
-              title="Login with Username"
+              title={t('loginWithUsername')}
               onPress={onPressLoginWithUsername}
             />
           </>
@@ -93,13 +95,13 @@ export const WelcomeScreen = ({ navigation }: Props) => {
             <Button
               type={ButtonType.primary}
               buttonStyle={styles.continueButton}
-              title="Configure shop device"
+              title={t('configureShopDevice')}
               onPress={handleConfigureDevice}
             />
             <Button
               type={ButtonType.secondary}
               buttonStyle={styles.secondaryBtn}
-              title="Admin device login"
+              title={t('adminDeviceLogin')}
               onPress={onLoginViaCredentials}
             />
           </>
@@ -107,14 +109,14 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       </View>
       <DeviceName />
       <View style={styles.ssoLoginContainer}>
-        <Text style={styles.text}>3M Employee ?</Text>
+        <Text style={styles.text}>{t('mmmEmployee')} ?</Text>
         <Button
           type={ButtonType.primary}
           icon={SVGs.ConnectedWorker}
           iconProps={LOGIN_ICON_PROPS}
           buttonStyle={styles.ssoLoginButton}
           textStyle={styles.ssoLoginButtonText}
-          title="Log In with Single Sign-On (SSO)"
+          title={t('loginWithSso')}
           onPress={onPressSSOLogin}
         />
       </View>

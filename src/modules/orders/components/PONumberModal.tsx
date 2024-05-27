@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { SharedValue } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -21,10 +22,9 @@ interface Props extends Omit<ModalProps, 'onClose'> {
   onSubmit?: (poNumber: string) => Promise<void>;
 }
 
-const semiTitle = 'Purchase Order (PO)';
-
 export const PONumberModal = observer(
   ({ isVisible, title, onSkip, onSubmit }: Props) => {
+    const { t } = useTranslation();
     const [poNumber, setPONumber] = useState('');
     const [isAlertVisible, setIsAlertVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -37,27 +37,29 @@ export const PONumberModal = observer(
     );
 
     const alertTitle = useMemo(
-      () => <Text style={styles.alertTitle}>Add PO Number Later?</Text>,
-      [],
+      () => <Text style={styles.alertTitle}>{t('addPONumberLater')}</Text>,
+      [t],
     );
 
     const alertMessage = useMemo(
       () => (
         <View style={{ gap: 24, alignSelf: 'center' }}>
           <Text style={styles.text}>
-            Your order will save in Repairstack,{'\n'}
-            but <Text style={styles.textBold}>will not be sent</Text> to your
-            {'\n'}
-            distributor.
+            {t('yourOrderWillSaveInRepairstack1')}
+            <Text style={styles.textBold}>
+              {' '}
+              {t('yourOrderWillSaveInRepairstack2')}
+            </Text>{' '}
+            {t('yourOrderWillSaveInRepairstack3')}
           </Text>
           <Text style={styles.text}>
-            A manager can add a PO Number at{' '}
+            {t('managerCanAddPONumber')}{' '}
             <Text style={styles.textItalic}>repairstack.3m.com</Text>
           </Text>
-          <Text style={styles.text}>Are you sure you want to continue?</Text>
+          <Text style={styles.text}>{t('areYouSureYouWantToContinue')}</Text>
         </View>
       ),
-      [],
+      [t],
     );
 
     const handlePONumberChange = useCallback(
@@ -81,7 +83,7 @@ export const PONumberModal = observer(
         title={title}
         titleStyle={styles.modalTitle}
         titleContainerStyle={styles.titleContainer}
-        semiTitle={semiTitle}
+        semiTitle={t('purchaseOrder')}
         topOffset={topOffset}
         onClose={handleSkipPress}
       >
@@ -95,48 +97,46 @@ export const PONumberModal = observer(
               />
               <ToastMessage>
                 <ToastMessage style={styles.warningBarText} bold>
-                  PO number
+                  {t('poNumber')}
                 </ToastMessage>{' '}
-                is required for this distributor
+                {t('isRequiredForDistributor')}
               </ToastMessage>
             </View>
 
             <View style={styles.inputInfoContainer}>
               <Text style={styles.text}>
-                Add one here <Text style={styles.textBold}>or</Text> your
-                manager can{'\n'}
-                <Text style={styles.textBold}>add a PO number</Text> at{' '}
+                {t('addOneHere')} <Text style={styles.textBold}>{t('or')}</Text>{' '}
+                {t('yourManagerCan')}
+                <Text style={styles.textBold}>{t('addPONumber')}</Text>{' '}
+                {t('at')}{' '}
                 <Text style={styles.textItalic}>repairstack.3m.com</Text>
-                {'\n'}for this order to submit to your distributor
+                {t('forThisOrderToSubmit')}
               </Text>
 
               <Input
                 contextMenuHidden
                 type={InputType.Primary}
-                placeholder="PO Number"
+                placeholder={t('poNumber')}
                 value={poNumber}
                 keyboardType="number-pad"
                 onChangeText={handlePONumberChange}
               />
 
-              <Text style={styles.text}>
-                If you don’t have this information on hand,{'\n'}reach out to
-                your manager.
-              </Text>
+              <Text style={styles.text}>{t('IfYouDontHaveInformation')}</Text>
             </View>
           </View>
 
           <View style={styles.buttons}>
             <Button
               type={ButtonType.secondary}
-              title="Skip"
+              title={t('skip')}
               buttonStyle={styles.button}
               textStyle={styles.buttonText}
               onPress={handleSkipPress}
             />
             <Button
               type={ButtonType.primary}
-              title="Continue"
+              title={t('continue')}
               disabled={!poNumber}
               isLoading={isLoading}
               buttonStyle={styles.button}
@@ -150,8 +150,8 @@ export const PONumberModal = observer(
           visible={isAlertVisible}
           message={alertMessage}
           title={alertTitle}
-          primaryTitle="Yes"
-          secondaryTitle="No"
+          primaryTitle={t('yes')}
+          secondaryTitle={t('no')}
           onPressPrimary={onSkip}
           onPressSecondary={closeAlert}
           alertContainerStyle={styles.alertContainer}

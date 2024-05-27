@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { SharedValue } from 'react-native-reanimated';
 import { isNil } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 import { ordersStore } from '../stores';
 import { Modal, Button, ButtonType } from '../../../components';
@@ -25,6 +26,7 @@ export const MissingItemsModal: React.FC<Props> = ({
   onClose,
   onSubmit,
 }) => {
+  const { t } = useTranslation();
   const ordersStoreRef = useRef(ordersStore).current;
 
   const renderItem = ({
@@ -60,16 +62,18 @@ export const MissingItemsModal: React.FC<Props> = ({
     >
       <View style={styles.titleContainer}>
         <SVGs.Warning color={colors.black} />
-        <Text style={styles.title}>Items Missing</Text>
+        <Text style={styles.title}>{t('itemsMissing')}</Text>
       </View>
 
-      <Text style={styles.subtitle}>
-        These items are missing from this order and will not be received
-      </Text>
+      <Text style={styles.subtitle}>{t('itemsAreMissingFromOrder')}</Text>
       <View style={styles.table}>
         <View style={styles.header}>
-          <Text style={[styles.headerText, styles.headerLeft]}>Product</Text>
-          <Text style={[styles.headerRight, styles.headerText]}>Missing</Text>
+          <Text style={[styles.headerText, styles.headerLeft]}>
+            {t('product')}
+          </Text>
+          <Text style={[styles.headerRight, styles.headerText]}>
+            {t('missing')}
+          </Text>
         </View>
         <FlatList
           style={styles.flatList}
@@ -82,7 +86,7 @@ export const MissingItemsModal: React.FC<Props> = ({
 
       <Button
         type={ButtonType.primary}
-        title="I still want these items"
+        title={t('stillWantTheseItems')}
         buttonStyle={styles.button}
         onPress={onSubmit}
       />

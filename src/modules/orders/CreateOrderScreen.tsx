@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
 import { RouteProp } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 import {
   ButtonType,
@@ -57,16 +58,9 @@ const RECOMMENDED_PRODUCTS_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-const suggestedItemsSuccessText = (count: number) =>
-  `${count} Recommended items added`;
-
-const suggestedItemsErrorText =
-  "Recommended items weren't loaded. Please try again";
-
-const createOrderErrorText = "The order wasn't created. Please try again.";
-
 const CreateOrderScreen = observer(
   ({ navigation, route: { params } }: Props) => {
+    const { t } = useTranslation();
     const [isPONumberModalVisible, setIsPONumberModalVisible] = useState(false);
 
     const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
@@ -97,7 +91,7 @@ const CreateOrderScreen = observer(
 
     const { showToast } = useSingleToast();
 
-    const submitButtonTitle = isPurchaseOrder ? 'Send Order' : 'Complete';
+    const submitButtonTitle = isPurchaseOrder ? t('sendOrder') : t('complete');
 
     const suppliers = useMemo<DropdownItem[]>(
       () =>
@@ -123,7 +117,7 @@ const CreateOrderScreen = observer(
       setIsSuggestedProductsLoading(false);
 
       if (error) {
-        return showToast(suggestedItemsErrorText, {
+        return showToast(t('recommendedItemsWerentLoaded'), {
           type: ToastType.SuggestedItemsError,
         });
       }
@@ -133,11 +127,11 @@ const CreateOrderScreen = observer(
 
       showToast(
         <ToastMessage style={styles.toastSuccessMessage}>
-          {suggestedItemsSuccessText(suggestedItemsAdded)}
+          {t('recommendedItemsAdded', { count: suggestedItemsAdded })}
         </ToastMessage>,
         { type: ToastType.SuggestedItemsSuccess },
       );
-    }, [showToast, ordersStoreRef]);
+    }, [showToast, ordersStoreRef, t]);
 
     const openResultScreen = useCallback(
       () =>
@@ -160,7 +154,7 @@ const CreateOrderScreen = observer(
       setIsCreateOrderLoading(false);
 
       if (error)
-        return showToast(createOrderErrorText, { type: ToastType.Error });
+        return showToast(t('orderWasntCreated'), { type: ToastType.Error });
 
       const order = ordersStoreRef.currentOrder?.order;
 
@@ -168,7 +162,7 @@ const CreateOrderScreen = observer(
         return setIsPONumberModalVisible(true);
 
       openResultScreen();
-    }, [ordersStoreRef, orderType, showToast, openResultScreen]);
+    }, [ordersStoreRef, orderType, showToast, openResultScreen, t]);
 
     const onSubmitPONumber = useCallback(
       async (poNumber: string) => {
@@ -197,8 +191,8 @@ const CreateOrderScreen = observer(
 
         <View style={styles.topContainer}>
           <Dropdown
-            label="Distributor"
-            placeholder="Select a Distributor"
+            label={t('distributor')}
+            placeholder={t('selectDistributor')}
             data={suppliers}
             selectedItem={supplier}
             onSelect={item => ordersStoreRef.setSupplier(+item.value)}
@@ -216,7 +210,7 @@ const CreateOrderScreen = observer(
             <Button
               disabled={!supplier || isSuggestedProductsLoading}
               type={ButtonType.primary}
-              title="Add Items Below Inventory Minimum"
+              title={t('addItemsBelowInventoryMinimum')}
               icon={SVGs.ProductSmallIcon}
               iconProps={RECOMMENDED_PRODUCTS_ICON_PROPS}
               buttonStyle={styles.recommendedProductsButton}
@@ -235,7 +229,7 @@ const CreateOrderScreen = observer(
             iconProps={SCAN_ICON_PROPS}
             textStyle={styles.scanText}
             buttonStyle={styles.buttonContainer}
-            title="Scan"
+            title={t('scan')}
             onPress={onPressScan}
           />
           <Button

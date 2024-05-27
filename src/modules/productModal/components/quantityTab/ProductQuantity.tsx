@@ -8,7 +8,9 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
+import i18n from 'i18next';
 import { colors, fonts, SVGs } from 'src/theme';
 import { EditQuantity } from './EditQuantity';
 import { FooterDescription } from './FooterDescription';
@@ -20,7 +22,8 @@ import {
   Button,
   ButtonType,
   ColoredTooltip,
-  scannerErrorMessages,
+  ScannerScreenError,
+  getScannerErrorMessages,
 } from 'src/components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
@@ -69,54 +72,59 @@ const toastStyles = StyleSheet.create({
   },
 });
 
-export const toastMessages: Record<
-  ProductQuantityToastType,
-  JSX.Element | string
-> = {
-  [ToastType.ProductQuantityError]: (
-    <ToastMessage style={toastStyles.default}>
-      You cannot remove more products than are '
-      <ToastMessage bold>On Hand</ToastMessage>' in this stock location. You can
-      update product quantity in the{' '}
-      <ToastMessage bold>Manage Products</ToastMessage> section
-    </ToastMessage>
-  ),
-  [ToastType.ProductUpdateError]:
-    'Sorry, there was an issue saving the product update',
-  [ToastType.ProductUpdateSuccess]: 'Product Updated',
-  [ToastType.UpcUpdateError]:
-    'This UPC already exists in the stock location of this product. Please, use another one',
-  [ToastType.UnitsPerContainerError]: (
-    <ToastMessage style={toastStyles.unitsPerContainerError}>
-      <ToastMessage bold style={toastStyles.unitsPerContainerError}>
-        Pieces Per Container
-      </ToastMessage>{' '}
-      cannot be saved less than 1
-    </ToastMessage>
-  ),
-  [ToastType.SpecialOrderError]: (
-    <ToastMessage style={toastStyles.default}>
-      Product listed as '<ToastMessage bold>Special Order</ToastMessage>'. You
-      can create a new order in the{' '}
-      <ToastMessage bold>Manage Orders</ToastMessage> section
-    </ToastMessage>
-  ),
+const getToastMessages = (toastType: ProductQuantityToastType) => {
+  const toastMessages: Record<ProductQuantityToastType, JSX.Element | string> =
+    {
+      [ToastType.ProductQuantityError]: (
+        <ToastMessage style={toastStyles.default}>
+          {i18n.t('youCannotRemoveMoreProducts1')}
+          <ToastMessage bold>{i18n.t('onHand')}</ToastMessage>
+          {i18n.t('youCannotRemoveMoreProducts2')}{' '}
+          <ToastMessage bold>{i18n.t('manageProducts')}</ToastMessage>{' '}
+          {i18n.t('section')}
+        </ToastMessage>
+      ),
+      [ToastType.ProductUpdateError]: i18n.t(
+        'sorryThereWasIssueSavingProductUpdate',
+      ),
+      [ToastType.ProductUpdateSuccess]: i18n.t('productUpdated'),
+      [ToastType.UpcUpdateError]: i18n.t('thisUPCAlreadyExists'),
+      [ToastType.UnitsPerContainerError]: (
+        <ToastMessage style={toastStyles.unitsPerContainerError}>
+          <ToastMessage bold style={toastStyles.unitsPerContainerError}>
+            {i18n.t('piecesPerContainer')}
+          </ToastMessage>{' '}
+          {i18n.t('cannotBeSavedLessThan1')}
+        </ToastMessage>
+      ),
+      [ToastType.SpecialOrderError]: (
+        <ToastMessage style={toastStyles.default}>
+          {i18n.t('productListedAs1')}
+          <ToastMessage bold>{i18n.t('specialOrder')}</ToastMessage>
+          {i18n.t('productListedAs2')}{' '}
+          <ToastMessage bold>{i18n.t('manageOrders')}</ToastMessage>{' '}
+          {i18n.t('section')}
+        </ToastMessage>
+      ),
+    };
+
+  return toastMessages[toastType];
 };
 
 const getEditQuantityLabel = (type?: ProductModalType) => {
   switch (type) {
     case ProductModalType.CreateOrder:
-      return 'Order Quantity';
+      return i18n.t('orderQuantity');
     case ProductModalType.ReturnOrder:
-      return 'Return Quantity';
+      return i18n.t('returnQuantity');
     case ProductModalType.ManageProduct:
-      return 'On Hand';
+      return i18n.t('onHand');
     case ProductModalType.Remove:
-      return 'Remove Quantity';
+      return i18n.t('removeQuantity');
     case ProductModalType.Return:
-      return 'Return Quantity';
+      return i18n.t('returnQuantity');
     case ProductModalType.CreateInvoice:
-      return 'Invoice Quantity';
+      return i18n.t('invoiceQuantity');
   }
 };
 
@@ -145,6 +153,7 @@ export const ProductQuantity = forwardRef(
     }: Props,
     ref: React.ForwardedRef<TextInput>,
   ) => {
+    const { t } = useTranslation();
     const jobNumber = product?.job?.jobNumber;
 
     const isSpecialOrder =
@@ -160,7 +169,7 @@ export const ProductQuantity = forwardRef(
 
     useEffect(() => {
       if (toastType)
-        showToast(toastMessages[toastType], {
+        showToast(getToastMessages(toastType), {
           type: toastType,
           onPress: onToastAction,
         });
@@ -204,13 +213,16 @@ export const ProductQuantity = forwardRef(
 
     const handleJobButtonPress = () => {
       if (type === ProductModalType.Remove && !product?.isRecoverable) {
-        showToast(scannerErrorMessages.ProductIsNotRecoverable, {
-          type: ToastType.InvoiceMissingProductPrice,
-          duration: 0,
-          onPress: () => {
-            setInvoicingInfoAlertVisible(true);
+        showToast(
+          getScannerErrorMessages(ScannerScreenError.ProductIsNotRecoverable),
+          {
+            type: ToastType.InvoiceMissingProductPrice,
+            duration: 0,
+            onPress: () => {
+              setInvoicingInfoAlertVisible(true);
+            },
           },
-        });
+        );
 
         return;
       }
@@ -238,12 +250,12 @@ export const ProductQuantity = forwardRef(
 
       const calculateButtonLabel = () => {
         if (type === ProductModalType.Remove && currentValue === 0)
-          return 'Cancel';
+          return t('cancel');
 
         return (jobSelectable && isRecoverable) ||
           type === ProductModalType.CreateInvoice
-          ? 'Next'
-          : 'Done';
+          ? t('next')
+          : t('done');
       };
 
       const calculateDisabled = () => {
@@ -269,7 +281,7 @@ export const ProductQuantity = forwardRef(
         return (
           <Pressable style={styles.deleteButton} onPress={onRemove}>
             <SVGs.TrashIcon color={colors.redDark} />
-            <Text style={styles.deleteButtonText}>Delete</Text>
+            <Text style={styles.deleteButtonText}>{t('delete')}</Text>
           </Pressable>
         );
       }
@@ -321,21 +333,25 @@ export const ProductQuantity = forwardRef(
               {!isSpecialOrder && (
                 <View style={styles.quantity}>
                   <View>
-                    <Text style={styles.quantityTitle}>Minimum Quantity</Text>
+                    <Text style={styles.quantityTitle}>
+                      {t('minimumQuantity')}
+                    </Text>
                     <Text style={styles.quantityValue}>{product.min}</Text>
                   </View>
                   <Text style={styles.divider}>/</Text>
                   <View>
-                    <Text style={styles.quantityTitle}>Maximum Quantity</Text>
+                    <Text style={styles.quantityTitle}>
+                      {t('maximumQuantity')}
+                    </Text>
                     <Text style={styles.quantityValue}>{product.max}</Text>
                   </View>
                 </View>
               )}
               <Text style={styles.cost}>
-                Cost Per: ${product.cost?.toFixed(2)}
+                {t('costPer')}: ${product.cost?.toFixed(2)}
               </Text>
               <Text style={styles.totalCost}>
-                Total Cost: ${getProductTotalCost(product).toFixed(2)}
+                {t('totalCost')}: ${getProductTotalCost(product).toFixed(2)}
               </Text>
             </View>
           );
@@ -388,13 +404,13 @@ export const ProductQuantity = forwardRef(
                 <SVGs.RefundIcon color={colors.purple} />
                 <Text style={styles.jobText}>
                   {isEdit && jobNumber
-                    ? `Repair Order ${jobNumber}`
-                    : 'Link to Repair Order'}
+                    ? t('repairOrder', { jobNumber })
+                    : t('linkToRepairOrder')}
                 </Text>
               </Pressable>
               {jobSelectable && product.isRecoverable ? (
                 <ColoredTooltip
-                  title="Recommended"
+                  title={t('recommended')}
                   textStyles={styles.tooltip}
                 />
               ) : null}
@@ -420,19 +436,19 @@ type InvoicingInfoAlertProps = Omit<
   'message' | 'hidePrimary' | 'secondaryTitle'
 >;
 
-const InvoicingInfoAlert: FC<InvoicingInfoAlertProps> = props => (
-  <AlertWrapper
-    message={
-      <Text style={{ textAlign: 'center' }}>
-        Invoicing Settings for this product can be added at repairstack.3m.com{' '}
-        {'>'} Products
-      </Text>
-    }
-    hidePrimary
-    secondaryTitle="Close"
-    {...props}
-  />
-);
+const InvoicingInfoAlert: FC<InvoicingInfoAlertProps> = props => {
+  const { t } = useTranslation();
+  return (
+    <AlertWrapper
+      message={
+        <Text style={{ textAlign: 'center' }}>{t('invoicingSettings')}</Text>
+      }
+      hidePrimary
+      secondaryTitle={t('close')}
+      {...props}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -16,6 +16,7 @@ import {
   PixelRatio,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { NativeStackScreenProps } from 'react-native-screens/native-stack';
@@ -63,6 +64,7 @@ type Props = NativeStackScreenProps<
 
 export const BaseUnlockScreen: React.FC<Props> = observer(
   ({ navigation, route }) => {
+    const { t } = useTranslation();
     const {
       params: { masterlockId, nextScreen, nextNavigationGoBack },
     } = route;
@@ -142,16 +144,16 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
     let title = '';
     switch (status) {
       case ExtendedMasterLockStatus.UNLOCKING:
-        title = 'Unlocking...';
+        title = t('unlocking');
         break;
       case LockStatus.UNLOCKED:
-        title = 'Unlocked';
+        title = t('unlocked');
         break;
       case LockStatus.LOCKED:
-        title = 'Locked';
+        title = t('locked');
         break;
       case LockStatus.UNKNOWN:
-        title = 'Error';
+        title = t('error');
         break;
     }
 
@@ -238,19 +240,19 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
         case LockStatus.UNLOCKED:
           return (
             <Text style={styles.counterText}>
-              {`Re-locking in ${countDownNumber}...`}
+              {t('relockingIn', { countDownNumber })}
             </Text>
           );
         case LockStatus.LOCKED:
           return (
             <Text style={styles.counterText}>
-              Cabinet Re-locked Automatically
+              {t('cabinetRelockedAutomatically')}
             </Text>
           );
         case LockStatus.UNKNOWN:
           return (
             <Text style={[styles.counterText, styles.lockErrorTextSubtitle]}>
-              Try Unlocking again, or use a physical key to manually unlock
+              {t('tryUnlockAgainOrUsePhysicalKey')}
             </Text>
           );
         default:
@@ -267,7 +269,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
                 <Button
                   type={ButtonType.primary}
                   buttonStyle={styles.primaryButton}
-                  title="Proceed without Unlocking"
+                  title={t('proceedWithoutUnlocking')}
                   onPress={navigateNextScreen}
                 />
               </View>
@@ -276,12 +278,14 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
         case LockStatus.UNLOCKED:
           return (
             <View style={styles.buttonsContainer}>
-              <Text style={styles.bottomText}>Open Cabinet to Continue</Text>
+              <Text style={styles.bottomText}>
+                {t('openCabinetToContinue')}
+              </Text>
               {canSkipUnlock && (
                 <Button
                   type={ButtonType.primary}
                   buttonStyle={styles.primaryButton}
-                  title="Proceed without Unlocking"
+                  title={t('proceedWithoutUnlocking')}
                   onPress={navigateNextScreen}
                 />
               )}
@@ -292,13 +296,13 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
             <View style={styles.buttonsContainer}>
               <Button
                 type={ButtonType.secondary}
-                title="Retry Unlock"
+                title={t('retryUnlock')}
                 onPress={unlock}
               />
               <Button
                 type={ButtonType.primary}
                 buttonStyle={styles.primaryButton}
-                title="Proceed without Unlocking"
+                title={t('proceedWithoutUnlocking')}
                 onPress={navigateNextScreen}
               />
             </View>
@@ -308,19 +312,19 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
             <View style={styles.buttonsContainer}>
               <Button
                 type={ButtonType.secondary}
-                title="Retry Unlock"
+                title={t('retryUnlock')}
                 onPress={unlock}
               />
               <Button
                 type={ButtonType.primary}
                 buttonStyle={styles.primaryButton}
-                title="Proceed without Unlocking"
+                title={t('proceedWithoutUnlocking')}
                 onPress={navigateNextScreen}
               />
             </View>
           );
       }
-    }, [canSkipUnlock, navigateNextScreen, status, unlock]);
+    }, [canSkipUnlock, navigateNextScreen, status, unlock, t]);
 
     return (
       <LinearGradient

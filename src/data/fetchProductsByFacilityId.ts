@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { v1 as uuid } from 'uuid';
 
 import { Task, TaskExecutor, getProductStepQty } from './helpers';
@@ -35,7 +36,7 @@ export class FetchProductsByFacilityIdTask extends Task {
     if (response) {
       this.productsContext.products = response;
     } else {
-      throw Error('Request Failed!');
+      throw Error(i18n.t('requestFailed'));
     }
   }
 }

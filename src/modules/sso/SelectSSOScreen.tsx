@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useRef, useEffect, useState } from 'react';
 import { StyleSheet, FlatList, View } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   AppNavigator,
@@ -30,6 +31,7 @@ type Props = NativeStackScreenProps<
 
 export const SelectSSOScreen: React.FC<Props> = observer(
   ({ navigation, route }) => {
+    const { t } = useTranslation();
     const isUpdating = route.params?.isUpdating;
     const store = useRef(new SelectSSOStore(ssoStore)).current;
     const listRef = useRef<FlatList | null>(null);
@@ -71,12 +73,12 @@ export const SelectSSOScreen: React.FC<Props> = observer(
 
         navigation.setOptions(
           getScreenOptions({
-            title: 'Update Location',
+            title: t('updateLocation'),
             leftBarButtonType: LeftBarType.Back,
           }) as Partial<NativeStackNavigationEventMap>,
         );
       }
-    }, [isUpdating, navigation, store]);
+    }, [isUpdating, navigation, store, t]);
 
     return (
       <View style={styles.container}>
@@ -86,7 +88,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(
         />
         <Input
           containerStyle={styles.input}
-          placeholder="Select a Shop Location"
+          placeholder={t('selectShopLocation')}
           rightIcon={SVGs.SearchIcon}
           onChangeText={onChangeText}
           value={store.searchInSSOList}
@@ -102,7 +104,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(
           disabled={!store.preselectedSSO || !isChangedSelectedValue}
           buttonStyle={styles.buttonStyle}
           onPress={onPressSubmit}
-          title={isUpdating ? 'Update' : 'Submit'}
+          title={isUpdating ? t('update') : t('submit')}
           type={ButtonType.primary}
         />
       </View>

@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import SecretCodeForm from 'src/components/SecretCodeForm';
 import { colors, fonts } from 'src/theme';
@@ -24,13 +25,9 @@ type Props = StackScreenProps<
   AppNavigator.CreatePinScreen
 >;
 
-const errorMessages = {
-  validationError: "PIN Codes doesn't match",
-  submitError: 'Something went wrong. Please, retry',
-};
-
 export const CreatePinScreenBase: React.FC<Props> = observer(
   ({ navigation, route }) => {
+    const { t } = useTranslation();
     const authStoreRef = useRef(authStore).current;
     const loginLinkStoreRef = useRef(loginLinkStore).current;
 
@@ -48,7 +45,7 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
     }, []);
 
     const showSubmitErrorToast = useCallback(() => {
-      showToast(errorMessages.submitError, { type: ToastType.Error });
+      showToast(t('somethingWentWrong'), { type: ToastType.Error });
       setIsLoading(false);
     }, [showToast]);
 
@@ -99,14 +96,14 @@ export const CreatePinScreenBase: React.FC<Props> = observer(
       >
         <InfoTitleBar
           type={InfoTitleBarType.Secondary}
-          title="Create a PIN Code"
+          title={t('createPin')}
         />
         <Text style={styles.username}>{username}</Text>
         <SecretCodeForm
           autoFocus
           cellCount={4}
           keyboardType="number-pad"
-          errorMessage={validationError ? errorMessages.validationError : null}
+          errorMessage={validationError ? t('pinCodesNotMatch') : null}
           confirmDisabled={validationError}
           isLoading={isLoading}
           style={styles.codeForm}

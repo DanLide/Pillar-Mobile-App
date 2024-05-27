@@ -7,6 +7,7 @@ import {
   Text,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { ProductModel, SyncedProductStoreType } from '../../../stores/types';
 import {
@@ -24,6 +25,7 @@ const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const SelectedProductsList: React.FC<Props> = observer(
   ({ onEditProduct }) => {
+    const { t } = useTranslation();
     const store = useRef<SyncedProductStoreType>(manageProductsStore).current;
 
     const products = store.getNotSyncedProducts;
@@ -33,9 +35,9 @@ export const SelectedProductsList: React.FC<Props> = observer(
         products.length > 0 ? (
           <View style={styles.headerTitleContainer}>
             <Text numberOfLines={1} style={styles.headerTitleLeft}>
-              Recently Scanned
+              {t('recentlyScanned')}
             </Text>
-            <Text style={styles.headerTitleRight}>Qty</Text>
+            <Text style={styles.headerTitleRight}>{t('qty')}</Text>
           </View>
         ) : null,
       [products.length],

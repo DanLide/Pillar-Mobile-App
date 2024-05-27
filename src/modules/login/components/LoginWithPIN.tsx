@@ -1,5 +1,6 @@
 import { memo, useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import TokenParser, { TokenParserProps } from './TokenParser';
 
@@ -10,6 +11,7 @@ const MAGIC_LINK =
   'https://3maaddev.b2clogin.com/3maaddev.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_Auth_With_UserId&client_id=5a060590-680c-4253-96c7-dd2adcfbddaf&nonce=defaultNonce&redirect_uri=https%3a%2f%2fjwt.ms&scope=openid&response_type=id_token&prompt=login&user_id=e81dd3dc-9317-4b1d-aa21-af92af55dfa4';
 
 const LoginWithPIN: React.FC<LoginWithPINProps> = ({ onTokenReceived }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLoadingStart = useCallback(() => setIsLoading(true), []);
@@ -17,7 +19,7 @@ const LoginWithPIN: React.FC<LoginWithPINProps> = ({ onTokenReceived }) => {
 
   const handleError = useCallback<NonNullable<TokenParserProps['onError']>>(
     ({ nativeEvent: { description } }) =>
-      Alert.alert(`Could not log in with a PIN: ${description}`),
+      Alert.alert(t('cannotLoginWithPin') + ' : ' + description),
     [],
   );
 
@@ -25,13 +27,13 @@ const LoginWithPIN: React.FC<LoginWithPINProps> = ({ onTokenReceived }) => {
     NonNullable<TokenParserProps['onHttpError']>
   >(
     ({ nativeEvent: { statusCode } }) =>
-      Alert.alert(`Magic link error with ${statusCode} code`),
+      Alert.alert(t('magicLinkError', { statusCode })),
     [],
   );
 
   const handleRequestTimeout = useCallback<
     NonNullable<TokenParserProps['onRequestTimeout']>
-  >(() => Alert.alert(`Magic link timeout`), []);
+  >(() => Alert.alert(t('magicLinkTimeout')), [t]);
 
   return (
     <View style={styles.container}>

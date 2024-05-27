@@ -8,6 +8,7 @@ import {
   View,
   ViewProps,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import {
   CodeField,
   Cursor,
@@ -42,6 +43,7 @@ const SecretCodeForm = ({
   onChangeText,
   handleConfirm,
 }: Props) => {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const [enableMask, setEnableMask] = useState(true);
   const ref = useBlurOnFulfill({ value, cellCount: cellCount });
@@ -136,7 +138,7 @@ const SecretCodeForm = ({
       {!autoSubmit && (
         <Button
           type={ButtonType.primary}
-          title="Confirm"
+          title={t('confirm')}
           isLoading={isLoading}
           disabled={isDisabled}
           buttonStyle={styles.buttonStyle}

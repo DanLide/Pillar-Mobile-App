@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
 import { getScreenOptions } from './helpers';
 import { AppNavigator, ConfigureDeviceStackParams, LeftBarType } from './types';
@@ -14,6 +15,7 @@ import { authStore, ssoStore } from 'src/stores';
 const Stack = createStackNavigator<ConfigureDeviceStackParams>();
 
 export const ConfigureDeviceStack: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   return (
     <Stack.Navigator initialRouteName={AppNavigator.ScanShopCodeScreen}>
@@ -25,7 +27,7 @@ export const ConfigureDeviceStack: React.FC = () => {
             authStore.logOut();
           },
           leftBarButtonType: LeftBarType.Back,
-          title: 'Repair Facility code',
+          title: t('repairFacilityCode'),
         })}
       />
       <Stack.Screen
@@ -33,7 +35,7 @@ export const ConfigureDeviceStack: React.FC = () => {
         component={EnterShopCodeScreen}
         options={getScreenOptions({
           leftBarButtonType: LeftBarType.Back,
-          title: 'Repair Facility code',
+          title: t('repairFacilityCode'),
         })}
       />
       <Stack.Screen
@@ -45,7 +47,7 @@ export const ConfigureDeviceStack: React.FC = () => {
             navigation.goBack();
           },
           leftBarButtonType: LeftBarType.Back,
-          title: 'Configure Shop Device',
+          title: t('configureShopDevice'),
         })}
       />
       <Stack.Screen
@@ -53,14 +55,14 @@ export const ConfigureDeviceStack: React.FC = () => {
         component={DeviceConfigCompletedScreen}
         options={getScreenOptions({
           leftBarButtonType: LeftBarType.Back,
-          title: 'Configure Shop Device',
+          title: t('configureShopDevice'),
         })}
       />
       <Stack.Screen
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />

@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
-
+import { useTranslation } from 'react-i18next';
 import QRCode from '../../../assets/images/QRCode.png';
 import UPC from '../../../assets/images/UPC.png';
 import cabinet from '../../../assets/images/cabinet.png';
@@ -9,49 +9,48 @@ import productPackage from '../../../assets/images/productPackage.png';
 
 import { colors, fonts } from '../../theme';
 
-export const HowToScanScreen = memo(() => (
-  <View style={styles.container}>
-    <Text style={styles.title}>How to scan a product?</Text>
+export const HowToScanScreen = memo(() => {
+  const { t } = useTranslation();
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>{t('howToScanProduct')}</Text>
 
-    <Text style={styles.text}>
-      Scanning a product is the first step in managing your shops inventory.
-    </Text>
-    <Text style={styles.text}>
-      You can either use the product QR code or{'\n'}UPC for scanning.
-    </Text>
+      <Text style={styles.text}>{t('scanningProductIsFirstStep')}</Text>
+      <Text style={styles.text}>{t('youCanEitherUseUpcOrUpcForScanning')}</Text>
 
-    <View style={styles.codeContainer}>
-      <View style={styles.codeItemContainer}>
-        <Image source={QRCode} style={styles.QRImage} />
-        <Text style={styles.imageSubtitle}>QR Code</Text>
+      <View style={styles.codeContainer}>
+        <View style={styles.codeItemContainer}>
+          <Image source={QRCode} style={styles.QRImage} />
+          <Text style={styles.imageSubtitle}>{t('qrCode')}</Text>
+        </View>
+        <View style={styles.codeItemContainer}>
+          <Image source={UPC} style={styles.UPCImage} />
+          <Text style={styles.imageSubtitle}>{t('upc')}</Text>
+        </View>
       </View>
-      <View style={styles.codeItemContainer}>
-        <Image source={UPC} style={styles.UPCImage} />
-        <Text style={styles.imageSubtitle}>UPC</Text>
+
+      <Text style={styles.title}>{t('howToFindQrOrUpc')}</Text>
+      <Text style={styles.text}>{t('youCanScanProductsInDifferentWays')}</Text>
+
+      <View style={styles.productsContainer}>
+        <View style={styles.productItemContainer}>
+          <Image source={cabinet} style={styles.cabinetImage} />
+          <Text style={styles.imageSubtitle}>{t('cabinet')}</Text>
+        </View>
+        <View style={styles.productItemContainer}>
+          <Image source={productPackage} style={styles.productPackageImage} />
+          <Text style={[styles.imageSubtitle, styles.productPackageText]}>
+            {t('productPackage')}
+          </Text>
+        </View>
+        <View style={styles.productItemContainer}>
+          <Image source={product} style={styles.productImage} />
+          <Text style={styles.imageSubtitle}>{t('product')}</Text>
+        </View>
       </View>
     </View>
-
-    <Text style={styles.title}>How to find the QR Code or UPC</Text>
-    <Text style={styles.text}>You can scan products in 3 different ways.</Text>
-
-    <View style={styles.productsContainer}>
-      <View style={styles.productItemContainer}>
-        <Image source={cabinet} style={styles.cabinetImage} />
-        <Text style={styles.imageSubtitle}>Cabinet</Text>
-      </View>
-      <View style={styles.productItemContainer}>
-        <Image source={productPackage} style={styles.productPackageImage} />
-        <Text style={[styles.imageSubtitle, styles.productPackageText]}>
-          Product Package
-        </Text>
-      </View>
-      <View style={styles.productItemContainer}>
-        <Image source={product} style={styles.productImage} />
-        <Text style={styles.imageSubtitle}>Product</Text>
-      </View>
-    </View>
-  </View>
-));
+  );
+});
 
 const styles = StyleSheet.create({
   container: {

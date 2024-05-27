@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { Task, TaskExecutor } from './helpers';
 
 import {
@@ -65,7 +66,7 @@ export class FetchShopByShopSetupCodeTask extends Task {
   async run(): Promise<void> {
     const shop = await shopSetupLoginAPI(this.shopSetupCode);
 
-    if (!authStore.getToken) throw Error('Unauthorized');
+    if (!authStore.getToken) throw Error(i18n.t('unauthorized'));
 
     const response = await singleSSOAPI(
       authStore.getToken,
@@ -106,7 +107,7 @@ export class FetchSSOMobileDevicesTask extends Task {
 
   async run(): Promise<void> {
     const response = await deviceByRepairFacilityIdAPI();
-    if (!response) throw Error('Request failed!');
+    if (!response) throw Error(i18n.t('requestFailed'));
 
     if (
       response.find(
@@ -123,10 +124,10 @@ export class FetchSSOMobileDevicesTask extends Task {
         if (currentDevice) {
           await assignDeviceToSSOAPI(currentDevice.partyRoleId);
         } else {
-          throw Error('Devices not found!');
+          throw Error(i18n.t('devicesNotFound'));
         }
       } else {
-        throw Error('Device not found!');
+        throw Error(i18n.t('devicesNotFound'));
       }
     }
   }

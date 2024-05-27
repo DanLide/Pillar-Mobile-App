@@ -10,6 +10,7 @@ import {
   ViewStyle,
   TextStyle,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { RoleType } from 'src/constants/common.enum';
 import { LockStatus, LockVisibility } from 'src/data/masterlock';
 import { stocksStore } from 'src/modules/stocksList/stores';
@@ -37,6 +38,7 @@ export const StockWithProducts: React.FC<Props> = ({
   totalProductsQty,
   stockNameStyle,
 }) => {
+  const { t } = useTranslation();
   const stockItem = stocksStore.stocks.find(
     stock => stock.partyRoleId === Number(stockId),
   );
@@ -111,7 +113,9 @@ export const StockWithProducts: React.FC<Props> = ({
         {renderIcon()}
       </View>
       {!isNil(totalProductsQty) ? (
-        <Text style={styles.productQty}>{totalProductsQty} Products</Text>
+        <Text style={styles.productQty}>
+          {totalProductsQty} {t('products')}
+        </Text>
       ) : null}
       <FlatList
         data={products}

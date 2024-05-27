@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   CurrentProductStoreType,
@@ -26,6 +27,7 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 export const ReturnProductsScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const store = useRef<Store>(returnProductsStore).current;
 
   const {
@@ -57,7 +59,7 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
       onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
-      tooltipTitle="Scan to add products to list"
+      tooltipTitle={t('scanToAddProductsToList')}
       onComplete={onCompleteReturn}
       ListComponent={SelectedProductsList}
       flow={Flows.Return}

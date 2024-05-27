@@ -1,5 +1,6 @@
 import { useRef, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   BaseScannerScreen,
@@ -32,6 +33,7 @@ const initModalParams: ProductModalParams = {
 };
 
 export const ScannerScreen: React.FC = observer(() => {
+  const { t } = useTranslation();
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
   const [alertParams, setAlertParams] = useState<AlertWrapperProps>();
@@ -72,8 +74,7 @@ export const ScannerScreen: React.FC = observer(() => {
           visible: true,
           message: (
             <Text style={{ textAlign: 'center' }}>
-              Invoicing Settings for this product can be added at
-              repairstack.3m.com {'>'} Products
+              {t('invoicingSettingsCanBeAddedAt')}
             </Text>
           ),
           onPressSecondary: () => {
@@ -101,6 +102,7 @@ export const ScannerScreen: React.FC = observer(() => {
           onCloseModal={onCloseModal}
           onFetchProduct={onFetchProduct}
           filteredType={BarcodeFormat.UPC_A}
+          buttonListTitle={t('review')}
         />
       </ToastContextProvider>
 
@@ -108,7 +110,7 @@ export const ScannerScreen: React.FC = observer(() => {
         visible={Boolean(alertParams)}
         message={alertParams?.message ?? ''}
         onPressSecondary={alertParams?.onPressSecondary}
-        secondaryTitle="Close"
+        secondaryTitle={t('close')}
         hidePrimary
         alertContainerStyle={styles.alertContainer}
       />

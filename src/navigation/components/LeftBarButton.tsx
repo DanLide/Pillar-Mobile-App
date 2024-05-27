@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import { authStore } from 'src/stores';
 import { LeftBarType } from '../types';
 import { SVGs, colors } from '../../theme';
 import { testIds } from '../../helpers';
@@ -46,6 +47,10 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
         }
         break;
       }
+      case LeftBarType.BackLogout: {
+        authStore.logOut();
+        break;
+      }
       case LeftBarType.Drawer: {
         navigation?.openDrawer();
         break;
@@ -58,6 +63,7 @@ export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
   const renderIcon = () => {
     switch (leftBarButtonType) {
       case LeftBarType.Back:
+      case LeftBarType.BackLogout:
         return (
           <SVGs.ChevronIcon
             style={styles.backArrow}

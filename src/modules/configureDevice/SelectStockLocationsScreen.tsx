@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react';
 import { useCallback, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   StyleSheet,
@@ -36,12 +37,11 @@ interface Props {
   >;
 }
 
-const selectAllItem = 'All Cabinets';
-
 const SelectStockLocations = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const ssoStoreRef = useRef(ssoStore).current;
   const stocksStoreRef = useRef(stocksStore).current;
-  const listData = [selectAllItem, ...stocksStoreRef.getMasterlockStocks];
+  const listData = [t('allCabinets'), ...stocksStoreRef.getMasterlockStocks];
   const [selectedStocks, setSelectedStocks] = useState<StockModel[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { showToast } = useSingleToast();
@@ -52,7 +52,7 @@ const SelectStockLocations = observer(({ navigation }: Props) => {
     setIsLoading(false);
 
     if (error) {
-      showToast(error.message ?? 'Request failed!', {
+      showToast(error.message ?? t('requestFailed'), {
         type: ToastType.Error,
       });
     } else {
@@ -123,7 +123,7 @@ const SelectStockLocations = observer(({ navigation }: Props) => {
         type={InfoTitleBarType.Primary}
       />
       <InfoTitleBar
-        title="Select Stock Location(s) for this device"
+        title={t('selectStocksForThisDevice')}
         type={InfoTitleBarType.Secondary}
       />
       <FlatList
@@ -136,7 +136,7 @@ const SelectStockLocations = observer(({ navigation }: Props) => {
           type={ButtonType.primary}
           buttonStyle={styles.button}
           disabled={!selectedStocks.length}
-          title="Confirm"
+          title={t('confirm')}
           isLoading={isLoading}
           onPress={handleConfirm}
         />

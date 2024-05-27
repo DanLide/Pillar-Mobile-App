@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
 import { getNavigationOptions, getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, UnauthStackParamsList } from './types';
@@ -13,6 +14,7 @@ import { LoginWithPinScreen } from 'src/modules/login/LoginWithPinScreen';
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
 export const UnauthStack: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName={AppNavigator.WelcomeScreen}>
       <Stack.Screen
@@ -40,7 +42,7 @@ export const UnauthStack: React.FC = () => {
         name={AppNavigator.UpdateShopLocationScreen}
         component={UpdateShopLocationScreen}
         options={getScreenOptions({
-          title: 'Update Location',
+          title: t('updateLocation'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />

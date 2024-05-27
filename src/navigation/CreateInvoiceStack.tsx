@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
 import { getScreenOptions } from './helpers';
 import {
@@ -18,13 +19,14 @@ import { CameraPermissionScreen } from '../modules/permissions';
 const Stack = createStackNavigator<CreateInvoiceParamList>();
 
 export const CreateInvoiceStack: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName={AppNavigator.SelectProductJob}>
       <Stack.Screen
         name={AppNavigator.SelectProductJob}
         component={SelectJob}
         options={getScreenOptions({
-          title: 'Create Invoice',
+          title: t('createInvoice'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -32,7 +34,7 @@ export const CreateInvoiceStack: React.FC = () => {
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
-          title: 'Create Invoice',
+          title: t('createInvoice'),
           leftBarButtonType: LeftBarType.Back,
           rightBarButtonType: RightBarType.QuestionMark,
         })}
@@ -41,7 +43,7 @@ export const CreateInvoiceStack: React.FC = () => {
         name={AppNavigator.ResultScreen}
         component={ResultScreen}
         options={getScreenOptions({
-          title: 'Create Invoice',
+          title: t('createInvoice'),
           leftBarButtonType: LeftBarType.Close,
         })}
       />
@@ -49,7 +51,7 @@ export const CreateInvoiceStack: React.FC = () => {
         name={AppNavigator.CreateInvoiceProductsScreen}
         component={ProductsScreen}
         options={getScreenOptions({
-          title: 'Create Invoice',
+          title: t('createInvoice'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -57,7 +59,7 @@ export const CreateInvoiceStack: React.FC = () => {
         name={AppNavigator.HowToScanScreen}
         component={HowToScanScreen}
         options={getScreenOptions({
-          title: 'How to Scan',
+          title: t('howToScan'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -65,7 +67,7 @@ export const CreateInvoiceStack: React.FC = () => {
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />

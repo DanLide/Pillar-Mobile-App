@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { SelectStockScreen } from '../modules/returnProducts/SelectStockScreen';
 import { getScreenOptions } from './helpers';
@@ -24,13 +25,14 @@ import { getScreenName } from './helpers/getScreenName';
 const Stack = createStackNavigator<ReturnStackParamList>();
 
 export const ReturnStack: React.FC = observer(() => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: t('returnProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -52,7 +54,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
         options={getScreenOptions({
-          title: 'Bluetooth Connection',
+          title: t('bluetoothConnection'),
           leftBarButtonType: LeftBarType.Back,
         })}
         initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
@@ -61,7 +63,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.ReturnProductsScreen}
         component={ReturnProductsScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: t('returnProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -69,7 +71,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.HowToScanScreen}
         component={HowToScanScreen}
         options={getScreenOptions({
-          title: 'How to Scan',
+          title: t('howToScan'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -77,7 +79,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -85,7 +87,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: t('returnProducts'),
           leftBarButtonType: LeftBarType.Back,
           rightBarButtonType: RightBarType.QuestionMark,
         })}
@@ -94,7 +96,7 @@ export const ReturnStack: React.FC = observer(() => {
         name={AppNavigator.ResultScreen}
         component={ResultScreen}
         options={getScreenOptions({
-          title: 'Return Products',
+          title: t('returnProducts'),
           leftBarButtonType: LeftBarType.Close,
         })}
       />

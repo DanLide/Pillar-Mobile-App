@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { observer } from 'mobx-react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { BaseResultScreenNavigationProp } from '../../navigation/types';
 import { CreateInvoiceStore, createInvoiceStore } from './stores';
@@ -12,16 +13,17 @@ interface Props {
 }
 
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
+  const { t } = useTranslation();
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
 
   const Header = () => (
     <View style={styles.headerContainer}>
       <View style={styles.contextTitleContainer}>
         <SVGs.RefundIcon color={colors.black} />
-        <Text style={styles.contextTitleText}>Invoice Created</Text>
+        <Text style={styles.contextTitleText}>{t('invoiceCreated')}</Text>
       </View>
       <Text style={styles.headerBody}>
-        The following items have been billed to{' '}
+        {t('followingItemsBilledTo')}{' '}
         <Text style={styles.bold}>{store.currentJob?.jobNumber}</Text>
       </Text>
     </View>
@@ -31,7 +33,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
     <BaseResultScreen
       navigation={navigation}
       store={store}
-      contextBody="You have successfully billed the following items to"
+      contextBody={t('youBilledFollowingItemsTo')}
       errorListTitle=""
       errorToastMessage=""
       title={store.currentJob?.jobNumber}

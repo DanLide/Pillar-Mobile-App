@@ -10,6 +10,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
+
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -44,6 +46,7 @@ const JobsListComponent: React.FC<Props> = observer(
     onPressItem,
     isCreateJobAvailable,
   }) => {
+    const { t } = useTranslation();
     const listRef = useRef<FlatList | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
@@ -113,13 +116,11 @@ const JobsListComponent: React.FC<Props> = observer(
         <View style={styles.errorContainer}>
           <View style={styles.image}>
             <SVGs.JobListErrorIcon />
-            <Text style={styles.text}>
-              Sorry, there was an issue loading a list of open jobs.
-            </Text>
+            <Text style={styles.text}>{t('sorryIssueLoadingJobs')}</Text>
           </View>
           <Button
             type={ButtonType.secondary}
-            title="Retry"
+            title={t('retry')}
             onPress={onFetchJobs}
             buttonStyle={styles.button}
           />
@@ -133,7 +134,7 @@ const JobsListComponent: React.FC<Props> = observer(
           style={styles.input}
           containerStyle={[styles.inputContainer, inputContainerStyle]}
           value={filterValue}
-          placeholder="Search"
+          placeholder={t('search')}
           rightIcon={() => (
             <SVGs.SearchIcon color={colors.black} width={16.5} height={16.5} />
           )}
@@ -153,7 +154,7 @@ const JobsListComponent: React.FC<Props> = observer(
               <>
                 <View style={styles.buttons}>
                   <Button
-                    title="Create Repair Order"
+                    title={t('createRepairOrder')}
                     type={ButtonType.secondary}
                     buttonStyle={styles.createJobButton}
                     onPress={() => setIsCreateJobModalVisible(true)}

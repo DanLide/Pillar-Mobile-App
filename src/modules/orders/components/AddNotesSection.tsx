@@ -1,6 +1,7 @@
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
-
 import { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
 import { Input } from 'src/components';
 import { SVGs, colors, fonts } from 'src/theme';
 import { OrdersStore } from '../stores/OrdersStore';
@@ -8,6 +9,7 @@ import { observer } from 'mobx-react';
 
 export const AddNotesSection = observer(
   ({ orderStore }: { orderStore: OrdersStore }) => {
+    const { t } = useTranslation();
     const [showNotesInput, setShowNotesInput] = useState(false);
     const presentNotes = () => setShowNotesInput(true);
 
@@ -19,7 +21,7 @@ export const AddNotesSection = observer(
 
     return showNotesInput ? (
       <Input
-        label="Notes"
+        label={t('notes')}
         containerStyle={styles.notesContainer}
         style={styles.notesInput}
         multiline
@@ -30,7 +32,7 @@ export const AddNotesSection = observer(
     ) : (
       <TouchableOpacity onPress={presentNotes} style={styles.addNotesContainer}>
         <SVGs.InvoiceIcon />
-        <Text style={styles.noteText}>Add Notes</Text>
+        <Text style={styles.noteText}>{t('addNotes')}</Text>
       </TouchableOpacity>
     );
   },

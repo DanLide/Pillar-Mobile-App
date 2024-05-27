@@ -6,6 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
 import { ToastType } from 'src/contexts/types';
 import { useSingleToast } from 'src/hooks';
@@ -30,15 +31,10 @@ interface Props {
   >;
 }
 
-const errorMessages = {
-  incorrectCode:
-    'Invalid Code, make sure the code is for the correct repair facility.',
-  networkRequestFailed: 'Please check your internet connection and retry',
-};
-
 const { width, height } = Dimensions.get('window');
 
 const EnterShopCodeScreenBody = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   const stocksStoreRef = useRef(stocksStore).current;
   const [isLoading, setIsLoading] = useState(false);
 
@@ -68,8 +64,8 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
     if (error) {
       return onError?.(
         Utils.isNetworkError(error)
-          ? errorMessages.networkRequestFailed
-          : errorMessages.incorrectCode,
+          ? t('checkYourInternetConnection')
+          : t('invalidFacilityCode'),
       );
     }
     setIsLoading(false);
@@ -82,6 +78,7 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
       });
     }
   };
+
   return (
     <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
       <View style={styles.container}>
@@ -95,18 +92,18 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
           </View>
         ) : null}
         <Text style={styles.formDescription}>
-          This will be in your activation email.
+          {t('thisWillBeInYourActivationEmail')}
         </Text>
         <View>
           <SecretCodeForm handleConfirm={handleSubmitForm} cellCount={5} />
         </View>
         <View style={styles.footer}>
-          <Text style={styles.text}>Repair Facility code not working?</Text>
+          <Text style={styles.text}>{t('facilityCodeNotWorking')}</Text>
           <Button
             type={ButtonType.primary}
             buttonStyle={styles.shopCodeButton}
             textStyle={styles.shopCodeButtonText}
-            title="Scan your QR code instead"
+            title={t('scanYourQRCodeInstead')}
             onPress={onPressScanShopCode}
           />
         </View>

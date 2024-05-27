@@ -7,6 +7,7 @@ import {
   StyleProp,
   ViewStyle,
 } from 'react-native';
+import i18n from 'i18next';
 
 import { Button, ButtonType } from '../components';
 import { colors, fonts } from '../theme';
@@ -31,8 +32,8 @@ const AlertWrapper: React.FC<AlertWrapperProps> = ({
   message,
   title,
   onPressPrimary,
-  primaryTitle = 'Continue',
-  secondaryTitle = 'Cancel',
+  primaryTitle = i18n.t('continue'),
+  secondaryTitle = i18n.t('cancel'),
   onPressSecondary,
   hideSecondary,
   hidePrimary,

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';
@@ -14,6 +15,7 @@ type StockLocationListModalProps = {
 export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
   onSelectStock,
 }) => {
+  const { t } = useTranslation();
   const fetchStocks = async () => {
     const stocks = await getFetchStockAPI();
     const productCabinets = ordersStore.backorderCabinets;
@@ -32,7 +34,7 @@ export const StockLocationListModal: React.FC<StockLocationListModalProps> = ({
       onPressItem={onSelectStock}
       onFetchStocks={fetchStocks}
       skipNavToUnlockScreen
-      itemRightText="Receive here"
+      itemRightText={t('receiveHere')}
     />
   );
 };

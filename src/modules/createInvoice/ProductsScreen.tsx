@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import {
   BaseProductsScreen,
@@ -23,6 +24,7 @@ interface Props {
 }
 
 export const ProductsScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
@@ -81,11 +83,11 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
       <View style={styles.errorContainer}>
         <View style={styles.image}>
           <SVGs.JobListErrorIcon />
-          <Text style={styles.text}>Sorry, there was an issue products</Text>
+          <Text style={styles.text}>{t('sorryIssueProducts')}</Text>
         </View>
         <Button
           type={ButtonType.secondary}
-          title="Retry"
+          title={t('retry')}
           onPress={fetchProducts}
           buttonStyle={styles.button}
         />
@@ -110,8 +112,8 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
         navigation={navigation}
         store={store}
         onComplete={onComplete}
-        tooltipTitle="Scan to add products to list"
-        primaryButtonTitle="Submit"
+        tooltipTitle={t('scanToAddProductsToList')}
+        primaryButtonTitle={t('submit')}
         ListComponent={BaseSelectedProductsList}
         flow={Flows.CreateInvoice}
       />

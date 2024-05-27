@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { removeProductsStore } from './stores';
 import { BaseProductsScreen } from '../../components';
@@ -26,6 +27,7 @@ type Store = ScannerModalStoreType &
   StockProductStoreType;
 
 export const RemoveProductsScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const store = useRef<Store>(removeProductsStore).current;
 
   const onCompleteRemove = useCallback(async () => {
@@ -57,7 +59,7 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
       onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
-      tooltipTitle="Scan to add products to list"
+      tooltipTitle={t('scanToAddProductsToList')}
       onComplete={onCompleteRemove}
       ListComponent={SelectedProductsList}
       flow={Flows.Remove}

@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { clone } from 'ramda';
 
 import { Task } from './helpers';
@@ -39,7 +40,8 @@ class FetchOrderSummaryDetails extends Task {
   }
 
   async run() {
-    if (!this.ordersStore.currentOrder?.order) throw Error('Request failed!');
+    if (!this.ordersStore.currentOrder?.order)
+      throw Error(i18n.t('requestFailed'));
     const { orderId } = this.ordersStore.currentOrder.order;
     const storages = await getOrderStorageAreaAPI(orderId);
 
@@ -57,7 +59,7 @@ class FetchOrderSummaryDetails extends Task {
             this.context.orderProductsByArea.push(response.productList);
           }
         } else {
-          throw Error('Request failed!');
+          throw Error(i18n.t('requestFailed'));
         }
       }
     }
@@ -81,7 +83,7 @@ class ReceiveProductTask extends Task {
       this.ordersStore.currentOrder?.productList,
     );
     const { orderProductsByArea } = this.context;
-    if (!currentOrderProducts?.length) throw Error('Request failed!');
+    if (!currentOrderProducts?.length) throw Error(i18n.t('requestFailed'));
 
     for (const products of orderProductsByArea) {
       const requestProduct = products.map((product: GetOrderSummaryProduct) => {
@@ -93,7 +95,7 @@ class ReceiveProductTask extends Task {
         );
 
         if (selectedProduct?.reservedCount === undefined)
-          throw Error('Request failed!');
+          throw Error(i18n.t('requestFailed'));
         return {
           number: this.ordersStore.currentOrder?.order.customPONumber,
           orderDetailId: product.orderDetailId,

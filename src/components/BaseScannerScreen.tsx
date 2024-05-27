@@ -1,6 +1,8 @@
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
 import { useCallback, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 import { StyleSheet, View } from 'react-native';
 
 import { BarcodeFormat } from 'vision-camera-code-scanner';
@@ -59,17 +61,23 @@ interface Props {
   onChangeProductQuantity?: (qty?: number) => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
   filteredType?: BarcodeFormat;
+  buttonListTitle?: string;
 }
 
-export const scannerErrorMessages: Record<ScannerScreenError, string> = {
-  [ScannerScreenError.ProductNotFound]:
-    'This product cannot be found in our product database',
-  [ScannerScreenError.ProductNotAssignedToStock]:
-    'This product is not assigned to this stock location',
-  [ScannerScreenError.NetworkRequestFailed]:
-    'Please check your internet connection and retry',
-  [ScannerScreenError.ProductIsNotRecoverable]:
-    'Cannot add to Invoice.\nInvoicing settings incomplete',
+export const getScannerErrorMessages = (error: ScannerScreenError) => {
+  const scannerErrorMessages: Record<ScannerScreenError, string> = {
+    [ScannerScreenError.ProductNotFound]: i18n.t('productNotFoundOnDatabase'),
+    [ScannerScreenError.ProductNotAssignedToStock]: i18n.t(
+      'productNotAssignedToStock',
+    ),
+    [ScannerScreenError.NetworkRequestFailed]: i18n.t(
+      'checkYourInternetConnection',
+    ),
+    [ScannerScreenError.ProductIsNotRecoverable]:
+      i18n.t('cannotAddToInvoice') + '\n' + i18n.t('invoiceSettingsIncomplete'),
+  };
+
+  return scannerErrorMessages[error];
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -87,7 +95,9 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onBadRequestError,
     ProductModalComponent = ProductModal,
     filteredType,
+    buttonListTitle,
   }) => {
+    const { t } = useTranslation();
     const [isScannerActive, setIsScannerActive] = useState(true);
 
     const { showToast } = useSingleToast();
@@ -105,7 +115,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           return onBadRequestError?.(error);
         }
 
-        return showToast(scannerErrorMessages[error], {
+        return showToast(getScannerErrorMessages(error), {
           type: toastType,
         });
       },
@@ -183,16 +193,16 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         showToast(
           <ToastMessage>
             <ToastMessage bold>{reservedCount}</ToastMessage>{' '}
-            {Number(reservedCount) > 1 ? 'units' : 'unit'} of{' '}
+            {Number(reservedCount) > 1 ? t('units') : t('unit')} of{' '}
             <ToastMessage bold>
               {Utils.truncateString(nameDetails)}
             </ToastMessage>{' '}
-            added to List
+            {t('addedToList')}
           </ToastMessage>,
           { type: ToastType.Info },
         );
       },
-      [onSubmit, showToast, store],
+      [onSubmit, showToast, store, t],
     );
 
     const setEditableProductQuantity = useCallback(
@@ -225,6 +235,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           isActive={!disableScanner && isScannerActive}
           scannedProductCount={scannedProducts.length}
           filteredType={filteredType}
+          buttonListTitle={buttonListTitle}
         />
         <Spinner visible={!isScannerActive} />
         <ProductModalComponent

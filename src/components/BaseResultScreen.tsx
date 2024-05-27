@@ -8,6 +8,7 @@ import {
   ListRenderItemInfo,
   FlatList,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 
 import {
@@ -62,6 +63,7 @@ const BaseResultScreen: React.FC<Props> = observer(
     Header,
     isShowInvoiceTooltip,
   }) => {
+    const { t } = useTranslation();
     const { showToast } = useSingleToast();
 
     const stockName = store.currentStock?.organizationName || '';
@@ -75,19 +77,17 @@ const BaseResultScreen: React.FC<Props> = observer(
           <View style={styles.rowContainer}>
             <Text style={styles.dotStyle}>•</Text>
             <Text style={styles.tooltipMessage}>
-              {' Your invoice is viewable in '}
+              {t('invoiceIsViewableInSystem1')}
               <Text style={[styles.tooltipMessage, styles.textBold]}>
-                RepairStack™
+                {t('repairStack')}
               </Text>{' '}
-              and/or your integrated Body Shop Management System.
+              {t('invoiceIsViewableInSystem2')}
             </Text>
           </View>
           <View style={styles.rowContainer}>
             <Text style={styles.dotStyle}>•</Text>
             <Text style={styles.tooltipMessage}>
-              {
-                ' An email notification has been sent to your shop with a link for the invoice.'
-              }
+              {t('emailWithLinkToInvoiceSent')}
             </Text>
           </View>
         </View>
@@ -114,19 +114,25 @@ const BaseResultScreen: React.FC<Props> = observer(
     );
 
     const renderSectionHeader = useCallback(
-      (info: { section?: SectionListData<ProductModel> }) => (
-        <View style={styles.sectionTitleContainer}>
-          <Text numberOfLines={1} style={styles.sectionTitleLeft}>
-            {info.section
-              ? info.section.jobId === OTHER_JOB_ID
-                ? 'Other'
-                : `RO Number ${info.section.jobId}`
-              : 'Product'}
-          </Text>
-          <Text style={styles.sectionTitleRight}>Qty</Text>
-        </View>
-      ),
-      [],
+      (info: { section?: SectionListData<ProductModel> }) => {
+        let sectionTitle = t('product');
+        if (info.section) {
+          sectionTitle =
+            info.section.jobId === OTHER_JOB_ID
+              ? t('other')
+              : t('roNumber', { id: info.section.jobId });
+        }
+
+        return (
+          <View style={styles.sectionTitleContainer}>
+            <Text numberOfLines={1} style={styles.sectionTitleLeft}>
+              {sectionTitle}
+            </Text>
+            <Text style={styles.sectionTitleRight}>{t('qty')}</Text>
+          </View>
+        );
+      },
+      [t],
     );
 
     const SyncedProductsList = useMemo<JSX.Element>(
@@ -159,10 +165,16 @@ const BaseResultScreen: React.FC<Props> = observer(
             contentStyle={styles.contextFooter}
             message={tooltipMessage}
           >
-            <Text style={styles.contextFooterText}>Where’s my Invoice?</Text>
+            <Text style={styles.contextFooterText}>{t('whereIsMyInvoice')}</Text>
           </Tooltip>
         ) : null,
-      [SyncedSectionFooter, groupByJob, tooltipMessage, isShowInvoiceTooltip],
+      [
+        SyncedSectionFooter,
+        groupByJob,
+        tooltipMessage,
+        isShowInvoiceTooltip,
+        t,
+      ],
     );
 
     const _renderHeader = useMemo<JSX.Element>(
@@ -246,14 +258,14 @@ const BaseResultScreen: React.FC<Props> = observer(
             <Button
               textStyle={styles.buttonText}
               type={ButtonType.secondary}
-              title="Logout"
+              title={t('logout')}
               buttonStyle={styles.logout}
               onPress={onPressLogout}
             />
             <Button
               textStyle={styles.buttonText}
               type={ButtonType.primary}
-              title="Return Home"
+              title={t('returnHome')}
               buttonStyle={styles.returnHome}
               onPress={onReturnHome}
             />

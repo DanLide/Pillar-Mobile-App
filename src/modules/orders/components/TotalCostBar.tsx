@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { ordersStore } from 'src/modules/orders/stores';
 import { colors, fonts } from 'src/theme';
@@ -17,10 +18,8 @@ interface Props extends ViewProps {
   orderType?: OrderType;
 }
 
-const purchaseOrderText = 'Total Cost';
-const returnOrderText = 'Return Order Total';
-
 export const TotalCostBar = observer(({ orderType, style }: Props) => {
+  const { t } = useTranslation();
   const ordersStoreRef = useRef(ordersStore).current;
 
   const isReturnOrder = orderType === OrderType.Return;
@@ -36,7 +35,7 @@ export const TotalCostBar = observer(({ orderType, style }: Props) => {
   return (
     <View style={containerStyle}>
       <Text style={styles.text}>
-        {isReturnOrder ? returnOrderText : purchaseOrderText}:{' '}
+        {isReturnOrder ? t('returnOrderTotal') : t('totalCost')}:{' '}
       </Text>
       <Text style={styles.count}>
         {costSign}${totalCost.toFixed(2)}

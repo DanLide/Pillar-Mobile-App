@@ -2,7 +2,9 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { observer } from 'mobx-react';
 import { RouteProp } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
+import i18n from 'i18next';
 import { BaseScannerScreen } from 'src/components';
 import { ProductModel } from 'src/stores/types';
 import {
@@ -33,13 +35,14 @@ const initModalParams: ProductModalParams = {
 const getAlertTitle = (error?: string) => {
   switch (error) {
     case ProductByOrderTypeAndSupplierError.NotAssignedToDistributor:
-      return 'Multiple Distributors';
+      return i18n.t('multipleDistributors');
     case ProductByOrderTypeAndSupplierError.NotAssignedToStock:
-      return 'Multiple Stock Locations';
+      return i18n.t('multipleStockLocations');
   }
 };
 
 export const ScannerScreen = observer(({ route: { params } }: Props) => {
+  const { t } = useTranslation();
   const [modalParams, setModalParams] =
     useState<ProductModalParams>(initModalParams);
   const [error, setError] = useState<BadRequestError | null>(null);
@@ -68,23 +71,23 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
     () => (
       <>
         <Text style={styles.alertMessage}>
-          The code for the product you scanned is associated with{' '}
+          {t('codeForProductAssociated')}{' '}
           <Text style={styles.alertMessageBold}>
             {error?.error_description}
           </Text>
         </Text>
         <Text style={styles.alertMessage}>
-          <Text>• </Text> Try scanning a different code for this product
+          <Text>• </Text> {t('tryScanningDifferentCodeProduct')}
         </Text>
         <Text style={styles.alertMessage}>
-          <Text>• </Text> Complete this order, and create a new order for{' '}
+          <Text>• </Text> {t('completeOrderAndCeateNew')}{' '}
           <Text style={styles.alertMessageBold}>
             {error?.error_description}
           </Text>
         </Text>
       </>
     ),
-    [error?.error_description],
+    [error?.error_description, t],
   );
 
   const fetchProduct = useCallback(
@@ -122,6 +125,7 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
           onProductScan={onProductScan}
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
+          buttonListTitle={t('reviewOrder')}
         />
       </ToastContextProvider>
 
@@ -129,7 +133,7 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
         visible={!!error}
         message={alertMessage}
         title={alertTitle}
-        primaryTitle="Okay"
+        primaryTitle={t('okay')}
         onPressPrimary={closeAlert}
         hideSecondary
         alertContainerStyle={styles.alertContainer}

@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import i18n from 'i18next';
 import { colors, fonts, SVGs } from '../theme';
 
 interface Props extends ViewProps {
@@ -18,8 +19,8 @@ interface Props extends ViewProps {
 
 export const ProductEmptyList = memo(
   ({
-    title = 'Nothing here',
-    subtitle = 'Start Scanning',
+    title = i18n.t('nothingHere'),
+    subtitle = i18n.t('startScanning'),
     hideTitle,
     style,
   }: Props) => {

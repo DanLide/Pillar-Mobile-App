@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { JobListItemType } from '../jobsList/components/JobsListItem';
 import { JobsList } from '../jobsList/components';
@@ -15,6 +16,7 @@ import {
 } from 'src/contexts';
 
 const SelectJobComponent = () => {
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
   const navigation = useNavigation();
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
@@ -34,7 +36,7 @@ const SelectJobComponent = () => {
     <SafeAreaView style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
-        title="Select a Repair Order"
+        title={t('selectOrder')}
       />
       <JobsList
         itemType={JobListItemType.Select}

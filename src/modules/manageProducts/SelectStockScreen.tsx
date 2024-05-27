@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { useIsFocused, RouteProp } from '@react-navigation/native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   AppNavigator,
@@ -30,6 +31,7 @@ interface Props {
 type Store = StockProductStoreType & ClearStoreType;
 
 const SelectStockScreenBody = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const store = useRef<Store>(manageProductsStore).current;
   const isFocused = useIsFocused();
 
@@ -55,7 +57,7 @@ const SelectStockScreenBody = observer(({ navigation }: Props) => {
     <SafeAreaView style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
-        title="Select a Stock Location"
+        title={t('selectStockLocation')}
       />
       <StocksList onFetchStocks={fetchStocks} onPressItem={onItemPress} />
     </SafeAreaView>

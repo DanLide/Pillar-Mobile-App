@@ -11,6 +11,7 @@ import {
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
 import { isNil, forEach } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 import { ordersStore } from './stores';
 import { colors, fonts } from '../../theme';
@@ -55,6 +56,7 @@ const initModalParams: OrderProductModal = {
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const OrderByStockLocationScreen = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modalParams, setModalParams] =
     useState<OrderProductModal>(initModalParams);
@@ -115,12 +117,12 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     if (currentOrder?.order.orderId) {
       navigation.setOptions(
         getScreenOptions({
-          title: `Receive Order ${currentOrder?.order.orderId}`,
+          title: t('receiveOrderId', { orderId: currentOrder?.order.orderId }),
           leftBarButtonType: LeftBarType.Back,
         }) as Partial<NativeStackNavigationEventMap>,
       );
     }
-  }, [currentOrder, navigation]);
+  }, [currentOrder, navigation, t]);
 
   const onSelectProduct = (item: ProductModel) => {
     if (
@@ -157,7 +159,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     setIsLoading(false);
 
     if (result) {
-      Alert.alert('Order confirmation was not successful. Please retry.');
+      Alert.alert(t('orderConfirmationWasNotSuccessful'));
     } else {
       navigation.navigate(AppNavigator.ResultScreen);
     }
@@ -189,11 +191,13 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     <View style={styles.container}>
       <InfoTitleBar type={InfoTitleBarType.Primary} title={stockName} />
       <View style={styles.header}>
-        <Text style={styles.headerText}>Product</Text>
+        <Text style={styles.headerText}>{t('product')}</Text>
         <Text style={[styles.headerText, styles.headerCenter]}>
-          Received/Ordered
+          {t('receivedOrdered')}
         </Text>
-        <Text style={[styles.headerText, styles.headerRight]}>Receiving</Text>
+        <Text style={[styles.headerText, styles.headerRight]}>
+          {t('receiving')}
+        </Text>
       </View>
       <FlatList
         data={getCurrentProductsByStockName}
@@ -204,7 +208,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       <View style={styles.button}>
         <Button
           type={ButtonType.primary}
-          title="Receive"
+          title={t('receive')}
           onPress={onReceive}
           isLoading={isLoading}
         />

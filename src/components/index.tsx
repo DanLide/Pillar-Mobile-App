@@ -17,7 +17,7 @@ import { ProductEmptyList } from './ProductEmptyList';
 import {
   BaseScannerScreen,
   ScannerScreenError,
-  scannerErrorMessages,
+  getScannerErrorMessages,
 } from './BaseScannerScreen';
 import { SelectedProductsListItem } from './SelectedProductsListItem';
 import { BaseProductsScreen } from './BaseProductsScreen';
@@ -39,7 +39,7 @@ export {
   ScanProduct,
   BaseScannerScreen,
   ScannerScreenError,
-  scannerErrorMessages,
+  getScannerErrorMessages,
   Checkbox,
   Toast,
   ToastActionType,

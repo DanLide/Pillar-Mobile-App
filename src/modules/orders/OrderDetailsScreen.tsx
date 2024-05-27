@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
@@ -33,6 +34,7 @@ type Props = NativeStackScreenProps<
 >;
 
 export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
@@ -126,7 +128,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       locationPermission !== RESULTS.DENIED &&
       isLocationPermissionRequested
     ) {
-      showToast('Location permissions not granted', {
+      showToast(t('locationPermissionsNotGranted'), {
         type: ToastType.LocationDisabled,
         onPress: () => {
           permissionStore.openSetting();
@@ -135,7 +137,13 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       return;
     }
     hideAll && hideAll();
-  }, [hideAll, showToast, isLocationPermissionRequested, locationPermission]);
+  }, [
+    hideAll,
+    showToast,
+    isLocationPermissionRequested,
+    locationPermission,
+    t,
+  ]);
 
   const showLocationPermLoader =
     (locationPermission === RESULTS.UNAVAILABLE ||
@@ -159,13 +167,11 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       <View style={styles.errorContainer}>
         <View style={styles.image}>
           <SVGs.JobListErrorIcon />
-          <Text style={styles.text}>
-            Sorry, there was an issue loading a list of orders.
-          </Text>
+          <Text style={styles.text}>{t('sorryIssueLoadingOrders')}</Text>
         </View>
         <Button
           type={ButtonType.secondary}
-          title="Retry"
+          title={t('retry')}
           onPress={fetchOrder}
           buttonStyle={styles.button}
         />
@@ -177,19 +183,19 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     const OrderDetailsSubtitle = () => {
       switch (currentOrder.order.status) {
         case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
-          return 'This order is waiting for a PO to be sent to the Distributor.';
+          return t('waitingForPoDistributor');
         case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
-          return 'This order is submitted and pending';
+          return t('orderIsSubmitted');
         case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
-          return 'This order has been shipped to the shop.';
+          return t('orderShippedToShop');
         case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
-          return 'Before this order can be received, Manager approval is needed.';
+          return t('beforeOrderReceivedManagerApproval');
         case OrderTitleByStatusType[OrderStatusType.CLOSED]:
-          return 'This order is closed. All items have been received.';
+          return t('orderClosed');
         case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
-          return 'This order was cancelled.';
+          return t('orderCancelled');
         case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
-          return 'Some items in this order have not been received.';
+          return t('someItemsNotReceived');
         default:
           return null;
       }
@@ -206,7 +212,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
             <Button
               disabled={!selectedStock}
               type={ButtonType.primary}
-              title="Unlock and Receive"
+              title={t('unlockAndReceive')}
               onPress={onNavigateToOrderByStockLocation}
             />
           );
@@ -215,7 +221,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
             <Button
               disabled={!selectedStock}
               type={ButtonType.primary}
-              title="Receive"
+              title={t('receive')}
               onPress={onNavigateToOrderByStockLocation}
             />
           );
@@ -224,7 +230,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
             <Button
               disabled={!selectedStock}
               type={ButtonType.primary}
-              title="Unlock and Receive"
+              title={t('unlockAndReceive')}
               onPress={onNavigateToOrderByStockLocation}
             />
           );
@@ -251,7 +257,9 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
 
         <View style={styles.header}>
           <View>
-            <Text style={styles.title}>Order {currentOrder.order.orderId}</Text>
+            <Text style={styles.title}>
+              {t('order')} {currentOrder.order.orderId}
+            </Text>
             <Text style={styles.titleDistributor}>
               {currentOrder.order.supplierName}
             </Text>
@@ -259,8 +267,8 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
         </View>
 
         <View style={styles.stockHeader}>
-          <Text style={styles.headerText}>Stock Location</Text>
-          <Text style={styles.headerText}>Received/Ordered</Text>
+          <Text style={styles.headerText}>{t('stockLocation')}</Text>
+          <Text style={styles.headerText}>{t('receivedOrdered')}</Text>
         </View>
         <OrdersDetailsStockList
           productsByStockId={orderProductsByStockId}

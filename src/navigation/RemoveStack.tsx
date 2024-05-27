@@ -1,5 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   AppNavigator,
@@ -25,13 +26,14 @@ import { getScreenName } from './helpers/getScreenName';
 const Stack = createStackNavigator<RemoveStackParamList>();
 
 export const RemoveStack: React.FC = observer(() => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName={getScreenName(permissionStore)}>
       <Stack.Screen
         name={AppNavigator.SelectStockScreen}
         component={SelectStockScreen}
         options={getScreenOptions({
-          title: 'Remove Products',
+          title: t('removeProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -53,7 +55,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.RemoveProductsScreen}
         component={RemoveProductsScreen}
         options={getScreenOptions({
-          title: 'Remove Products',
+          title: t('removeProducts'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -61,7 +63,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.HowToScanScreen}
         component={HowToScanScreen}
         options={getScreenOptions({
-          title: 'How to Scan',
+          title: t('howToScan'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -69,7 +71,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -77,7 +79,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
         options={getScreenOptions({
-          title: 'Bluetooth Connection',
+          title: t('bluetoothConnection'),
           leftBarButtonType: LeftBarType.Back,
         })}
         initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
@@ -86,7 +88,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.ScannerScreen}
         component={ScannerScreen}
         options={getScreenOptions({
-          title: 'Remove Products',
+          title: t('removeProducts'),
           leftBarButtonType: LeftBarType.Back,
           rightBarButtonType: RightBarType.QuestionMark,
         })}
@@ -95,7 +97,7 @@ export const RemoveStack: React.FC = observer(() => {
         name={AppNavigator.ResultScreen}
         component={ResultScreen}
         options={getScreenOptions({
-          title: 'Remove Products',
+          title: t('removeProducts'),
           leftBarButtonType: LeftBarType.Close,
         })}
       />

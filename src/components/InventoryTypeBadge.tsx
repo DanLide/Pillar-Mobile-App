@@ -1,4 +1,5 @@
 import { memo, useMemo } from 'react';
+import i18n from 'i18next';
 import { ColoredTooltip } from './ColoredTooltip';
 import { InventoryUseType } from '../constants/common.enum';
 import { colors } from '../theme';
@@ -8,18 +9,22 @@ interface Props {
   inventoryUseTypeId?: number;
 }
 
-const InventoryTypeLabel = {
-  [InventoryUseType.Stock]: 'Stock',
-  [InventoryUseType.Percent]: 'Percent',
-  [InventoryUseType.Container]: 'Container',
-  [InventoryUseType.Each]: 'Each Piece',
-  [InventoryUseType.NonStock]: 'Special Order',
-  [InventoryUseType.All]: 'All',
+const getInventoryTypeLabel = (inventoryUseTypeId: number) => {
+  const InventoryTypeLabel = {
+    [InventoryUseType.Stock]: i18n.t('stock'),
+    [InventoryUseType.Percent]: i18n.t('percent'),
+    [InventoryUseType.Container]: i18n.t('container'),
+    [InventoryUseType.Each]: i18n.t('eachPiece'),
+    [InventoryUseType.NonStock]: i18n.t('specialOrder'),
+    [InventoryUseType.All]: i18n.t('all'),
+  };
+
+  return InventoryTypeLabel[inventoryUseTypeId];
 };
 
 export const InventoryTypeBadge = memo(({ inventoryUseTypeId }: Props) => {
   const label = inventoryUseTypeId
-    ? InventoryTypeLabel[inventoryUseTypeId]
+    ? getInventoryTypeLabel(inventoryUseTypeId)
     : undefined;
 
   const labelTheme = useMemo<StyleProp<TextStyle>>(() => {

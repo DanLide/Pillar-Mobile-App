@@ -1,21 +1,23 @@
 import { View, Text, Pressable, Alert, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { deviceInfoStore } from 'src/stores';
 
 export const DeviceName = observer(() => {
+  const { t } = useTranslation();
   const onChangeDeviceName = () => {
     Alert.prompt(
-      'Set device name',
+      t('setDeviceName'),
       '',
       [
         {
-          text: 'Save',
+          text: t('save'),
           onPress: (value?: string) => {
             if (value) deviceInfoStore.setDeviceName(value);
           },
         },
-        { text: 'Cancel' },
+        { text: t('cancel') },
       ],
       'plain-text',
       deviceInfoStore.getDeviceName,
@@ -24,9 +26,11 @@ export const DeviceName = observer(() => {
 
   return (
     <View style={styles.container}>
-      <Text>Device Name: {deviceInfoStore.getDeviceName}</Text>
+      <Text>
+        {t('deviceName')}: {deviceInfoStore.getDeviceName}
+      </Text>
       <Pressable onPress={onChangeDeviceName} style={styles.button}>
-        <Text>Update</Text>
+        <Text>{t('update')}</Text>
       </Pressable>
     </View>
   );

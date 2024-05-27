@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   AppState,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
@@ -53,9 +54,8 @@ const SCAN_ICON_PROPS: SvgProps = {
   color: colors.purpleDark,
 };
 
-const createOrderErrorText = "The order wasn't created. Please try again.";
-
 const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
+  const { t } = useTranslation();
   const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
   const { showToast, hideAll } = useSingleToast();
   const locationPermission = permissionStore.locationPermission;
@@ -84,7 +84,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       locationPermission !== RESULTS.DENIED &&
       isLocationPermissionRequested
     ) {
-      showToast('Location permissions not granted', {
+      showToast(t('locationPermissionsNotGranted'), {
         type: ToastType.BluetoothDisabled,
         onPress: () => {
           permissionStore.openSetting();
@@ -93,7 +93,13 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       return;
     }
     hideAll && hideAll();
-  }, [showToast, locationPermission, isLocationPermissionRequested, hideAll]);
+  }, [
+    showToast,
+    locationPermission,
+    isLocationPermissionRequested,
+    hideAll,
+    t,
+  ]);
 
   useEffect(() => {
     ordersStore.clear();
@@ -161,7 +167,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
     setIsCreateOrderLoading(false);
 
     if (error)
-      return showToast(createOrderErrorText, { type: ToastType.Error });
+      return showToast(t('orderWasntCreated'), { type: ToastType.Error });
 
     openResultScreen();
   };
@@ -174,8 +180,8 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
       />
       <View style={styles.topContainer}>
         <Dropdown
-          label="Distributor"
-          placeholder="Select a Distributor"
+          label={t('distributor')}
+          placeholder={t('selectDistributor')}
           data={stocksStore.suppliersRenderFormat}
           selectedItem={supplier}
           onSelect={item => ordersStore.setSupplier(+item.value)}
@@ -197,7 +203,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           iconProps={SCAN_ICON_PROPS}
           textStyle={styles.scanText}
           buttonStyle={styles.buttonContainer}
-          title="Scan"
+          title={t('scan')}
           onPress={onPressScan}
           disabled={!supplier}
         />
@@ -206,7 +212,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
           isLoading={isCreateOrderLoading}
           type={ButtonType.primary}
           buttonStyle={styles.buttonContainer}
-          title="Receive"
+          title={t('receive')}
           onPress={onReceiveOrder}
         />
       </View>

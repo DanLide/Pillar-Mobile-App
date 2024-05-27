@@ -6,7 +6,6 @@ jest.mock('../../modules/stocksList/stores');
 
 const mockToken = 'mockToken';
 const mockIsTnCSelected = true;
-const mockIsLanguageSelected = true;
 const mockIsLoggedIn = true;
 const mockPartyRoleId = 10;
 const mockUsername = 'mockUsername';
@@ -27,11 +26,6 @@ describe('AuthStore', () => {
   it('should update isTnCSelected on setIsTnC and compute isTnCSelected', () => {
     store.setIsTnC(mockIsTnCSelected);
     expect(store.isTnCSelected).toBe(mockIsTnCSelected);
-  });
-
-  it('should update isLanguageSelected on setIsLanguage and compute isLanguageSelected', () => {
-    store.setIsLanguage(mockIsLanguageSelected);
-    expect(store.isLanguageSelected).toBe(mockIsLanguageSelected);
   });
 
   it('should update isLoggedIn on setLoggedIn and get store.isLoggedIn', () => {
@@ -80,7 +74,6 @@ describe('AuthStore', () => {
     store.logOut();
     expect(store).toHaveProperty('token', undefined);
     expect(store).toHaveProperty('isTnC', undefined);
-    expect(store).toHaveProperty('isLanguage', undefined);
     expect(store).toHaveProperty('permissionSet', undefined);
     expect(store).toHaveProperty('isLoggedIn', false);
     expect(stocksStore.clear).toHaveBeenCalled();

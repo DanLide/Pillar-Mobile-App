@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -25,6 +26,7 @@ export const CreateOrderResultScreen = ({
   navigation,
   route: { params },
 }: Props) => {
+  const { t } = useTranslation();
   const ordersStoreRef = useRef(ordersStore).current;
 
   const order = ordersStoreRef.currentOrder?.order;
@@ -39,12 +41,12 @@ export const CreateOrderResultScreen = ({
   const isPORequired = status === OrderStatusType.POREQUIRED;
   const isOrderNotFinalized = isPORequired && !poNumber;
 
-  const primaryButtonText = isPurchaseOrder ? 'Home' : 'Manage Orders';
-  const secondaryButtonText = isPurchaseOrder ? 'View Order' : 'Home';
+  const primaryButtonText = isPurchaseOrder ? t('home') : t('manageOrders');
+  const secondaryButtonText = isPurchaseOrder ? t('viewOrder') : t('home');
 
   const title = isPurchaseOrder
-    ? `Order ${orderId ? `${orderId} ` : ''}Created`
-    : 'Return Order Created';
+    ? t('orderIdCreated', { orderId: orderId ? orderId : '' })
+    : t('returnOrderCreated');
 
   const TitleIcon = useMemo(
     () =>
@@ -112,33 +114,35 @@ export const CreateOrderResultScreen = ({
             {isOrderNotFinalized ? (
               <>
                 <Text style={subtitleLargeStyle}>
-                  Your order is saved, but not finalized.
+                  {t('yourOrderIsSavedButNotFinalized')}
                 </Text>
                 <Text style={subtitleLargeStyle}>
-                  Login to{' '}
+                  {t('loginTo')}{' '}
                   <Text style={styles.subtitleBoldItalic}>
                     repairstack.3m.com
                   </Text>{' '}
-                  to assign{'\n'}PO and release order to you Distributor
+                  {t('toAssignOrderToDistributor')}
                 </Text>
               </>
             ) : (
               <Text style={styles.subtitle}>
-                You have successfully submitted the following items
+                {t('youHaveSuccessfullySubmittedItems')}
               </Text>
             )}
           </View>
 
           <View style={styles.distributorAndPOContainer}>
             <View style={styles.distributorAndPOContent}>
-              <Text style={styles.distributorAndPOTitle}>Distributor</Text>
+              <Text style={styles.distributorAndPOTitle}>
+                {t('distributor')}
+              </Text>
               <Text numberOfLines={1} style={distributorAndPOTextStyle}>
                 {supplierName}
               </Text>
             </View>
             {isPORequired && (
               <View style={styles.distributorAndPOContent}>
-                <Text style={poTitleStyle}>Purchase Order Number</Text>
+                <Text style={poTitleStyle}>{t('purchaseOrderNumber')}</Text>
                 <Text style={poTextStyle} numberOfLines={1}>
                   {poNumber ?? <Text style={styles.poPlaceholder}>---</Text>}
                 </Text>
@@ -152,10 +156,7 @@ export const CreateOrderResultScreen = ({
         </View>
 
         {isPurchaseOrder && !isPORequired && (
-          <Text style={styles.note}>
-            Your order will be sent via{'\n'}email and/or EDI to your
-            distributor
-          </Text>
+          <Text style={styles.note}>{t('yourOrderWillBeSentEmail')}</Text>
         )}
       </View>
 

@@ -1,8 +1,9 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
 import { isNil } from 'ramda';
-
+import i18n from 'i18next';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
 import { SelectSSOScreen } from '../modules/sso/SelectSSOScreen';
@@ -33,12 +34,10 @@ const getInitialScreen = (
   ssoStore: SSOStore,
 ): keyof HomeStackParamList => {
   const getIsDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
+
   if (!authStore.isUsernameExistInUsernames) {
-    return AppNavigator.AlphaAlertScreen;
+    return AppNavigator.LanguageSelectScreen;
   }
-  // if (!authStore.isLanguageSelected) {
-  //   return AppNavigator.LanguageSelectScreen;
-  // }
   if (!isNil(getIsDeviceConfiguredBySSO) && !getIsDeviceConfiguredBySSO) {
     return AppNavigator.ConfigureDeviceStack;
   }
@@ -54,7 +53,7 @@ const getInitialScreen = (
 const Stack = createStackNavigator<HomeStackParamList>();
 
 const ssoScreenOptions = getScreenOptions({
-  title: 'Shop Location',
+  title: i18n.t('shopLocation'),
   rightBarButtonType: RightBarType.Logout,
 });
 
@@ -80,6 +79,7 @@ const DrawerHome = () => (
 );
 
 export const HomeStack: React.FC = () => {
+  const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const initialRoute = getInitialScreen(authStore, ssoStore);
 
@@ -91,20 +91,27 @@ export const HomeStack: React.FC = () => {
         options={getNavigationOptions}
       />
       <Stack.Screen
-        name={AppNavigator.TermsScreen}
-        component={TermsScreen}
-        options={getScreenOptions({
-          title: 'Terms & Conditions',
-          rightBarButtonType: RightBarType.Logout,
-        })}
+        name={AppNavigator.LanguageSelectScreen}
+        component={LanguageSelectScreen}
+        options={({ route: { params } }) =>
+          getScreenOptions({
+            title: params?.isSettings
+              ? t('language')
+              : ssoStore.getCurrentSSO?.name || 'Repair Stack',
+            leftBarButtonType: params?.isSettings
+              ? LeftBarType.Back
+              : LeftBarType.BackLogout,
+          })
+        }
       />
       <Stack.Screen
         name={AppNavigator.AlphaAlertScreen}
         component={AlphaAlertScreen}
         options={getScreenOptions({
-          title: 'Alpha/Beta Agreement',
-          leftBarButtonType: LeftBarType.Close,
-          leftBarButtonAction: () => {
+          title: t('alphaBetaAgreement'),
+          leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.Close,
+          rightBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);
             if (screen === AppNavigator.HomeScreen) {
               navigation.reset({
@@ -117,9 +124,13 @@ export const HomeStack: React.FC = () => {
         })}
       />
       <Stack.Screen
-        name={AppNavigator.LanguageSelectScreen}
-        component={LanguageSelectScreen}
-        options={getNavigationOptions}
+        name={AppNavigator.TermsScreen}
+        component={TermsScreen}
+        options={getScreenOptions({
+          title: t('termsConditions'),
+          leftBarButtonType: LeftBarType.Back,
+          rightBarButtonType: RightBarType.Logout,
+        })}
       />
       <Stack.Screen
         name={AppNavigator.SelectSSOScreen}
@@ -160,7 +171,7 @@ export const HomeStack: React.FC = () => {
         name={AppNavigator.Settings}
         component={SettingsScreen}
         options={getScreenOptions({
-          title: 'Settings',
+          title: t('settings'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />

@@ -8,6 +8,7 @@ import {
   ListRenderItemInfo,
 } from 'react-native';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { removeProductsStore } from './stores';
 import { groupProductsByJobId } from './helpers';
@@ -23,6 +24,7 @@ interface Props {
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
+  const { t } = useTranslation();
   const store = useRef<SyncedProductStoreType>(removeProductsStore).current;
   const sectionListData = groupProductsByJobId(store.getNotSyncedProducts);
 
@@ -31,13 +33,13 @@ export const SelectedProductsList = observer(({ onEditProduct }: Props) => {
       <View style={styles.sectionTitleContainer}>
         <Text numberOfLines={1} style={styles.sectionTitleLeft}>
           {info.section.jobId === OTHER_JOB_ID
-            ? 'Other'
-            : `RO Number ${info.section.jobId}`}
+            ? t('other')
+            : t('roNumber', { id: info.section.jobId })}
         </Text>
-        <Text style={styles.sectionTitleRight}>Qty</Text>
+        <Text style={styles.sectionTitleRight}>{t('qty')}</Text>
       </View>
     ),
-    [],
+    [t],
   );
 
   const renderItem = useCallback(

@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { Task, TaskExecutor } from './helpers/taskExecutor';
 
 import { TokenData } from './login';
@@ -63,7 +64,7 @@ export class SaveTokensToStore extends Task {
     if (token && refreshToken && typeof tokenExpiresIn === 'number') {
       authStore.setToken(token, refreshToken, tokenExpiresIn);
     } else {
-      throw Error('Token is not defined!');
+      throw Error(i18n.t('tokenIsNotDefined'));
     }
   }
 }

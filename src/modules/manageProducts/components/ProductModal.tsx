@@ -16,6 +16,8 @@ import Animated, {
   WithSpringConfig,
 } from 'react-native-reanimated';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
+import i18n from 'i18next';
 
 import {
   Button,
@@ -65,9 +67,9 @@ const SCROLL_ANIMATION_CONFIG: WithSpringConfig = {
 const getErrorMessage = (error: unknown) => {
   switch (error) {
     case ProductModalErrors.UpcFormatError:
-      return 'Invalid UPC Code';
+      return i18n.t('invalidUpc');
     case ProductModalErrors.UpcLengthError:
-      return 'UPC length should be 12 or 13 digits long';
+      return i18n.t('upcLengthError');
   }
 };
 
@@ -80,9 +82,6 @@ const INIT_ALERT_PARAMS: AlertParams = {
   isVisible: false,
   shouldCloseModal: false,
 };
-
-const alertMessage =
-  'Are you sure you want to exit without saving? Your edits will not be saved.';
 
 export const ProductModal = observer(
   ({
@@ -98,6 +97,7 @@ export const ProductModal = observer(
     onCancelPress,
     onClose,
   }: ProductModalProps) => {
+    const { t } = useTranslation();
     const store = useRef(manageProductsStore).current;
     const scrollViewRef = useRef<Animated.ScrollView>(null);
     const reservedCountInputRef = useRef<TextInput>(null);
@@ -125,11 +125,11 @@ export const ProductModal = observer(
     const onOrderTitle = useMemo(
       () => (
         <Text style={styles.onOrderTitle}>
-          <Text style={styles.onOrderTitleBold}>On Order.</Text> Some settings
-          cannot be changed
+          <Text style={styles.onOrderTitleBold}>{t('onOrder')}.</Text>
+          {t('someSettingsCannotBeChanged')}
         </Text>
       ),
-      [],
+      [t],
     );
 
     const scrollTo = useCallback(
@@ -315,7 +315,7 @@ export const ProductModal = observer(
         title={stockName}
         titleContainerStyle={styles.titleContainer}
         topOffset={topOffset}
-        semiTitle={isEdit ? 'Edit Product' : 'View Product'}
+        semiTitle={isEdit ? t('editProduct') : t('viewProduct')}
       >
         <>
           <ToastContextProvider disableSafeArea offset={35}>
@@ -373,7 +373,7 @@ export const ProductModal = observer(
               <View style={styles.buttons}>
                 {userPermissions.editProductInStock && (
                   <Button
-                    title={isEdit ? 'Cancel' : 'Edit'}
+                    title={isEdit ? t('cancel') : t('edit')}
                     type={ButtonType.secondary}
                     disabled={isLoading}
                     buttonStyle={styles.buttonContainer}
@@ -381,7 +381,7 @@ export const ProductModal = observer(
                   />
                 )}
                 <Button
-                  title={isEdit ? 'Save' : 'Done'}
+                  title={isEdit ? t('save') : t('done')}
                   type={ButtonType.primary}
                   isLoading={isLoading}
                   buttonStyle={styles.buttonContainer}
@@ -393,7 +393,7 @@ export const ProductModal = observer(
 
           <AlertWrapper
             visible={alertParams.isVisible}
-            message={alertMessage}
+            message={t('exitWithoutSaving')}
             onPressPrimary={handleAlertPrimaryPress}
             onPressSecondary={handleAlertSecondaryPress}
           />

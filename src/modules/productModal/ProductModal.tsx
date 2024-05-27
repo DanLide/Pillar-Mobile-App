@@ -3,6 +3,7 @@ import { StyleSheet, Dimensions, View, Text } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
+import { useTranslation } from 'react-i18next';
 
 import { Modal } from 'src/components';
 import {
@@ -105,6 +106,7 @@ export const ProductModal = memo(
     onChangeProductQuantity,
     onSelectStock,
   }: ProductModalProps) => {
+    const { t } = useTranslation();
     const tabs = useMemo(() => getTabs(type), [type]);
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(tabs[0]);
@@ -267,31 +269,31 @@ export const ProductModal = memo(
               }${product?.partNo ?? ''}`}</Text>
             );
           }
-          return 'Adjust Quantity';
+          return t('adjustQuantity');
         }
         case Tabs.LinkJob:
-          return 'Link to Repair Order';
+          return t('linkToRepairOrder');
         case Tabs.StockList:
           return (
             <View style={styles.upcContainer}>
               <SVGs.CodeIcon width={24} height={16} color={colors.black} />
-              <Text style={styles.upcTitle}>UPC</Text>
+              <Text style={styles.upcTitle}>{t('upc')}</Text>
               <Text style={styles.upc}>{product?.upc}</Text>
             </View>
           );
         default:
           return '';
       }
-    }, [selectedTab, type, product, isReturnRemoveCreateInvoice]);
+    }, [selectedTab, type, product, isReturnRemoveCreateInvoice, t]);
 
     const renderStockName = useMemo(() => {
       switch (type) {
         case ProductModalType.ReceiveBackOrder:
-          return 'Choose Stock Location for Item';
+          return t('chooseStockLocationItem');
         default:
           return stockName;
       }
-    }, [stockName, type]);
+    }, [stockName, type, t]);
 
     return (
       <Modal

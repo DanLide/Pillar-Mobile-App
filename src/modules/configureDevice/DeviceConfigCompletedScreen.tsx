@@ -6,6 +6,7 @@ import {
   FlatList,
   ListRenderItemInfo,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SVGs, colors, fonts } from '../../theme';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { AppNavigator, ConfigureDeviceStackParams } from 'src/navigation/types';
@@ -18,6 +19,7 @@ type Props = NativeStackScreenProps<
 >;
 
 export const DeviceConfigCompletedScreen = ({ route, navigation }: Props) => {
+  const { t } = useTranslation();
   const onNavigateToHome = () => {
     navigation.reset({
       routes: [{ name: AppNavigator.Drawer }],
@@ -36,15 +38,14 @@ export const DeviceConfigCompletedScreen = ({ route, navigation }: Props) => {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <SVGs.CheckMark color={colors.green3} />
-        <Text style={styles.title}>Shop Location Complete</Text>
+        <Text style={styles.title}>{t('shopLocationComplete')}</Text>
       </View>
       <Text style={styles.subtitle}>
-        You have successfully add Shop Location with the following Stock
-        Location(s)
+        {t('shopLocationWithStocksSubmitted')}
       </Text>
 
       <View style={styles.table}>
-        <Text style={styles.tableTitle}>Stock Location</Text>
+        <Text style={styles.tableTitle}>{t('stockLocation')}</Text>
         <FlatList
           data={route.params.stocks}
           renderItem={renderItem}
@@ -55,7 +56,7 @@ export const DeviceConfigCompletedScreen = ({ route, navigation }: Props) => {
         <Button
           type={ButtonType.primary}
           buttonStyle={styles.button}
-          title="Home"
+          title={t('home')}
           onPress={onNavigateToHome}
         />
       </View>

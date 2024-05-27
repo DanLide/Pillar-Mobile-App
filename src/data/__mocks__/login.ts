@@ -46,7 +46,6 @@ export const GET_ROLE_MANAGER_RESPONSE: GetRoleManagerAPI.GetRoleManagerAPIRespo
 
 export const LOGIN_CONTEXT: LoginFlowContext = {
   token: LOGIN_RESPONSE.access_token,
-  isLanguage: !!GET_ROLE_MANAGER_RESPONSE.languageTypeId,
   isTnC: GET_ROLE_MANAGER_RESPONSE.isTermsAccepted,
 };
 

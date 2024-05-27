@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useEffect } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Button, ButtonType, DropdownItem } from '../../components';
 import { colors, fonts, SVGs } from '../../theme';
@@ -18,6 +19,7 @@ type Props = NativeStackScreenProps<
 >;
 
 export const BackOrderResultScreen = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   const order = ordersStore.currentOrder?.order;
 
   const orderId = order?.orderId;
@@ -58,18 +60,20 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
         <View style={styles.header}>
           <View style={styles.titleContainer}>
             <SVGs.CheckMark color={colors.green3} />
-            <Text style={styles.title}>Products Received</Text>
+            <Text style={styles.title}>{t('productsReceived')}</Text>
           </View>
 
           <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>
-              You have successfully submixtted the following items
+              {t('youHaveSuccessfullySubmixtted')}
             </Text>
           </View>
 
           <View style={styles.distributorAndPOContainer}>
             <View style={styles.distributorAndPOContent}>
-              <Text style={styles.distributorAndPOTitle}>Distributor</Text>
+              <Text style={styles.distributorAndPOTitle}>
+                {t('distributor')}
+              </Text>
               <Text numberOfLines={1} style={distributorAndPOTextStyle}>
                 {supplier.label}
               </Text>
@@ -88,7 +92,7 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
         {orderId && (
           <Button
             type={ButtonType.secondary}
-            title="View Order"
+            title={t('viewOrder')}
             buttonStyle={styles.button}
             textStyle={styles.buttonText}
             onPress={onNavigateToOrderView}
@@ -96,7 +100,7 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
         )}
         <Button
           type={ButtonType.primary}
-          title="Home"
+          title={t('home')}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
           onPress={onNavigateToHome}

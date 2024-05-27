@@ -1,17 +1,19 @@
-import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
-
-import { View, Text, StyleSheet } from 'react-native';
 import { FC } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
+
+import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 import { fonts } from 'src/theme';
 
 type Props = Omit<AlertWrapperProps, 'message'>;
 
 const EraseProductsAlert: FC<Props> = props => {
+  const { t } = useTranslation();
   return (
     <AlertWrapper
       title={
         <Text style={[styles.title, styles.label, styles.textBold]}>
-          Go Back?
+          {t('goBack')}
         </Text>
       }
       message={
@@ -19,16 +21,17 @@ const EraseProductsAlert: FC<Props> = props => {
           <Text
             style={[styles.label, { marginBottom: 12, paddingHorizontal: 36 }]}
           >
-            If you <Text style={styles.textBold}>go back</Text> now, all
-            products added to this list{' '}
-            <Text style={styles.textBold}>will be deleted.</Text>
+            {t('ifYouGoBack1')}
+            <Text style={styles.textBold}>{t('ifYouGoBack2')}</Text>
+            {t('ifYouGoBack3')}{' '}
+            <Text style={styles.textBold}>{t('ifYouGoBack4')}</Text>
           </Text>
 
-          <Text style={styles.label}>Are you sure you want to continue?</Text>
+          <Text style={styles.label}>{t('areYouSureYouWantToContinue')}</Text>
         </View>
       }
-      primaryTitle="Continue"
-      secondaryTitle="Cancel"
+      primaryTitle={t('continue')}
+      secondaryTitle={t('cancel')}
       {...props}
     />
   );

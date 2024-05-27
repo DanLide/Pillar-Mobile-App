@@ -143,7 +143,7 @@ export type HomeStackParamList = {
   [AppNavigator.HomeScreen]: undefined;
   [AppNavigator.Drawer]: undefined;
   [AppNavigator.TermsScreen]: undefined;
-  [AppNavigator.LanguageSelectScreen]: undefined;
+  [AppNavigator.LanguageSelectScreen]: { isSettings: boolean } | undefined;
   [AppNavigator.SelectSSOScreen]: SelectSSOScreenParams;
   [AppNavigator.RemoveProductsStack]: undefined;
   [AppNavigator.ReturnProductsStack]: undefined;
@@ -237,11 +237,13 @@ export enum LeftBarType {
   Back,
   Close,
   Drawer,
+  BackLogout,
 }
 
 export enum RightBarType {
   Logout,
   QuestionMark,
+  Close,
 }
 
 export type BaseProductsScreenNavigationProp = CompositeNavigationProp<

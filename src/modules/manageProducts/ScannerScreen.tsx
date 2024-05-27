@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { BaseScannerScreen } from 'src/components';
 import { ProductModal } from './components';
@@ -11,6 +12,7 @@ import { useManageProducts } from 'src/modules/manageProducts/hooks';
 import { manageProductsStore } from 'src/modules/manageProducts/stores';
 
 const ScannerScreen = observer(() => {
+  const { t } = useTranslation();
   const store = useRef(manageProductsStore).current;
 
   const {
@@ -36,6 +38,7 @@ const ScannerScreen = observer(() => {
       onEditPress={onEditPress}
       onCancelPress={onCancelPress}
       ProductModalComponent={ProductModal}
+      buttonListTitle={t('reviewUpdates')}
     />
   );
 });

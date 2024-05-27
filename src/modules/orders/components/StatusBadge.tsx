@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { View, StyleProp, ViewStyle, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
+import i18n from 'i18next';
 import { ColoredTooltip } from '../../../components';
 
 import { OrderStatusType } from '../../../constants/common.enum';
@@ -21,6 +23,21 @@ export const OrderTitleByStatusType: Record<string, string> = {
   [OrderStatusType.TRANSMITTED]: 'Transmitted',
   [OrderStatusType.CLOSED]: 'Closed',
   [OrderStatusType.CANCELLED]: 'Cancelled',
+};
+
+const getOrderTitleByStatusTypeI18n = (label: string) => {
+  const OrderTitleByStatusTypeI18n: Record<string, string> = {
+    ['Approval']: i18n.t('approval'),
+    ['PO Required']: i18n.t('poRequired'),
+    ['Shipped']: i18n.t('shipped'),
+    ['Receiving']: i18n.t('receiving'),
+    ['Submitted']: i18n.t('submitted'),
+    ['Transmitted']: i18n.t('transmitted'),
+    ['Closed']: i18n.t('closed'),
+    ['Cancelled']: i18n.t('cancelled'),
+  };
+
+  return OrderTitleByStatusTypeI18n[label];
 };
 
 export const getBadgeStyleByStatusType = (orderStatusType: string) => {
@@ -47,6 +64,7 @@ export const getBadgeStyleByStatusType = (orderStatusType: string) => {
 };
 
 export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
+  const { t } = useTranslation();
   const label = isString
     ? orderStatusType
     : OrderTitleByStatusType[orderStatusType]
@@ -90,7 +108,11 @@ export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
     <View style={styles.container}>
       {label ? (
         <ColoredTooltip
-          title={label === 'Receiving' ? 'Backordered' : label}
+          title={
+            label === 'Receiving'
+              ? t('backordered')
+              : getOrderTitleByStatusTypeI18n(label)
+          }
           textStyles={badgeStyle}
           icon={renderIcon}
         />

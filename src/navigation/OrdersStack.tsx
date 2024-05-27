@@ -1,5 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
+import { useTranslation } from 'react-i18next';
 
+import i18n from 'i18next';
 import { getScreenOptions } from './helpers';
 import { AppNavigator, LeftBarType, OrdersParamsList } from './types';
 
@@ -28,22 +30,23 @@ const Stack = createStackNavigator<OrdersParamsList>();
 const getsScreenTitleByOrderType = (orderType?: OrderType) => {
   switch (orderType) {
     case OrderType.Purchase:
-      return 'Create Order';
+      return i18n.t('createOrder');
     case OrderType.Return:
-      return 'Return Order';
+      return i18n.t('returnOrder');
     default:
-      return 'Manage Orders';
+      return i18n.t('manageOrders');
   }
 };
 
 export const OrdersStack: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <Stack.Navigator initialRouteName={AppNavigator.OrdersScreen}>
       <Stack.Screen
         name={AppNavigator.OrdersScreen}
         component={OrdersScreen}
         options={getScreenOptions({
-          title: 'Manage Orders',
+          title: t('manageOrders'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -51,7 +54,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.OrderDetailsScreen}
         component={OrderDetailsScreen}
         options={getScreenOptions({
-          title: 'View Order',
+          title: t('viewOrder'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -59,7 +62,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.BluetoothPermissionScreen}
         component={BluetoothPermissionScreen}
         options={getScreenOptions({
-          title: 'Bluetooth Connection',
+          title: t('bluetoothConnection'),
           leftBarButtonType: LeftBarType.Back,
         })}
         initialParams={{ nextRoute: AppNavigator.SelectStockScreen }}
@@ -110,7 +113,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.ResultScreen}
         component={ResultScreen}
         options={getScreenOptions({
-          title: 'Result screen',
+          title: t('resultScreen'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -131,8 +134,8 @@ export const OrdersStack: React.FC = () => {
           getScreenOptions({
             title:
               params?.modalType === ProductModalType.CreateOrder
-                ? 'Create Order'
-                : 'Return Order',
+                ? t('createOrder')
+                : t('returnOrder'),
             leftBarButtonType: LeftBarType.Back,
           })
         }
@@ -141,7 +144,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.HowToScanScreen}
         component={HowToScanScreen}
         options={getScreenOptions({
-          title: 'How to Scan',
+          title: t('howToScan'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -149,7 +152,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.CameraPermissionScreen}
         component={CameraPermissionScreen}
         options={getScreenOptions({
-          title: 'Camera Access',
+          title: t('cameraAccess'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -157,7 +160,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.ReceiveBackorderScreen}
         component={ReceiveBackorderScreen}
         options={getScreenOptions({
-          title: 'Receive Backorder',
+          title: t('receiveBackorder'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -165,7 +168,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.BackorderScannerScreen}
         component={BackOrderScannerScreen}
         options={getScreenOptions({
-          title: 'Receive Backorder',
+          title: t('receiveBackorder'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />
@@ -173,7 +176,7 @@ export const OrdersStack: React.FC = () => {
         name={AppNavigator.BackOrderResultScreen}
         component={BackOrderResultScreen}
         options={getScreenOptions({
-          title: 'Receive Backorder',
+          title: t('receiveBackorder'),
           leftBarButtonType: LeftBarType.Back,
         })}
       />

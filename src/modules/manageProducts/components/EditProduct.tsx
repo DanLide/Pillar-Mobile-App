@@ -6,6 +6,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { find, whereEq } from 'ramda';
@@ -69,6 +70,7 @@ export const EditProduct = observer(
       }: Props,
       ref: React.ForwardedRef<TextInput>,
     ) => {
+      const { t } = useTranslation();
       const store = useRef(manageProductsStore).current;
       const inputRef = useRef<TextInput | null>(null);
 
@@ -138,9 +140,9 @@ export const EditProduct = observer(
         () => (
           <Text style={styles.tooltipMessage}>
             <Text style={[styles.tooltipMessage, styles.textBold]}>
-              Shipment Quantity
+              {t('shipmentQuantity')}
             </Text>{' '}
-            - The increment in which the product is shipped (i.e 4-pack)
+            - {t('incrementInWhichProductIsShipped')}
           </Text>
         ),
         [],
@@ -150,13 +152,12 @@ export const EditProduct = observer(
         () => (
           <Text style={styles.tooltipMessage}>
             <Text style={[styles.tooltipMessage, styles.textBold]}>
-              Restock From
+              {t('restockFrom')}
             </Text>{' '}
-            - Choose to replenish either from your distributor or from another
-            Stock Location
+            - {t('chooseToReplenishFrom')}
           </Text>
         ),
-        [],
+        [t],
       );
 
       const renderInventoryType = useCallback(
@@ -189,7 +190,7 @@ export const EditProduct = observer(
       return (
         <>
           <Dropdown
-            label="Remove By"
+            label={t('removeBy')}
             disabled={isOnOrder}
             data={inventoryTypes}
             selectedItem={product?.inventoryUseTypeId}
@@ -198,7 +199,7 @@ export const EditProduct = observer(
             onSelect={onRemoveBySelect}
           />
           <Dropdown
-            label="Category"
+            label={t('category')}
             data={categories}
             selectedItem={category}
             style={styles.categories}
@@ -206,13 +207,15 @@ export const EditProduct = observer(
           />
           <View style={styles.orderSection}>
             <View style={styles.orderSettingsContainer}>
-              <Text style={styles.orderSettingsLabel}>Order Settings</Text>
+              <Text style={styles.orderSettingsLabel}>
+                {t('orderSettings')}
+              </Text>
               <View style={styles.orderSettings}>
                 {!isSpecialOrder && (
                   <View style={styles.minMaxRow}>
                     <EditQuantity
                       vertical
-                      label="Minimum"
+                      label={t('minimum')}
                       currentValue={product?.min ?? 0}
                       maxValue={MAX_VALUE}
                       minValue={minQty}
@@ -224,7 +227,7 @@ export const EditProduct = observer(
                     <Text style={styles.slash}>/</Text>
                     <EditQuantity
                       vertical
-                      label="Maximum"
+                      label={t('maximum')}
                       currentValue={product?.max ?? 0}
                       maxValue={MAX_VALUE}
                       minValue={minQty}
@@ -239,8 +242,8 @@ export const EditProduct = observer(
                   {isEachPeace && (
                     <EditQuantity
                       vertical
-                      label="Pieces Per"
-                      labelWithNewLine="Container"
+                      label={t('piecesPer')}
+                      labelWithNewLine={t('container')}
                       disabled={isOnOrder}
                       hideCount={isOnOrder}
                       currentValue={product?.unitsPerContainer ?? 0}
@@ -257,8 +260,8 @@ export const EditProduct = observer(
                   {!isSpecialOrder && (
                     <EditQuantity
                       vertical
-                      label="Shipment"
-                      labelWithNewLine="Quantity"
+                      label={t('shipment')}
+                      labelWithNewLine={t('quantity')}
                       disabled={isOnOrder}
                       hideCount={isOnOrder}
                       currentValue={product?.orderMultiple ?? 0}
@@ -273,7 +276,7 @@ export const EditProduct = observer(
                   <EditQuantity
                     disabled
                     vertical
-                    label="On order"
+                    label={t('onOrder')}
                     labelContainerStyle={styles.onOrderLabel}
                     currentValue={product?.onOrder ?? 0}
                     maxValue={MAX_VALUE}
@@ -292,14 +295,14 @@ export const EditProduct = observer(
                 contentStyle={styles.shipmentQuantity}
               >
                 <Text style={styles.shipmentQuantityText}>
-                  What is Shipment Quantity?
+                  {t('whatIsShipmentQuantity')}
                 </Text>
               </Tooltip>
             )}
           </View>
           <View style={styles.bottomSection}>
             <Dropdown
-              label="Distributor"
+              label={t('distributor')}
               disabled={isOnOrder}
               data={suppliers}
               selectedItem={supplier}
@@ -308,7 +311,7 @@ export const EditProduct = observer(
             {!isSpecialOrder && (
               <View style={styles.spaceBetweenContainer}>
                 <Dropdown
-                  label="Restock From"
+                  label={t('restockFrom')}
                   disabled={isOnOrder}
                   data={enabledSuppliers}
                   selectedItem={enabledSupplier}
@@ -325,14 +328,14 @@ export const EditProduct = observer(
                 keyboardType="number-pad"
                 type={InputType.Primary}
                 value={product?.upc}
-                label="UPC Number"
+                label={t('upcNumber')}
                 error={upcError}
                 ref={inputRef}
                 containerStyle={styles.upcInput}
                 onChangeText={handleUpcChange}
               />
               <Button
-                title="Scan"
+                title={t('scan')}
                 type={ButtonType.secondary}
                 icon={SVGs.CodeIcon}
                 iconProps={SCAN_ICON_PROPS}
@@ -345,7 +348,7 @@ export const EditProduct = observer(
               <Switch
                 trackColor={{ true: colors.purple }}
                 value={product?.isRecoverable}
-                label="Recommend to Add to RO"
+                label={t('recommendedToAddToRO')}
                 labelStyle={styles.recoverableLabel}
                 style={styles.spaceBetweenContainer}
                 onPress={() => store.toggleIsRecoverable()}

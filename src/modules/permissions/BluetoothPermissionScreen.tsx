@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import { SVGs, colors, fonts } from '../../theme';
 import { Button, ButtonType } from '../../components';
@@ -13,6 +14,7 @@ import {
 
 export const BluetoothPermissionScreen = observer(
   ({ navigation, route }: BluetoothPermissionScreenProps) => {
+    const { t } = useTranslation();
     const params = route.params;
     const onButtonPress = async () => {
       if (permissionStore.bluetoothPermission === RESULTS.DENIED) {
@@ -39,20 +41,19 @@ export const BluetoothPermissionScreen = observer(
     return (
       <View style={styles.container}>
         <View style={styles.contentContainer}>
-          <Text style={styles.title}>Bluetooth Connection</Text>
+          <Text style={styles.title}>{t('bluetoothConnection')}</Text>
           <Text style={styles.subtitle}>
-            RepairStack would like to connect to your bluetooth, so that you can
-            easily unlock cabinets at your shop.
+            {t('repairStackWouldLikeToConnectBluetooth')}
           </Text>
           <SVGs.BluetoothIcon color={colors.black} style={styles.icon} />
           <Text style={styles.subtitle}>
-            You may also use your keys to unlock the cabinet.
+            {t('youMayUseYourKeysToUnlockCabinet')}
           </Text>
         </View>
         <Button
           type={ButtonType.primary}
           buttonStyle={styles.button}
-          title={'Continue'}
+          title={t('continue')}
           onPress={onButtonPress}
         />
       </View>

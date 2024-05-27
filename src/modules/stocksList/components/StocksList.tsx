@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { observer } from 'mobx-react';
 import {
   RouteProp,
@@ -39,11 +40,10 @@ interface Props {
 }
 
 const keyExtractor = (item: StockModel) => String(item.partyRoleId);
-const errorText =
-  'Sorry, we are unable to connect to your stock location right now. To continue, you may need to locate a key to unlock the stock location.';
 
 export const StocksList: React.FC<Props> = observer(
   ({ onPressItem, onFetchStocks, skipNavToUnlockScreen, itemRightText }) => {
+    const { t } = useTranslation();
     const route =
       useRoute<
         RouteProp<RemoveStackParamList, AppNavigator.SelectStockScreen>
@@ -117,7 +117,7 @@ export const StocksList: React.FC<Props> = observer(
         permissionStore.locationPermission !== RESULTS.GRANTED &&
         permissionStore.locationPermission !== RESULTS.DENIED
       ) {
-        showToast('Location permissions not granted', {
+        showToast(t('locationPermissionsNotGranted'), {
           type: ToastType.LocationDisabled,
           onPress: () => {
             permissionStore.openSetting();
@@ -127,7 +127,7 @@ export const StocksList: React.FC<Props> = observer(
       }
 
       if (route.params?.succeedBluetooth && permissionStore.isBluetoothOn) {
-        showToast('Bluetooth successfully connected', {
+        showToast(t('bluetoothSuccessfullyConnected'), {
           type: ToastType.BluetoothEnabled,
         });
         navigation.setParams({
@@ -137,7 +137,7 @@ export const StocksList: React.FC<Props> = observer(
         return;
       }
       if (permissionStore.bluetoothPermission !== RESULTS.GRANTED) {
-        showToast('Bluetooth not connected', {
+        showToast(t('bluetoothNotConnected'), {
           type: ToastType.BluetoothDisabled,
           onPress: () => {
             permissionStore.openSetting();
@@ -146,7 +146,7 @@ export const StocksList: React.FC<Props> = observer(
         return;
       }
       if (!permissionStore.isBluetoothOn) {
-        showToast('Make sure Bluetooth is enabled, bluetooth not connected', {
+        showToast(t('makeSureBluetoothIsEnabled'), {
           type: ToastType.BluetoothDisabled,
           onPress: () => {
             permissionStore.openBluetoothPowerSetting();
@@ -182,10 +182,12 @@ export const StocksList: React.FC<Props> = observer(
         <View style={styles.container}>
           <View style={styles.infoContainer}>
             <SVGs.StockLocationErrorIcon />
-            <Text style={styles.text}>{errorText}</Text>
+            <Text style={styles.text}>
+              {t('sorryunableToConnectStockLocation')}
+            </Text>
           </View>
           <Button
-            title="Retry"
+            title={t('retry')}
             type={ButtonType.primary}
             buttonStyle={styles.buttonStyle}
             onPress={handlePressRetry}

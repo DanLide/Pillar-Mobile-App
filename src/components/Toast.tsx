@@ -10,6 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { ToastProps } from 'react-native-toast-notifications/lib/typescript/toast';
+import { useTranslation } from 'react-i18next';
 
 import { colors, fonts, SVGs, toastColors } from '../theme';
 import { ToastMessage } from './ToastMessage';
@@ -77,6 +78,7 @@ export const Toast: React.FC<Props> = ({
   onHide,
   onPress,
 }) => {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
 
   const { primary, secondary, action } = toastColors[type] ?? {};
@@ -142,7 +144,7 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idUndoText(testID)}
             style={[styles.action, { color: action }]}
           >
-            Undo
+            {t('undo')}
           </Text>
         );
       case ToastActionType.Edit:
@@ -151,7 +153,7 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idUndoText(testID)}
             style={[styles.action, { color: action }]}
           >
-            Edit
+            {t('edit')}
           </Text>
         );
       case ToastActionType.OpenSettings:
@@ -160,7 +162,7 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idSettingsText(testID)}
             style={[styles.action, { color: action }]}
           >
-            Open Settings
+            {t('openSettings')}
           </Text>
         );
       case ToastActionType.Details:
@@ -169,7 +171,7 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idDetailsButton(testID)}
             style={[styles.action, { color: action }]}
           >
-            Details
+            {t('details')}
           </Text>
         );
       case ToastActionType.Return:
@@ -178,13 +180,13 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idDetailsButton(testID)}
             style={[styles.action, { color: action }]}
           >
-            Return
+            {t('return')}
           </Text>
         );
       default:
         return null;
     }
-  }, [isLoading, action, actionType, testID]);
+  }, [isLoading, action, actionType, testID, t]);
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.container, { backgroundColor: secondary }, style],

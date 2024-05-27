@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import { Task, TaskExecutor } from './helpers';
 import { deviceByRepairFacilityIdAPI, removeDeviceFromSSO } from './api/ssoAPI';
 import { deviceInfoStore, ssoStore } from 'src/stores';
@@ -17,13 +18,13 @@ export class RemoveDeviceFromSSO extends Task {
 
   async run() {
     const deviceList = await deviceByRepairFacilityIdAPI();
-    if (!deviceList.length) throw Error('Device list is empty!');
+    if (!deviceList.length) throw Error(i18n.t('deviceListIsEmpty'));
 
     const deviceName = deviceInfoStore.deviceName;
     const currentDevice = deviceList.find(
       device => device.leanTecSerialNo === deviceName,
     );
-    if (!deviceName) throw Error('Device is not find!');
+    if (!deviceName) throw Error(i18n.t('deviceIsNotFind'));
 
     const partyRoleID = ssoStore.getCurrentSSO?.pisaId;
 

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
 import { autorun } from 'mobx';
@@ -82,9 +83,6 @@ const SCAN_ICON_PROPS: SvgProps = {
   width: 32,
 };
 
-const alertMessage =
-  'If you change the stock location now, all products added to this list will be deleted. \n\n Are you sure you want to continue?';
-
 const BaseProducts = observer(
   ({
     modalParams,
@@ -109,6 +107,7 @@ const BaseProducts = observer(
     onComplete,
     flow,
   }: Props) => {
+    const { t } = useTranslation();
     const { showToast } = useSingleToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -153,7 +152,7 @@ const BaseProducts = observer(
       setIsLoading(false);
 
       if (error && modalType === ProductModalType.CreateInvoice) {
-        showToast('The Invoice was not generated. Please try again.', {
+        showToast(t('invoiceNotGenerated'), {
           type: ToastType.CreateInvoiceError,
           duration: 0,
           onPress: onCompleteRemove,
@@ -191,7 +190,7 @@ const BaseProducts = observer(
             disabled={!scannedProductsCount && flow !== Flows.ManageProduct}
             type={ButtonType.primary}
             buttonStyle={styles.buttonContainer}
-            title={primaryButtonTitle ?? 'Complete'}
+            title={primaryButtonTitle ?? t('complete')}
             onPress={onCompleteRemove}
           />
         );
@@ -233,7 +232,7 @@ const BaseProducts = observer(
               iconProps={SCAN_ICON_PROPS}
               textStyle={styles.scanText}
               buttonStyle={styles.buttonContainer}
-              title="Scan"
+              title={t('scan')}
               onPress={onPressScan}
             />
 
@@ -255,8 +254,12 @@ const BaseProducts = observer(
 
         <AlertWrapper
           visible={alertVisible}
-          message={alertMessage}
-          title="Change Stock Location"
+          message={
+            t('changeStockLocationWarning') +
+            ' \n\n ' +
+            t('areYouSureYouWantToContinue')
+          }
+          title={t('changeStockLocation')}
           onPressPrimary={onPressPrimary}
           onPressSecondary={onPressSecondary}
         />

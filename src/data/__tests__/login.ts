@@ -1,6 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import { clone } from 'ramda';
 
+import { initI18n } from 'src/libs/translation';
 import { exportedForTesting, LoginFlowContext } from '../login';
 import { AuthStore } from '../../stores/AuthStore';
 import {
@@ -14,6 +15,7 @@ import {
 } from '../__mocks__/login';
 
 jest.mock('jwt-decode');
+initI18n();
 
 const { LoginTask, GetRoleManagerTask, JWTParserTask, SaveAuthDataTask } =
   exportedForTesting;
@@ -64,7 +66,7 @@ describe('login', () => {
     const mockedGetRoleManagerSuccess = mockGetRoleManagerSuccess();
     const getRoleManagerTask = new GetRoleManagerTask(loginContext);
 
-    await expect(getRoleManagerTask.run()).rejects.toThrow('Login failed');
+    await expect(getRoleManagerTask.run()).rejects.toThrow('Login failed!');
     expect(loginContext.partyRoleId).toBeUndefined();
     expect(mockedGetRoleManagerSuccess).not.toBeCalled();
   });
@@ -114,7 +116,6 @@ describe('login', () => {
 
     await expect(saveAuthDataTask.run()).resolves.not.toThrow();
     expect(authStore.getToken).toBeDefined();
-    expect(authStore.isLanguageSelected).toBeDefined();
     expect(authStore.isTnCSelected).toBeDefined();
     expect(authStore.isLoggedIn).toBeTruthy();
   });
@@ -125,9 +126,8 @@ describe('login', () => {
 
     const saveAuthDataTask = new SaveAuthDataTask(loginContext, authStore);
 
-    await expect(saveAuthDataTask.run()).rejects.toThrow('Login failed');
+    await expect(saveAuthDataTask.run()).rejects.toThrow('Login failed!');
     expect(authStore.getToken).toBeUndefined();
-    expect(authStore.isLanguageSelected).toBeUndefined();
     expect(authStore.isTnCSelected).toBeUndefined();
     expect(authStore.isLoggedIn).toBeFalsy();
   });

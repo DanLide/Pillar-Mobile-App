@@ -7,6 +7,7 @@ import {
   ListRenderItemInfo,
 } from 'react-native';
 import { isNil, filter } from 'ramda';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -35,6 +36,7 @@ type Props = NativeStackScreenProps<
 const keyExtractor = (item: ProductModel): string => item.uuid;
 
 export const ResultScreen = ({ navigation }: Props) => {
+  const { t } = useTranslation();
   const ordersStoreRef = useRef(ordersStore).current;
 
   const isNextStock = useMemo(() => {
@@ -75,12 +77,14 @@ export const ResultScreen = ({ navigation }: Props) => {
     if (ordersStoreRef.currentOrder?.order.orderId) {
       navigation.setOptions(
         getScreenOptions({
-          title: `Receive Order ${ordersStoreRef.currentOrder?.order.orderId}`,
+          title: t('receiveOrderId', {
+            orderId: ordersStoreRef.currentOrder?.order.orderId,
+          }),
           leftBarButtonType: LeftBarType.Back,
         }) as Partial<NativeStackNavigationEventMap>,
       );
     }
-  }, [ordersStoreRef, navigation]);
+  }, [ordersStoreRef, navigation, t]);
 
   const onNavigateToHome = () => {
     navigation.reset({
@@ -102,22 +106,26 @@ export const ResultScreen = ({ navigation }: Props) => {
       <View style={styles.titleContainer}>
         <SVGs.CheckMark color={colors.green3} />
         <Text style={styles.title}>
-          Order {ordersStoreRef.currentOrder?.order.orderId} Received
+          {t('orderReceived', {
+            orderId: ordersStoreRef.currentOrder?.order.orderId,
+          })}
         </Text>
       </View>
       <Text style={styles.subtitle}>
-        You have successfully submitted the following items
+        {t('youHaveSuccessfullySubmittedItems')}
       </Text>
-      <Text style={styles.distributorTitle}>Distributor</Text>
+      <Text style={styles.distributorTitle}>{t('distributor')}</Text>
       <Text style={[styles.distributorTitle, styles.distributorText]}>
         {ordersStoreRef.currentOrder?.order.supplierName}
       </Text>
 
       <View style={styles.table}>
         <View style={styles.header}>
-          <Text style={[styles.headerText, styles.headerLeft]}>Product</Text>
+          <Text style={[styles.headerText, styles.headerLeft]}>
+            {t('product')}
+          </Text>
           <Text style={[styles.headerRight, styles.headerText]}>
-            Received/Ordered
+            {t('receivedOrdered')}
           </Text>
         </View>
         <FlatList
@@ -133,13 +141,13 @@ export const ResultScreen = ({ navigation }: Props) => {
         <>
           <View style={styles.titleContainer}>
             <SVGs.Warning color={colors.black} />
-            <Text style={styles.title}>Items Missing</Text>
+            <Text style={styles.title}>{t('itemsMissing')}</Text>
           </View>
           <Text style={[styles.subtitle, styles.noBottomPadding]}>
-            Order is incomplete.
+            {t('orderIsIncomplete')}
           </Text>
           <Text style={[styles.subtitle, styles.noBottomPadding]}>
-            If items arrive later on, update this order.
+            {t('ifItemsArriveLater')}
           </Text>
         </>
       ) : null}
@@ -147,14 +155,14 @@ export const ResultScreen = ({ navigation }: Props) => {
       <View style={styles.buttons}>
         <Button
           type={ButtonType.secondary}
-          title="View Order"
+          title={t('viewOrder')}
           buttonStyle={[styles.button, styles.viewOrderButton]}
           textStyle={styles.buttonText}
           onPress={onNavigateToOrderView}
         />
         <Button
           type={ButtonType.primary}
-          title={isNextStock ? 'Continue' : 'Home'}
+          title={isNextStock ? t('continue') : t('home')}
           buttonStyle={[styles.button, styles.homeButton]}
           textStyle={styles.buttonText}
           onPress={isNextStock ? onNavigateToOrderView : onNavigateToHome}

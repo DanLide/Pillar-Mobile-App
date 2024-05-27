@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { observer } from 'mobx-react';
+import { useTranslation } from 'react-i18next';
 
 import {
   StockProductStoreType,
@@ -16,6 +17,7 @@ interface Props {
 type ProductsStore = SyncedProductStoreType & StockProductStoreType;
 
 export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
+  const { t } = useTranslation();
   const store = useRef<ProductsStore>(removeProductsStore).current;
 
   return (
@@ -23,11 +25,11 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
       groupByJob
       navigation={navigation}
       store={store}
-      contextTitle="Remove Complete"
-      contextBody="You have successfully removed the following items from"
-      errorListTitle="The following products were "
-      errorListTitlePartBolt="not removed"
-      errorToastMessage="Sorry, some of the products on your list were not removed from inventory"
+      contextTitle={t('removeComplete')}
+      contextBody={t('youHaveSuccessfullyRemovedItemsFrom')}
+      errorListTitle={t('followingProductsWere')}
+      errorListTitlePartBolt={t('notRemoved')}
+      errorToastMessage={t('sorrySomeProductsWereNotRemoved')}
     />
   );
 });

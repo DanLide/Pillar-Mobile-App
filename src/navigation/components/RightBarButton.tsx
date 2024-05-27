@@ -18,7 +18,13 @@ export const RightBarButton: React.FC<Props> = ({
   onPress,
 }) => {
   const navigation = useNavigation();
+
   const onIconPress = () => {
+    if (onPress) {
+      onPress();
+      return;
+    }
+
     switch (rightBarButtonType) {
       case RightBarType.Logout:
         authStore.logOut();
@@ -26,6 +32,12 @@ export const RightBarButton: React.FC<Props> = ({
       case RightBarType.QuestionMark:
         navigation.navigate(AppNavigator.HowToScanScreen);
         break;
+      case RightBarType.Close: {
+        if (navigation.canGoBack()) {
+          navigation.goBack();
+        }
+        break;
+      }
       default:
         break;
     }
@@ -37,6 +49,8 @@ export const RightBarButton: React.FC<Props> = ({
         return <SVGs.LogoutIcon color={colors.white} />;
       case RightBarType.QuestionMark:
         return <SVGs.QuestionMark color={colors.white} />;
+      case RightBarType.Close:
+        return <SVGs.CloseIcon color={colors.white} />;
       default:
         return null;
     }

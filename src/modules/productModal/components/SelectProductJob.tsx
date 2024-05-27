@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { Button, ButtonType } from '../../../components';
 import { JobsList } from '../../jobsList/components';
@@ -26,6 +27,7 @@ export const SelectProductJob: React.FC<Props> = ({
   onPressSkip,
   onPressAdd,
 }) => {
+  const { t } = useTranslation();
   const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
     undefined,
   );
@@ -46,14 +48,14 @@ export const SelectProductJob: React.FC<Props> = ({
         {isRecoverableProduct ? (
           <Button
             type={ButtonType.secondary}
-            title="Skip"
+            title={t('skip')}
             buttonStyle={styles.button}
             onPress={onPressSkip}
           />
         ) : (
           <Button
             type={ButtonType.secondary}
-            title="Back"
+            title={t('back')}
             buttonStyle={styles.button}
             onPress={onPressBack}
           />
@@ -61,7 +63,7 @@ export const SelectProductJob: React.FC<Props> = ({
         <Button
           type={ButtonType.primary}
           disabled={isEdit ? false : !selectedJob}
-          title="Done"
+          title={t('done')}
           buttonStyle={styles.button}
           onPress={() => onPressAdd(selectedJob)}
         />
@@ -74,6 +76,7 @@ export const SelectProductJob: React.FC<Props> = ({
       onPressBack,
       onPressSkip,
       selectedJob,
+      t,
     ],
   );
 

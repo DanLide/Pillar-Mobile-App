@@ -1,3 +1,4 @@
+import i18n from 'i18next';
 import jwt_decode from 'jwt-decode';
 
 import { jobsStore } from '../modules/jobsList/stores';
@@ -31,7 +32,6 @@ export interface TokenData {
 export interface LoginFlowContext extends TokenData {
   token?: string;
   isTnC?: boolean;
-  isLanguage?: boolean;
   partyRoleId?: number;
   orgPartyRoleId?: number;
   username?: string;
@@ -53,7 +53,6 @@ export const onLogin = async (
   const loginContext: LoginFlowContext = {
     token: undefined,
     isTnC: undefined,
-    isLanguage: undefined,
     type,
   };
 
@@ -72,7 +71,6 @@ export const onLoginWithToken = async (token: string, authStore: AuthStore) => {
   const loginContext: LoginFlowContext = {
     token,
     isTnC: undefined,
-    isLanguage: undefined,
     type: LoginType.LoginShopDevice,
   };
 
@@ -114,7 +112,7 @@ class GetRoleManagerTask extends Task {
 
   async run(): Promise<void> {
     if (!this.loginFlowContext.token) {
-      throw new Error('Login failed!');
+      throw new Error(i18n.t('loginFailed'));
     }
 
     const response = await getRoleManagerAPI(this.loginFlowContext.token);
@@ -129,7 +127,6 @@ class GetRoleManagerTask extends Task {
     }
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
-    this.loginFlowContext.isLanguage = !!response.languageTypeId;
     this.loginFlowContext.partyRoleId = response.partyRoleId;
     this.loginFlowContext.orgPartyRoleId = response.orgPartyRoleID;
     this.loginFlowContext.roleTypeDescription = response.roleTypeDescription;
@@ -157,7 +154,7 @@ class JWTParserTask extends Task {
     const decodedToken = jwt_decode(this.loginFlowContext.token);
 
     if (!this.isTokenValid(decodedToken)) {
-      throw Error('Token is not valid!');
+      throw Error(i18n.t('tokenIsNotValid'));
     }
 
     this.loginFlowContext.username = Utils.zeroToUndefined<string>(
@@ -198,14 +195,14 @@ class GetSSOTask extends Task {
     ssoStore.clear();
 
     if (!this.loginFlowContext.token) {
-      throw new Error('Login failed!');
+      throw new Error(i18n.t('loginFailed'));
     }
 
     jobsStore.clear();
     const ssoList = await this.fetchSSOList();
 
     if (ssoList === undefined) {
-      throw new Error('SSO fetching error!');
+      throw new Error(i18n.t('ssoFetchingError'));
     }
     ssoStore.setSSOList(ssoList);
 
@@ -336,17 +333,14 @@ class SaveAuthDataTask extends Task {
   }
 
   isLoginContextValid() {
-    const { token, isTnC, isLanguage } = this.loginFlowContext;
-    return (
-      isLanguage !== undefined && token !== undefined && isTnC !== undefined
-    );
+    const { token, isTnC } = this.loginFlowContext;
+    return token !== undefined && isTnC !== undefined;
   }
 
   async run() {
     const {
       token,
       isTnC,
-      isLanguage,
       partyRoleId,
       permissionSet1,
       permissionSet2,
@@ -386,7 +380,6 @@ class SaveAuthDataTask extends Task {
 
       this.authStore.setToken(token, refreshToken, tokenExpiresIn);
       this.authStore.setIsTnC(isTnC);
-      this.authStore.setIsLanguage(isLanguage);
       this.authStore.setRoleTypeDescription(roleTypeDescription);
 
       this.authStore.setPartyRoleId(partyRoleId);
@@ -400,7 +393,7 @@ class SaveAuthDataTask extends Task {
       this.authStore.setLoggedIn(true);
     } else {
       this.authStore.logOut();
-      throw Error('Login failed!');
+      throw Error(i18n.t('loginFailed'));
     }
   }
 }

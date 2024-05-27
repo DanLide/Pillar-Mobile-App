@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
@@ -39,6 +40,7 @@ type Props = NativeStackScreenProps<
 
 const LoginViaCredentialsScreenContent = observer(
   ({ route, navigation }: Props) => {
+    const { t } = useTranslation();
     const { showToast } = useSingleToast();
     const loginFormRef = useRef(new LoginFormStore()).current;
     const authStoreRef = useRef(authStore).current;
@@ -58,20 +60,17 @@ const LoginViaCredentialsScreenContent = observer(
         isBadRequestError(error) &&
         error.error_description?.includes('AADB2C90225')
       ) {
-        showToast(
-          'Sorry, your username and password are incorrect. Please try again.',
-          {
-            type: ToastType.Error,
-            duration: 0,
-          },
-        );
+        showToast(t('incorrectUsernameAndPassword'), {
+          type: ToastType.Error,
+          duration: 0,
+        });
       } else if (error.code === 'no_permission') {
         showToast(error.message, {
           type: ToastType.ProfileError,
           duration: 0,
         });
       } else {
-        showToast('Sorry, we are not able to login.', {
+        showToast(t('weAreNotAbleToLogin'), {
           type: ToastType.Retry,
           duration: 0,
           onPress: onSubmit,
@@ -112,7 +111,7 @@ const LoginViaCredentialsScreenContent = observer(
           {
             navigation.setOptions(
               getScreenOptions({
-                title: 'Configure Shop Device',
+                title: t('configureShopDevice'),
                 leftBarButtonType: LeftBarType.Back,
               }) as Partial<NativeStackNavigationEventMap>,
             );
@@ -126,12 +125,12 @@ const LoginViaCredentialsScreenContent = observer(
     return (
       <View style={styles.container}>
         <InfoTitleBar
-          title="Login with your username and password"
+          title={t('loginWithYourUsernameAndPassword')}
           type={InfoTitleBarType.Secondary}
         />
-        <Text style={styles.title}>Account Login</Text>
+        <Text style={styles.title}>{t('accountLogin')}</Text>
         <Input
-          label="Username"
+          label={t('username')}
           containerStyle={styles.input}
           value={loginFormRef.getUsername}
           editable={!isLoading}
@@ -141,7 +140,7 @@ const LoginViaCredentialsScreenContent = observer(
           autoCorrect={false}
         />
         <Input
-          label="Password"
+          label={t('password')}
           containerStyle={[styles.input, styles.inputTopMargin]}
           value={loginFormRef.getPassword}
           editable={!isLoading}
@@ -150,28 +149,28 @@ const LoginViaCredentialsScreenContent = observer(
           rightIcon={isPasswordVisible ? SVGs.OpenEyeIcon : SVGs.CloseEyeIcon}
           onRightIconPress={onRightIconPress}
           secureTextEntry={!isPasswordVisible}
-          rightLabel="Required"
+          rightLabel={t('required')}
         />
         <View style={styles.secondaryButtonsContainer}>
-          <Text style={styles.secondaryButton}>Forgot Username</Text>
+          <Text style={styles.secondaryButton}>{t('forgotUsername')}</Text>
           <View style={styles.separator} />
-          <Text style={styles.secondaryButton}>Forgot Password</Text>
+          <Text style={styles.secondaryButton}>{t('forgotPassword')}</Text>
         </View>
         <View style={styles.ssoLoginContainer}>
-          <Text style={styles.text}>3M Employee ?</Text>
+          <Text style={styles.text}>{t('mmmEmployee')} ?</Text>
           <Button
             type={ButtonType.primary}
             icon={SVGs.ConnectedWorker}
             iconProps={LOGIN_ICON_PROPS}
             buttonStyle={styles.ssoLoginButton}
             textStyle={styles.ssoLoginButtonText}
-            title="Log In with Single Sign-On (SSO)"
+            title={t('loginWithSso')}
             onPress={onPressSSOLogin}
           />
         </View>
         <Button
           type={ButtonType.primary}
-          title="Login"
+          title={t('login')}
           disabled={isDisabled}
           buttonStyle={styles.buttonStyle}
           onPress={onSubmit}

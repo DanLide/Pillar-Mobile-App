@@ -7,6 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import { masterLockStore, ssoStore } from 'src/stores';
+import { useTranslation } from 'react-i18next';
 
 import { StockModel } from '../stores/StocksStore';
 import { RoleType } from 'src/constants/common.enum';
@@ -44,6 +45,7 @@ export const StocksListItem: React.FC<Props> = observer(
     itemRightText,
     nextNavigationGoBack,
   }) => {
+    const { t } = useTranslation();
     const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
 
     const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
@@ -126,7 +128,7 @@ export const StocksListItem: React.FC<Props> = observer(
               style={styles.statusContainer}
             >
               {isDeviceConfiguredBySSO && isLocked && (
-                <Text style={styles.statusText}>Unlock</Text>
+                <Text style={styles.statusText}>{t('unlock')}</Text>
               )}
               <SVGs.ChevronIcon color={colors.purpleDark} />
             </Pressable>
