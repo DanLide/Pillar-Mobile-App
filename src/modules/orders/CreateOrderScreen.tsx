@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+
 import { observer } from 'mobx-react';
 import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
@@ -34,12 +34,15 @@ import { getProductsReservedCount } from 'src/modules/orders/helpers';
 import { createOrder } from 'src/data/createOrder';
 import {
   AddNotesSection,
+  KeyboardToolButton,
   PONumberModal,
   SelectedProductsList,
   TotalCostBar,
 } from './components';
 import { OrderStatusType, OrderType } from 'src/constants/common.enum';
 import { updatePONumber } from 'src/data/updatePONumber';
+import { StyleSheet, View } from 'react-native';
+import { KeyboardToolbar } from 'react-native-keyboard-controller';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -261,6 +264,7 @@ const CreateOrderScreen = observer(
           onSkip={openResultScreen}
           onSubmit={onSubmitPONumber}
         />
+        <KeyboardToolbar button={KeyboardToolButton} showArrows={false} />
       </View>
     );
   },

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import 'react-native-url-polyfill/auto';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
   ScrollView,
   View,
@@ -140,11 +141,13 @@ const App = observer(() => {
           return false;
         }}
       >
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <AppStack />
-          </NavigationContainer>
-        </SafeAreaProvider>
+        <KeyboardProvider>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <AppStack />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </KeyboardProvider>
       </View>
     </ScrollView>
   );

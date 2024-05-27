@@ -1,0 +1,15 @@
+diff --git a/node_modules/react-native-keyboard-controller/ios/delegates/KCTextInputCompositeDelegate.swift b/node_modules/react-native-keyboard-controller/ios/delegates/KCTextInputCompositeDelegate.swift
+index 3c4a609..485669f 100644
+--- a/node_modules/react-native-keyboard-controller/ios/delegates/KCTextInputCompositeDelegate.swift
++++ b/node_modules/react-native-keyboard-controller/ios/delegates/KCTextInputCompositeDelegate.swift
+@@ -93,7 +93,9 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
+   // MARK: UITextFieldDelegate
+ 
+   func textFieldDidChangeSelection(_ textField: UITextField) {
+-    textFieldDelegate?.textFieldDidChangeSelection?(textField)
++    if #available(iOS 13.0, *) {
++       textFieldDelegate?.textFieldDidChangeSelection?(textField)
++    }
+     updateSelectionPosition(textInput: textField)
+   }
+ 

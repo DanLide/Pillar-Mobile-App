@@ -34,6 +34,7 @@ import {
 import { ToastType } from 'src/contexts/types';
 import {
   AddNotesSection,
+  KeyboardToolButton,
   SelectedProductsList,
   TotalCostBar,
 } from './components';
@@ -42,6 +43,7 @@ import { receiveBackOrder } from 'src/data/receiveBackOrder';
 import { OrderType } from 'src/constants/common.enum';
 import permissionStore from '../permissions/stores/PermissionStore';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { KeyboardToolbar } from 'react-native-keyboard-controller';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -217,6 +219,7 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         onRemove={onRemoveProduct}
         onChangeProductQuantity={setEditableProductQuantity}
       />
+      <KeyboardToolbar button={KeyboardToolButton} showArrows={false} />
     </View>
   );
 });
