@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo, memo, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   FlatList,
   View,
@@ -12,11 +12,6 @@ import {
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-  ToastContextProvider,
-} from 'src/contexts';
-
 import { jobsStore } from '../stores';
 import { fetchJobs } from '../../../data/fetchJobs';
 
@@ -24,7 +19,11 @@ import { JobListItem, JobListItemType } from './JobsListItem';
 import { JobModel } from '../stores/JobsStore';
 import { SVGs, colors, fonts } from '../../../theme';
 import { Button, ButtonType, Input } from '../../../components';
-import { CreateJobModal } from 'src/modules/createInvoice/components/CreateJobModal';
+import { useNavigation } from '@react-navigation/native';
+import {
+  AppNavigator,
+  TCreateInvoiceNavScreenProps,
+} from 'src/navigation/types';
 
 interface Props {
   itemType?: JobListItemType;
@@ -36,7 +35,8 @@ interface Props {
 
   onPressItem: (job: JobModel) => void;
 }
-const JobsListComponent: React.FC<Props> = observer(
+
+export const JobsList: React.FC<Props> = observer(
   ({
     selectedId,
     footerComponent,
@@ -51,13 +51,16 @@ const JobsListComponent: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [filterValue, setFilterValue] = useState<string>('');
-    const [isCreateJobModalVisible, setIsCreateJobModalVisible] =
-      useState(false);
 
     const containerStyles = useMemo(
       () => [styles.container, containerStyle],
       [containerStyle],
     );
+
+    const { navigate } =
+      useNavigation<
+        TCreateInvoiceNavScreenProps<AppNavigator.CreateInvoiceProductsScreen>['navigation']
+      >();
 
     const filteredList = useMemo(
       () =>
@@ -100,12 +103,8 @@ const JobsListComponent: React.FC<Props> = observer(
       setFilterValue(text);
     };
 
-    const onCloseModal = (isRefreshJobs?: boolean) => {
-      setIsCreateJobModalVisible(false);
-      if (isRefreshJobs) {
-        onFetchJobs();
-      }
-    };
+    const openJobModal = () =>
+      navigate(AppNavigator.CreateJobModal, { onSubmit: onFetchJobs });
 
     if (isLoading) {
       return <ActivityIndicator size="large" style={styles.loading} />;
@@ -151,33 +150,19 @@ const JobsListComponent: React.FC<Props> = observer(
         {footerComponent
           ? footerComponent
           : isCreateJobAvailable && (
-              <>
-                <View style={styles.buttons}>
-                  <Button
-                    title={t('createRepairOrder')}
-                    type={ButtonType.secondary}
-                    buttonStyle={styles.createJobButton}
-                    onPress={() => setIsCreateJobModalVisible(true)}
-                  />
-                </View>
-                <CreateJobModal
-                  isVisible={isCreateJobModalVisible}
-                  onClose={onCloseModal}
+              <View style={styles.buttons}>
+                <Button
+                  title={t('createRepairOrder')}
+                  type={ButtonType.secondary}
+                  buttonStyle={styles.createJobButton}
+                  onPress={openJobModal}
                 />
-              </>
+              </View>
             )}
       </>
     );
   },
 );
-
-export const JobsList = (props: Props) => {
-  return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <JobsListComponent {...props} />
-    </ToastContextProvider>
-  );
-};
 
 const styles = StyleSheet.create({
   container: {

@@ -355,5 +355,7 @@
   "cart": "Panier",
   "review": "Vérifier",
   "reviewUpdates": "Vérifier les mises à jour",
-  "reviewOrder": "Vérifier la commande"
+  "reviewOrder": "Vérifier la commande",
+  "repairOrderTitle": "Demandes de réparations",
+  "description": ""
 }

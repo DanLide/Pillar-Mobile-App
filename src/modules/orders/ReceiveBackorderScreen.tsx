@@ -17,6 +17,7 @@ import {
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
+  KeyboardToolButton,
 } from 'src/components';
 import Button from '../../components/Button';
 import { colors, SVGs } from '../../theme';
@@ -35,7 +36,6 @@ import {
 import { ToastType } from 'src/contexts/types';
 import {
   AddNotesSection,
-  KeyboardToolButton,
   SelectedProductsList,
   TotalCostBar,
 } from './components';

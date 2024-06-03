@@ -15,7 +15,7 @@ jest.mock('react-native-reanimated', () =>
 jest.mock('react-native-permissions', () =>
   require('react-native-permissions/mock'),
 );
-jest.mock('react-native-vision-camera', () => {});
+jest.mock('react-native-vision-camera', () => ({}));
 jest.mock('react-native-volume-manager', () => {
   return {
     setVolume: jest.fn(),
@@ -78,6 +78,22 @@ RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
 };
 
 jest.mock('react-native-bluetooth-state-manager', () => ({}));
+
+jest.mock('react-i18next', () => ({
+  // this mock makes sure any components using the translate hook can use it without a warning being shown
+  useTranslation: () => {
+    return {
+      t: (str: string) => str,
+      i18n: {
+        changeLanguage: () => new Promise(() => ({})),
+      },
+    };
+  },
+  initReactI18next: {
+    type: '3rdParty',
+    init: (i18next: unknown) => i18next,
+  },
+}));
 
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');

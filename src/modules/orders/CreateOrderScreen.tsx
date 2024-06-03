@@ -12,6 +12,7 @@ import {
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
+  KeyboardToolButton,
   ToastMessage,
 } from 'src/components';
 import Button from '../../components/Button';
@@ -35,7 +36,6 @@ import { getProductsReservedCount } from 'src/modules/orders/helpers';
 import { createOrder } from 'src/data/createOrder';
 import {
   AddNotesSection,
-  KeyboardToolButton,
   PONumberModal,
   SelectedProductsList,
   TotalCostBar,

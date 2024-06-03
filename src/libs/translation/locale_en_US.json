@@ -355,5 +355,7 @@
   "cart": "Cart",
   "review": "Review",
   "reviewUpdates": "Review Updates",
-  "reviewOrder": "Review Order"
+  "reviewOrder": "Review Order",
+  "repairOrderTitle": "Repair Order",
+  "description": "Description"
 }

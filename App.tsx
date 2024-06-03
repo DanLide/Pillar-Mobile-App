@@ -29,6 +29,7 @@ import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
 import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
+import { ToastProvider } from 'src/contexts';
 
 if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
@@ -147,11 +148,13 @@ const App = observer(() => {
         }}
       >
         <KeyboardProvider>
-          <SafeAreaProvider>
-            <NavigationContainer>
-              <AppStack />
-            </NavigationContainer>
-          </SafeAreaProvider>
+          <ToastProvider>
+            <SafeAreaProvider>
+              <NavigationContainer>
+                <AppStack />
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </ToastProvider>
         </KeyboardProvider>
       </View>
     </ScrollView>

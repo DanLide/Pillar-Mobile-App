@@ -37,6 +37,8 @@ export enum AppNavigator {
   BaseUnlockScreen = 'BaseUnlockScreen',
   BluetoothPermissionScreen = 'BluetoothPermissionScreen',
 
+  CreateJobModal = 'CreateJobModal',
+
   // RemoveProductsStack
   RemoveProductsStack = 'RemoveProductsStack',
   RemoveProductsScreen = 'RemoveProductsScreen',
@@ -153,6 +155,7 @@ export type HomeStackParamList = {
   [AppNavigator.ConfigureDeviceStack]: undefined;
   [AppNavigator.Settings]: undefined;
   [AppNavigator.AlphaAlertScreen]: undefined;
+  [AppNavigator.CreateJobModal]: { onSubmit: () => void };
 };
 
 export type RemoveStackParamList = {
@@ -285,6 +288,13 @@ export type BluetoothPermissionScreenProps = NativeStackScreenProps<
 
 export type THomeNavScreenProps<TScreenName extends keyof HomeStackParamList> =
   StackScreenProps<HomeStackParamList, TScreenName>;
+
+export type TCreateInvoiceNavScreenProps<
+  TScreenName extends keyof CreateInvoiceParamList,
+> = CompositeScreenProps<
+  StackScreenProps<CreateInvoiceParamList, TScreenName>,
+  THomeNavScreenProps<keyof HomeStackParamList>
+>;
 
 export type TManageProductsNavScreenProps<
   TScreenName extends keyof ManageProductsStackParamList,

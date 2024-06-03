@@ -10,7 +10,6 @@ import { StockWithProducts } from './StockWithProducts';
 import { TotalCostBar } from './TotalCostBar';
 
 export { AddNotesSection } from './AddNotesSection';
-export { KeyboardToolButton } from './KeyboardToolbarButton';
 
 export {
   MissingItemsModal,

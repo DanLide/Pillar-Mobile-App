@@ -2,8 +2,8 @@ import { render } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { ToastProvider } from 'react-native-toast-notifications';
 
-import { ToastContextProvider } from '../ToastContext';
 import { testIds } from '../../helpers';
+import { ToastContextProvider } from '../ToastContext/ToastContext';
 
 const mockChildrenText = 'mockChildrenText';
 const mockOffset = 16;

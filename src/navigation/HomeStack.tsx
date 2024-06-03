@@ -28,6 +28,8 @@ import {
 import { SettingsScreen } from 'src/modules/settings/SettingsScreen';
 import { AlphaAlertScreen } from 'src/modules/terms/AlphaAlertScreen';
 import { useNavigation } from '@react-navigation/native';
+import { CreateJobModalScreen } from 'src/modules';
+import { MODAL_STACK_GROUP_OPTIONS } from './navigation.const';
 
 const getInitialScreen = (
   authStore: AuthStore,
@@ -175,6 +177,12 @@ export const HomeStack: React.FC = () => {
           leftBarButtonType: LeftBarType.Back,
         })}
       />
+      <Stack.Group screenOptions={MODAL_STACK_GROUP_OPTIONS}>
+        <Stack.Screen
+          name={AppNavigator.CreateJobModal}
+          component={CreateJobModalScreen}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

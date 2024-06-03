@@ -27,6 +27,7 @@ import { BaseSelectedProductsList } from './BaseSelectedProductsList';
 import { Dropdown, DropdownItem } from './Dropdown';
 import { InventoryTypeBadge } from './InventoryTypeBadge';
 import { Separator } from './Separator';
+export { KeyboardToolButton } from './KeyboardToolbarButton';
 
 export {
   Separator,
