@@ -7,6 +7,7 @@ import MasterLockModule, {
 } from '../data/masterlock';
 import { PermissionStore } from 'src/modules/permissions/stores/PermissionStore';
 import { RoleType } from 'src/constants/common.enum';
+import { LoggingService } from 'src/services';
 
 type UpdatedLockItem = [string, LockVisibility | LockStatus];
 
@@ -117,7 +118,7 @@ export class MasterLockStore {
         }
       }
     } catch (e) {
-      console.warn('error', e);
+      LoggingService.logException(e);
     }
   }
 

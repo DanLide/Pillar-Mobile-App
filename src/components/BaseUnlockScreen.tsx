@@ -191,7 +191,6 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
           fill={100}
           tintColor="#E0E0E0"
           duration={RELOCK_TIME - 1000}
-          onAnimationComplete={() => console.log('onAnimationComplete')}
           backgroundColor="transparent"
           backgroundWidth={0}
           rotation={0}

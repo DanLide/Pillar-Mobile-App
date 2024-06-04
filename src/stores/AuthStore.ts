@@ -16,6 +16,7 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
   private partyRoleId?: number;
   private roleTypeDescription?: string;
   private username?: string;
+  private loginUsername?: string;
   private name?: string;
   private companyNumber?: string;
   private permissionSet?: bigint[];
@@ -72,6 +73,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
     return this.username;
   }
 
+  @computed public get getLoginUserName() {
+    return this.loginUsername;
+  }
+
   @computed public get getUserNames() {
     return this.usernames;
   }
@@ -126,6 +131,10 @@ export class AuthStore implements LogoutListener, GetAuthToken, Permissions {
 
   @action setUsername(value?: string) {
     this.username = value;
+  }
+
+  @action setLoginUsername(value?: string) {
+    this.loginUsername = value;
   }
 
   @action setCompanyNumber(value?: string) {

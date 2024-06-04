@@ -61,7 +61,7 @@ export const onLogin = async (
     new GetRoleManagerTask(loginContext),
     new JWTParserTask(loginContext),
     new GetSSOTask(loginContext),
-    new SaveAuthDataTask(loginContext, authStore),
+    new SaveAuthDataTask(loginContext, authStore, params.username),
   ]).execute();
 
   return result;
@@ -123,7 +123,7 @@ class GetRoleManagerTask extends Task {
       response.orgRoleTypeID === RoleType.RepairFacility &&
       response.orgPartyRoleID !== ssoStore?.getCurrentSSO?.pisaId
     ) {
-      throw new Error('Login failed!');
+      throw new Error(i18n.t('loginFailed'));
     }
 
     this.loginFlowContext.isTnC = !!response.isTermsAccepted;
@@ -325,11 +325,17 @@ class GetSSOTask extends Task {
 class SaveAuthDataTask extends Task {
   loginFlowContext: LoginFlowContext;
   authStore: AuthStore;
+  loginUsername?: string;
 
-  constructor(loginFlowContext: LoginFlowContext, authStore: AuthStore) {
+  constructor(
+    loginFlowContext: LoginFlowContext,
+    authStore: AuthStore,
+    loginUsername?: string,
+  ) {
     super();
     this.loginFlowContext = loginFlowContext;
     this.authStore = authStore;
+    this.loginUsername = loginUsername;
   }
 
   isLoginContextValid() {
@@ -384,6 +390,7 @@ class SaveAuthDataTask extends Task {
 
       this.authStore.setPartyRoleId(partyRoleId);
       this.authStore.setUsername(this.loginFlowContext.username);
+      this.authStore.setLoginUsername(this.loginUsername);
       this.authStore.setCompanyNumber(this.loginFlowContext.companyNumber);
 
       this.authStore.setMsoID(this.loginFlowContext.msoID);

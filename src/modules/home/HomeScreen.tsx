@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
+import { LoggingService } from 'src/services';
 import { authStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
@@ -49,6 +50,14 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   const renderBorderBetweenTheItems =
     userPermissions.removeProduct && userPermissions.returnProduct;
+
+  useEffect(() => {
+    LoggingService.setInitializer(
+      authStore.getLoginUserName || authStore.getUserName,
+      ssoStore.getCurrentSSO?.name,
+      ssoStore.getCurrentSSO?.pisaId,
+    );
+  }, []);
 
   return (
     <View style={styles.container}>

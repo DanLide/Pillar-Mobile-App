@@ -1,5 +1,6 @@
 import AzureAuth from 'react-native-azure-auth';
 
+import { LoggingService } from 'src/services';
 import { Task, TaskExecutor } from './helpers';
 import { LoginFlowContext } from './login';
 
@@ -34,9 +35,10 @@ export class SSOLoginTask extends Task {
       const tokens = await azureAuth.webAuth.authorize({
         scope: SCOPE,
       });
-      console.log('CRED>>>', tokens);
     } catch (error) {
-      console.log('Error during Azure operation', error);
+      LoggingService.logException(error, {
+        message: 'Error during Azure operation',
+      });
     }
   }
 }

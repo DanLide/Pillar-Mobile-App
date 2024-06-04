@@ -59,4 +59,7 @@ export const environment = {
   features: {
     editProductROSwitch: false,
   },
+  appInsights: {
+    instrumentationKey: `${Config.INSTRUMENTATION_KEY}`,
+  },
 };
