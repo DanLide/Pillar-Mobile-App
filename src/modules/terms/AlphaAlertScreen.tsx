@@ -1,12 +1,22 @@
 import { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { authStore } from 'src/stores';
 import { getUsernames, setUsernames } from 'src/helpers/localStorage';
 import Pdf from 'react-native-pdf';
 
-import AlphaBetaAgreement from '../../../assets/pdf/AlphaBetaAgreement.pdf';
+import en_US_AlphaBetaAgreement from 'assets/pdf/AlphaBetaAgreementEN.pdf';
+import fr_CA_AlphaBetaAgreement from 'assets/pdf/AlphaBetaAgreementFR.pdf';
+
+type termsType = Record<string, number>;
+
+const allAlphaBetaAgreement: termsType = {
+  en_US: en_US_AlphaBetaAgreement,
+  fr_CA: fr_CA_AlphaBetaAgreement,
+};
 
 export const AlphaAlertScreen = () => {
+  const { i18n } = useTranslation();
   const updateUsernames = useCallback(async () => {
     const username = authStore.getUserName;
     if (username) {
@@ -23,7 +33,10 @@ export const AlphaAlertScreen = () => {
   }, [updateUsernames]);
   return (
     <View style={styles.container}>
-      <Pdf source={AlphaBetaAgreement} style={styles.container} />
+      <Pdf
+        source={allAlphaBetaAgreement[i18n.language]}
+        style={styles.container}
+      />
     </View>
   );
 };
