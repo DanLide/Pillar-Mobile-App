@@ -28,7 +28,11 @@ import {
   BaseProductsScreenNavigationProp,
 } from 'src/navigation/types';
 import { ProductModal, ProductModalType } from 'src/modules/productModal';
-import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
+import {
+  useBaseProductsScreen,
+  useSingleToast,
+  useCustomGoBack,
+} from 'src/hooks';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -45,6 +49,7 @@ import { OrderType } from 'src/constants/common.enum';
 import permissionStore from '../permissions/stores/PermissionStore';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { KeyboardToolbar } from 'react-native-keyboard-controller';
+import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -77,6 +82,20 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
   );
   const [isLocationPermissionRequested, setIsLocationPermissionRequested] =
     useState(false);
+  const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
+    useState(false);
+
+  useCustomGoBack({
+    callback: event => {
+      if (ordersStore.getNotSyncedProducts.length) {
+        setEraseProductsAlertVisible(true);
+        return;
+      }
+
+      navigation.dispatch(event.data.action);
+    },
+    deps: [ordersStore.getNotSyncedProducts],
+  });
 
   useEffect(() => {
     if (
@@ -226,6 +245,17 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         onChangeProductQuantity={setEditableProductQuantity}
       />
       <KeyboardToolbar button={KeyboardToolButton} showArrows={false} />
+      <EraseProductsAlert
+        visible={eraseProductsAlertVisible}
+        onPressPrimary={() => {
+          ordersStore.setProducts([]);
+          ordersStore.setSupplier(undefined);
+          setEraseProductsAlertVisible(false);
+        }}
+        onPressSecondary={() => {
+          setEraseProductsAlertVisible(false);
+        }}
+      />
     </View>
   );
 });

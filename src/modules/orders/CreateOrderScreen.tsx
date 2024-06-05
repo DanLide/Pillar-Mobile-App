@@ -25,7 +25,11 @@ import {
   OrdersParamsList,
 } from 'src/navigation/types';
 import { ProductModal, ProductModalType } from 'src/modules/productModal';
-import { useBaseProductsScreen, useSingleToast } from 'src/hooks';
+import {
+  useBaseProductsScreen,
+  useSingleToast,
+  useCustomGoBack,
+} from 'src/hooks';
 import { fetchSuggestedProducts } from 'src/data/fetchSuggestedProducts';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -44,6 +48,7 @@ import { OrderStatusType, OrderType } from 'src/constants/common.enum';
 import { updatePONumber } from 'src/data/updatePONumber';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardToolbar } from 'react-native-keyboard-controller';
+import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -65,6 +70,8 @@ const CreateOrderScreen = observer(
 
     const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
     const [isSuggestedProductsLoading, setIsSuggestedProductsLoading] =
+      useState(false);
+    const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
       useState(false);
 
     const ordersStoreRef = useRef(ordersStore).current;
@@ -101,6 +108,18 @@ const CreateOrderScreen = observer(
         })),
       [],
     );
+
+    useCustomGoBack({
+      callback: event => {
+        if (ordersStoreRef.getNotSyncedProducts.length) {
+          setEraseProductsAlertVisible(true);
+          return;
+        }
+
+        navigation.dispatch(event.data.action);
+      },
+      deps: [ordersStoreRef.getNotSyncedProducts],
+    });
 
     const supplier = useMemo<DropdownItem | undefined>(
       () => find(whereEq({ value: ordersStoreRef.supplierId }), suppliers),
@@ -259,6 +278,17 @@ const CreateOrderScreen = observer(
           onSubmit={onSubmitPONumber}
         />
         <KeyboardToolbar button={KeyboardToolButton} showArrows={false} />
+        <EraseProductsAlert
+          visible={eraseProductsAlertVisible}
+          onPressPrimary={() => {
+            ordersStoreRef.setProducts([]);
+            ordersStoreRef.setSupplier(undefined);
+            setEraseProductsAlertVisible(false);
+          }}
+          onPressSecondary={() => {
+            setEraseProductsAlertVisible(false);
+          }}
+        />
       </View>
     );
   },

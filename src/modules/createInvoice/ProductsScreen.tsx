@@ -14,9 +14,8 @@ import { ProductModalType } from '../productModal';
 import { onCreateInvoice } from 'src/data/createInvoice';
 import { fetchProductsByFacilityId } from 'src/data/fetchProductsByFacilityId';
 import { SVGs, colors, fonts } from '../../theme';
-import { useBaseProductsScreen, useCustomGoBack } from 'src/hooks';
+import { useBaseProductsScreen } from 'src/hooks';
 import { observer } from 'mobx-react';
-import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 import { Flows } from '../types';
 
 interface Props {
@@ -27,8 +26,6 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
-    useState(false);
 
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
   const {
@@ -42,19 +39,6 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
     onRemoveProduct,
     onCloseModal,
   } = useBaseProductsScreen(store, navigation, ProductModalType.CreateInvoice);
-
-  useCustomGoBack(
-    event => {
-      if (store.getNotSyncedProducts.length) {
-        setEraseProductsAlertVisible(true);
-        return;
-      }
-
-      navigation.dispatch(event.data.action);
-    },
-    undefined,
-    [store.getNotSyncedProducts],
-  );
 
   const onComplete = useCallback(() => {
     return onCreateInvoice(store);
@@ -98,7 +82,6 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
   return (
     <>
       <BaseProductsScreen
-        disableAlert
         modalParams={modalParams}
         product={product}
         scannedProductsCount={scannedProductsCount}
@@ -116,18 +99,6 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
         primaryButtonTitle={t('submit')}
         ListComponent={BaseSelectedProductsList}
         flow={Flows.CreateInvoice}
-      />
-
-      <EraseProductsAlert
-        visible={eraseProductsAlertVisible}
-        onPressPrimary={() => {
-          store.setProducts([]);
-          setEraseProductsAlertVisible(false);
-          onPressScan();
-        }}
-        onPressSecondary={() => {
-          setEraseProductsAlertVisible(false);
-        }}
       />
     </>
   );

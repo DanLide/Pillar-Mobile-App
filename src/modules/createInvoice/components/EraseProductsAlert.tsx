@@ -22,7 +22,7 @@ const EraseProductsAlert: FC<Props> = props => {
             style={[styles.label, { marginBottom: 12, paddingHorizontal: 36 }]}
           >
             {t('ifYouGoBack1')}
-            <Text style={styles.textBold}>{t('ifYouGoBack2')}</Text>
+            <Text style={styles.textBold}> {t('ifYouGoBack2')} </Text>
             {t('ifYouGoBack3')}{' '}
             <Text style={styles.textBold}>{t('ifYouGoBack4')}</Text>
           </Text>

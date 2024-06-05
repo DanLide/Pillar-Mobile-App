@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, DependencyList, useCallback } from 'react';
 import { EventArg, useNavigation } from '@react-navigation/native';
 
 const BACK_ACTIONS = ['POP', 'GO_BACK'];
@@ -16,30 +16,35 @@ type Event = EventArg<
   }
 >;
 
-interface Props {
-  // use this property instead of calling navigation.goBack in callback
+type TProps = {
+  callback: (event: Event) => void;
   shouldUseDefaultGoBack?: boolean;
   shouldPreventDefault?: boolean;
-}
+  deps: DependencyList;
+};
 
-const useCustomGoBack = (
-  callback: (event: Event) => void,
-  { shouldUseDefaultGoBack = false, shouldPreventDefault = true }: Props = {},
-  deps: Array<unknown> = [],
-): void => {
+const useCustomGoBack = ({
+  callback,
+  shouldUseDefaultGoBack = false,
+  shouldPreventDefault = true,
+  deps,
+}: TProps): void => {
   const navigation = useNavigation();
 
-  const handleNavigationEvent = (event: Event) => {
-    const actionType = event.data.action.type;
+  const handleNavigationEvent = useCallback(
+    (event: Event) => {
+      const actionType = event.data.action.type;
 
-    if (BACK_ACTIONS.includes(actionType)) {
-      // in some cases we need to call together custom callback and the default
-      if (shouldPreventDefault) {
-        event.preventDefault();
+      if (BACK_ACTIONS.includes(actionType)) {
+        // in some cases we need to call together custom callback and the default
+        if (shouldPreventDefault) {
+          event.preventDefault();
+        }
+        callback(event);
       }
-      callback(event);
-    }
-  };
+    },
+    [callback, shouldPreventDefault],
+  );
 
   useEffect(() => {
     if (!shouldUseDefaultGoBack) {
@@ -49,7 +54,8 @@ const useCustomGoBack = (
         navigation.removeListener('beforeRemove', handleNavigationEvent);
     }
     return undefined;
-  }, deps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps, handleNavigationEvent, navigation, shouldUseDefaultGoBack]);
 };
 
 export default useCustomGoBack;

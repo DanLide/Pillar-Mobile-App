@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { SvgProps } from 'react-native-svg';
 import { observer } from 'mobx-react';
-import { autorun } from 'mobx';
 
 import {
   CurrentProductStoreType,
@@ -26,10 +25,10 @@ import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
-import AlertWrapper from '../contexts/AlertWrapper';
+import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 import { RequestError } from 'src/data/helpers/tryFetch';
 import { ToastType } from 'src/contexts/types';
-import { useSingleToast } from 'src/hooks';
+import { useSingleToast, useCustomGoBack } from 'src/hooks';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -111,7 +110,8 @@ const BaseProducts = observer(
     const { showToast } = useSingleToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [alertVisible, setAlertVisible] = useState(false);
+    const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
+      useState(false);
     const isNeedNavigateBack = useRef(false);
 
     const modalType = modalParams.type;
@@ -121,28 +121,17 @@ const BaseProducts = observer(
         ? ButtonType.primary
         : ButtonType.secondary;
 
-    useEffect(() => {
-      if (disableAlert) return;
+    useCustomGoBack({
+      callback: event => {
+        if (!disableAlert && store.getNotSyncedProducts.length) {
+          setEraseProductsAlertVisible(true);
+          return;
+        }
 
-      autorun(() => {
-        navigation.addListener('beforeRemove', e => {
-          if (!store.getNotSyncedProducts.length) {
-            return;
-          }
-          if (isNeedNavigateBack.current) {
-            setAlertVisible(false);
-            return;
-          }
-          e.preventDefault();
-          setAlertVisible(true);
-        });
-      });
-    }, [
-      navigation,
-      alertVisible,
-      store.getNotSyncedProducts.length,
-      disableAlert,
-    ]);
+        navigation.dispatch(event.data.action);
+      },
+      deps: [store.getNotSyncedProducts],
+    });
 
     const onCompleteRemove = useCallback(async () => {
       isNeedNavigateBack.current = true;
@@ -172,13 +161,6 @@ const BaseProducts = observer(
         ],
       });
     }, [modalType, navigation, onComplete, showToast]);
-
-    const onPressPrimary = useCallback(() => {
-      isNeedNavigateBack.current = true;
-      navigation.goBack();
-    }, [navigation]);
-
-    const onPressSecondary = useCallback(() => setAlertVisible(false), []);
 
     const CompleteButton = useMemo<JSX.Element | null>(() => {
       if (
@@ -252,16 +234,15 @@ const BaseProducts = observer(
           />
         </View>
 
-        <AlertWrapper
-          visible={alertVisible}
-          message={
-            t('changeStockLocationWarning') +
-            ' \n\n ' +
-            t('areYouSureYouWantToContinue')
-          }
-          title={t('changeStockLocation')}
-          onPressPrimary={onPressPrimary}
-          onPressSecondary={onPressSecondary}
+        <EraseProductsAlert
+          visible={eraseProductsAlertVisible}
+          onPressPrimary={() => {
+            store.setProducts([]);
+            setEraseProductsAlertVisible(false);
+          }}
+          onPressSecondary={() => {
+            setEraseProductsAlertVisible(false);
+          }}
         />
       </>
     );
