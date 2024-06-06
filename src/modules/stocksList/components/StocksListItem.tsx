@@ -1,10 +1,10 @@
 import {
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   ViewStyle,
-  Pressable,
 } from 'react-native';
 import { masterLockStore, ssoStore } from 'src/stores';
 import { useTranslation } from 'react-i18next';
@@ -57,7 +57,8 @@ export const StocksListItem: React.FC<Props> = observer(
 
     const isLocked =
       roleTypeId === RoleType.Cabinet &&
-      lockStatus === LockStatus.LOCKED &&
+      (lockStatus === LockStatus.LOCKED ||
+        lockStatus === LockStatus.OPEN_LOCKED) &&
       isVisible;
 
     const unlockMasterlock = () => {
