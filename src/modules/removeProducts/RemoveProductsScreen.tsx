@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
@@ -45,6 +45,18 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
     onRemoveProduct,
     onCloseModal,
   } = useBaseProductsScreen(store, navigation, ProductModalType.Remove);
+
+  useEffect(() => {
+    // Remove Products - Pre-populate job for scanned products
+    if (
+      product?.isRecoverable &&
+      !modalParams.isEdit &&
+      !product?.job &&
+      store.lastSelectedJob
+    ) {
+      store.setCurrentProduct({ ...product, job: store.lastSelectedJob });
+    }
+  }, [product, store, modalParams.isEdit]);
 
   return (
     <BaseProductsScreen

@@ -13,7 +13,7 @@ import {
 import { SelectProductJob } from './components/SelectProductJob';
 
 import { SVGs, colors, fonts } from 'src/theme';
-import { JobModel } from '../jobsList/stores/JobsStore';
+import { JobModel, jobIdNoRepairOrder } from '../jobsList/stores/JobsStore';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -162,7 +162,13 @@ export const ProductModal = memo(
         const onPressAdd = (job?: JobModel) => {
           if (!product) return;
 
-          onSubmit({ ...product, job });
+          if (job?.jobId === jobIdNoRepairOrder) {
+            delete product.job;
+            onSubmit(product);
+          } else {
+            onSubmit({ ...product, job });
+          }
+
           clearProductModalStoreOnClose();
         };
 

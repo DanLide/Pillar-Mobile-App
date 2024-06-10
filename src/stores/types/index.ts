@@ -46,6 +46,7 @@ export interface CurrentProductStoreType<
   T extends ProductModel = ProductModel,
 > {
   getCurrentProduct?: T;
+  lastSelectedJob?: JobModel;
   setCurrentProduct: (product?: T) => void;
   removeCurrentProduct: () => void;
 }

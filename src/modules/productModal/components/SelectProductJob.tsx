@@ -86,6 +86,7 @@ export const SelectProductJob: React.FC<Props> = ({
         selectedId={selectedJob?.jobId}
         onPressItem={onPressItem}
         footerComponent={Footer}
+        isJobsWithNoRepairOrder
       />
     );
   } else {

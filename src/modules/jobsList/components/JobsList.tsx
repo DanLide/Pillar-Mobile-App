@@ -32,6 +32,7 @@ interface Props {
   containerStyle?: StyleProp<ViewStyle>;
   inputContainerStyle?: StyleProp<ViewStyle>;
   isCreateJobAvailable?: boolean;
+  isJobsWithNoRepairOrder?: boolean;
 
   onPressItem: (job: JobModel) => void;
 }
@@ -45,12 +46,17 @@ export const JobsList: React.FC<Props> = observer(
     inputContainerStyle,
     onPressItem,
     isCreateJobAvailable,
+    isJobsWithNoRepairOrder,
   }) => {
     const { t } = useTranslation();
     const listRef = useRef<FlatList | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState<boolean>(false);
     const [filterValue, setFilterValue] = useState<string>('');
+
+    const jobs = isJobsWithNoRepairOrder
+      ? jobsStore.getJobsWithNoRepairOrder
+      : jobsStore.jobs;
 
     const containerStyles = useMemo(
       () => [styles.container, containerStyle],
@@ -64,10 +70,10 @@ export const JobsList: React.FC<Props> = observer(
 
     const filteredList = useMemo(
       () =>
-        jobsStore.jobs.filter(job =>
+        jobs.filter(job =>
           job.jobNumber.toLowerCase().includes(filterValue.toLowerCase()),
         ),
-      [filterValue],
+      [filterValue, jobs],
     );
 
     const renderJobListItem = useCallback(
@@ -143,7 +149,7 @@ export const JobsList: React.FC<Props> = observer(
         <FlatList
           style={containerStyles}
           keyExtractor={keyExtractor}
-          data={filterValue ? filteredList : jobsStore.jobs}
+          data={filterValue ? filteredList : jobs}
           renderItem={renderJobListItem}
           ref={listRef}
         />

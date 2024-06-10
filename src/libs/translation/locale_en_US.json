@@ -357,5 +357,6 @@
   "reviewUpdates": "Review Updates",
   "reviewOrder": "Review Order",
   "repairOrderTitle": "Repair Order",
-  "description": "Description"
+  "description": "Description",
+  "noRepairOrder": "no Repair Order"
 }

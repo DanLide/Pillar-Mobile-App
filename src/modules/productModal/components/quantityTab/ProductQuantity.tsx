@@ -236,7 +236,7 @@ export const ProductQuantity = forwardRef(
         return;
       }
 
-      if (jobSelectable && isRecoverable) {
+      if (jobSelectable && isRecoverable && !jobNumber) {
         onJobSelectNavigation?.();
       } else {
         onPressAddToList?.();
@@ -252,7 +252,7 @@ export const ProductQuantity = forwardRef(
         if (type === ProductModalType.Remove && currentValue === 0)
           return t('cancel');
 
-        return (jobSelectable && isRecoverable) ||
+        return (jobSelectable && isRecoverable && !jobNumber) ||
           type === ProductModalType.CreateInvoice
           ? t('next')
           : t('done');
@@ -403,7 +403,7 @@ export const ProductQuantity = forwardRef(
               >
                 <SVGs.RefundIcon color={colors.purple} />
                 <Text style={styles.jobText}>
-                  {isEdit && jobNumber
+                  {jobNumber
                     ? t('repairOrder', { jobNumber })
                     : t('linkToRepairOrder')}
                 </Text>

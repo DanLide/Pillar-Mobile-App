@@ -37,7 +37,9 @@ export const JobListItem: React.FC<Props> = ({
 
             <View style={[styles.textContainer, styles.toggleTextContainer]}>
               <Text style={styles.title}>{item.jobNumber}</Text>
-              <Text style={styles.description}>{item.jobDescription}</Text>
+              {item.jobDescription && (
+                <Text style={styles.description}>{item.jobDescription}</Text>
+              )}
             </View>
           </View>
         </TouchableOpacity>
@@ -49,9 +51,10 @@ export const JobListItem: React.FC<Props> = ({
           <View style={[styles.underlineContainer, styles.selectTextContainer]}>
             <View style={styles.textContainer}>
               <Text style={styles.title}>{item.jobNumber}</Text>
-              <Text style={styles.description}>{item.jobDescription}</Text>
+              {item.jobDescription && (
+                <Text style={styles.description}>{item.jobDescription}</Text>
+              )}
             </View>
-
             <SVGs.ChevronIcon color={colors.purpleDark} />
           </View>
         </TouchableOpacity>
@@ -75,10 +78,12 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   textContainer: {
+    height: 52,
     width: 0,
     flexGrow: 1,
     flex: 1,
     padding: 8,
+    justifyContent: 'center',
   },
   selectTextContainer: {
     marginHorizontal: 12,

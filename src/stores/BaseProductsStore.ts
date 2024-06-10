@@ -12,6 +12,7 @@ import {
 } from './types';
 import { StockModel } from '../modules/stocksList/stores/StocksStore';
 import { addProductByJob, getReservedCountById } from './helpers';
+import { JobModel } from 'src/modules/jobsList/stores/JobsStore';
 
 type BaseProductsStoreType = SyncedProductStoreType &
   StockProductStoreType &
@@ -23,6 +24,7 @@ export class BaseProductsStore implements BaseProductsStoreType {
   @observable currentStock?: StockModel;
   @observable products: ProductModel[];
   @observable currentProduct?: ProductModel;
+  @observable lastSelectedJob?: JobModel;
 
   constructor() {
     this.currentStock = undefined;
@@ -116,6 +118,11 @@ export class BaseProductsStore implements BaseProductsStoreType {
 
   @action addProduct(product: ProductModel) {
     const removedProduct = { ...product, isRemoved: false, uuid: uuid() };
+
+    if (product.job) {
+      this.lastSelectedJob = product.job;
+    }
+
     this.products = addProductByJob(removedProduct, this.products);
   }
 
@@ -127,5 +134,6 @@ export class BaseProductsStore implements BaseProductsStoreType {
     this.currentStock = undefined;
     this.products = [];
     this.currentProduct = undefined;
+    this.lastSelectedJob = undefined;
   }
 }
