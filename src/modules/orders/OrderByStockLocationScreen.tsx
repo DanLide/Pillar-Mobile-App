@@ -83,31 +83,25 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
           <Text style={styles.boldText}>{item.receivedQty}</Text>/
           {item.orderedQty}
         </Text>
-        <Text style={styles.itemReceiving}>
-          +{Math.abs(item.receivedQty - item.reservedCount)}
-        </Text>
+        <Text style={styles.itemReceiving}>+{item.reservedCount}</Text>
       </Pressable>
     ) : null;
 
   useEffect(() => {
-    //Decrease reservedCount: max count, what we can receiving, depends on the shippedQty
-    //For OrderStatusType = SHIPPED
-    if (
-      currentOrder?.order.status ===
-      OrderTitleByStatusType[OrderStatusType.SHIPPED]
-    ) {
-      if (getCurrentProductsByStockName) {
-        forEach((product: ProductModel) => {
-          const maxReservedCount = product.shippedQty ?? 0;
+    if (getCurrentProductsByStockName) {
+      forEach((product: ProductModel) => {
+        //Decrease reservedCount: max count, what we can receiving, depends on the shippedQty and receivedQty
+        const maxReservedCount =
+          currentOrder?.order.status ===
+          OrderTitleByStatusType[OrderStatusType.SHIPPED]
+            ? (product.shippedQty ?? 0) - (product.receivedQty ?? 0)
+            : (product.orderedQty ?? 0) - (product.receivedQty ?? 0);
 
-          ordersStoreRef.updateCurrentOrderProduct({
-            ...product,
-            reservedCount: maxReservedCount,
-          });
-        }, getCurrentProductsByStockName);
-        setIsLoading(false);
-      }
-    } else {
+        ordersStoreRef.updateCurrentOrderProduct({
+          ...product,
+          reservedCount: maxReservedCount,
+        });
+      }, getCurrentProductsByStockName);
       setIsLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,9 +131,9 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
       maxValue:
         currentOrder?.order.status ===
         OrderTitleByStatusType[OrderStatusType.SHIPPED]
-          ? item.shippedQty ?? 0
-          : item.orderedQty,
-      minValue: item.receivedQty,
+          ? (item.shippedQty ?? 0) - item.receivedQty
+          : item.orderedQty - item.receivedQty,
+      minValue: 0,
       currentProduct: item,
     });
   };

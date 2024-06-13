@@ -188,8 +188,12 @@ export const ProductQuantity = forwardRef(
         return 0;
       }
 
-      return product.reservedCount || product.receivedQty;
-    }, [isProductQuantityError, isSpecialOrderError, product]);
+      if (type === ProductModalType.ReceiveOrder) {
+        return product.reservedCount;
+      } else {
+        return product.reservedCount || product.receivedQty;
+      }
+    }, [isProductQuantityError, isSpecialOrderError, product, type]);
 
     if (!product) return null;
 

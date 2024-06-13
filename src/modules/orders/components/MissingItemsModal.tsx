@@ -32,9 +32,17 @@ export const MissingItemsModal: React.FC<Props> = ({
   const renderItem = ({
     item,
   }: ListRenderItemInfo<NonNullable<ProductModel>>) => {
-    if (isNil(item.orderedQty) || isNil(item.reservedCount)) return null;
+    if (
+      isNil(item.orderedQty) ||
+      isNil(item.reservedCount) ||
+      isNil(item.receivedQty)
+    )
+      return null;
 
-    if (item.orderedQty - item.reservedCount === 0) return null;
+    const itemsMissing =
+      item.orderedQty - item.reservedCount - item.receivedQty;
+
+    if (itemsMissing === 0) return null;
 
     return (
       <View style={styles.item}>
@@ -43,9 +51,7 @@ export const MissingItemsModal: React.FC<Props> = ({
           <Text style={styles.itemSize}> {item.size}</Text>
         </View>
         <View>
-          <Text style={styles.itemName}>
-            {item.orderedQty - item.reservedCount}
-          </Text>
+          <Text style={styles.itemName}>{itemsMissing}</Text>
         </View>
       </View>
     );
@@ -77,7 +83,7 @@ export const MissingItemsModal: React.FC<Props> = ({
         </View>
         <FlatList
           style={styles.flatList}
-          data={ordersStoreRef.currentOrder?.productList}
+          data={ordersStoreRef.getCurrentProductsByStockName}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
           ItemSeparatorComponent={() => <View style={styles.separator} />}
