@@ -277,7 +277,7 @@
   "orderConfirmationWasNotSuccessful": "Order confirmation was not successful. Please retry.",
   "searchByOrderOrProductNumber": "Search by order or product number",
   "orderReceived": "Order {{orderId}} Received",
-  "orderIsIncomplete.": "Order is incomplete.",
+  "orderIsIncomplete": "Order is incomplete.",
   "ifItemsArriveLater": "If items arrive later on, update this order.",
   "bluetoothConnection": "Bluetooth Connection",
   "repairStackWouldLikeToConnectBluetooth": "RepairStack would like to connect to your bluetooth, so that you can easily unlock cabinets at your shop.",

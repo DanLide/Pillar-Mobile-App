@@ -263,6 +263,9 @@ export const ProductQuantity = forwardRef(
       };
 
       const calculateDisabled = () => {
+        if (type === ProductModalType.Remove && currentValue === 0)
+          return false;
+
         if (
           type === ProductModalType.Remove ||
           type === ProductModalType.ReceiveOrder

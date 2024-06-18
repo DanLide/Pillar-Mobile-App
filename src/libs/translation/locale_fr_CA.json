@@ -277,7 +277,7 @@
   "orderConfirmationWasNotSuccessful": "La commande n’a pas pu être confirmée. Veuillez réessayer.",
   "searchByOrderOrProductNumber": "Recherche par commande ou numéro de produit",
   "orderReceived": "Commande {{orderId}} reçue",
-  "orderIsIncomplete.": "Commande incomplète.",
+  "orderIsIncomplete": "Commande incomplète.",
   "ifItemsArriveLater": "Si des articles arrivent plus tard, mettez cette commande à jour.",
   "bluetoothConnection": "Connectivité Bluetooth",
   "repairStackWouldLikeToConnectBluetooth": "RepairStack Cherche à se connecter à votre bluetooth de manière à pouvoir facilement déverrouiller les armoires de votre atelier.",
