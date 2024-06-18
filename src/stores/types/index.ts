@@ -16,6 +16,7 @@ export interface ProductModel
   unitsPerContainer?: number;
   job?: JobModel;
   product?: string;
+  unitPer?: number;
   unitsPer?: number;
   shippedQty?: number;
   cost?: number;

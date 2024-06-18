@@ -358,5 +358,8 @@
   "reviewOrder": "Review Order",
   "repairOrderTitle": "Repair Order",
   "description": "Description",
-  "noRepairOrder": "no Repair Order"
+  "noRepairOrder": "no Repair Order",
+  "valueCannotBe0": "value cannot be 0",
+  "mustBeGreaterThan": "must be greater than",
+  "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value"
 }

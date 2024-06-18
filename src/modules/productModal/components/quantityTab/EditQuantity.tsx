@@ -119,8 +119,12 @@ export const EditQuantity = forwardRef(
     );
 
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
-      () => [styles.inputLabelContainer, labelContainerStyle],
-      [labelContainerStyle],
+      () => [
+        styles.inputLabelContainer,
+        labelContainerStyle,
+        error && styles.inputLabelContainerError,
+      ],
+      [error, labelContainerStyle],
     );
 
     const quantityButtonStyle = useMemo<StyleProp<ViewStyle>>(
@@ -335,6 +339,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 2,
+  },
+  inputLabelContainerError: {
+    backgroundColor: colors.red,
   },
   inputVertical: {
     borderTopLeftRadius: 0,

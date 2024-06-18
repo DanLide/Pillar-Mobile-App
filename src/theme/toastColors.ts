@@ -72,7 +72,16 @@ export const toastColors: Record<
     secondary: colors.redLight,
     action: colors.redDark,
   },
-
+  [ToastType.MinimumValueError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
+  [ToastType.MaximumValueError]: {
+    primary: colors.red,
+    secondary: colors.redLight,
+    action: colors.redDark,
+  },
   [ToastType.Info]: {
     primary: colors.purple,
     secondary: colors.magnolia,

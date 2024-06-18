@@ -72,10 +72,19 @@ export class ManageProductsStore extends BaseProductsStore {
     if (!this.updatedProduct) return;
 
     const isEachPeace = inventoryUseTypeId === InventoryUseType.Each;
+    const isContainer = inventoryUseTypeId === InventoryUseType.Container;
 
     this.updatedProduct = {
       ...this.updatedProduct,
-      ...(isEachPeace && { unitsPerContainer: 0 }),
+      ...(isEachPeace && {
+        unitsPerContainer: this.updatedProduct.unitPer || 0,
+        min: 0,
+        max: this.updatedProduct.unitPer,
+      }),
+      ...(isContainer && {
+        min: 1,
+        max: 1,
+      }),
       inventoryUseTypeId,
       reservedCount: 0,
     };
@@ -90,9 +99,17 @@ export class ManageProductsStore extends BaseProductsStore {
   @action setMinValue(min: number) {
     if (!this.updatedProduct) return;
 
-    const maxValue = this.updatedProduct.max ?? 0;
+    let max;
+    const isEachPeace =
+      this.updatedProduct.inventoryUseTypeId === InventoryUseType.Each;
+    const currentMaxValue = this.updatedProduct.max ?? 0;
+    const minMaxValue = min + (this.updatedProduct.unitsPerContainer ?? 0);
 
-    const max = min >= maxValue ? min : maxValue;
+    if (isEachPeace) {
+      max = currentMaxValue >= minMaxValue ? currentMaxValue : minMaxValue;
+    } else {
+      max = currentMaxValue >= min ? currentMaxValue : min;
+    }
 
     this.updatedProduct = { ...this.updatedProduct, min, max };
   }
@@ -100,9 +117,21 @@ export class ManageProductsStore extends BaseProductsStore {
   @action setMaxValue(max: number) {
     if (!this.updatedProduct) return;
 
-    const minValue = this.updatedProduct.min ?? 0;
+    let min;
+    const isEachPeace =
+      this.updatedProduct.inventoryUseTypeId === InventoryUseType.Each;
+    const currentMinValue = this.updatedProduct.min ?? 0;
+    const isMaxDecrements = (this.updatedProduct.max ?? 0) > max;
+    const maxMinValue = Math.max(
+      0,
+      max - (this.updatedProduct.unitsPerContainer ?? 0),
+    );
 
-    const min = max <= minValue ? max : minValue;
+    if (isEachPeace && isMaxDecrements) {
+      min = currentMinValue <= maxMinValue ? currentMinValue : maxMinValue;
+    } else {
+      min = currentMinValue <= max ? currentMinValue : max;
+    }
 
     this.updatedProduct = { ...this.updatedProduct, max, min };
   }

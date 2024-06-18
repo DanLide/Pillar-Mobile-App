@@ -79,7 +79,20 @@ export const renderType: Record<
       actionType={ToastActionType.Edit}
     />
   ),
-
+  [ToastType.MinimumValueError]: toast => (
+    <Toast
+      {...toast}
+      type={ToastType.MinimumValueError}
+      actionType={ToastActionType.Edit}
+    />
+  ),
+  [ToastType.MaximumValueError]: toast => (
+    <Toast
+      {...toast}
+      type={ToastType.MaximumValueError}
+      actionType={ToastActionType.Edit}
+    />
+  ),
   [ToastType.Info]: toast => (
     <Toast
       {...toast}
@@ -87,7 +100,6 @@ export const renderType: Record<
       actionType={ToastActionType.Close}
     />
   ),
-
   [ToastType.Success]: toast => (
     <Toast
       {...toast}
@@ -109,7 +121,6 @@ export const renderType: Record<
       actionType={ToastActionType.Close}
     />
   ),
-
   [ToastType.CreateInvoiceError]: toast => (
     <Toast
       {...toast}
@@ -117,7 +128,6 @@ export const renderType: Record<
       actionType={ToastActionType.Retry}
     />
   ),
-
   [ToastType.ProfileError]: toast => (
     <Toast
       {...toast}
@@ -125,7 +135,6 @@ export const renderType: Record<
       actionType={ToastActionType.Return}
     />
   ),
-
   [ToastType.Retry]: toast => (
     <Toast
       {...toast}

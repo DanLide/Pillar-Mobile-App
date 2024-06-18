@@ -38,6 +38,8 @@ export type ProductQuantityToastType =
   | ToastType.ProductUpdateSuccess
   | ToastType.UpcUpdateError
   | ToastType.UnitsPerContainerError
+  | ToastType.MinimumValueError
+  | ToastType.MaximumValueError
   | ToastType.SpecialOrderError;
 
 interface Props extends ViewProps {
@@ -63,9 +65,6 @@ interface Props extends ViewProps {
 }
 
 const toastStyles = StyleSheet.create({
-  unitsPerContainerError: {
-    textAlign: 'left',
-  },
   default: {
     textAlign: 'left',
     marginHorizontal: 8,
@@ -90,11 +89,30 @@ const getToastMessages = (toastType: ProductQuantityToastType) => {
       [ToastType.ProductUpdateSuccess]: i18n.t('productUpdated'),
       [ToastType.UpcUpdateError]: i18n.t('thisUPCAlreadyExists'),
       [ToastType.UnitsPerContainerError]: (
-        <ToastMessage style={toastStyles.unitsPerContainerError}>
-          <ToastMessage bold style={toastStyles.unitsPerContainerError}>
+        <ToastMessage>
+          <ToastMessage bold style={toastStyles.default}>
             {i18n.t('piecesPerContainer')}
           </ToastMessage>{' '}
           {i18n.t('cannotBeSavedLessThan1')}
+        </ToastMessage>
+      ),
+      [ToastType.MinimumValueError]: (
+        <ToastMessage>
+          <ToastMessage bold style={toastStyles.default}>
+            {i18n.t('minimum')}{' '}
+          </ToastMessage>
+          {i18n.t('valueCannotBe0')}
+        </ToastMessage>
+      ),
+      [ToastType.MaximumValueError]: (
+        <ToastMessage style={toastStyles.default}>
+          <ToastMessage bold style={toastStyles.default}>
+            {i18n.t('maximum')}{' '}
+          </ToastMessage>
+          {i18n.t('mustBeGreaterThan')}{' '}
+          <ToastMessage bold style={toastStyles.default}>
+            {i18n.t('piecesPerContainerMinimumValue')}
+          </ToastMessage>
         </ToastMessage>
       ),
       [ToastType.SpecialOrderError]: (

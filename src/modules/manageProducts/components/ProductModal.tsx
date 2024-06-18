@@ -83,6 +83,13 @@ const INIT_ALERT_PARAMS: AlertParams = {
   shouldCloseModal: false,
 };
 
+export type TError = {
+  unitsPerContainer?: boolean;
+  upc?: string;
+  min?: boolean;
+  max?: boolean;
+};
+
 export const ProductModal = observer(
   ({
     product,
@@ -102,12 +109,13 @@ export const ProductModal = observer(
     const scrollViewRef = useRef<Animated.ScrollView>(null);
     const reservedCountInputRef = useRef<TextInput>(null);
     const unitsPerContainerInputRef = useRef<TextInput>(null);
+    const unitsMinInputRef = useRef<TextInput>(null);
+    const unitsMaxInputRef = useRef<TextInput>(null);
     const viewRef = useRef<View>(null);
 
     const [isLoading, setIsLoading] = useState(false);
-    const [isUnitsPerContainerError, setIsUnitsPerContainerError] =
-      useState(false);
-    const [upcError, setUpcError] = useState<string | undefined>();
+    const [errors, setError] = useState<TError>({});
+
     const [alertParams, setAlertParams] =
       useState<AlertParams>(INIT_ALERT_PARAMS);
 
@@ -142,7 +150,7 @@ export const ProductModal = observer(
 
     const clearProductModalStoreOnClose = useCallback(() => {
       setAlertParams(INIT_ALERT_PARAMS);
-      setUpcError(undefined);
+      setError({});
       scrollViewRef.current?.scrollTo({ y: 0 });
 
       setTimeout(() => onClose());
@@ -162,36 +170,68 @@ export const ProductModal = observer(
         case ProductModalErrors.UpcFormatError:
         case ProductModalErrors.UpcLengthError:
         case ProductModalErrors.UpcUpdateError:
-          setUpcError(getErrorMessage(error));
+          setError(errors => ({ ...errors, upc: getErrorMessage(error) }));
           scrollViewRef.current?.scrollToEnd({ animated: true });
           break;
       }
     }, []);
 
+    const scrollToError = useCallback(
+      async (refInput: React.RefObject<TextInput>) => {
+        const viewRefInstance = viewRef.current;
+        if (!viewRefInstance) return false;
+
+        const y = await new Promise<number>(resolve =>
+          refInput.current?.measureLayout(viewRefInstance, (x, y) =>
+            resolve(y - QUANTITY_PICKER_HEIGHT),
+          ),
+        );
+
+        scrollViewRef.current?.scrollTo({ y, animated: true });
+      },
+      [],
+    );
+
+    const validationError = useCallback(async () => {
+      const isEachPeace = product?.inventoryUseTypeId === InventoryUseType.Each;
+
+      if (isEachPeace && !product.unitsPerContainer) {
+        await scrollToError(unitsPerContainerInputRef);
+        setError(errors => ({ ...errors, unitsPerContainer: true }));
+        onSubmit(product, ToastType.UnitsPerContainerError);
+        return true;
+      }
+
+      if (
+        isEachPeace &&
+        (product.max ?? 0) <
+          (product.min ?? 0) + (product.unitsPerContainer ?? 0)
+      ) {
+        await scrollToError(unitsMaxInputRef);
+        setError(errors => ({ ...errors, max: true }));
+        onSubmit(product, ToastType.MaximumValueError);
+        return true;
+      }
+
+      if (isEachPeace && !product.min) {
+        await scrollToError(unitsMinInputRef);
+        setError(errors => ({ ...errors, min: true }));
+        onSubmit(product, ToastType.MinimumValueError);
+        return true;
+      }
+
+      return false;
+    }, [onSubmit, product, scrollToError]);
+
     const handleCancel = useCallback(() => {
-      setUpcError(undefined);
+      setError({});
       onCancelPress?.();
     }, [onCancelPress]);
 
     const handleSubmit = useCallback(async () => {
       if (!product) return;
 
-      const isEachPeace = product?.inventoryUseTypeId === InventoryUseType.Each;
-      const viewRefInstance = viewRef.current;
-
-      if (isEachPeace && !product.unitsPerContainer && viewRefInstance) {
-        const y = await new Promise<number>(resolve =>
-          unitsPerContainerInputRef.current?.measureLayout(
-            viewRefInstance,
-            (x, y) => resolve(y - QUANTITY_PICKER_HEIGHT),
-          ),
-        );
-        setIsUnitsPerContainerError(true);
-        onSubmit(product, ToastType.UnitsPerContainerError);
-
-        scrollViewRef.current?.scrollTo({ y, animated: true });
-        return;
-      }
+      if (await validationError()) return;
 
       setIsLoading(true);
       const error = await onSubmit(product);
@@ -208,6 +248,7 @@ export const ProductModal = observer(
       isEdit,
       onSubmit,
       product,
+      validationError,
     ]);
 
     const handleToastAction = useCallback(() => {
@@ -219,6 +260,12 @@ export const ProductModal = observer(
           break;
         case ToastType.UnitsPerContainerError:
           unitsPerContainerInputRef.current?.focus();
+          break;
+        case ToastType.MaximumValueError:
+          unitsMaxInputRef.current?.focus();
+          break;
+        case ToastType.MinimumValueError:
+          unitsMinInputRef.current?.focus();
           break;
       }
     }, [handleSubmit, onEditPress, toastType]);
@@ -250,14 +297,31 @@ export const ProductModal = observer(
 
     const handleUnitsPerContainerChange = useCallback(
       (unitsPerContainer: number) => {
-        if (isUnitsPerContainerError) setIsUnitsPerContainerError(false);
+        if (errors.unitsPerContainer)
+          setError(errors => ({ ...errors, unitsPerContainer: false }));
         store.setUnitsPerContainer(unitsPerContainer);
       },
-      [isUnitsPerContainerError, store],
+      [errors, store],
+    );
+
+    const handleMinimumChange = useCallback(
+      (min: number) => {
+        if (errors.min) setError(errors => ({ ...errors, min: false }));
+        store.setMinValue(min);
+      },
+      [errors, store],
+    );
+
+    const handleMaximumChange = useCallback(
+      (max: number) => {
+        if (errors.max) setError(errors => ({ ...errors, max: false }));
+        store.setMaxValue(max);
+      },
+      [errors, store],
     );
 
     const handleUpcChange = useCallback(() => {
-      setUpcError(undefined);
+      setError(errors => ({ ...errors, upc: undefined }));
     }, []);
 
     const setEditableProductQuantity = useCallback(
@@ -352,12 +416,15 @@ export const ProductModal = observer(
                     <EditProduct
                       product={product}
                       stockName={stockName}
-                      unitsPerContainerError={isUnitsPerContainerError}
-                      upcError={upcError}
+                      errors={errors}
                       onRemoveBySelect={handleRemoveBySelect}
+                      onMinimumChange={handleMinimumChange}
+                      onMaximumChange={handleMaximumChange}
                       onUnitsPerContainerChange={handleUnitsPerContainerChange}
                       onUpcChange={handleUpcChange}
-                      ref={unitsPerContainerInputRef}
+                      refPiecesPer={unitsPerContainerInputRef}
+                      refMin={unitsMinInputRef}
+                      refMax={unitsMaxInputRef}
                     />
                   ) : (
                     <ViewProduct product={product} />

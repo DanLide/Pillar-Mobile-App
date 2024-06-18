@@ -51,6 +51,8 @@ const icons: Record<
   [ToastType.CreateInvoiceError]: SVGs.RefundErrorIcon,
   [ToastType.InvoiceMissingProductPrice]: SVGs.RefundErrorIcon,
   [ToastType.UnitsPerContainerError]: SVGs.ProductsErrorIcon,
+  [ToastType.MinimumValueError]: SVGs.ProductsErrorIcon,
+  [ToastType.MaximumValueError]: SVGs.ProductsErrorIcon,
   [ToastType.ProfileError]: SVGs.ProfileError,
 
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
