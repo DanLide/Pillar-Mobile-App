@@ -147,8 +147,6 @@
   "selectStockLocation": "Select a Stock Location",
   "selectLanguage": "Select a language",
   "itemsAreMissingFromOrder": "These items are missing from this order and will not be received",
-  "missing": "Missing",
-  "stillWantTheseItems": "I still want these items",
   "specialOrder": "Special Order",
   "close": "Close",
   "howToFindQrOrUpc": "How to find the QR Code or UPC",

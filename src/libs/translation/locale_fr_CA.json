@@ -147,8 +147,6 @@
   "selectStockLocation": "Sélectionner un emplacement de stock.",
   "selectLanguage": "Sélectionnez une langue",
   "itemsAreMissingFromOrder": "Ces articles sont absents de cette commande et ne seront pas reçus",
-  "missing": "Manquant",
-  "stillWantTheseItems": "Je veux quand même ces articles",
   "specialOrder": "Commande spéciale",
   "close": "Fermer",
   "howToFindQrOrUpc": "Comment trouver le code QR ou le CUP",

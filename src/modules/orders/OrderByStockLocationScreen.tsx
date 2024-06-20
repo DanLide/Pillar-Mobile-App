@@ -33,7 +33,6 @@ import {
   ProductModalParams,
   ProductModalType,
 } from '../productModal';
-import { MissingItemsModal } from './components/MissingItemsModal';
 import { ProductModel } from '../../stores/types';
 import { receiveOrder } from '../../data/receiveOrder';
 import { OrderTitleByStatusType } from 'src/modules/orders/components/StatusBadge';
@@ -60,8 +59,6 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [modalParams, setModalParams] =
     useState<OrderProductModal>(initModalParams);
-  const [isProductsMissingModal, setIsProductsMissingModal] =
-    useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
   const { currentOrder, getCurrentProductsByStockName } = ordersStoreRef;
   const stockName =
@@ -138,16 +135,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
     });
   };
 
-  const onReceive = () => {
-    if (ordersStoreRef.isProductItemsMissing) {
-      setIsProductsMissingModal(true);
-    } else {
-      onUpdateOrder();
-    }
-  };
-
   const onUpdateOrder = async () => {
-    if (isProductsMissingModal) setIsProductsMissingModal(false);
     setIsLoading(true);
     const result = await receiveOrder(ordersStoreRef);
     setIsLoading(false);
@@ -203,7 +191,7 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         <Button
           type={ButtonType.primary}
           title={t('receive')}
-          onPress={onReceive}
+          onPress={onUpdateOrder}
           isLoading={isLoading}
         />
       </View>
@@ -216,11 +204,6 @@ export const OrderByStockLocationScreen = ({ navigation }: Props) => {
         onChangeProductQuantity={onChangeProductQuantity}
         isHideDecreaseButton={modalParams.maxValue === modalParams.minValue}
         isAllowZeroValue={true}
-      />
-      <MissingItemsModal
-        onSubmit={onUpdateOrder}
-        isVisible={isProductsMissingModal}
-        onClose={() => setIsProductsMissingModal(false)}
       />
     </View>
   );

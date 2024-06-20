@@ -1,4 +1,3 @@
-import { MissingItemsModal } from './MissingItemsModal';
 import { OrdersDetailsStockList } from './OrdersDetailsStockList';
 import { OrdersList } from './OrdersList';
 import { OrdersListItem } from './OrdersListItem';
@@ -12,7 +11,6 @@ import { TotalCostBar } from './TotalCostBar';
 export { AddNotesSection } from './AddNotesSection';
 
 export {
-  MissingItemsModal,
   OrdersDetailsStockList,
   OrdersList,
   OrdersListItem,
