@@ -48,6 +48,7 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
 
   return (
     <BaseProductsScreen
+      disableAlert
       modalParams={modalParams}
       product={product}
       scannedProductsCount={scannedProductsCount}

@@ -15,8 +15,8 @@ import {
   InfoTitleBar,
   InfoTitleBarType,
   ScanProductProps,
+  ScanProduct,
 } from '../../../components';
-import ScanProduct from '../../../components/ScanProduct';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 

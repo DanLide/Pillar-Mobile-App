@@ -1,22 +1,21 @@
 import { observer } from 'mobx-react';
 import { useCallback, useRef, useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  ActivityIndicator,
-  Dimensions,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 
+import { useTranslation } from 'react-i18next';
+
 import i18n from 'i18next';
-import { Button, ButtonType } from '../../components';
+import {
+  Button,
+  ButtonType,
+  ScanProduct,
+  ScanProductProps,
+} from '../../components';
 
 import { ToastType } from 'src/contexts/types';
 
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
-import ScanProduct, { ScanProductProps } from 'src/components/ScanProduct';
 import { useSingleToast } from 'src/hooks';
 import {
   AppNavigator,
@@ -62,7 +61,7 @@ const { width, height } = Dimensions.get('window');
 const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
   const { t } = useTranslation();
   const stocksStoreRef = useRef(stocksStore).current;
-  const [isScannerActive, setIsScannerActive] = useState(true);
+  const [isCameraActive, setIsCameraActive] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
   const { showToast } = useSingleToast();
@@ -86,7 +85,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
   const onScanError = useCallback(
     (error: ScannerScreenError) => {
       setIsLoading(false);
-      setIsScannerActive(true);
+      setIsCameraActive(true);
 
       showToast(getScannerErrorMessages(error), {
         type: ToastType.ScanError,
@@ -114,7 +113,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
       }
 
       setIsLoading(false);
-      setIsScannerActive(true);
+      setIsCameraActive(true);
 
       if (stocksStoreRef.getMasterlockStocks.length) {
         navigation.navigate(AppNavigator.SelectStockLocationsScreen);
@@ -129,7 +128,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
 
   const onScanShopCode = useCallback<ScanProductProps['onScan']>(
     async code => {
-      setIsScannerActive(false);
+      setIsCameraActive(false);
 
       if (typeof code === 'string') {
         await fetchSSOById(code);
@@ -150,7 +149,8 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
         <Spinner visible={isLoading} />
         <ScanProduct
           onScan={onScanShopCode}
-          isActive={isScannerActive}
+          isActive={isCameraActive}
+          useScannerFlow={false}
           tooltipText={t('lookingForCode')}
         />
         <View style={styles.footer}>

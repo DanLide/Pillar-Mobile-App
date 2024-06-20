@@ -112,5 +112,11 @@ jest.mock('react-native', () => {
     getDeviceName: jest.fn(),
   };
 
+  RN.NativeModules.CaptuvoModule = {
+    removeListeners: jest.fn(),
+    addListener: jest.fn(),
+    getConstants: jest.fn(() => false),
+  };
+
   return RN;
 });

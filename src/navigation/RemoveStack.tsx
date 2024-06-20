@@ -49,7 +49,7 @@ export const RemoveStack: React.FC = observer(() => {
             },
           })
         }
-        initialParams={{ nextScreen: AppNavigator.RemoveProductsScreen }}
+        initialParams={{ nextScreen: AppNavigator.ScannerScreen }}
       />
       <Stack.Screen
         name={AppNavigator.RemoveProductsScreen}

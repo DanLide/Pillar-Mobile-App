@@ -9,7 +9,10 @@ import { createInvoiceStore, CreateInvoiceStore } from './stores';
 import { JobModel } from '../jobsList/stores/JobsStore';
 import { colors } from '../../theme';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { AppNavigator } from '../../navigation/types';
+import {
+  AppNavigator,
+  TCreateInvoiceNavScreenProps,
+} from '../../navigation/types';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -18,7 +21,10 @@ import {
 const SelectJobComponent = () => {
   const { t } = useTranslation();
   const isFocused = useIsFocused();
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<
+      TCreateInvoiceNavScreenProps<AppNavigator.SelectProductJob>['navigation']
+    >();
   const store = useRef<CreateInvoiceStore>(createInvoiceStore).current;
 
   useEffect(() => {
@@ -29,7 +35,7 @@ const SelectJobComponent = () => {
 
   const onSelectJob = (job: JobModel) => {
     store.setCurrentJob(job);
-    navigation.navigate(AppNavigator.CreateInvoiceProductsScreen);
+    navigation.navigate(AppNavigator.ScannerScreen);
   };
 
   return (

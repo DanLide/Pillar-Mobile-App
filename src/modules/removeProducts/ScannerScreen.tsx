@@ -20,6 +20,10 @@ import {
 } from '../../stores/types';
 import { ToastType } from '../../contexts/types';
 import { InventoryUseType } from 'src/constants/common.enum';
+import {
+  AppNavigator,
+  TRemoveProductNavScreenProps,
+} from 'src/navigation/types';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -30,60 +34,68 @@ type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
   StockProductStoreType;
 
-export const ScannerScreen: React.FC = observer(() => {
-  const { t } = useTranslation();
-  const [modalParams, setModalParams] =
-    useState<ProductModalParams>(initModalParams);
+export const ScannerScreen = observer(
+  ({
+    navigation: { navigate },
+  }: TRemoveProductNavScreenProps<AppNavigator.ScannerScreen>) => {
+    const { t } = useTranslation();
+    const [modalParams, setModalParams] =
+      useState<ProductModalParams>(initModalParams);
 
-  const store = useRef<BaseProductsStore>(removeProductsStore).current;
+    const store = useRef<BaseProductsStore>(removeProductsStore).current;
 
-  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
-    async product => {
-      const removedProductCount = store.getScannedProductsCountByProductId(
-        product.productId,
-      );
+    const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
+      async product => {
+        const removedProductCount = store.getScannedProductsCountByProductId(
+          product.productId,
+        );
 
-      const minQty = getProductStepQty(product.inventoryUseTypeId);
+        const minQty = getProductStepQty(product.inventoryUseTypeId);
 
-      const calculateToastType = () => {
-        const quantityError =
-          removedProductCount >= product.onHand || product.onHand < minQty;
+        const calculateToastType = () => {
+          const quantityError =
+            removedProductCount >= product.onHand || product.onHand < minQty;
 
-        if (!quantityError) {
-          return undefined;
-        }
+          if (!quantityError) {
+            return undefined;
+          }
 
-        const isSpecialOrder =
-          product?.inventoryUseTypeId === InventoryUseType.NonStock;
+          const isSpecialOrder =
+            product?.inventoryUseTypeId === InventoryUseType.NonStock;
 
-        return isSpecialOrder
-          ? ToastType.SpecialOrderError
-          : ToastType.ProductQuantityError;
-      };
+          return isSpecialOrder
+            ? ToastType.SpecialOrderError
+            : ToastType.ProductQuantityError;
+        };
 
-      const toastType = calculateToastType();
+        const toastType = calculateToastType();
 
-      setModalParams({
-        type: ProductModalType.Remove,
-        toastType,
-        maxValue: store.getMaxValue(product),
-        onHand: store.getOnHand(product),
-      });
-    },
-    [store],
-  );
+        setModalParams({
+          type: ProductModalType.Remove,
+          toastType,
+          maxValue: store.getMaxValue(product),
+          onHand: store.getOnHand(product),
+        });
+      },
+      [store],
+    );
 
-  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
-
-  return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen
-        store={store}
-        modalParams={modalParams}
-        onProductScan={onProductScan}
-        onCloseModal={onCloseModal}
-        buttonListTitle={t('cart')}
-      />
-    </ToastContextProvider>
-  );
-});
+    const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+    const onProductListPress = useCallback(
+      () => navigate(AppNavigator.RemoveProductsScreen),
+      [navigate],
+    );
+    return (
+      <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+        <BaseScannerScreen
+          store={store}
+          modalParams={modalParams}
+          onProductScan={onProductScan}
+          onCloseModal={onCloseModal}
+          onProductsListPress={onProductListPress}
+          buttonListTitle={t('cart')}
+        />
+      </ToastContextProvider>
+    );
+  },
+);

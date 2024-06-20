@@ -1,6 +1,14 @@
 import { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import Svg, { G, Line, Mask, Path, Rect, SvgProps } from 'react-native-svg';
+import Svg, {
+  Circle,
+  G,
+  Line,
+  Mask,
+  Path,
+  Rect,
+  SvgProps,
+} from 'react-native-svg';
 import { colors } from './colors';
 
 export interface SvgPropsWithColors extends SvgProps {
@@ -1579,6 +1587,19 @@ export const QuestionIcon = (props: SvgProps) => (
       fill="#fff"
       fillRule="evenodd"
       d="M11.09 15.771c0 .372 0 .695.075.944h1.364a6.99 6.99 0 0 1-.05-.793c0-.944.248-1.96 1.166-2.629l1.116-.818c1.463-1.092 2.48-2.454 2.48-4.266 0-2.403-1.86-4.709-5.059-4.709C8.638 3.5 7 6.053 7 8.383c0 .445.051.844.2 1.266l1.511.223a5.137 5.137 0 0 1-.197-1.34c0-1.858 1.164-3.644 3.668-3.644 2.282 0 3.495 1.587 3.495 3.348 0 1.213-.668 2.255-1.711 3.047l-1.089.845c-1.264.967-1.787 2.107-1.787 3.643Zm.77 3.273c-.694 0-1.24.545-1.24 1.24 0 .67.546 1.216 1.24 1.216.695 0 1.24-.546 1.24-1.216 0-.695-.545-1.24-1.24-1.24Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+);
+
+export const ScannerPlaceholderImage = (props: SvgProps) => (
+  <Svg width={232} height={232} fill="none" {...props}>
+    <Circle cx={116} cy={116} r={116} fill="#fff" />
+    <Circle cx={116} cy={116} r={105} fill="#E1E1E8" />
+    <Path
+      fill="#fff"
+      fillRule="evenodd"
+      d="M68 150.5h96v-66H68v66Zm6-6.188h84V90.687H74v53.625Zm73-7.218h4.004V97.906H147v39.188Zm-12 0h6V97.906h-6v39.188Zm-10 0h4V97.906h-4v39.188Zm-12 0h6V97.906h-6v39.188Zm-12 0h5.996V97.906H101v39.188Zm-10 0h4V97.906h-4v39.188Zm-10 0h4V97.906h-4v39.188Z"
       clipRule="evenodd"
     />
   </Svg>

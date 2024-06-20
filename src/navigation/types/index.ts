@@ -103,17 +103,15 @@ type SelectSSOScreenParams = {
 };
 
 export type UnlockStockNextScreenParams =
-  | AppNavigator.ReturnProductsScreen
-  | AppNavigator.RemoveProductsScreen
   | AppNavigator.CreateOrderScreen
-  | AppNavigator.ManageProductsScreen
-  | AppNavigator.OrderByStockLocationScreen;
+  | AppNavigator.OrderByStockLocationScreen
+  | AppNavigator.ScannerScreen;
 
 type UnlockStockScreenParams = {
   title?: string;
   masterlockId: string;
   nextNavigationGoBack?: boolean;
-  nextScreen?: UnlockStockNextScreenParams;
+  nextScreen?: AppNavigator.ScannerScreen;
 };
 
 type PinScreenParams = {
@@ -295,6 +293,14 @@ export type TCreateInvoiceNavScreenProps<
   StackScreenProps<CreateInvoiceParamList, TScreenName>,
   THomeNavScreenProps<keyof HomeStackParamList>
 >;
+
+export type TReturnProductNavScreenProps<
+  TScreenName extends keyof ReturnStackParamList,
+> = StackScreenProps<ReturnStackParamList, TScreenName>;
+
+export type TRemoveProductNavScreenProps<
+  TScreenName extends keyof RemoveStackParamList,
+> = StackScreenProps<RemoveStackParamList, TScreenName>;
 
 export type TManageProductsNavScreenProps<
   TScreenName extends keyof ManageProductsStackParamList,

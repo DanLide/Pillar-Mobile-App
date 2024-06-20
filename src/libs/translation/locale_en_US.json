@@ -354,6 +354,8 @@
   "review": "Review",
   "reviewUpdates": "Review Updates",
   "reviewOrder": "Review Order",
+  "clickToScan": "Click to\nScan",
+  "scanWithCamera": "Scan with Device Camera",
   "repairOrderTitle": "Repair Order",
   "description": "Description",
   "noRepairOrder": "no Repair Order",

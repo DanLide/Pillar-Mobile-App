@@ -1,0 +1,1 @@
+export { useCaptuvoScanner } from './captuvo';

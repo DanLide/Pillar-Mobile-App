@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { NativeStackNavigationProp } from 'react-native-screens/native-stack';
 import { useIsFocused, RouteProp } from '@react-navigation/native';
 import { observer } from 'mobx-react';
@@ -12,6 +12,7 @@ import { InfoTitleBar, InfoTitleBarType } from '../../components';
 import { StocksList } from '../stocksList/components/StocksList';
 import { returnProductsStore } from './stores';
 import { ToastContextProvider } from '../../contexts';
+import { commonStyles } from 'src/theme';
 
 interface Props {
   route: RouteProp<ReturnStackParamList, AppNavigator.SelectStockScreen>;
@@ -37,12 +38,12 @@ const SelectStockScreenBody: React.FC<Props> = observer(({ navigation }) => {
   const onItemPress = (stock: StockModel, withoutNavigation?: boolean) => {
     store.setCurrentStocks(stock);
     if (!withoutNavigation) {
-      navigation.navigate(AppNavigator.ReturnProductsScreen);
+      navigation.navigate(AppNavigator.ScannerScreen);
     }
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={commonStyles.flex1}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
         title={t('selectStockLocation')}
@@ -59,10 +60,3 @@ export const SelectStockScreen: React.FC<Props> = props => {
     </ToastContextProvider>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-  toastStyle: {
-    gap: 8,
-  },
-});

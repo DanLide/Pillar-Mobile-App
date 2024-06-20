@@ -18,6 +18,7 @@ interface Props extends Omit<TouchableOpacityProps, 'children'> {
   count?: number;
   containerStyle?: StyleProp<ViewStyle>;
   testID?: string;
+  onPress?: () => void;
   buttonListTitle?: string;
 }
 
@@ -27,6 +28,7 @@ const ProductListButton: React.FC<Props> = ({
   count,
   containerStyle,
   style,
+  onPress,
   testID = 'productListButton',
   buttonListTitle,
   ...props
@@ -45,7 +47,7 @@ const ProductListButton: React.FC<Props> = ({
     <View style={containerStyle} testID={testIds.idContainer(testID)}>
       <TouchableOpacity
         style={buttonStyle}
-        onPress={goBack}
+        onPress={onPress || goBack}
         {...props}
         testID={testIds.idButton(testID)}
       >

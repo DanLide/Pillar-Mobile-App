@@ -16,6 +16,10 @@ import {
   ToastContextProvider,
 } from '../../contexts';
 import { ProductModalParams, ProductModalType } from '../productModal';
+import {
+  AppNavigator,
+  TReturnProductNavScreenProps,
+} from 'src/navigation/types';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -26,34 +30,42 @@ const initModalParams: ProductModalParams = {
   maxValue: undefined,
 };
 
-export const ScannerScreen: React.FC = observer(() => {
-  const { t } = useTranslation();
-  const [modalParams, setModalParams] =
-    useState<ProductModalParams>(initModalParams);
+export const ScannerScreen = observer(
+  ({
+    navigation: { navigate },
+  }: TReturnProductNavScreenProps<AppNavigator.ScannerScreen>) => {
+    const { t } = useTranslation();
+    const [modalParams, setModalParams] =
+      useState<ProductModalParams>(initModalParams);
 
-  const store = useRef<BaseProductsStore>(returnProductsStore).current;
+    const store = useRef<BaseProductsStore>(returnProductsStore).current;
 
-  const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
-    async product =>
-      setModalParams({
-        type: ProductModalType.Return,
-        maxValue: store.getMaxValue(product),
-        onHand: store.getOnHand(product),
-      }),
-    [store],
-  );
+    const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
+      async product =>
+        setModalParams({
+          type: ProductModalType.Return,
+          maxValue: store.getMaxValue(product),
+          onHand: store.getOnHand(product),
+        }),
+      [store],
+    );
 
-  const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
-
-  return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <BaseScannerScreen
-        store={store}
-        modalParams={modalParams}
-        onProductScan={onProductScan}
-        onCloseModal={onCloseModal}
-        buttonListTitle={t('cart')}
-      />
-    </ToastContextProvider>
-  );
-});
+    const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
+    const onProductListPress = useCallback(
+      () => navigate(AppNavigator.ReturnProductsScreen),
+      [navigate],
+    );
+    return (
+      <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
+        <BaseScannerScreen
+          store={store}
+          modalParams={modalParams}
+          onProductScan={onProductScan}
+          onCloseModal={onCloseModal}
+          buttonListTitle={t('cart')}
+          onProductsListPress={onProductListPress}
+        />
+      </ToastContextProvider>
+    );
+  },
+);

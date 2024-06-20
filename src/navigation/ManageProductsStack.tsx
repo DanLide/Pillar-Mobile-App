@@ -68,7 +68,7 @@ export const ManageProductsStack: React.FC = observer(() => {
             },
           })
         }
-        initialParams={{ nextScreen: AppNavigator.ManageProductsScreen }}
+        initialParams={{ nextScreen: AppNavigator.ScannerScreen }}
       />
       <Stack.Screen
         name={AppNavigator.HowToScanScreen}

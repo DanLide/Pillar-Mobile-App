@@ -9,6 +9,19 @@
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* RepairStackTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* RepairStackTests.m */; };
 		0C5A1C7A520DD8AE5BD6D7C8 /* libPods-RepairStackAbstract-RepairStackTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5874614118EAC98DF02C1375 /* libPods-RepairStackAbstract-RepairStackTests.a */; };
+		39A623112BEE2E1D00FC704D /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF3B2BDA45000052D640 /* ExternalAccessory.framework */; };
+		39A623122BEE2E3900FC704D /* libCaptuvoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */; };
+		39A623132BEE2E4800FC704D /* libCaptuvoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */; };
+		39A623142BEE2E4F00FC704D /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF3B2BDA45000052D640 /* ExternalAccessory.framework */; };
+		39D8BF392BDA44EA0052D640 /* libCaptuvoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */; };
+		39D8BF3A2BDA44F90052D640 /* libCaptuvoSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */; };
+		39D8BF3C2BDA45000052D640 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 39D8BF3B2BDA45000052D640 /* ExternalAccessory.framework */; };
+		39D8BF3E2BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF3D2BDA4A6F0052D640 /* CaptuvoModule.swift */; };
+		39D8BF3F2BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF3D2BDA4A6F0052D640 /* CaptuvoModule.swift */; };
+		39D8BF402BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF3D2BDA4A6F0052D640 /* CaptuvoModule.swift */; };
+		39D8BF422BDA4C5C0052D640 /* CaptuvoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF412BDA4C5C0052D640 /* CaptuvoModule.m */; };
+		39D8BF432BDA4C5C0052D640 /* CaptuvoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF412BDA4C5C0052D640 /* CaptuvoModule.m */; };
+		39D8BF442BDA4C5C0052D640 /* CaptuvoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D8BF412BDA4C5C0052D640 /* CaptuvoModule.m */; };
 		4495D1E214972CDE62C23389 /* libPods-RepairStackAbstract-RepairStackPROD.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4003121AD86474B7972A06C /* libPods-RepairStackAbstract-RepairStackPROD.a */; };
 		720EAD7A2B2758A200213574 /* JAMFAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 720EAD792B2758A200213574 /* JAMFAppConfig.m */; };
 		720EAD7B2B2758A200213574 /* JAMFAppConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 720EAD792B2758A200213574 /* JAMFAppConfig.m */; };
@@ -137,6 +150,11 @@
 		29788E79FADBC002E57511AF /* Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStackTests/Pods-RepairStackAbstract-RepairStackTests.debug.xcconfig"; sourceTree = "<group>"; };
 		35687FC0B2B6150FF4C5E22F /* Pods-RepairStack-RepairStackTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStack-RepairStackTests.release.xcconfig"; path = "Target Support Files/Pods-RepairStack-RepairStackTests/Pods-RepairStack-RepairStackTests.release.xcconfig"; sourceTree = "<group>"; };
 		368C4EA6964F4288B7C5B80C /* 3MCircular-BoldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircular-BoldItalic.otf"; path = "../assets/fonts/3MCircular-BoldItalic.otf"; sourceTree = "<group>"; };
+		39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCaptuvoSDK.a; sourceTree = "<group>"; };
+		39D8BF382BDA44EA0052D640 /* Captuvo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Captuvo.h; sourceTree = "<group>"; };
+		39D8BF3B2BDA45000052D640 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		39D8BF3D2BDA4A6F0052D640 /* CaptuvoModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptuvoModule.swift; sourceTree = "<group>"; };
+		39D8BF412BDA4C5C0052D640 /* CaptuvoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CaptuvoModule.m; sourceTree = "<group>"; };
 		3B3B95FBA98B49738AF28158 /* 3MCircularTT-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "3MCircularTT-Bold.otf"; path = "../assets/fonts/3MCircularTT-Bold.otf"; sourceTree = "<group>"; };
 		437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RepairStackAbstract-RepairStackUAT.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45D21D02C990BF6286BD5B0F /* Pods-RepairStackAbstract-RepairStack.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RepairStackAbstract-RepairStack.release.xcconfig"; path = "Target Support Files/Pods-RepairStackAbstract-RepairStack/Pods-RepairStackAbstract-RepairStack.release.xcconfig"; sourceTree = "<group>"; };
@@ -189,6 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D8BF392BDA44EA0052D640 /* libCaptuvoSDK.a in Frameworks */,
 				0C5A1C7A520DD8AE5BD6D7C8 /* libPods-RepairStackAbstract-RepairStackTests.a in Frameworks */,
 				95ACE4D32A78041E0059C020 /* MLBluetooth.xcframework in Frameworks */,
 			);
@@ -198,6 +217,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39A623122BEE2E3900FC704D /* libCaptuvoSDK.a in Frameworks */,
+				39A623112BEE2E1D00FC704D /* ExternalAccessory.framework in Frameworks */,
 				726995592A79AA03008C7ACB /* MLBluetooth.xcframework in Frameworks */,
 				A3D7796A6881A29F2E5134E1 /* libPods-RepairStackAbstract-RepairStackQA.a in Frameworks */,
 			);
@@ -207,6 +228,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39D8BF3C2BDA45000052D640 /* ExternalAccessory.framework in Frameworks */,
+				39D8BF3A2BDA44F90052D640 /* libCaptuvoSDK.a in Frameworks */,
 				7269957F2A79ABD1008C7ACB /* MLBluetooth.xcframework in Frameworks */,
 				F08D5D32A9E5AE537CBE08B5 /* libPods-RepairStackAbstract-RepairStackUAT.a in Frameworks */,
 				726AA7AB2B2915BB00A7FF0B /* libManagedAppConfigLib.a in Frameworks */,
@@ -217,6 +240,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39A623142BEE2E4F00FC704D /* ExternalAccessory.framework in Frameworks */,
+				39A623132BEE2E4800FC704D /* libCaptuvoSDK.a in Frameworks */,
 				726995A52A79AC14008C7ACB /* MLBluetooth.xcframework in Frameworks */,
 				4495D1E214972CDE62C23389 /* libPods-RepairStackAbstract-RepairStackPROD.a in Frameworks */,
 			);
@@ -260,6 +285,8 @@
 				726AA7B02B29193B00A7FF0B /* RepairStackUAT-Bridging-Header.h */,
 				728399562B45EF2C0069DE89 /* RepairStackQA-Bridging-Header.h */,
 				171797082B61563D00FB4CCF /* RepairStackPROD-Bridging-Header.h */,
+				39D8BF3D2BDA4A6F0052D640 /* CaptuvoModule.swift */,
+				39D8BF412BDA4C5C0052D640 /* CaptuvoModule.m */,
 			);
 			name = RepairStack;
 			sourceTree = "<group>";
@@ -288,6 +315,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				39D8BF3B2BDA45000052D640 /* ExternalAccessory.framework */,
 				726AA7AA2B2915BB00A7FF0B /* libManagedAppConfigLib.a */,
 				95ACE4CA2A7804030059C020 /* MLBluetooth.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
@@ -297,6 +325,15 @@
 				437090FF08E88AA930CCAADF /* libPods-RepairStackAbstract-RepairStackUAT.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		39D8BF2D2BDA3FFC0052D640 /* StaticLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				39D8BF382BDA44EA0052D640 /* Captuvo.h */,
+				39D8BF372BDA44E90052D640 /* libCaptuvoSDK.a */,
+			);
+			path = StaticLibrary;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -309,6 +346,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				39D8BF2D2BDA3FFC0052D640 /* StaticLibrary */,
 				13B07FAE1A68108700A75B9A /* RepairStack */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* RepairStackTests */,
@@ -922,6 +960,8 @@
 				726995552A79AA03008C7ACB /* main.m in Sources */,
 				720EAD7A2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				726995562A79AA03008C7ACB /* RCTMasterLockModule.m in Sources */,
+				39D8BF3E2BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */,
+				39D8BF422BDA4C5C0052D640 /* CaptuvoModule.m in Sources */,
 				726AA7AD2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -934,6 +974,8 @@
 				7269957B2A79ABD1008C7ACB /* main.m in Sources */,
 				720EAD7B2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				7269957C2A79ABD1008C7ACB /* RCTMasterLockModule.m in Sources */,
+				39D8BF3F2BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */,
+				39D8BF432BDA4C5C0052D640 /* CaptuvoModule.m in Sources */,
 				726AA7AE2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -946,6 +988,8 @@
 				726995A12A79AC14008C7ACB /* main.m in Sources */,
 				720EAD7C2B2758A200213574 /* JAMFAppConfig.m in Sources */,
 				726995A22A79AC14008C7ACB /* RCTMasterLockModule.m in Sources */,
+				39D8BF402BDA4A6F0052D640 /* CaptuvoModule.swift in Sources */,
+				39D8BF442BDA4C5C0052D640 /* CaptuvoModule.m in Sources */,
 				726AA7AF2B29172D00A7FF0B /* JAMFAppConfig.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -969,6 +1013,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -994,6 +1043,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -1025,6 +1079,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					.rugby/build,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
@@ -1065,6 +1124,11 @@
 					"@executable_path/Frameworks",
 					.rugby/build,
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1103,6 +1167,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					.rugby/build,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
@@ -1144,6 +1213,11 @@
 					"@executable_path/Frameworks",
 					.rugby/build,
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1184,6 +1258,11 @@
 					"@executable_path/Frameworks",
 					.rugby/build,
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
+				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1222,6 +1301,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					.rugby/build,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/lib/swift",
+					"$(inherited)",
+					"$(PROJECT_DIR)/StaticLibrary",
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (

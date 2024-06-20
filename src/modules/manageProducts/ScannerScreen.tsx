@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,11 +10,19 @@ import {
 } from 'src/contexts';
 import { useManageProducts } from 'src/modules/manageProducts/hooks';
 import { manageProductsStore } from 'src/modules/manageProducts/stores';
+import { useNavigation } from '@react-navigation/native';
+import {
+  AppNavigator,
+  TManageProductsNavScreenProps,
+} from 'src/navigation/types';
 
 const ScannerScreen = observer(() => {
   const { t } = useTranslation();
   const store = useRef(manageProductsStore).current;
-
+  const { navigate } =
+    useNavigation<
+      TManageProductsNavScreenProps<AppNavigator.ScannerScreen>['navigation']
+    >();
   const {
     modalParams,
     product,
@@ -25,6 +33,11 @@ const ScannerScreen = observer(() => {
     onEditPress,
     onCancelPress,
   } = useManageProducts(store);
+
+  const onProductListPress = useCallback(
+    () => navigate(AppNavigator.ManageProductsScreen),
+    [navigate],
+  );
 
   return (
     <BaseScannerScreen
@@ -38,6 +51,7 @@ const ScannerScreen = observer(() => {
       onEditPress={onEditPress}
       onCancelPress={onCancelPress}
       ProductModalComponent={ProductModal}
+      onProductsListPress={onProductListPress}
       buttonListTitle={t('reviewUpdates')}
     />
   );

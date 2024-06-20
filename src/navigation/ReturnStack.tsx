@@ -48,7 +48,7 @@ export const ReturnStack: React.FC = observer(() => {
             },
           })
         }
-        initialParams={{ nextScreen: AppNavigator.ReturnProductsScreen }}
+        initialParams={{ nextScreen: AppNavigator.ScannerScreen }}
       />
       <Stack.Screen
         name={AppNavigator.BluetoothPermissionScreen}

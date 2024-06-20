@@ -24,9 +24,11 @@ import {
   StockProductStoreType,
 } from '../stores/types';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
-import ScanProduct, { ScanProductProps } from './ScanProduct';
+import { ScanProduct, ScanProductProps } from './ScanProduct';
 import { Spinner } from './Spinner';
 import { ToastMessage } from './ToastMessage';
+import { commonStyles } from 'src/theme';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -59,6 +61,7 @@ interface Props {
   >;
   onBadRequestError?: (error: BadRequestError) => void;
   onChangeProductQuantity?: (qty?: number) => void;
+  onProductsListPress?: () => void;
   ProductModalComponent?: React.FC<ProductModalProps>;
   filteredType?: BarcodeFormat;
   buttonListTitle?: string;
@@ -94,6 +97,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     onFetchProduct,
     onBadRequestError,
     ProductModalComponent = ProductModal,
+    onProductsListPress,
     filteredType,
     buttonListTitle,
   }) => {
@@ -220,12 +224,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
       }, 350);
     };
 
-    const onSelectStock = stock => {
+    const onSelectStock = (stock: StockModel) => {
       store.setCurrentStocks(stock);
     };
 
     return (
-      <View style={styles.container}>
+      <View style={commonStyles.flex1}>
         <InfoTitleBar
           type={InfoTitleBarType.Primary}
           title={store.currentStock?.organizationName}
@@ -235,6 +239,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           isActive={!disableScanner && isScannerActive}
           scannedProductCount={scannedProducts.length}
           filteredType={filteredType}
+          onProductsListPress={onProductsListPress}
           buttonListTitle={buttonListTitle}
         />
         <Spinner visible={!isScannerActive} />
@@ -253,7 +258,3 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     );
   },
 );
-
-const styles = StyleSheet.create({
-  container: { flex: 1 },
-});

@@ -3,7 +3,6 @@ import Input, { InputType } from './Input';
 import Button, { ButtonType } from './Button';
 import Text from './Text';
 import Switch from './Switch';
-import ScanProduct, { ScanProductProps } from './ScanProduct';
 import { Toast, ToastActionType } from './Toast';
 import ToastMessage from './ToastMessage';
 import { Checkbox } from './Checkbox';
@@ -29,6 +28,9 @@ import { InventoryTypeBadge } from './InventoryTypeBadge';
 import { Separator } from './Separator';
 export { KeyboardToolButton } from './KeyboardToolbarButton';
 
+export * from './ScanProduct';
+export * from './Spacer';
+
 export {
   Separator,
   Scanner,
@@ -37,7 +39,6 @@ export {
   Button,
   Text,
   Switch,
-  ScanProduct,
   BaseScannerScreen,
   ScannerScreenError,
   getScannerErrorMessages,
@@ -63,4 +64,4 @@ export {
   InventoryTypeBadge,
 };
 
-export type { ScanProductProps, DropdownItem, ModalProps };
+export type { DropdownItem, ModalProps };
