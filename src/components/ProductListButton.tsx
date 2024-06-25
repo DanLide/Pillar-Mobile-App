@@ -51,18 +51,20 @@ const ProductListButton: React.FC<Props> = ({
         {...props}
         testID={testIds.idButton(testID)}
       >
-        <SVGs.ProductListIcon color={colors.purpleDark} />
+        <View>
+          <SVGs.ProductListIcon color={colors.purpleDark} />
+          {!!count && (
+            <View style={styles.countContainer}>
+              <Text style={styles.countText} testID={testIds.idCount(testID)}>
+                {count}
+              </Text>
+            </View>
+          )}
+        </View>
         <Text style={styles.titleText}>
           {buttonListTitle ? buttonListTitle : t('list')}
         </Text>
       </TouchableOpacity>
-      {count ? (
-        <View style={styles.countContainer}>
-          <Text style={styles.countText} testID={testIds.idCount(testID)}>
-            {count}
-          </Text>
-        </View>
-      ) : null}
     </View>
   );
 };
@@ -70,7 +72,8 @@ const ProductListButton: React.FC<Props> = ({
 const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.white,
-    padding: 5,
+    paddingHorizontal: 5,
+    paddingVertical: 12,
     borderRadius: 8,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
@@ -86,7 +89,7 @@ const styles = StyleSheet.create({
     color: colors.purple,
     fontSize: 20,
     fontFamily: fonts.TT_Regular,
-    marginLeft: 8,
+    marginLeft: 16,
     fontWeight: 'bold',
   },
   countContainer: {
@@ -98,7 +101,7 @@ const styles = StyleSheet.create({
     minWidth: COUNTER_SIZE,
     position: 'absolute',
     right: -6,
-    top: -10,
+    top: -6,
   },
   countText: {
     color: colors.white,

@@ -468,6 +468,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 5,
+    marginVertical: 7,
     borderRadius: 8,
   },
   listButtonContainer: {
