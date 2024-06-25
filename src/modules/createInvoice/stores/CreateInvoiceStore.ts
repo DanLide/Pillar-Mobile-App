@@ -37,11 +37,6 @@ export class CreateInvoiceStore extends BaseProductsStore {
       getReservedCountById(this.getProducts, product.productId);
   }
 
-  @computed get getProductById() {
-    return (productId: number) =>
-      this.facilityProducts.find(product => product.productId === productId);
-  }
-
   @override get getEditableOnHand() {
     return (product: ProductModel) =>
       product.onHand +
@@ -51,16 +46,5 @@ export class CreateInvoiceStore extends BaseProductsStore {
 
   @action setCurrentJob(job: JobModel) {
     this.currentJob = job;
-  }
-
-  @action setFacilityProducts(products: ProductModel[]) {
-    this.facilityProducts = this.mapProducts(products);
-  }
-
-  mapProducts(products: ProductModel[]) {
-    return products.map(product => ({
-      ...product,
-      isRecoverable: product.isRecoverable === 'Yes',
-    }));
   }
 }

@@ -59,21 +59,6 @@ export const ScannerScreen = observer(
 
     const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
-    const onFetchProduct = async (code: string) => {
-      const isProductRecoverable = (product?: ProductModel) =>
-        product?.isRecoverable;
-
-      const currentProduct = createInvoiceStore.getProductById(
-        +code.replace('~~', ''),
-      );
-
-      if (currentProduct && !isProductRecoverable(currentProduct)) {
-        return ScannerScreenError.ProductIsNotRecoverable;
-      }
-
-      store.setCurrentProduct(currentProduct);
-    };
-
     const handleToastPress = (actionType: ToastActionType) => {
       switch (actionType) {
         case ToastActionType.Details: {
@@ -112,7 +97,6 @@ export const ScannerScreen = observer(
             modalParams={modalParams}
             onProductScan={onProductScan}
             onCloseModal={onCloseModal}
-            onFetchProduct={onFetchProduct}
             filteredType={BarcodeFormat.UPC_A}
             buttonListTitle={t('review')}
             onProductsListPress={onProductListPress}
