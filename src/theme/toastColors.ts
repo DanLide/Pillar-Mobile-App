@@ -97,6 +97,11 @@ export const toastColors: Record<
     secondary: colors.background,
     action: colors.purpleDark,
   },
+  [ToastType.UnitsPerContainerReset]: {
+    primary: colors.purple,
+    secondary: colors.background,
+    action: colors.purpleDark,
+  },
 
   [ToastType.Success]: {
     primary: colors.green2,

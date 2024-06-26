@@ -170,6 +170,13 @@ export const renderType: Record<
       actionType={ToastActionType.Close}
     />
   ),
+  [ToastType.UnitsPerContainerReset]: toast => (
+    <Toast
+      {...toast}
+      type={ToastType.UnitsPerContainerReset}
+      actionType={ToastActionType.Edit}
+    />
+  ),
 };
 
 const styles = StyleSheet.create({
