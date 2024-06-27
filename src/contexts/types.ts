@@ -17,6 +17,7 @@ export enum ToastType {
   Info = 'Info',
   TooltipInfo = 'TooltipInfo',
   TooltipCreateInvoice = 'TooltipCreateInvoice',
+  UnitsPerContainerReset = 'UnitsPerContainerReset',
 
   Success = 'Success',
   ProductUpdateSuccess = 'ProductUpdateSuccess',

@@ -58,6 +58,7 @@ const icons: Record<
   [ToastType.Info]: SVGs.ListAffirmativeIcon,
   [ToastType.TooltipInfo]: SVGs.InfoLargeIcon,
   [ToastType.TooltipCreateInvoice]: SVGs.CreateInvoiceTooltipIcon,
+  [ToastType.UnitsPerContainerReset]: SVGs.ProductsErrorIcon,
 
   [ToastType.Success]: SVGs.ListAffirmativeIcon,
   [ToastType.ProductUpdateSuccess]: SVGs.AffirmationSolidIcon,

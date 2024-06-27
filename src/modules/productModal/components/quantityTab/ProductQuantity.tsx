@@ -38,6 +38,7 @@ export type ProductQuantityToastType =
   | ToastType.ProductUpdateSuccess
   | ToastType.UpcUpdateError
   | ToastType.UnitsPerContainerError
+  | ToastType.UnitsPerContainerReset
   | ToastType.MinimumValueError
   | ToastType.MaximumValueError
   | ToastType.SpecialOrderError;
@@ -94,6 +95,14 @@ const getToastMessages = (toastType: ProductQuantityToastType) => {
             {i18n.t('piecesPerContainer')}
           </ToastMessage>{' '}
           {i18n.t('cannotBeSavedLessThan1')}
+        </ToastMessage>
+      ),
+      [ToastType.UnitsPerContainerReset]: (
+        <ToastMessage>
+          <ToastMessage bold style={toastStyles.default}>
+            {i18n.t('piecesPerContainer')}
+          </ToastMessage>{' '}
+          {i18n.t('reset').toLowerCase()}
         </ToastMessage>
       ),
       [ToastType.MinimumValueError]: (

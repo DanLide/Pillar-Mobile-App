@@ -259,6 +259,7 @@ export const ProductModal = observer(
           onEditPress?.();
           break;
         case ToastType.UnitsPerContainerError:
+        case ToastType.UnitsPerContainerReset:
           unitsPerContainerInputRef.current?.focus();
           break;
         case ToastType.MaximumValueError:
@@ -286,13 +287,16 @@ export const ProductModal = observer(
 
     const handleRemoveBySelect = useCallback(
       (removeBy: number) => {
-        if (product?.inventoryUseTypeId === removeBy) return;
+        if (!product || product.inventoryUseTypeId === removeBy) return;
 
         store.setInventoryType(removeBy);
         reservedCountInputRef.current?.focus();
+
+        if (removeBy === InventoryUseType.Each)
+          onSubmit(product, ToastType.UnitsPerContainerReset);
       },
 
-      [product?.inventoryUseTypeId, store],
+      [onSubmit, product, store],
     );
 
     const handleUnitsPerContainerChange = useCallback(
