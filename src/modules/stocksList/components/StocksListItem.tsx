@@ -1,5 +1,4 @@
 import {
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -33,8 +32,6 @@ interface Props {
   nextNavigationGoBack?: boolean;
 }
 
-const UNLOCK_BUTTON_HIT_SLOP = { right: 24 };
-
 export const StocksListItem: React.FC<Props> = observer(
   ({
     item,
@@ -61,7 +58,7 @@ export const StocksListItem: React.FC<Props> = observer(
         lockStatus === LockStatus.OPEN_LOCKED) &&
       isVisible;
 
-    const unlockMasterlock = () => {
+    const handlePress = () => {
       if (
         isLocked &&
         !skipNavToUnlockScreen &&
@@ -75,11 +72,9 @@ export const StocksListItem: React.FC<Props> = observer(
           masterlockId: item.controllerSerialNo,
           nextNavigationGoBack,
         });
+      } else {
+        onPressItem && onPressItem(item);
       }
-    };
-
-    const handlePress = () => {
-      onPressItem && onPressItem(item);
     };
 
     const renderIcon = () => {
@@ -117,23 +112,13 @@ export const StocksListItem: React.FC<Props> = observer(
             {renderIcon()}
             <Text style={styles.title}>{organizationName}</Text>
           </View>
-          {itemRightText ? (
-            <View style={styles.statusContainer}>
-              <Text style={styles.statusText}>{itemRightText}</Text>
-              <SVGs.ChevronIcon color={colors.purpleDark} />
-            </View>
-          ) : (
-            <Pressable
-              hitSlop={UNLOCK_BUTTON_HIT_SLOP}
-              onPress={unlockMasterlock}
-              style={styles.statusContainer}
-            >
-              {isDeviceConfiguredBySSO && isLocked && (
-                <Text style={styles.statusText}>{t('unlock')}</Text>
-              )}
-              <SVGs.ChevronIcon color={colors.purpleDark} />
-            </Pressable>
-          )}
+          <View style={styles.statusContainer}>
+            <Text style={styles.statusText}>
+              {itemRightText ||
+                (isDeviceConfiguredBySSO && isLocked && t('unlock'))}
+            </Text>
+            <SVGs.ChevronIcon color={colors.purpleDark} />
+          </View>
         </View>
       </TouchableOpacity>
     );
