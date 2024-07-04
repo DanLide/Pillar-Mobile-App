@@ -9,7 +9,11 @@ import {
   getFetchProductByFacilityIdAPI,
   getFetchProductsByFacilityIdAPI,
 } from './productsAPI';
-import { getFetchJobsAPI } from './jobsAPI';
+import {
+  getFetchJobsAPI,
+  getFetchJobsByProductAPI,
+  getFetchJobDetailQuantityAPI,
+} from './jobsAPI';
 import {
   createInvoiceAPI,
   createJobAPI,
@@ -32,6 +36,8 @@ export {
   getFetchStockAPI,
   getFetchProductAPI,
   getFetchJobsAPI,
+  getFetchJobsByProductAPI,
+  getFetchJobDetailQuantityAPI,
   removeProductAPI,
   returnProductAPI,
   createInvoiceAPI,

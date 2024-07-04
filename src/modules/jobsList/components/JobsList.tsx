@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
+import { isEmpty } from 'ramda';
 
 import { jobsStore } from '../stores';
 import { fetchJobs } from '../../../data/fetchJobs';
@@ -33,6 +34,7 @@ interface Props {
   inputContainerStyle?: StyleProp<ViewStyle>;
   isCreateJobAvailable?: boolean;
   isJobsWithNoRepairOrder?: boolean;
+  productJobs?: JobModel[];
 
   onPressItem: (job: JobModel) => void;
 }
@@ -47,6 +49,7 @@ export const JobsList: React.FC<Props> = observer(
     onPressItem,
     isCreateJobAvailable,
     isJobsWithNoRepairOrder,
+    productJobs,
   }) => {
     const { t } = useTranslation();
     const listRef = useRef<FlatList | null>(null);
@@ -97,7 +100,11 @@ export const JobsList: React.FC<Props> = observer(
     }, []);
 
     useEffect(() => {
-      onFetchJobs();
+      if (productJobs && !isEmpty(productJobs)) {
+        jobsStore.setJobs(productJobs);
+      } else {
+        onFetchJobs();
+      }
     }, [onFetchJobs]);
 
     const keyExtractor = (item: JobModel) => String(item.jobId);

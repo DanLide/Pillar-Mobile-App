@@ -4,6 +4,18 @@ export interface JobModel {
   jobId: number;
   jobNumber: string;
   jobDescription?: string;
+  extCost?: number;
+  extPrice?: number;
+  inventoryAssignmentId?: number;
+  isRecoverable?: string;
+  isTaxable?: number;
+  jobDetailId?: number;
+  onHand?: number;
+  productID?: number;
+  qty?: number;
+  status?: string;
+  tax?: number;
+  unitCost?: number;
 }
 
 export const jobIdNoRepairOrder = 0;

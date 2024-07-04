@@ -8,11 +8,16 @@ const PRODUCT_MAX_COUNT = 9999;
 
 export class ReturnProductsStore extends BaseProductsStore {
   @override get getMaxValue() {
-    return () => PRODUCT_MAX_COUNT;
+    return (product: ProductModel) =>
+      (this.productJobs[product.productId] &&
+        this.productJobs[product.productId][0]?.qty) ||
+      PRODUCT_MAX_COUNT;
   }
 
   @override get getEditableMaxValue() {
-    return () => PRODUCT_MAX_COUNT;
+    return () => {
+      return this.currentProduct?.job?.qty || PRODUCT_MAX_COUNT;
+    };
   }
 
   @override get getOnHand() {

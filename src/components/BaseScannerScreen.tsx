@@ -245,6 +245,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
         <Spinner visible={!isScannerActive} />
         <ProductModalComponent
           {...modalParams}
+          store={store}
           product={product}
           stockName={store.stockName}
           onSubmit={onProductSubmit}

@@ -20,6 +20,7 @@ import {
   AppNavigator,
   TReturnProductNavScreenProps,
 } from 'src/navigation/types';
+import { fetchJobsByProduct } from 'src/data/fetchJobsByProduct';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -41,12 +42,27 @@ export const ScannerScreen = observer(
     const store = useRef<BaseProductsStore>(returnProductsStore).current;
 
     const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
-      async product =>
-        setModalParams({
+      async product => {
+        await fetchJobsByProduct(store, product);
+
+        // Return Products - Pre-populate job for scanned products
+        if (product?.isRecoverable && !product?.job && store?.productJobs) {
+          const job = store.productJobs[product.productId][0];
+          if (job) {
+            store.setCurrentProduct({
+              ...product,
+              job,
+              reservedCount: job?.qty || product.reservedCount,
+            });
+          }
+        }
+
+        return setModalParams({
           type: ProductModalType.Return,
           maxValue: store.getMaxValue(product),
           onHand: store.getOnHand(product),
-        }),
+        });
+      },
       [store],
     );
 

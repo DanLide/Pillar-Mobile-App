@@ -70,6 +70,11 @@ export const ScannerScreen = observer(
 
         const toastType = calculateToastType();
 
+        // Remove Products - Pre-populate job for scanned products
+        if (product?.isRecoverable && !product?.job && store?.lastSelectedJob) {
+          store.setCurrentProduct({ ...product, job: store.lastSelectedJob });
+        }
+
         setModalParams({
           type: ProductModalType.Remove,
           toastType,

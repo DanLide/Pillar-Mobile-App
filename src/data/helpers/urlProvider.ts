@@ -236,6 +236,22 @@ export class URLProvider {
     );
   }
 
+  getFetchJobsByProductUrl(productId: number, partyRoleId: number) {
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/${productId}/${partyRoleId}/1`,
+    );
+  }
+
+  getFetchJobDetailQuantityUrl(
+    jobId: number,
+    partyRoleId: number,
+    productId: number,
+  ) {
+    return new URL(
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/JobDetailQuantity/${jobId}/${partyRoleId}/${productId}`,
+    );
+  }
+
   removeProduct(productId: number, quantity?: number, jobId?: number | null) {
     const partyRoleID = this.removeProductsStore.currentStock?.partyRoleId;
 
@@ -249,11 +265,11 @@ export class URLProvider {
     );
   }
 
-  returnProduct(productId: number, quantity?: number) {
+  returnProduct(productId: number, quantity?: number, jobDetailId?: number) {
     const partyRoleID = this.returnProductsStore.currentStock?.partyRoleId;
 
     return new URL(
-      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}/0`,
+      `${this.currentEnv.modules.pisaProductInventory.apiUri}/api/Product/ReturnProduct/${partyRoleID}/${productId}/${quantity}/${jobDetailId}`,
     );
   }
 

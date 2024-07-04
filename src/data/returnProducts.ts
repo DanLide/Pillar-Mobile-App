@@ -3,7 +3,7 @@ import { clone } from 'ramda';
 
 import { Task } from './helpers';
 import { ReturnProductsStore } from '../modules/returnProducts/stores';
-import { returnProductAPI } from './api';
+import { returnProductAPI, getFetchJobDetailQuantityAPI } from './api';
 
 export const onReturnProducts = async (
   returnProductsStore: ReturnProductsStore,
@@ -31,7 +31,11 @@ export class ReturnProductTask extends Task {
     for (const product of products) {
       if (!product.isRemoved) {
         try {
-          await returnProductAPI(product);
+          const jobDetail = product.job?.jobId
+            ? await getFetchJobDetailQuantityAPI(product)
+            : undefined;
+
+          await returnProductAPI(product, jobDetail?.jobDetailId);
           product.isRemoved = true;
         } catch (error) {
           this.hasError = true;

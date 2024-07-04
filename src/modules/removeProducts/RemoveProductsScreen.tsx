@@ -46,18 +46,6 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
     onCloseModal,
   } = useBaseProductsScreen(store, navigation, ProductModalType.Remove);
 
-  useEffect(() => {
-    // Remove Products - Pre-populate job for scanned products
-    if (
-      product?.isRecoverable &&
-      !modalParams.isEdit &&
-      !product?.job &&
-      store.lastSelectedJob
-    ) {
-      store.setCurrentProduct({ ...product, job: store.lastSelectedJob });
-    }
-  }, [product, store, modalParams.isEdit]);
-
   return (
     <BaseProductsScreen
       modalParams={modalParams}

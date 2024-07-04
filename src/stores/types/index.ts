@@ -48,7 +48,10 @@ export interface CurrentProductStoreType<
 > {
   getCurrentProduct?: T;
   lastSelectedJob?: JobModel;
+  productJobs?: { [key: number]: JobModel[] };
+  productJobDetails?: JobModel;
   setCurrentProduct: (product?: T) => void;
+  setProductJobs: (productId: number, jobs: JobModel[]) => void;
   removeCurrentProduct: () => void;
 }
 

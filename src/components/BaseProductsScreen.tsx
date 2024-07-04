@@ -224,6 +224,7 @@ const BaseProducts = observer(
           <ProductModalComponent
             {...modalParams}
             product={product}
+            store={store}
             stockName={store.stockName}
             onSubmit={onSubmitProduct}
             onEditPress={onEditPress}

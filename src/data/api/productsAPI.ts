@@ -113,16 +113,21 @@ export const removeProductAPI = (product: ProductModel) => {
   });
 };
 
-export const returnProductAPI = ({
-  productId,
-  reservedCount,
-}: ProductModel) => {
-  const url = new URLProvider().returnProduct(productId, reservedCount);
+export const returnProductAPI = (
+  { productId, reservedCount, job }: ProductModel,
+  jobDetailId = 0,
+) => {
+  const url = new URLProvider().returnProduct(
+    productId,
+    reservedCount,
+    jobDetailId,
+  );
 
   const body = JSON.stringify([
     {
       TransactionTypeID: TransactionType.JobScan,
       Description: 'Product Return',
+      Number: job?.jobId || 0,
     },
   ]);
 

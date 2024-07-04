@@ -4,6 +4,7 @@ import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 import { SharedValue } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useTranslation } from 'react-i18next';
+import { isNil } from 'ramda';
 
 import { Modal } from 'src/components';
 import {
@@ -18,7 +19,12 @@ import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
 } from 'src/contexts';
-import { ProductModel } from 'src/stores/types';
+import {
+  CurrentProductStoreType,
+  ProductModel,
+  ScannerModalStoreType,
+  StockProductStoreType,
+} from 'src/stores/types';
 import { ToastType } from 'src/contexts/types';
 import { StockLocationListModal } from '../orders/components';
 import { StockModel } from '../stocksList/stores/StocksStore';
@@ -45,7 +51,12 @@ export interface ProductModalParams {
   minValue?: number;
 }
 
+type BaseProductsStore = ScannerModalStoreType &
+  CurrentProductStoreType &
+  StockProductStoreType;
+
 export interface ProductModalProps extends ProductModalParams {
+  store?: BaseProductsStore;
   product?: ProductModel;
   stockName?: string;
   isHideDecreaseButton?: boolean;
@@ -73,7 +84,6 @@ export enum Tabs {
 
 const getTabs = (type: ProductModalType): Tabs[] => {
   switch (type) {
-    case ProductModalType.Return:
     case ProductModalType.CreateInvoice:
     case ProductModalType.ReceiveOrder:
     case ProductModalType.CreateOrder:
@@ -91,6 +101,7 @@ const MODAL_HEADER_HEIGHT = 70;
 export const ProductModal = memo(
   ({
     type,
+    store,
     product,
     stockName,
     toastType,
@@ -110,6 +121,7 @@ export const ProductModal = memo(
     const tabs = useMemo(() => getTabs(type), [type]);
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(tabs[0]);
+
     useEffect(() => {
       setSelectedTab(tabs[0]);
     }, [tabs]);
@@ -166,7 +178,18 @@ export const ProductModal = memo(
             delete product.job;
             onSubmit(product);
           } else {
-            onSubmit({ ...product, job });
+            let reservedCount = product.reservedCount;
+
+            if (
+              type === ProductModalType.Return &&
+              !isNil(reservedCount) &&
+              !isNil(job?.qty)
+            ) {
+              reservedCount =
+                reservedCount > job?.qty ? job?.qty : reservedCount;
+            }
+
+            onSubmit({ ...product, job, reservedCount });
           }
 
           clearProductModalStoreOnClose();
@@ -178,6 +201,13 @@ export const ProductModal = memo(
           onSubmit(product);
           clearProductModalStoreOnClose();
         };
+
+        const productJobs =
+          type === ProductModalType.Return &&
+          product?.productId &&
+          store?.productJobs
+            ? store?.productJobs[product.productId]
+            : [];
 
         switch (item) {
           case Tabs.EditQuantity:
@@ -191,7 +221,10 @@ export const ProductModal = memo(
                   toastType === ToastType.ProductQuantityError ||
                   toastType === ToastType.SpecialOrderError
                 }
-                jobSelectable={type === ProductModalType.Remove}
+                jobSelectable={
+                  type === ProductModalType.Remove ||
+                  type === ProductModalType.Return
+                }
                 toastType={toastType}
                 maxValue={maxValue}
                 minValue={minValue}
@@ -213,6 +246,7 @@ export const ProductModal = memo(
               <SelectProductJob
                 isEdit={isEdit}
                 productJob={product?.job}
+                productJobs={productJobs}
                 selectedTab={selectedTab}
                 isRecoverableProduct={product?.isRecoverable}
                 onPressSkip={onPressSkip}

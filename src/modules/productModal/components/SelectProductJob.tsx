@@ -12,6 +12,7 @@ interface Props {
   selectedTab: Tabs;
   productJob?: JobModel;
   isEdit?: boolean;
+  productJobs?: JobModel[];
 
   onPressBack: () => void;
   onPressSkip: () => void;
@@ -26,6 +27,7 @@ export const SelectProductJob: React.FC<Props> = ({
   onPressBack,
   onPressSkip,
   onPressAdd,
+  productJobs,
 }) => {
   const { t } = useTranslation();
   const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
@@ -87,6 +89,7 @@ export const SelectProductJob: React.FC<Props> = ({
         onPressItem={onPressItem}
         footerComponent={Footer}
         isJobsWithNoRepairOrder
+        productJobs={productJobs}
       />
     );
   } else {

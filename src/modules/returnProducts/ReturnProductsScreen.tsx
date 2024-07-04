@@ -40,7 +40,7 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
     setEditableProductQuantity,
     onRemoveProduct,
     onCloseModal,
-  } = useBaseProductsScreen(store, navigation, ProductModalType.Remove);
+  } = useBaseProductsScreen(store, navigation, ProductModalType.Return);
 
   const onCompleteReturn = useCallback(async () => {
     await onReturnProducts(returnProductsStore);

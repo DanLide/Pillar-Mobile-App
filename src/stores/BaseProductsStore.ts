@@ -25,11 +25,13 @@ export class BaseProductsStore implements BaseProductsStoreType {
   @observable products: ProductModel[];
   @observable currentProduct?: ProductModel;
   @observable lastSelectedJob?: JobModel;
+  @observable productJobs: { [key: number]: JobModel[] };
 
   constructor() {
     this.currentStock = undefined;
     this.currentProduct = undefined;
     this.products = [];
+    this.productJobs = {};
 
     makeObservable(this);
   }
@@ -130,10 +132,19 @@ export class BaseProductsStore implements BaseProductsStoreType {
     this.products = products;
   }
 
+  @action setProductJobs(productId: number, jobs: JobModel[]) {
+    this.productJobs[productId] = jobs;
+  }
+
+  getProductJobs(productId: number) {
+    return this.productJobs[productId] || [];
+  }
+
   @action clear() {
     this.currentStock = undefined;
     this.products = [];
     this.currentProduct = undefined;
     this.lastSelectedJob = undefined;
+    this.productJobs = {};
   }
 }
