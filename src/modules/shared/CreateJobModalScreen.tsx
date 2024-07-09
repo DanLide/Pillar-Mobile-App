@@ -6,13 +6,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  ButtonType,
-  Input,
-  KeyboardToolButton,
-  Text,
-} from 'src/components';
+import { ButtonCluster, Input, KeyboardToolButton, Text } from 'src/components';
 import { checkIsExistJob, onCreateJob } from 'src/data/createJob';
 import { SVGs, colors, commonStyles, fonts } from 'src/theme';
 import { ToastType } from 'src/contexts/types';
@@ -20,7 +14,6 @@ import { KeyboardToolbar } from 'react-native-keyboard-controller';
 import { AppNavigator, THomeNavScreenProps } from 'src/navigation/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToastMessage } from 'src/hooks';
-import { WIDTH } from 'src/constants';
 
 export const CreateJobModalScreen = ({
   navigation: { goBack },
@@ -95,22 +88,15 @@ export const CreateJobModalScreen = ({
               onChangeText={setComment}
               maxLength={1000}
             />
-            <View style={styles.buttons}>
-              <Button
-                title={t('cancel')}
-                type={ButtonType.secondary}
-                buttonStyle={styles.button}
-                onPress={goBack}
-              />
-              <Button
-                title={t('create')}
-                type={ButtonType.primary}
-                buttonStyle={styles.button}
-                onPress={onCreateRepairOrder}
-                disabled={!number.length}
-                isLoading={isLoading}
-              />
-            </View>
+            <ButtonCluster
+              style={styles.bottomButtons}
+              leftTitle={t('cancel')}
+              leftOnPress={goBack}
+              rightTitle={t('create')}
+              rightOnPress={onCreateRepairOrder}
+              rightDisabled={!number.length}
+              rightIsLoading={isLoading}
+            />
           </SafeAreaView>
         </View>
       </KeyboardAvoidingView>
@@ -163,14 +149,9 @@ const styles = StyleSheet.create({
   comment: {
     height: 140,
   },
-  buttons: {
+  bottomButtons: {
     marginTop: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    width: (WIDTH - 48) / 2,
-    height: 48,
+    paddingBottom: 0,
+    paddingHorizontal: 0,
   },
 });

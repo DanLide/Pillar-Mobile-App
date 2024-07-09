@@ -34,7 +34,7 @@ export const getToastDuration = (type?: string) => {
 export const useToastMessage = () => {
   const { show, hideAll } = useToast();
   const toastInitialized = !!show && hideAll;
-  const bottomDefault = useBottomInsert({ extraIndent: 0 });
+  const bottomDefault = useBottomInsert(0);
   const bottomIndent = bottomDefault > 16 ? bottomDefault - 16 : bottomDefault;
   const showToast = useCallback(
     (

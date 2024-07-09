@@ -3,8 +3,7 @@ import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
-  Button,
-  ButtonType,
+  ButtonCluster,
   InfoTitleBar,
   InfoTitleBarType,
 } from '../../components';
@@ -161,43 +160,18 @@ export const CreateOrderResultScreen = ({
       </View>
 
       <TotalCostBar orderType={orderType} style={styles.totalCost} />
-
-      <View style={styles.buttons}>
-        {isPurchaseOrder && !orderId ? null : (
-          <Button
-            type={ButtonType.secondary}
-            title={secondaryButtonText}
-            buttonStyle={styles.button}
-            textStyle={styles.buttonText}
-            onPress={onSecondaryPress}
-          />
-        )}
-        <Button
-          type={ButtonType.primary}
-          title={primaryButtonText}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-          onPress={onPrimaryPress}
-        />
-      </View>
+      <ButtonCluster
+        leftTitle={secondaryButtonText}
+        leftOnPress={onSecondaryPress}
+        showLeftButton={!isPurchaseOrder || !!orderId}
+        rightTitle={primaryButtonText}
+        rightOnPress={onPrimaryPress}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    flex: 1,
-  },
-  buttons: {
-    flexDirection: 'row',
-    gap: 16,
-    justifyContent: 'space-between',
-    padding: 16,
-  },
-  buttonText: {
-    fontSize: 20,
-    lineHeight: 30,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.white,

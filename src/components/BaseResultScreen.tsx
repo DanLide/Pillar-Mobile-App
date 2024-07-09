@@ -28,8 +28,8 @@ import { colors, fonts, SVGs } from '../theme';
 import { ResultProductsListItem } from './ResultProductsListItem';
 import { OTHER_JOB_ID } from '../constants';
 import { Tooltip } from './Tooltip';
-import Button, { ButtonType } from './Button';
 import { useSingleToast } from '../hooks';
+import { ButtonCluster } from './ButtonCluster';
 
 type ProductsStore = SyncedProductStoreType & StockProductStoreType;
 
@@ -165,7 +165,9 @@ const BaseResultScreen: React.FC<Props> = observer(
             contentStyle={styles.contextFooter}
             message={tooltipMessage}
           >
-            <Text style={styles.contextFooterText}>{t('whereIsMyInvoice')}</Text>
+            <Text style={styles.contextFooterText}>
+              {t('whereIsMyInvoice')}
+            </Text>
           </Tooltip>
         ) : null,
       [
@@ -253,23 +255,12 @@ const BaseResultScreen: React.FC<Props> = observer(
             {_renderSyncedSectionFooter}
             {renderNotSyncedProduct}
           </View>
-
-          <View style={styles.buttonsContainer}>
-            <Button
-              textStyle={styles.buttonText}
-              type={ButtonType.secondary}
-              title={t('logout')}
-              buttonStyle={styles.logout}
-              onPress={onPressLogout}
-            />
-            <Button
-              textStyle={styles.buttonText}
-              type={ButtonType.primary}
-              title={t('returnHome')}
-              buttonStyle={styles.returnHome}
-              onPress={onReturnHome}
-            />
-          </View>
+          <ButtonCluster
+            leftTitle={t('logout')}
+            leftOnPress={onPressLogout}
+            rightTitle={t('returnHome')}
+            rightOnPress={onReturnHome}
+          />
         </View>
       </>
     );
@@ -399,22 +390,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     letterSpacing: 0.16,
     textAlign: 'center',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 6,
-  },
-  logout: {
-    width: 155,
-    height: 48,
-  },
-  returnHome: {
-    width: 171,
-    height: 48,
-  },
-  buttonText: {
-    fontSize: 20,
   },
   rowContainer: {
     flexDirection: 'row',

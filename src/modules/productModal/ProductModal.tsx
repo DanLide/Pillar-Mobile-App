@@ -96,7 +96,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
   }
 };
 
-const MODAL_HEADER_HEIGHT = 70;
+const MODAL_HEADER_HEIGHT = 60;
 
 export const ProductModal = memo(
   ({
@@ -229,10 +229,10 @@ export const ProductModal = memo(
                 maxValue={maxValue}
                 minValue={minValue}
                 isAllowZeroValue={isAllowZeroValue}
-                style={[
+                style={
                   !isReturnRemoveCreateInvoice &&
-                    styles.productQuantityContainer,
-                ]}
+                  styles.productQuantityContainer
+                }
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}

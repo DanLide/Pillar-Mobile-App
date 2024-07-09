@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { JobListItemType } from '../jobsList/components/JobsListItem';
@@ -39,7 +39,7 @@ const SelectJobComponent = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <InfoTitleBar
         type={InfoTitleBarType.Secondary}
         title={t('selectOrder')}
@@ -51,7 +51,7 @@ const SelectJobComponent = () => {
         inputContainerStyle={styles.input}
         isCreateJobAvailable
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -12,14 +12,13 @@ import { SvgProps } from 'react-native-svg';
 import { find, whereEq } from 'ramda';
 
 import {
-  ButtonType,
+  ButtonCluster,
   Dropdown,
   DropdownItem,
   InfoTitleBar,
   InfoTitleBarType,
   KeyboardToolButton,
 } from 'src/components';
-import Button from '../../components/Button';
 import { colors, SVGs } from '../../theme';
 import { ordersStore } from './stores';
 import { stocksStore } from '../stocksList/stores';
@@ -215,26 +214,17 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         />
       </View>
       <TotalCostBar orderType={OrderType.Purchase} />
-      <View style={styles.buttons}>
-        <Button
-          type={ButtonType.secondary}
-          icon={SVGs.ScanIcon}
-          iconProps={SCAN_ICON_PROPS}
-          textStyle={styles.scanText}
-          buttonStyle={styles.buttonContainer}
-          title={t('scan')}
-          onPress={onPressScan}
-          disabled={!supplier}
-        />
-        <Button
-          disabled={!scannedProductsCount}
-          isLoading={isCreateOrderLoading}
-          type={ButtonType.primary}
-          buttonStyle={styles.buttonContainer}
-          title={t('receive')}
-          onPress={onReceiveOrder}
-        />
-      </View>
+      <ButtonCluster
+        leftTitle={t('scan')}
+        leftOnPress={onPressScan}
+        leftDisabled={!supplier}
+        leftIcon={SVGs.ScanIcon}
+        leftIconProps={SCAN_ICON_PROPS}
+        rightTitle={t('receive')}
+        rightOnPress={onReceiveOrder}
+        rightDisabled={!scannedProductsCount}
+        rightIsLoading={isCreateOrderLoading}
+      />
       <ProductModal
         {...modalParams}
         product={ordersStore.getCurrentProduct}
@@ -265,20 +255,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
     justifyContent: 'center',
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 16,
-    padding: 16,
-    backgroundColor: colors.white,
-  },
-  scanText: {
-    paddingLeft: 8,
-  },
-  buttonContainer: {
-    flex: 1,
-    height: 48,
   },
   productsContainer: {
     backgroundColor: colors.background,

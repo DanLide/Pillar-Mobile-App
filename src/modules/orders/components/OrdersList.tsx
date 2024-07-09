@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
 import { SVGs, colors, fonts } from 'src/theme';
-import { Button, ButtonType, Separator } from 'src/components';
+import { ButtonCluster, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
 import { AppNavigator } from 'src/navigation/types';
 import { getScreenName } from 'src/navigation/helpers/getScreenName';
@@ -98,22 +98,12 @@ export const OrdersList = memo(
         )}
 
         {userPermissions.createOrder && (
-          <View style={styles.buttons}>
-            <Button
-              type={ButtonType.secondary}
-              title={t('returnOrder')}
-              buttonStyle={[styles.button, styles.returnButton]}
-              textStyle={styles.buttonText}
-              onPress={onSecondaryPress}
-            />
-            <Button
-              type={ButtonType.primary}
-              title="Create Order"
-              buttonStyle={[styles.button, styles.createButton]}
-              textStyle={styles.buttonText}
-              onPress={onPrimaryPress}
-            />
-          </View>
+          <ButtonCluster
+            leftTitle={t('returnOrder')}
+            leftOnPress={onSecondaryPress}
+            rightTitle={t('createOrder')}
+            rightOnPress={onPrimaryPress}
+          />
         )}
       </View>
     );
@@ -158,25 +148,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     paddingLeft: 8,
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 16,
-  },
-  button: {
-    flex: 1,
-  },
-  returnButton: {
-    marginLeft: 16,
-    marginRight: 8,
-  },
-  createButton: {
-    marginRight: 16,
-    marginLeft: 8,
-  },
-  buttonText: {
-    fontSize: 20,
-    lineHeight: 30,
   },
 });
