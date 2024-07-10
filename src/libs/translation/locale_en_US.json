@@ -192,7 +192,7 @@
   "orderClosed": "This order is closed. All items have been received.",
   "orderCancelled": "This order was cancelled.",
   "someItemsNotReceived": "Some items in this order have not been received.",
-  "unlockAndReceive": "Unlock and Receive",
+  "unlockAndReceive": "Unlock/Receive",
   "receive": "Receive",
   "order": "Order",
   "receivedOrdered": "Received/Ordered",

@@ -192,7 +192,7 @@
   "orderClosed": "Cette commande est terminée. Tous les articles ont été reçus.",
   "orderCancelled": "Cette commande a été annulée.",
   "someItemsNotReceived": "Certains articles de cette commande n’ont pas été reçus.",
-  "unlockAndReceive": "Déverrouiller et recevoir",
+  "unlockAndReceive": "Déverrouiller/Recevoir",
   "receive": "Recevoir",
   "order": "Commande",
   "receivedOrdered": "Reçu/commandé",
