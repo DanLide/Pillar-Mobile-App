@@ -1,5 +1,9 @@
 import { useEffect, DependencyList, useCallback } from 'react';
-import { EventArg, useNavigation } from '@react-navigation/native';
+import {
+  EventArg,
+  useNavigation,
+  NavigationProp,
+} from '@react-navigation/native';
 
 const BACK_ACTIONS = ['POP', 'GO_BACK'];
 
@@ -17,7 +21,10 @@ type Event = EventArg<
 >;
 
 type TProps = {
-  callback: (event: Event) => void;
+  callback: (
+    event: Event,
+    navigation: NavigationProp<ReactNavigation.RootParamList>,
+  ) => void;
   shouldUseDefaultGoBack?: boolean;
   shouldPreventDefault?: boolean;
   deps: DependencyList;
@@ -40,7 +47,7 @@ const useCustomGoBack = ({
         if (shouldPreventDefault) {
           event.preventDefault();
         }
-        callback(event);
+        callback(event, navigation);
       }
     },
     [callback, shouldPreventDefault],

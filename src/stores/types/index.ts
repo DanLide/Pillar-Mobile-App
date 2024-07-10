@@ -65,6 +65,7 @@ export interface ScannerModalStoreType<T extends ProductModel = ProductModel> {
 
   setEditableProductQuantity: (quantity: number) => void;
   addProduct: (product: T) => void;
+  setProducts: (product: T[]) => void;
   updateProduct: (product: T) => void;
   removeProduct: (product: T) => void;
 }

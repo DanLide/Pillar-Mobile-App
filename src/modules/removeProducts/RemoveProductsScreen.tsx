@@ -63,7 +63,6 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
       onComplete={onCompleteRemove}
       ListComponent={SelectedProductsList}
       flow={Flows.Remove}
-      disableAlert
     />
   );
 });

@@ -119,6 +119,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onBadRequestError={onBadRequestError}
           onSubmit={onSubmit}
           buttonListTitle={t('reviewOrder')}
+          disableAlert
         />
       </ToastContextProvider>
 

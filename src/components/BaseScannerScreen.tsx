@@ -10,7 +10,7 @@ import { ToastType } from '../contexts/types';
 import { fetchProductByScannedCode } from '../data/fetchProductByScannedCode';
 import { BadRequestError, RequestError } from '../data/helpers/tryFetch';
 import { Utils, isBadRequestError } from '../data/helpers/utils';
-import { useSingleToast } from '../hooks';
+import { useSingleToast, useCustomGoBack } from 'src/hooks';
 import {
   ProductModal,
   ProductModalParams,
@@ -22,6 +22,7 @@ import {
   ProductModel,
   ScannerModalStoreType,
   StockProductStoreType,
+  SyncedProductStoreType,
 } from '../stores/types';
 import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { ScanProduct, ScanProductProps } from './ScanProduct';
@@ -29,10 +30,12 @@ import { Spinner } from './Spinner';
 import { ToastMessage } from './ToastMessage';
 import { commonStyles } from 'src/theme';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
+import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
-  StockProductStoreType;
+  StockProductStoreType &
+  SyncedProductStoreType;
 
 export enum ScannerScreenError {
   ProductNotFound = 'ProductNotFound',
@@ -46,6 +49,7 @@ interface Props {
   modalParams: ProductModalParams;
   product?: ProductModel;
   disableScanner?: boolean;
+  disableAlert?: boolean;
   onProductScan?: (product: ProductModel) => void;
   onSubmit?: (
     product: ProductModel,
@@ -89,6 +93,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     modalParams,
     product = store.getCurrentProduct,
     disableScanner,
+    disableAlert,
     onProductScan,
     onSubmit,
     onEditPress,
@@ -103,10 +108,22 @@ export const BaseScannerScreen: React.FC<Props> = observer(
   }) => {
     const { t } = useTranslation();
     const [isScannerActive, setIsScannerActive] = useState(true);
-
     const { showToast } = useSingleToast();
-
     const scannedProducts = store.getProducts;
+    const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
+      useState(false);
+
+    useCustomGoBack({
+      callback: (event, navigation) => {
+        if (!disableAlert && store.getNotSyncedProducts.length) {
+          setEraseProductsAlertVisible(true);
+          return;
+        }
+
+        navigation.dispatch(event.data.action);
+      },
+      deps: [store.getNotSyncedProducts],
+    });
 
     const handleScanError = useCallback(
       (
@@ -229,33 +246,45 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     };
 
     return (
-      <View style={commonStyles.flex1}>
-        <InfoTitleBar
-          type={InfoTitleBarType.Primary}
-          title={store.currentStock?.organizationName}
+      <>
+        <View style={commonStyles.flex1}>
+          <InfoTitleBar
+            type={InfoTitleBarType.Primary}
+            title={store.currentStock?.organizationName}
+          />
+          <ScanProduct
+            onScan={onScanProduct}
+            isActive={!disableScanner && isScannerActive}
+            scannedProductCount={scannedProducts.length}
+            filteredType={filteredType}
+            onProductsListPress={onProductsListPress}
+            buttonListTitle={buttonListTitle}
+          />
+          <Spinner visible={!isScannerActive} />
+          <ProductModalComponent
+            {...modalParams}
+            store={store}
+            product={product}
+            stockName={store.stockName}
+            onSubmit={onProductSubmit}
+            onEditPress={onEditPress}
+            onCancelPress={onCancelPress}
+            onClose={handleCloseModal}
+            onChangeProductQuantity={setEditableProductQuantity}
+            onSelectStock={onSelectStock}
+          />
+        </View>
+        <EraseProductsAlert
+          visible={eraseProductsAlertVisible}
+          onPressPrimary={() => {
+            store.setProducts([]);
+            setEraseProductsAlertVisible(false);
+          }}
+          onPressSecondary={() => {
+            setEraseProductsAlertVisible(false);
+          }}
         />
-        <ScanProduct
-          onScan={onScanProduct}
-          isActive={!disableScanner && isScannerActive}
-          scannedProductCount={scannedProducts.length}
-          filteredType={filteredType}
-          onProductsListPress={onProductsListPress}
-          buttonListTitle={buttonListTitle}
-        />
-        <Spinner visible={!isScannerActive} />
-        <ProductModalComponent
-          {...modalParams}
-          store={store}
-          product={product}
-          stockName={store.stockName}
-          onSubmit={onProductSubmit}
-          onEditPress={onEditPress}
-          onCancelPress={onCancelPress}
-          onClose={handleCloseModal}
-          onChangeProductQuantity={setEditableProductQuantity}
-          onSelectStock={onSelectStock}
-        />
-      </View>
+      </>
     );
   },
 );

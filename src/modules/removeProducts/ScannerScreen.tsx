@@ -17,6 +17,7 @@ import {
   CurrentProductStoreType,
   ProductModel,
   StockProductStoreType,
+  SyncedProductStoreType,
 } from '../../stores/types';
 import { ToastType } from '../../contexts/types';
 import { InventoryUseType } from 'src/constants/common.enum';
@@ -32,7 +33,8 @@ const initModalParams: ProductModalParams = {
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
-  StockProductStoreType;
+  StockProductStoreType &
+  SyncedProductStoreType;
 
 export const ScannerScreen = observer(
   ({
