@@ -12,9 +12,12 @@ export const ResultProductsListItem = memo(({ item }: Props) => (
     {item.isRemoved ? null : (
       <SVGs.ExclamationMarkIcon color={colors.red} style={styles.error} />
     )}
-    <Text numberOfLines={1} ellipsizeMode="middle" style={styles.name}>
-      {item.name}
-    </Text>
+    <View style={styles.nameContainer}>
+      <Text numberOfLines={1} ellipsizeMode="tail" style={styles.name}>
+        {item.name}
+      </Text>
+      <Text style={styles.description}>{item.nameDetails}</Text>
+    </View>
     <Text style={styles.reservedCount}>{item.reservedCount}</Text>
   </View>
 ));
@@ -29,15 +32,23 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     paddingVertical: 8,
   },
+  description: {
+    color: colors.grayDark4,
+    fontSize: 12,
+    lineHeight: 16,
+    fontFamily: fonts.TT_Regular,
+  },
   error: {
     marginRight: 8,
   },
   name: {
-    flex: 3,
-    color: colors.blackSemiLight,
-    fontSize: 17,
-    lineHeight: 22,
+    color: colors.textNeutral,
+    fontSize: 15,
+    lineHeight: 20,
     fontFamily: fonts.TT_Regular,
+  },
+  nameContainer: {
+    flex: 3,
   },
   reservedCount: {
     flex: 1,
