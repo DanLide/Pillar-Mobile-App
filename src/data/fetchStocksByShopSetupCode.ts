@@ -122,6 +122,7 @@ export class FetchSSOMobileDevicesTask extends Task {
           device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
         );
         if (currentDevice) {
+          deviceInfoStore.setPartyRoleId(currentDevice.partyRoleId);
           await assignDeviceToSSOAPI(currentDevice.partyRoleId);
         } else {
           throw Error(i18n.t('devicesNotFound'));

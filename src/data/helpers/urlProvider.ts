@@ -402,9 +402,10 @@ export class URLProvider {
 
   getRNToken() {
     const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
-    const deviceId = this.ssoStore.getCurrentMobileDevice(
-      deviceInfoStore.getDeviceName,
-    )?.partyRoleId;
+    const deviceId =
+      deviceInfoStore.partyRoleId ??
+      this.ssoStore.getCurrentMobileDevice(deviceInfoStore.getDeviceName)
+        ?.partyRoleId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }

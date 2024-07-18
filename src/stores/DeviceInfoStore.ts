@@ -4,6 +4,7 @@ import { getVersion } from 'react-native-device-info';
 
 export class DeviceInfoStore {
   @observable deviceName: string;
+  @observable partyRoleId?: number;
   @observable version: string;
 
   constructor() {
@@ -25,5 +26,9 @@ export class DeviceInfoStore {
 
   @action setDeviceName(deviceName: string) {
     this.deviceName = deviceName;
+  }
+
+  @action setPartyRoleId(partyRoleId: number) {
+    this.partyRoleId = partyRoleId;
   }
 }
