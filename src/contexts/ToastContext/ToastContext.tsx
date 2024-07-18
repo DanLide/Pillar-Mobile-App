@@ -15,6 +15,7 @@ interface Props extends PropsWithChildren<ToastProviderProps> {
 
 const OFFSET_DEFAULT = 16;
 export const TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 62;
+export const MODAL_TOAST_OFFSET_ABOVE_SINGLE_BUTTON = 72;
 
 export const ToastProvider: React.FC<Props> = ({ children }) => {
   return (

@@ -8,6 +8,10 @@ import { ToastContextProvider } from '../ToastContext/ToastContext';
 const mockChildrenText = 'mockChildrenText';
 const mockOffset = 16;
 
+jest.mock('src/contexts/ToastContext/renderTypes', () => ({
+  renderType: [],
+}));
+
 describe('ToastContext', () => {
   it('render children', () => {
     const { getByText } = render(

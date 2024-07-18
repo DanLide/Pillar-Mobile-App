@@ -8,6 +8,7 @@ import {
   Text,
   StyleProp,
   ViewStyle,
+  Pressable,
 } from 'react-native';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
@@ -32,11 +33,13 @@ interface Props {
   footerComponent?: JSX.Element | null;
   containerStyle?: StyleProp<ViewStyle>;
   inputContainerStyle?: StyleProp<ViewStyle>;
-  isCreateJobAvailable?: boolean;
+  isCreateJobButton?: boolean;
+  isCreateJobLink?: boolean;
   isJobsWithNoRepairOrder?: boolean;
   productJobs?: JobModel[];
 
   onPressItem: (job: JobModel) => void;
+  updateJobSelectModal?: (showModal: boolean, number?: string) => void;
 }
 
 export const JobsList: React.FC<Props> = observer(
@@ -47,9 +50,11 @@ export const JobsList: React.FC<Props> = observer(
     containerStyle,
     inputContainerStyle,
     onPressItem,
-    isCreateJobAvailable,
+    isCreateJobButton,
+    isCreateJobLink,
     isJobsWithNoRepairOrder,
     productJobs,
+    updateJobSelectModal,
   }) => {
     const { t } = useTranslation();
     const listRef = useRef<FlatList | null>(null);
@@ -116,8 +121,22 @@ export const JobsList: React.FC<Props> = observer(
       setFilterValue(text);
     };
 
-    const openJobModal = () =>
-      navigate(AppNavigator.CreateJobModal, { onSubmit: onFetchJobs });
+    const openCreateJobButton = () => {
+      navigate(AppNavigator.CreateJobModal, {
+        onSubmit: onFetchJobs,
+      });
+    };
+
+    const openCreateJobLink = () => {
+      updateJobSelectModal?.(false);
+      navigate(AppNavigator.CreateJobModal, {
+        onSubmit: async (number: string) => {
+          await onFetchJobs();
+          updateJobSelectModal?.(true, number);
+        },
+        beforeBack: () => updateJobSelectModal?.(true),
+      });
+    };
 
     if (isLoading) {
       return <ActivityIndicator size="large" style={styles.loading} />;
@@ -160,18 +179,26 @@ export const JobsList: React.FC<Props> = observer(
           renderItem={renderJobListItem}
           ref={listRef}
         />
-        {footerComponent
-          ? footerComponent
-          : isCreateJobAvailable && (
-              <View style={styles.buttons}>
-                <Button
-                  title={t('createRepairOrder')}
-                  type={ButtonType.secondary}
-                  buttonStyle={styles.createJobButton}
-                  onPress={openJobModal}
-                />
-              </View>
-            )}
+
+        {isCreateJobButton && (
+          <View style={styles.buttons}>
+            <Button
+              title={t('createRepairOrder')}
+              type={ButtonType.secondary}
+              buttonStyle={styles.createJobButton}
+              onPress={openCreateJobButton}
+            />
+          </View>
+        )}
+
+        {isCreateJobLink && (
+          <Pressable style={styles.createJobLink} onPress={openCreateJobLink}>
+            <SVGs.PlusIcon color={colors.purpleDark} width={14} height={14} />
+            <Text style={styles.createJobLinkText}>{t('createNewRO')}</Text>
+          </Pressable>
+        )}
+
+        {footerComponent}
       </>
     );
   },
@@ -226,5 +253,19 @@ const styles = StyleSheet.create({
   buttons: { padding: 16, marginTop: 'auto' },
   createJobButton: {
     width: '100%',
+  },
+  createJobLink: {
+    backgroundColor: colors.grayLight,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 9,
+  },
+  createJobLinkText: {
+    fontFamily: fonts.TT_Bold,
+    color: colors.purpleDark3,
+    fontSize: 13,
+    lineHeight: 18,
+    paddingLeft: 8,
   },
 });

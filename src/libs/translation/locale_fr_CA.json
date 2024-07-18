@@ -360,5 +360,6 @@
   "noRepairOrder": "Non Demandes de réparations",
   "valueCannotBe0": "value cannot be 0",
   "mustBeGreaterThan": "must be greater than",
-  "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value"
+  "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value",
+  "createNewRO": ""
 }

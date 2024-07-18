@@ -49,7 +49,7 @@ const SelectJobComponent = () => {
         onPressItem={onSelectJob}
         containerStyle={styles.jobListBackground}
         inputContainerStyle={styles.input}
-        isCreateJobAvailable
+        isCreateJobButton
       />
     </SafeAreaView>
   );

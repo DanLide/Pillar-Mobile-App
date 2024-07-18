@@ -153,7 +153,10 @@ export type HomeStackParamList = {
   [AppNavigator.ConfigureDeviceStack]: undefined;
   [AppNavigator.Settings]: undefined;
   [AppNavigator.AlphaAlertScreen]: undefined;
-  [AppNavigator.CreateJobModal]: { onSubmit: () => void };
+  [AppNavigator.CreateJobModal]: {
+    onSubmit: (number: string) => void;
+    beforeBack?: () => void;
+  };
 };
 
 export type RemoveStackParamList = {
