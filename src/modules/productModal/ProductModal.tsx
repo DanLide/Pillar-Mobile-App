@@ -29,6 +29,10 @@ import { StockLocationListModal } from '../orders/components';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { ordersStore } from '../orders/stores';
 import { renderType } from 'src/contexts/ToastContext/renderTypes';
+import {
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from 'src/contexts';
 
 export enum ProductModalType {
   Remove,
@@ -370,17 +374,22 @@ export const ProductModal = memo(
         topOffset={topOffset}
         semiTitle={title}
       >
-        <Carousel
-          ref={carouselRef}
-          loop={false}
-          width={width}
-          height={height - headerHeight - MODAL_HEADER_HEIGHT}
-          autoPlay={false}
-          enabled={false}
-          data={tabs}
-          scrollAnimationDuration={500}
-          renderItem={renderItem}
-        />
+        <ToastContextProvider
+          duration={0}
+          offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}
+        >
+          <Carousel
+            ref={carouselRef}
+            loop={false}
+            width={width}
+            height={height - headerHeight - MODAL_HEADER_HEIGHT}
+            autoPlay={false}
+            enabled={false}
+            data={tabs}
+            scrollAnimationDuration={500}
+            renderItem={renderItem}
+          />
+        </ToastContextProvider>
         <Toast ref={toastRef} renderToast={TOAST_SUCCESS_CREATE_JOB} />
       </Modal>
     );
