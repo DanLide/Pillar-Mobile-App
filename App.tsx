@@ -27,7 +27,7 @@ import autoLogoutService, {
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
-import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
+import { getSSORNToken, getUsernames } from 'src/helpers/storage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import { ToastProvider } from 'src/contexts';
 
@@ -85,8 +85,9 @@ const App = observer(() => {
     };
   }, []);
 
-  const getSSORNTokenData = useCallback(async () => {
-    const data = await getSSORNToken();
+  const getSSORNTokenData = useCallback(() => {
+    const data = getSSORNToken();
+
     if (data) {
       ssoStore.setCurrentSSO(data.sso);
       ssoStore.setDeviceConfiguration(true);
@@ -97,8 +98,8 @@ const App = observer(() => {
     getSSORNTokenData();
   }, [getSSORNTokenData]);
 
-  const getUsernamesData = useCallback(async () => {
-    const data = await getUsernames();
+  const getUsernamesData = useCallback(() => {
+    const data = getUsernames();
     if (data && data.usernames) {
       authStore.setUsernames(data.usernames);
     }

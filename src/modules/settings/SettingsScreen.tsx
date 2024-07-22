@@ -16,7 +16,7 @@ import { WidthType } from 'src/components/Separator';
 import { colors, fonts, SVGs } from 'src/theme';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import AlertWrapper from 'src/contexts/AlertWrapper';
-import { cleanKeychain } from 'src/helpers/localStorage';
+import { cleanKeychain } from 'src/helpers/storage';
 import { permissionProvider } from 'src/data/providers';
 import { onRemoveDeviceFromSSO } from 'src/data/removeDeviceFromSSO';
 import { AppNavigator } from 'src/navigation/types';
@@ -140,7 +140,7 @@ export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
 
   const handleResetConfirm = useCallback(async () => {
     await onRemoveDeviceFromSSO();
-    await cleanKeychain();
+    cleanKeychain();
     closeAlert();
     ssoStore.setDeviceConfiguration(false);
     authStore.logOut();

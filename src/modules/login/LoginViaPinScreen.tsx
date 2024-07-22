@@ -27,6 +27,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { onLoginWithToken } from 'src/data/login';
 import TokenParser from './components/TokenParser';
 import { URLProvider } from 'src/data/helpers';
+import { useToastMessage } from 'src/hooks';
+import { ToastType } from 'src/contexts/types';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -43,6 +45,7 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
   const [userIdToLoginWithoutPIN, setUserIdToLoginWithoutPIN] = useState<
     null | string
   >(null);
+  const { showToast } = useToastMessage();
 
   // temp fix after back will be done
   const loginMagicLink = useMemo(
@@ -53,13 +56,18 @@ export const LoginViaPinScreen = observer(({ navigation }: Props) => {
     [userIdToLoginWithoutPIN],
   );
 
-  const fetchUsers = () => {
-    fetchSSOUsers(ssoStore);
-  };
+  const fetchUsers = useCallback(async () => {
+    const error = await fetchSSOUsers(ssoStore);
+    if (error) {
+      showToast(t('ssoUserFetchingError'), {
+        type: ToastType.Error,
+      });
+    }
+  }, [showToast, t]);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
 
   const onPressTab = (index: number) => {
     if (selectedTabIndex === index) return;

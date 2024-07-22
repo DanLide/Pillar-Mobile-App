@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { authStore } from 'src/stores';
-import { getUsernames, setUsernames } from 'src/helpers/localStorage';
+import { getUsernames, setUsernames } from 'src/helpers/storage';
 import Pdf from 'react-native-pdf';
 
 import en_US_AlphaBetaAgreement from 'assets/pdf/AlphaBetaAgreementEN.pdf';
@@ -17,11 +17,11 @@ const allAlphaBetaAgreement: termsType = {
 
 export const AlphaAlertScreen = () => {
   const { i18n } = useTranslation();
-  const updateUsernames = useCallback(async () => {
+  const updateUsernames = useCallback(() => {
     const username = authStore.getUserName;
     if (username) {
-      await setUsernames(username);
-      const usernames = await getUsernames();
+      setUsernames(username);
+      const usernames = getUsernames();
       if (usernames && usernames.usernames) {
         authStore.setUsernames(usernames.usernames);
       }

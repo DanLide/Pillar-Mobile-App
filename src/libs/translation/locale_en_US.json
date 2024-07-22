@@ -361,5 +361,6 @@
   "valueCannotBe0": "value cannot be 0",
   "mustBeGreaterThan": "must be greater than",
   "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value",
-  "createNewRO": "Create New RO"
+  "createNewRO": "Create New RO",
+  "ssoUserFetchingError": "SSO User fetching error!"
 }

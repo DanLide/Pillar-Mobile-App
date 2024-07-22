@@ -1,5 +1,5 @@
 import { Task, TaskExecutor } from './helpers';
-import { getSSORNToken } from 'src/helpers/localStorage';
+import { getSSORNToken } from 'src/helpers/storage';
 import { getLoginLinkAPI, setPinAPI } from 'src/data/api/login';
 import { LoginLinkStore } from 'src/modules/login/stores';
 
@@ -45,7 +45,7 @@ class GetRNToken extends Task {
   }
 
   async run() {
-    const rnToken = await getSSORNToken();
+    const rnToken = getSSORNToken();
 
     if (!rnToken) throw new Error();
 

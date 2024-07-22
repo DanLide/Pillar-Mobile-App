@@ -17,7 +17,7 @@ import {
 } from './api/ssoAPI';
 import { getFetchStockByPartyRoleIdAPI } from './api/stocksAPI';
 import { mapSingle } from './helpers/utils';
-import { setSSORNToken } from 'src/helpers/localStorage';
+import { setSSORNToken } from 'src/helpers/storage';
 import { authStore, deviceInfoStore } from 'src/stores';
 
 interface FetchStocksContext {
