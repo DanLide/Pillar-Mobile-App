@@ -81,7 +81,7 @@ export const useManageProducts = (store: ManageProductsStore) => {
 
   const validateUpc = useCallback(
     (upc?: string) => {
-      if (!modalParams.isEdit || !upc) return;
+      if (!modalParams.isEdit || !upc || !store.isUpcChanged) return;
 
       const upcLengthValidation = [12, 13].includes(upc.length);
 
@@ -116,9 +116,9 @@ export const useManageProducts = (store: ManageProductsStore) => {
 
       if (!store.isProductChanged) return;
 
-      const validationError = validateUpc(product.upc);
+      const upcValidationError = validateUpc(product.upc);
 
-      if (validationError) return validationError;
+      if (upcValidationError) return upcValidationError;
 
       const updateProductFunction = modalParams.isEdit
         ? onUpdateProduct
@@ -141,7 +141,7 @@ export const useManageProducts = (store: ManageProductsStore) => {
         });
       }
     },
-    [modalParams.isEdit, showToast, store, validateUpc],
+    [modalParams.isEdit, showToast, store, t, validateUpc],
   );
 
   return {
