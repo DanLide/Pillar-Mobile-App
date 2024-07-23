@@ -54,6 +54,10 @@ export class ManageProductsStore extends BaseProductsStore {
     );
   }
 
+  @computed get isUpcChanged(): boolean {
+    return !equals(this.updatedProduct?.upc, this.currentProduct?.upc);
+  }
+
   @action setUpdatedProduct(product?: ProductModel) {
     this.updatedProduct = product;
   }
