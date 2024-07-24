@@ -122,6 +122,12 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     }
   };
 
+  const onNavigateToHome = () => {
+    navigation.reset({
+      routes: [{ name: AppNavigator.Drawer }],
+    });
+  };
+
   useEffect(() => {
     if (
       locationPermission !== RESULTS.GRANTED &&
@@ -237,6 +243,13 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
         case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
         case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
         case OrderTitleByStatusType[OrderStatusType.CLOSED]:
+          return (
+            <Button
+              type={ButtonType.primary}
+              title={t('home')}
+              onPress={onNavigateToHome}
+            />
+          );
         case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
         default:
           return null;
