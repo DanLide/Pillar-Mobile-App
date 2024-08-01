@@ -1,4 +1,4 @@
-import { isNil } from 'ramda';
+import { isNil, forEachObjIndexed } from 'ramda';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   LayoutChangeEvent,
@@ -26,16 +26,17 @@ import ProductListButton from '../ProductListButton';
 import Scanner from '../Scanner';
 import { TooltipBar } from '../TooltipBar';
 import {
-  BarcodeStateItem,
   Coordinate,
   ScanProductProps,
+  BarcodesMemoryStateItem,
 } from './ScanProduct.types';
 import {
   AUTOSCAN_TIMEOUT_MS,
-  DISSAPIERED_QR_CODE_DELAY_MS,
   FLASH_TIME_MS,
   NORMAL_ZOOM,
   ZOOM_IN,
+  LIMIT_SCAN_FREQUENCY_MS,
+  BARCODE_LIFETIME_MS,
 } from './ScanProduct.const';
 import { HEIGHT, WIDTH, storageKeys } from 'src/constants';
 import {
@@ -86,7 +87,10 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
   const barcodesSharedValue = useSharedValue<Coordinate[]>([]);
 
   const scanSquareLayout = useRef<LayoutRectangle | null>(null);
-  const barcodesState = useRef<BarcodeStateItem[]>([]);
+  const barcodesState = useRef<Barcode[]>([]);
+  const barcodesMemoryState = useRef<BarcodesMemoryStateItem>({});
+  let previousScanTime = 0;
+  let timeStampAutoScanFocus = 0;
 
   const onCloseTooltip = useCallback(() => {
     setScannerTooltip(true);
@@ -174,6 +178,17 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
   };
 
   const onRead = (barcodes: Barcode[], frame) => {
+    const currentTime = new Date().getTime();
+
+    // Limit scanning frequency
+    const scanFrequency = Math.floor(currentTime / LIMIT_SCAN_FREQUENCY_MS);
+    if (previousScanTime !== scanFrequency) {
+      previousScanTime = scanFrequency;
+    } else {
+      return false;
+    }
+
+    // Return if no barcodes
     if (
       !frame ||
       !scannerLayoutRef.current ||
@@ -186,49 +201,24 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
 
     frameRef.current = frame;
 
-    let isBarcodesLengthUpdated = false;
-    const currentDate = new Date();
-
-    // adding and updating existing barcodes status
-    barcodes.forEach(updatedBarcode => {
-      const barcodeForUpdatingIndex = barcodesState.current.findIndex(
-        stateBarcode => {
-          return stateBarcode.rawValue === updatedBarcode.rawValue;
-        },
-      );
-
-      // updating existing barcodes status
-      if (barcodeForUpdatingIndex !== -1) {
-        barcodesState.current[barcodeForUpdatingIndex] = {
-          ...barcodesState.current[barcodeForUpdatingIndex],
-          ...updatedBarcode,
-          timeStampLastDetectionInFrame: currentDate,
-        };
-      } else {
-        // adding new barcode
-        isBarcodesLengthUpdated = true;
-        barcodesState.current.push({
-          ...updatedBarcode,
-          timeStampLastDetectionInFrame: currentDate,
-          timeStampAutoscanFocus: null,
-        });
-      }
+    // Stabilize scanning codes
+    barcodesState.current = [];
+    barcodes.forEach(barcode => {
+      if (isNil(barcode.rawValue)) return;
+      barcodesMemoryState.current[barcode.rawValue] = {
+        barcode: barcode,
+        time: currentTime,
+      };
     });
 
-    // filtering outdated codes
-    barcodesState.current = barcodesState.current?.filter(barcode => {
-      if (
-        currentDate - barcode.timeStampLastDetectionInFrame >
-        DISSAPIERED_QR_CODE_DELAY_MS
-      ) {
-        isBarcodesLengthUpdated = true;
-        return false;
+    forEachObjIndexed(memoryBarcode => {
+      if (currentTime - memoryBarcode.time < BARCODE_LIFETIME_MS) {
+        barcodesState.current.push(memoryBarcode.barcode);
       }
-      return true;
-    });
+    }, barcodesMemoryState.current);
 
     // need to rebuild react tree to mount/unmount elements
-    isBarcodesLengthUpdated && setBarcodesLength(barcodes.length);
+    setBarcodesLength(barcodesState.current.length);
 
     barcodesSharedValue.value = barcodesState.current?.map(barcode =>
       mapToScreenCoordinates(barcode.cornerPoints),
@@ -237,9 +227,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
     // autoscan logic below
     // reset timeStamp if another code appeared in Frame
     if (barcodesState.current.length !== 1) {
-      barcodesState.current.forEach(e => {
-        e.timeStampAutoscanFocus = null;
-      });
+      timeStampAutoScanFocus = 0;
       return;
     }
 
@@ -261,25 +249,21 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
 
     // reset, barcode moved from scan area
     if (!isBarcodeInCenter) {
-      singleBarcodeState.timeStampAutoscanFocus = null;
+      timeStampAutoScanFocus = 0;
       return;
     }
 
     // set time when frame qr`a state start satisfy to be autoscanned
-    if (singleBarcodeState.timeStampAutoscanFocus === null) {
-      singleBarcodeState.timeStampAutoscanFocus = currentDate;
+    if (timeStampAutoScanFocus === 0) {
+      timeStampAutoScanFocus = currentTime;
       return;
     }
 
     // autoscan
-    if (
-      singleBarcodeState.timeStampAutoscanFocus &&
-      currentDate - singleBarcodeState.timeStampAutoscanFocus >
-        AUTOSCAN_TIMEOUT_MS
-    ) {
+    if (currentTime - timeStampAutoScanFocus > AUTOSCAN_TIMEOUT_MS) {
       scanBarcode(singleBarcodeState?.rawValue);
       setAutoScanDone(true);
-      singleBarcodeState.timeStampAutoscanFocus = null;
+      timeStampAutoScanFocus = 0;
     }
   };
 

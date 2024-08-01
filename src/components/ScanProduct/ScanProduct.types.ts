@@ -29,7 +29,9 @@ export type QRButtonProps = {
   barcodeFormat: Barcode['format'];
 };
 
-export type BarcodeStateItem = Barcode & {
-  timeStampLastDetectionInFrame: Date;
-  timeStampAutoscanFocus: Date | null;
+export type BarcodesMemoryStateItem = {
+  [key: string]: {
+    barcode: Barcode;
+    time: number;
+  };
 };
