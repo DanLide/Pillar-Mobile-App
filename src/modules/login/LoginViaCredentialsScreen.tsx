@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Pressable, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
@@ -32,6 +32,7 @@ import { useSingleToast } from '../../hooks';
 import { authStore } from '../../stores';
 import { SVGs, colors, fonts } from '../../theme';
 import { LoginFormStore } from './stores/LoginFormStore';
+import { URLProvider } from 'src/data/helpers';
 
 type Props = NativeStackScreenProps<
   UnauthStackParamsList,
@@ -84,6 +85,7 @@ const LoginViaCredentialsScreenContent = observer(
       loginFormRef.username,
       route.params?.type,
       showToast,
+      t,
     ]);
 
     const onChangeUsername = (value: string) => {
@@ -105,6 +107,11 @@ const LoginViaCredentialsScreenContent = observer(
       await ssoLogin();
     };
 
+    const onPressForgotUsernamePassword = () => {
+      const url = new URLProvider().webURL();
+      Linking.openURL(url);
+    };
+
     useEffect(() => {
       switch (route.params?.type) {
         case LoginType.ConfigureShopDevice:
@@ -120,7 +127,7 @@ const LoginViaCredentialsScreenContent = observer(
         default:
           break;
       }
-    }, [navigation, route.params?.type]);
+    }, [navigation, route.params?.type, t]);
 
     return (
       <View style={styles.container}>
@@ -152,9 +159,14 @@ const LoginViaCredentialsScreenContent = observer(
           rightLabel={t('required')}
         />
         <View style={styles.secondaryButtonsContainer}>
-          <Text style={styles.secondaryButton}>{t('forgotUsername')}</Text>
+          <Pressable onPress={onPressForgotUsernamePassword}>
+            <Text style={styles.secondaryButton}>{t('forgotUsername')}</Text>
+          </Pressable>
+
           <View style={styles.separator} />
-          <Text style={styles.secondaryButton}>{t('forgotPassword')}</Text>
+          <Pressable onPress={onPressForgotUsernamePassword}>
+            <Text style={styles.secondaryButton}>{t('forgotPassword')}</Text>
+          </Pressable>
         </View>
         <View style={styles.ssoLoginContainer}>
           <Text style={styles.text}>{t('mmmEmployee')} ?</Text>

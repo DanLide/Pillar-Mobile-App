@@ -39,7 +39,7 @@ export class URLProvider {
       order: { apiUri: string };
       shopSetup: { apiUri: string };
       shopSetupAuthentication: { apiUri: string };
-      base: { apiUri: string };
+      base: { apiUri: string; webURL: string };
     };
   };
 
@@ -443,5 +443,9 @@ export class URLProvider {
 
   removeDeviceFromSSO(id: string) {
     return `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignedDevice/${id}`;
+  }
+
+  webURL() {
+    return `${this.currentEnv.modules.base.webURL}`;
   }
 }

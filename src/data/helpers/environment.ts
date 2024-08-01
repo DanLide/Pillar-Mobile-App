@@ -8,6 +8,7 @@ export const environment = {
   },
   modules: {
     base: {
+      webURL: `${Config.WEB_URL}`,
       apiUri: `${Config.API_URL}`,
     },
     pisaUser: {
