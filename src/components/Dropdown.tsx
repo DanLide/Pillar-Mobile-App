@@ -177,7 +177,7 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
           <Text style={styles.pickerLabel}>{label}</Text>
         </View>
         {SelectedOption}
-        {!disabled && <SVGs.DownIcon color={colors.black} />}
+        {!disabled && data.length > 1 && <SVGs.DownIcon color={colors.black} />}
       </TouchableOpacity>
 
       {isOpen && (
@@ -219,12 +219,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-  },
-  flatListContentContainer: {
-    flexGrow: 1,
-  },
-  flex: {
-    flex: 1,
   },
   option: {
     alignItems: 'flex-start',
