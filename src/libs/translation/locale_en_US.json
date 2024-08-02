@@ -264,7 +264,6 @@
   "toAssignOrderToDistributor": "to assign \nPO and release order to you Distributor",
   "youHaveSuccessfullySubmittedItems": "You have successfully submitted the following items",
   "purchaseOrderNumber": "Purchase Order Number",
-  "yourOrderWillBeSentEmail": "Your order will be sent via \nemail and/or EDI to your distributor",
   "sendOrder": "Send Order",
   "recommendedItemsWerentLoaded": "Recommended items weren't loaded. Please try again",
   "recommendedItemsAdded": "{{count}} Recommended items added",

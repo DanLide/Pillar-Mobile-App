@@ -264,7 +264,6 @@
   "toAssignOrderToDistributor": "pour attribuer un \nbon de commande et remettre la commande à votre distributeur",
   "youHaveSuccessfullySubmittedItems": "Vous avez soumis avec succès les articles suivants",
   "purchaseOrderNumber": "Le numéro de bon de commande",
-  "yourOrderWillBeSentEmail": "Votre commande sera envoyée par \ncourriel et/ou par échange électronique de données (EDI) à votre distributeur.",
   "sendOrder": "Envoyer la commande",
   "recommendedItemsWerentLoaded": "Les articles recommandés n’étaient pas chargés. Veuillez essayer de nouveau.",
   "recommendedItemsAdded": "{{count}} Articles recommandés ajoutés",
