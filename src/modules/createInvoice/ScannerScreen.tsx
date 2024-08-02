@@ -26,6 +26,8 @@ import {
   AppNavigator,
   TCreateInvoiceNavScreenProps,
 } from 'src/navigation/types';
+import { useToastMessage } from 'src/hooks';
+import { ToastType } from 'src/contexts/types';
 
 type BaseProductsStore = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -41,49 +43,62 @@ export const ScannerScreen = observer(
     navigation: { navigate },
   }: TCreateInvoiceNavScreenProps<AppNavigator.ScannerScreen>) => {
     const { t } = useTranslation();
+    const { showToast } = useToastMessage();
     const [modalParams, setModalParams] =
       useState<ProductModalParams>(initModalParams);
     const [alertParams, setAlertParams] = useState<AlertWrapperProps>();
 
     const store = useRef<BaseProductsStore>(createInvoiceStore).current;
 
-    const onProductScan = useCallback<(product: ProductModel) => Promise<void>>(
-      async product =>
-        setModalParams({
-          type: ProductModalType.CreateInvoice,
-          maxValue: store.getMaxValue(product),
-          onHand: store.getOnHand(product),
-        }),
-      [store],
-    );
-
     const onCloseModal = useCallback(() => setModalParams(initModalParams), []);
 
-    const handleToastPress = (actionType: ToastActionType) => {
-      switch (actionType) {
-        case ToastActionType.Details: {
-          setAlertParams({
-            visible: true,
-            message: (
-              <Text style={styles.text}>
-                {t('invoicingSettingsCanBeAddedAt')}
-              </Text>
-            ),
-            onPressSecondary: () => {
-              setAlertParams(undefined);
-            },
-          });
-          break;
+    const handleToastPress = useCallback(
+      (actionType: ToastActionType) => {
+        switch (actionType) {
+          case ToastActionType.Details: {
+            setAlertParams({
+              visible: true,
+              message: (
+                <Text style={styles.text}>
+                  {t('invoicingSettingsCanBeAddedAt')}
+                </Text>
+              ),
+              onPressSecondary: () => {
+                setAlertParams(undefined);
+              },
+            });
+            break;
+          }
+          default: {
+            return null;
+          }
         }
-        default: {
-          return null;
-        }
-      }
-    };
+      },
+      [t],
+    );
 
     const onProductListPress = useCallback(
       () => navigate(AppNavigator.CreateInvoiceProductsScreen),
       [navigate],
+    );
+
+    const onProductScan = useCallback(
+      (product: ProductModel) => {
+        if (product.isRecoverable) {
+          setModalParams({
+            type: ProductModalType.CreateInvoice,
+            maxValue: store.getMaxValue(product),
+            onHand: store.getOnHand(product),
+          });
+        } else {
+          showToast(t('cannotAddToInvoiceMissingPricing'), {
+            type: ToastType.DetailedScanError,
+            offsetType: 'aboveButtons',
+            onPress: handleToastPress,
+          });
+        }
+      },
+      [handleToastPress, showToast, store, t],
     );
 
     return (

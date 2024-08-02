@@ -183,6 +183,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           return;
         }
 
+        setIsScannerActive(true);
         onProductScan?.(product);
       },
       [onFetchProduct, store, handleFetchError, onProductScan, handleScanError],

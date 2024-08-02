@@ -360,6 +360,7 @@
   "valueCannotBe0": "La valeur ne peut pas être 0",
   "mustBeGreaterThan": "doit être supérieure à",
   "piecesPerContainerMinimumValue": "Pièces par conteneur + Valeur minimale",
-  "createNewRO": "",
-  "ssoUserFetchingError": ""
+  "createNewRO": "Créer une nouvelle demande de réparations",
+  "ssoUserFetchingError": "",
+  "cannotAddToInvoiceMissingPricing": ""
 }

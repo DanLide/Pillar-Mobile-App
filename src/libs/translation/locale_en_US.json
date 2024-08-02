@@ -361,5 +361,6 @@
   "mustBeGreaterThan": "must be greater than",
   "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value",
   "createNewRO": "Create New RO",
-  "ssoUserFetchingError": "SSO User fetching error!"
+  "ssoUserFetchingError": "SSO User fetching error!",
+  "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info"
 }
