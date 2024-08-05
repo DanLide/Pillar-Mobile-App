@@ -29,7 +29,10 @@ import { Separator } from './Separator';
 export { KeyboardToolButton } from './KeyboardToolbarButton';
 
 export * from './ScanProduct';
-export * from './Spacer';
+export { Spacer } from './Spacer';
+export { ButtonCluster } from './ButtonCluster';
+
+export * from './modals';
 
 export {
   Separator,

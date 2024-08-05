@@ -30,6 +30,8 @@ import { colors, fonts } from './src/theme';
 import { getSSORNToken, getUsernames } from 'src/helpers/storage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import { ToastProvider } from 'src/contexts';
+import { ModalProvider } from 'react-native-modalfy';
+import { MODAL_STACK } from 'src/components';
 
 if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
@@ -151,9 +153,11 @@ const App = observer(() => {
         <KeyboardProvider>
           <ToastProvider>
             <SafeAreaProvider>
-              <NavigationContainer>
-                <AppStack />
-              </NavigationContainer>
+              <ModalProvider stack={MODAL_STACK}>
+                <NavigationContainer>
+                  <AppStack />
+                </NavigationContainer>
+              </ModalProvider>
             </SafeAreaProvider>
           </ToastProvider>
         </KeyboardProvider>

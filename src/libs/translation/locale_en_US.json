@@ -8,6 +8,7 @@
   "loginWithSso": "Log In with Single Sign-On (SSO)",
   "changeStockLocationWarning": "If you change the stock location now, all products added to this list will be deleted.",
   "areYouSureYouWantToContinue": "Are you sure you want to continue?",
+  "areYouSureYouWantTo": "Are you sure you want to",
   "invoiceNotGenerated": "The Invoice was not generated. Please try again.",
   "complete": "Complete",
   "scan": "Scan",
@@ -201,7 +202,7 @@
   "bluetoothSuccessfullyConnected": "Bluetooth successfully connected",
   "bluetoothNotConnected": "Bluetooth not connected",
   "makeSureBluetoothIsEnabled": "Make sure Bluetooth is enabled, bluetooth not connected",
-  "goBack": "Go Back?",
+  "goBack": "Go Back",
   "ifYouGoBack1": "If you",
   "ifYouGoBack2": "go back",
   "ifYouGoBack3": "now, all products added to this list",
@@ -362,5 +363,6 @@
   "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value",
   "createNewRO": "Create New RO",
   "ssoUserFetchingError": "SSO User fetching error!",
+  "stay": "Stay",
   "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info"
 }

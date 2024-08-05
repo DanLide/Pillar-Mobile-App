@@ -8,6 +8,7 @@
   "loginWithSso": "Ouvrir une session avec authentification unique (SSO)",
   "changeStockLocationWarning": "Si vous changez l’emplacement du stock maintenant, tous les produits ajoutés à cette liste seront supprimés.",
   "areYouSureYouWantToContinue": "Êtes-vous certain de vouloir continuer?",
+  "areYouSureYouWantTo": "Êtes-vous certain de vouloir",
   "invoiceNotGenerated": "La facture n’a pas été générée. Veuillez réessayer.",
   "complete": "Terminé",
   "scan": "Balayer",
@@ -201,7 +202,7 @@
   "bluetoothSuccessfullyConnected": "Connexion Bluetooth réussie",
   "bluetoothNotConnected": "Bluetooth non connecté",
   "makeSureBluetoothIsEnabled": "Vérifiez si la connexion Bluetooth est activée, bluetooth non connecté",
-  "goBack": "Retour?",
+  "goBack": "Retour",
   "ifYouGoBack1": "Si vous",
   "ifYouGoBack2": "retour",
   "ifYouGoBack3": "maintenant, tous les produits ajoutés à cette liste",
@@ -360,7 +361,7 @@
   "valueCannotBe0": "La valeur ne peut pas être 0",
   "mustBeGreaterThan": "doit être supérieure à",
   "piecesPerContainerMinimumValue": "Pièces par conteneur + Valeur minimale",
+  "stay": "",
   "createNewRO": "Créer une nouvelle demande de réparations",
-  "ssoUserFetchingError": "",
   "cannotAddToInvoiceMissingPricing": ""
 }

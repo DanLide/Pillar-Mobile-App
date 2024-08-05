@@ -49,7 +49,8 @@ import { OrderType } from 'src/constants/common.enum';
 import permissionStore from '../permissions/stores/PermissionStore';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { KeyboardToolbar } from 'react-native-keyboard-controller';
-import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
+import { useModal } from 'react-native-modalfy';
+import { IModalStackParamsList } from 'src/types';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -61,6 +62,7 @@ const SCAN_ICON_PROPS: SvgProps = {
 
 const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
   const { t } = useTranslation();
+  const { openModal } = useModal<IModalStackParamsList>();
   const [isCreateOrderLoading, setIsCreateOrderLoading] = useState(false);
   const { showToast, hideAll } = useSingleToast();
   const locationPermission = permissionStore.locationPermission;
@@ -82,13 +84,16 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
   );
   const [isLocationPermissionRequested, setIsLocationPermissionRequested] =
     useState(false);
-  const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
-    useState(false);
 
   useCustomGoBack({
     callback: event => {
       if (ordersStore.getNotSyncedProducts.length) {
-        setEraseProductsAlertVisible(true);
+        openModal('EraseProductModal', {
+          onAction: () => {
+            ordersStore.setProducts([]);
+            ordersStore.setSupplier(undefined);
+          },
+        });
         return;
       }
 
@@ -245,17 +250,6 @@ const ReceiveBackorderScreen = observer(({ navigation }: Props) => {
         onChangeProductQuantity={setEditableProductQuantity}
       />
       <KeyboardToolbar button={KeyboardToolButton} showArrows={false} />
-      <EraseProductsAlert
-        visible={eraseProductsAlertVisible}
-        onPressPrimary={() => {
-          ordersStore.setProducts([]);
-          ordersStore.setSupplier(undefined);
-          setEraseProductsAlertVisible(false);
-        }}
-        onPressSecondary={() => {
-          setEraseProductsAlertVisible(false);
-        }}
-      />
     </View>
   );
 });

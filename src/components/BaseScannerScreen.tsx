@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { BarcodeFormat } from 'vision-camera-code-scanner';
 import { ToastType } from '../contexts/types';
@@ -30,7 +30,9 @@ import { Spinner } from './Spinner';
 import { ToastMessage } from './ToastMessage';
 import { commonStyles } from 'src/theme';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
-import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
+
+import { useModal } from 'react-native-modalfy';
+import { IModalStackParamsList } from 'src/types';
 
 type StoreModel = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -109,14 +111,15 @@ export const BaseScannerScreen: React.FC<Props> = observer(
     const { t } = useTranslation();
     const [isScannerActive, setIsScannerActive] = useState(true);
     const { showToast } = useSingleToast();
+    const { openModal } = useModal<IModalStackParamsList>();
     const scannedProducts = store.getProducts;
-    const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
-      useState(false);
 
     useCustomGoBack({
       callback: (event, navigation) => {
         if (!disableAlert && store.getNotSyncedProducts.length) {
-          setEraseProductsAlertVisible(true);
+          openModal('EraseProductModal', {
+            onAction: () => store.setProducts([]),
+          });
           return;
         }
 
@@ -275,16 +278,6 @@ export const BaseScannerScreen: React.FC<Props> = observer(
             onSelectStock={onSelectStock}
           />
         </View>
-        <EraseProductsAlert
-          visible={eraseProductsAlertVisible}
-          onPressPrimary={() => {
-            store.setProducts([]);
-            setEraseProductsAlertVisible(false);
-          }}
-          onPressSecondary={() => {
-            setEraseProductsAlertVisible(false);
-          }}
-        />
       </>
     );
   },
