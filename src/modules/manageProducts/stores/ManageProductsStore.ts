@@ -107,7 +107,10 @@ export class ManageProductsStore extends BaseProductsStore {
     const isEachPeace =
       this.updatedProduct.inventoryUseTypeId === InventoryUseType.Each;
     const currentMaxValue = this.updatedProduct.max ?? 0;
-    const minMaxValue = min + (this.updatedProduct.unitsPerContainer ?? 0);
+    const minMaxValue = Math.max(
+      0,
+      min + (this.updatedProduct.unitsPerContainer ?? 0) - 1,
+    );
 
     if (isEachPeace) {
       max = currentMaxValue >= minMaxValue ? currentMaxValue : minMaxValue;
@@ -128,7 +131,7 @@ export class ManageProductsStore extends BaseProductsStore {
     const isMaxDecrements = (this.updatedProduct.max ?? 0) > max;
     const maxMinValue = Math.max(
       0,
-      max - (this.updatedProduct.unitsPerContainer ?? 0),
+      max - (this.updatedProduct.unitsPerContainer ?? 0) + 1,
     );
 
     if (isEachPeace && isMaxDecrements) {
