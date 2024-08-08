@@ -360,7 +360,7 @@
   "noRepairOrder": "no Repair Order",
   "valueCannotBe0": "value cannot be 0",
   "mustBeGreaterThan": "must be greater than",
-  "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value",
+  "piecesPerContainerMinimumValue": "Pieces per Container + Minimum value - 1",
   "createNewRO": "Create New RO",
   "ssoUserFetchingError": "SSO User fetching error!",
   "stay": "Stay",
