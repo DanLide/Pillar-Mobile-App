@@ -16,6 +16,17 @@ export interface SvgPropsWithColors extends SvgProps {
   secondaryColor?: string;
 }
 
+export const ReturnOrderIcon = (props: SvgProps) => (
+  <Svg width={20} height={20} fill="none" {...props}>
+    <Path
+      fill="#313136"
+      fillRule="evenodd"
+      d="M6.667 7.604v4.528l3.75 1.47 3.75-1.47V7.604l-3.75-1.355-3.75 1.355Zm4.375 2.238 1.875-.676v2.226l-1.108.4-.767.278V9.842Zm-2.017 1.95-1.108-.4V9.166l1.875.676v2.228l-.767-.277Zm-.622-3.674 2.02-.73 2.02.73-2.02.729-2.02-.73ZM3.75 9.999a6.466 6.466 0 0 0 6.458 6.459 6.466 6.466 0 0 0 6.459-6.459 6.466 6.466 0 0 0-6.459-6.458 6.4 6.4 0 0 0-3.807 1.25h2.14v1.25H4.168V1.666h1.25v2.3a7.647 7.647 0 0 1 4.791-1.675c4.251 0 7.709 3.458 7.709 7.708 0 4.251-3.458 7.709-7.709 7.709-4.25 0-7.708-3.458-7.708-7.709h1.25Z"
+      clipRule="evenodd"
+    />
+  </Svg>
+);
+
 export const CloseIcon = (props: SvgProps) => (
   <Svg width={16} height={16} viewBox="0 0 16 16" fill="none" {...props}>
     <Path

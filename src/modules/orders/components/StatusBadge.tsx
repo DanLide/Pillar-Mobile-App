@@ -12,6 +12,7 @@ import { SVGs, colors } from '../../../theme';
 interface Props {
   orderStatusType: OrderStatusType | string;
   isString?: boolean;
+  isReturnOrder?: boolean;
 }
 
 export const OrderTitleByStatusType: Record<string, string> = {
@@ -63,13 +64,15 @@ export const getBadgeStyleByStatusType = (orderStatusType: string) => {
   }
 };
 
-export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
+export const StatusBadge: React.FC<Props> = ({
+  orderStatusType,
+  isString,
+  isReturnOrder,
+}) => {
   const { t } = useTranslation();
   const label = isString
     ? orderStatusType
-    : OrderTitleByStatusType[orderStatusType]
-    ? OrderTitleByStatusType[orderStatusType]
-    : undefined;
+    : OrderTitleByStatusType[orderStatusType];
 
   const badgeStyle = useMemo<StyleProp<ViewStyle>>(() => {
     if (isString) {
@@ -99,14 +102,19 @@ export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
       case OrderStatusType.POREQUIRED:
       case OrderStatusType.APPROVAL:
         return <SVGs.TransparentWarning />;
+      case OrderStatusType.CLOSED:
+        if (isReturnOrder) {
+          return <SVGs.ReturnOrderIcon />;
+        }
+        return undefined;
       default:
         return undefined;
     }
-  }, [orderStatusType]);
+  }, [orderStatusType, isReturnOrder]);
 
   return (
     <View style={styles.container}>
-      {label ? (
+      {label && (
         <ColoredTooltip
           title={
             label === 'Receiving'
@@ -116,7 +124,7 @@ export const StatusBadge: React.FC<Props> = ({ orderStatusType, isString }) => {
           textStyles={badgeStyle}
           icon={renderIcon}
         />
-      ) : null}
+      )}
     </View>
   );
 };

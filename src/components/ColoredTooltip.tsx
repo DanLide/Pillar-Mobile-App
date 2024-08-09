@@ -12,11 +12,13 @@ export const ColoredTooltip: React.FC<Props> = ({
   textStyles,
   icon,
 }) => (
-  <View style={[styles.container, textStyles]}>
+  <View
+    style={[styles.container, icon && styles.containerWithIcon, textStyles]}
+  >
     <Text numberOfLines={1} style={[styles.text, textStyles]}>
       {title}
     </Text>
-    {icon ? <View style={styles.icon}>{icon}</View> : null}
+    {!!icon && <View style={styles.icon}>{icon}</View>}
   </View>
 );
 
@@ -30,6 +32,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  containerWithIcon: {
+    paddingRight: 6,
+  },
   text: {
     fontSize: 13,
     lineHeight: 18,
@@ -37,6 +42,6 @@ const styles = StyleSheet.create({
     color: colors.green,
   },
   icon: {
-    paddingLeft: 6,
+    paddingLeft: 3,
   },
 });
