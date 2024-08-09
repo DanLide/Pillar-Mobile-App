@@ -1,6 +1,7 @@
 import { Config } from 'react-native-config';
 
 export const environment = {
+  env: Config.ENV,
   b2c: {
     clientId: `${Config.AUTH_CLIENT_ID}`,
     authority: `${Config.AUTH_URL}`,
@@ -62,5 +63,9 @@ export const environment = {
   },
   appInsights: {
     instrumentationKey: `${Config.INSTRUMENTATION_KEY}`,
+  },
+  tealium: {
+    account: Config.TEALIUM_ACCOUNT,
+    profile: Config.TEALIUM_PROFILE,
   },
 };

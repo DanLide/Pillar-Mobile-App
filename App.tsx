@@ -18,6 +18,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 
 import { initI18n } from 'src/libs/translation';
+import { initTealium } from 'src/libs';
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
@@ -49,6 +50,7 @@ const App = observer(() => {
 
   useEffect(() => {
     initI18n();
+    initTealium();
   }, []);
 
   useEffect(() => {
