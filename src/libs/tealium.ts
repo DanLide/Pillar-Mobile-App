@@ -10,8 +10,8 @@ import {
 import { environment } from 'src/data/helpers/environment';
 
 const config: TealiumConfig = {
-  account: environment.tealium.account,
-  profile: environment.tealium.profile,
+  account: environment.tealium.account ?? '',
+  profile: environment.tealium.profile ?? '',
   environment: TealiumEnvironment.prod,
   dispatchers: [
     Dispatchers.Collect,
