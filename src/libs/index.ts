@@ -1,2 +1,2 @@
 export { useCaptuvoScanner } from './captuvo';
-export { initTealium } from './tealium';
+// export { initTealium } from './tealium';

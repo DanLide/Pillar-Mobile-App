@@ -19,7 +19,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-pod "tealium-react-native-swift", :path => '../node_modules/tealium-react-native/tealium-react-native-swift.podspec'
+# pod "tealium-react-native-swift", :path => '../node_modules/tealium-react-native/tealium-react-native-swift.podspec'
 
 abstract_target 'RepairStackAbstract' do
   config = use_native_modules!
