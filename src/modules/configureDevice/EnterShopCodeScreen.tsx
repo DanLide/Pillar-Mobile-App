@@ -11,7 +11,7 @@ import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/n
 import { ToastType } from 'src/contexts/types';
 import { useSingleToast } from 'src/hooks';
 import { AppNavigator, ConfigureDeviceStackParams } from 'src/navigation/types';
-import { Button, ButtonType } from '../../components';
+import { TextButton } from '../../components';
 import SecretCodeForm from '../../components/SecretCodeForm';
 import { colors, fonts } from '../../theme';
 
@@ -80,35 +80,31 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
   };
 
   return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <View style={styles.container}>
-        {isLoading ? (
-          <View style={styles.loader}>
-            <ActivityIndicator
-              size="large"
-              color="white"
-              style={styles.activityIndicator}
-            />
-          </View>
-        ) : null}
-        <Text style={styles.formDescription}>
-          {t('thisWillBeInYourActivationEmail')}
-        </Text>
-        <View>
-          <SecretCodeForm handleConfirm={handleSubmitForm} cellCount={5} />
-        </View>
-        <View style={styles.footer}>
-          <Text style={styles.text}>{t('facilityCodeNotWorking')}</Text>
-          <Button
-            type={ButtonType.primary}
-            buttonStyle={styles.shopCodeButton}
-            textStyle={styles.shopCodeButtonText}
-            title={t('scanYourQRCodeInstead')}
-            onPress={onPressScanShopCode}
+    <View style={styles.container}>
+      {isLoading ? (
+        <View style={styles.loader}>
+          <ActivityIndicator
+            size="large"
+            color="white"
+            style={styles.activityIndicator}
           />
         </View>
+      ) : null}
+      <Text style={styles.formDescription}>
+        {t('thisWillBeInYourActivationEmail')}
+      </Text>
+      <View>
+        <SecretCodeForm handleConfirm={handleSubmitForm} cellCount={5} />
       </View>
-    </ToastContextProvider>
+      <View style={styles.footer}>
+        <Text style={styles.text}>{t('facilityCodeNotWorking')}</Text>
+        <TextButton
+          title={t('scanYourQRCodeInstead')}
+          onPress={onPressScanShopCode}
+          style={styles.shopCodeButton}
+        />
+      </View>
+    </View>
   );
 };
 
@@ -147,16 +143,8 @@ const styles = StyleSheet.create({
     color: colors.black,
   },
   shopCodeButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
+    paddingVertical: 12,
     marginBottom: 5,
-  },
-  shopCodeButtonText: {
-    paddingLeft: 8,
-    fontSize: 13,
-    fontFamily: fonts.TT_Bold,
-    lineHeight: 18,
-    color: colors.purpleDark,
   },
   loader: {
     position: 'absolute',

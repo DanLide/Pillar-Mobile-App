@@ -6,12 +6,7 @@ import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 import { useTranslation } from 'react-i18next';
 
 import i18n from 'i18next';
-import {
-  Button,
-  ButtonType,
-  ScanProduct,
-  ScanProductProps,
-} from '../../components';
+import { ScanProduct, ScanProductProps, TextButton } from '../../components';
 
 import { ToastType } from 'src/contexts/types';
 
@@ -144,27 +139,23 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
   };
 
   return (
-    <ToastContextProvider offset={TOAST_OFFSET_ABOVE_SINGLE_BUTTON}>
-      <View style={styles.container}>
-        <Spinner visible={isLoading} />
-        <ScanProduct
-          onScan={onScanShopCode}
-          isActive={isCameraActive}
-          useScannerFlow={false}
-          tooltipText={t('lookingForCode')}
+    <View style={styles.container}>
+      <Spinner visible={isLoading} />
+      <ScanProduct
+        onScan={onScanShopCode}
+        isActive={isCameraActive}
+        useScannerFlow={false}
+        tooltipText={t('lookingForCode')}
+      />
+      <View style={styles.footer}>
+        <Text style={styles.text}>{t('qrCodeNotWorking')}</Text>
+        <TextButton
+          title={t('enterFacilityCodeInstead')}
+          onPress={onPressEnterShopCode}
+          style={styles.shopCodeButton}
         />
-        <View style={styles.footer}>
-          <Text style={styles.text}>{t('qrCodeNotWorking')}</Text>
-          <Button
-            type={ButtonType.primary}
-            buttonStyle={styles.shopCodeButton}
-            textStyle={styles.shopCodeButtonText}
-            title={t('enterFacilityCodeInstead')}
-            onPress={onPressEnterShopCode}
-          />
-        </View>
       </View>
-    </ToastContextProvider>
+    </View>
   );
 });
 
@@ -192,8 +183,7 @@ const styles = StyleSheet.create({
     color: colors.purpleDark,
   },
   shopCodeButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
+    paddingVertical: 12,
     marginBottom: 5,
   },
   text: {

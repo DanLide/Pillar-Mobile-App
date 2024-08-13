@@ -2,19 +2,19 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { useRef } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 
 import Logo from '../../../assets/images/logo.png';
-import { Button, ButtonType } from '../../components';
+import { Button, ButtonType, Spacer, TextButton } from '../../components';
 import {
   AppNavigator,
   LoginType,
   UnauthStackParamsList,
 } from '../../navigation/types';
-import { SVGs, colors, fonts } from '../../theme';
+import { colors, fonts } from '../../theme';
 import { DeviceName } from './components/DeviceName';
 import { ssoStore } from 'src/stores';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -22,8 +22,6 @@ interface Props {
     AppNavigator.WelcomeScreen
   >;
 }
-
-const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
 export const WelcomeScreen = ({ navigation }: Props) => {
   const { t } = useTranslation();
@@ -49,31 +47,20 @@ export const WelcomeScreen = ({ navigation }: Props) => {
     navigation.navigate(AppNavigator.LoginViaPinScreen);
   };
 
-  const onUpdateLocation = () => {
-    navigation.navigate(AppNavigator.UpdateShopLocationScreen);
-  };
-
   const onPressSSOLogin = async () => {
     await ssoLogin();
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={{ bottom: 'maximum' }} style={styles.container}>
       <View style={styles.continueContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <Text style={styles.text}>{t('welcomeToRepairStack')}</Text>
-        {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
-          <View>
-            <Text style={styles.locationText}>
-              {ssoStore.getCurrentSSO?.name}
-            </Text>
-            {/* <TouchableOpacity onPress={onUpdateLocation}>
-              <Text style={styles.updateLocationBtn}>Update Location</Text>
-            </TouchableOpacity> */}
-          </View>
-        ) : (
-          <Text style={styles.locationText}>({t('locationNotSet')})</Text>
-        )}
+        <Text style={styles.locationText}>
+          {ssoStoreRef.getIsDeviceConfiguredBySSO
+            ? ssoStore.getCurrentSSO?.name
+            : t('locationNotSet')}
+        </Text>
         {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
           <>
             <Button
@@ -110,22 +97,20 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       <DeviceName />
       <View style={styles.ssoLoginContainer}>
         <Text style={styles.text}>{t('mmmEmployee')} ?</Text>
-        <Button
-          type={ButtonType.primary}
-          icon={SVGs.ConnectedWorker}
-          iconProps={LOGIN_ICON_PROPS}
-          buttonStyle={styles.ssoLoginButton}
-          textStyle={styles.ssoLoginButtonText}
+        <Spacer h={11} />
+        <TextButton
+          leftIconName="worker"
           title={t('loginWithSso')}
           onPress={onPressSSOLogin}
+          color="purpleDark3"
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, paddingBottom: 10 },
   continueContainer: {
     marginTop: 150,
     alignItems: 'center',
@@ -139,17 +124,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
-  },
-  ssoLoginButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-  },
-  ssoLoginButtonText: {
-    paddingLeft: 8,
-    fontSize: 13,
-    fontFamily: fonts.TT_Bold,
-    lineHeight: 18,
-    color: colors.purpleDark,
   },
   loginWithUserNameButton: {
     backgroundColor: 'transparent',
@@ -186,12 +160,5 @@ const styles = StyleSheet.create({
   secondaryBtn: {
     marginTop: 24,
     width: '90%',
-  },
-  updateLocationBtn: {
-    textAlign: 'center',
-    fontSize: 14,
-    lineHeight: 18,
-    fontFamily: fonts.TT_Regular,
-    color: colors.purpleDark,
   },
 });

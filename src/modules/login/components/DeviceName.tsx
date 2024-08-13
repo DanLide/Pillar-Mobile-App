@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Alert, StyleSheet } from 'react-native';
+import { View, Text, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
@@ -29,9 +29,13 @@ export const DeviceName = observer(() => {
       <Text>
         {t('deviceName')}: {deviceInfoStore.getDeviceName}
       </Text>
-      <Pressable onPress={onChangeDeviceName} style={styles.button}>
+      <TouchableOpacity
+        activeOpacity={0.4}
+        onPress={onChangeDeviceName}
+        style={styles.button}
+      >
         <Text>{t('update')}</Text>
-      </Pressable>
+      </TouchableOpacity>
     </View>
   );
 });

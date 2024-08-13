@@ -45,4 +45,4 @@ export const colors = {
   blueLight: '#E8F3FF',
   pink: '#D130A1',
   pinkLight: '#FFEDFB',
-};
+} as const;
