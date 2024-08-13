@@ -22,6 +22,7 @@ export const ResultScreen: React.FC<Props> = observer(({ navigation }) => {
 
   return (
     <BaseResultScreen
+      groupByJob
       navigation={navigation}
       store={store}
       contextTitle={t('returnComplete')}

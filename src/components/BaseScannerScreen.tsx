@@ -222,7 +222,9 @@ export const BaseScannerScreen: React.FC<Props> = observer(
             <ToastMessage bold>
               {Utils.truncateString(nameDetails)}
             </ToastMessage>{' '}
-            {t('addedToList')}
+            {buttonListTitle === t('cart')
+              ? t('addedToCart')
+              : t('addedToList')}
           </ToastMessage>,
           { type: ToastType.Info },
         );

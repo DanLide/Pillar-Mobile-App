@@ -59,7 +59,7 @@ export const RemoveProductsScreen = observer(({ navigation }: Props) => {
       onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
-      tooltipTitle={t('scanToAddProductsToList')}
+      tooltipTitle={t('scanToAddProductsToCart')}
       onComplete={onCompleteRemove}
       ListComponent={SelectedProductsList}
       flow={Flows.Remove}
