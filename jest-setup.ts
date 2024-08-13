@@ -122,6 +122,6 @@ jest.mock('react-native', () => {
   return RN;
 });
 
-// jest.mock('tealium-react-native', () => ({
-//   initialize: jest.fn(),
-// }));
+jest.mock('tealium-react-native', () => ({
+  initialize: jest.fn(),
+}));

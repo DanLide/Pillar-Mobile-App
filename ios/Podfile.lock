@@ -489,6 +489,34 @@ PODS:
   - RNSVG (13.9.0):
     - React-Core
   - SwiftAudioEx (0.15.3)
+  - tealium-react-native (2.4.1):
+    - React-Core
+    - tealium-swift/Collect (~> 2.13)
+    - tealium-swift/Core (~> 2.13)
+    - tealium-swift/Lifecycle (~> 2.13)
+    - tealium-swift/RemoteCommands (~> 2.13)
+    - tealium-swift/TagManagement (~> 2.13)
+    - tealium-swift/VisitorService (~> 2.13)
+  - tealium-react-native-swift (2.4.1):
+    - React-Core
+    - tealium-react-native
+    - tealium-swift/Collect (~> 2.13)
+    - tealium-swift/Core (~> 2.13)
+    - tealium-swift/Lifecycle (~> 2.13)
+    - tealium-swift/RemoteCommands (~> 2.13)
+    - tealium-swift/TagManagement (~> 2.13)
+    - tealium-swift/VisitorService (~> 2.13)
+  - tealium-swift/Collect (2.13.0):
+    - tealium-swift/Core
+  - tealium-swift/Core (2.13.0)
+  - tealium-swift/Lifecycle (2.13.0):
+    - tealium-swift/Core
+  - tealium-swift/RemoteCommands (2.13.0):
+    - tealium-swift/Core
+  - tealium-swift/TagManagement (2.13.0):
+    - tealium-swift/Core
+  - tealium-swift/VisitorService (2.13.0):
+    - tealium-swift/Core
   - vision-camera-code-scanner (0.2.0):
     - GoogleMLKit/BarcodeScanning
     - React-Core
@@ -559,6 +587,8 @@ DEPENDENCIES:
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - tealium-react-native (from `../node_modules/tealium-react-native`)
+  - tealium-react-native-swift (from `../node_modules/tealium-react-native/tealium-react-native-swift.podspec`)
   - vision-camera-code-scanner (from `../node_modules/vision-camera-code-scanner`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -585,6 +615,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - SwiftAudioEx
+    - tealium-swift
 
 EXTERNAL SOURCES:
   AzureAuth:
@@ -701,6 +732,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-screens"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  tealium-react-native:
+    :path: "../node_modules/tealium-react-native"
+  tealium-react-native-swift:
+    :path: "../node_modules/tealium-react-native/tealium-react-native-swift.podspec"
   vision-camera-code-scanner:
     :path: "../node_modules/vision-camera-code-scanner"
   VisionCamera:
@@ -786,10 +821,13 @@ SPEC CHECKSUMS:
   RNScreens: 218801c16a2782546d30bd2026bb625c0302d70f
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   SwiftAudioEx: 83eabba2940924fc1c0d5cb0896049921365229c
+  tealium-react-native: c3cc2065e6fc6f16be13e02a50726a56db3fb8cf
+  tealium-react-native-swift: 6b483c1f6fc082e23384ec4d36f0fbb05f5b3dd2
+  tealium-swift: f2a1d022bae58151c7ff31d2a063008cfe6463d8
   vision-camera-code-scanner: dda884a7f3ec8243a2a6d6489b91860648371bca
   VisionCamera: c6356b309f7b8e185b7be2e703ec67bb35acf345
   Yoga: e407d2e8cc6cf5170a1dddf459f9fc612f85fcac
 
-PODFILE CHECKSUM: 4e15ec5849f2073a2bdd2da1fc5831d0d54f85f2
+PODFILE CHECKSUM: 04ae83eb079ed44fe870fd0f25c5080f06e86ad7
 
 COCOAPODS: 1.15.2
