@@ -14,6 +14,7 @@ export interface SingleSSOAPIResponse {
   zipCode: string;
   state: string;
   country: string;
+  integrations: [];
 }
 
 export type MultiSSOAPIResponse = Array<MultiSSOAPIObj>;
