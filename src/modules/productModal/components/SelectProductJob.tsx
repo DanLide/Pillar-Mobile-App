@@ -16,6 +16,7 @@ interface Props {
   onPressBack: () => void;
   onPressSkip: () => void;
   onPressAdd: (job?: JobModel) => void;
+  updateJobSelectModal?: (showModal: boolean, number?: string) => void;
 }
 
 export const SelectProductJob: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const SelectProductJob: React.FC<Props> = ({
   onPressSkip,
   onPressAdd,
   productJobs,
+  updateJobSelectModal,
 }) => {
   const { t } = useTranslation();
   const [selectedJob, setSelectedJob] = useState<JobModel | undefined>(
@@ -70,8 +72,10 @@ export const SelectProductJob: React.FC<Props> = ({
         selectedId={selectedJob?.jobId}
         onPressItem={onPressItem}
         footerComponent={Footer}
+        isCreateJobLink
         isJobsWithNoRepairOrder
         productJobs={productJobs}
+        updateJobSelectModal={updateJobSelectModal}
       />
     );
   } else {

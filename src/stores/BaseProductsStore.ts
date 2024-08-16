@@ -13,6 +13,7 @@ import {
 import { StockModel } from '../modules/stocksList/stores/StocksStore';
 import { addProductByJob, getReservedCountById } from './helpers';
 import { JobModel } from 'src/modules/jobsList/stores/JobsStore';
+import { jobsStore } from 'src/modules/jobsList/stores';
 
 type BaseProductsStoreType = SyncedProductStoreType &
   StockProductStoreType &
@@ -95,6 +96,17 @@ export class BaseProductsStore implements BaseProductsStoreType {
 
   @action setCurrentProduct(product?: ProductModel) {
     this.currentProduct = product;
+  }
+
+  @action setJobToCurrentProduct(jobNumber: string) {
+    const job = jobsStore.getJobByJobNumber(jobNumber);
+
+    if (this.currentProduct && job) {
+      this.setCurrentProduct({
+        ...this.currentProduct,
+        job,
+      });
+    }
   }
 
   @action setEditableProductQuantity(reservedCount: number) {

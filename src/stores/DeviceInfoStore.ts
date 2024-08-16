@@ -1,9 +1,10 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { NativeModules } from 'react-native';
-import { getVersion } from 'react-native-device-info';
+import { getVersion, getBuildNumber } from 'react-native-device-info';
 
 export class DeviceInfoStore {
   @observable deviceName: string;
+  @observable partyRoleId?: number;
   @observable version: string;
 
   constructor() {
@@ -15,7 +16,7 @@ export class DeviceInfoStore {
         this.deviceName = deviceName.split('-')[3] ?? deviceName;
       }
     });
-    this.version = getVersion();
+    this.version = `${getVersion()} - ${getBuildNumber()}`;
     makeObservable(this);
   }
 
@@ -25,5 +26,9 @@ export class DeviceInfoStore {
 
   @action setDeviceName(deviceName: string) {
     this.deviceName = deviceName;
+  }
+
+  @action setPartyRoleId(partyRoleId: number) {
+    this.partyRoleId = partyRoleId;
   }
 }

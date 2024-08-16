@@ -87,5 +87,6 @@ export const mapSingle = (resp: SingleSSOAPIResponse): SSOModel | undefined => {
     msoPillarId: resp.msoId,
     distributorId: resp.distributorId,
     distributorName: resp.distributor,
+    isIntegrated: !isEmpty(resp.integrations),
   };
 };

@@ -1,4 +1,4 @@
-import { getSSORNToken } from 'src/helpers/localStorage';
+import { getSSORNToken } from 'src/helpers/storage';
 import { SSOStore, SSOUser } from './../stores/SSOStore';
 import { getSSOUsers } from './api/getSSOUsers';
 
@@ -20,7 +20,7 @@ class FetchSSOUsers extends Task {
   }
 
   async run() {
-    const rnTokenData = await getSSORNToken();
+    const rnTokenData = getSSORNToken();
     const usersList: SSOUser[] = rnTokenData
       ? await getSSOUsers(rnTokenData.rnToken)
       : [];

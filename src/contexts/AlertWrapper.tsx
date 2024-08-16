@@ -21,6 +21,7 @@ export type AlertWrapperProps = {
   title?: string | JSX.Element;
   primaryTitle?: string;
   secondaryTitle?: string;
+  secondaryType?: ButtonType;
   hidePrimary?: boolean;
   hideSecondary?: boolean;
   alertContainerStyle?: StyleProp<ViewStyle>;
@@ -34,6 +35,7 @@ const AlertWrapper: React.FC<AlertWrapperProps> = ({
   onPressPrimary,
   primaryTitle = i18n.t('continue'),
   secondaryTitle = i18n.t('cancel'),
+  secondaryType = ButtonType.secondary,
   onPressSecondary,
   hideSecondary,
   hidePrimary,
@@ -63,7 +65,7 @@ const AlertWrapper: React.FC<AlertWrapperProps> = ({
             {!hideSecondary && (
               <Button
                 testID={testIds.idSecondaryButton(testID)}
-                type={ButtonType.secondary}
+                type={secondaryType}
                 title={secondaryTitle}
                 buttonStyle={styles.buttonStyle}
                 onPress={onPressSecondary}

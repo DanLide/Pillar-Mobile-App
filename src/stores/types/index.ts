@@ -51,6 +51,7 @@ export interface CurrentProductStoreType<
   productJobs?: { [key: number]: JobModel[] };
   productJobDetails?: JobModel;
   setCurrentProduct: (product?: T) => void;
+  setJobToCurrentProduct: (jobNumber: string) => void;
   setProductJobs: (productId: number, jobs: JobModel[]) => void;
   removeCurrentProduct: () => void;
 }
@@ -65,6 +66,7 @@ export interface ScannerModalStoreType<T extends ProductModel = ProductModel> {
 
   setEditableProductQuantity: (quantity: number) => void;
   addProduct: (product: T) => void;
+  setProducts: (product: T[]) => void;
   updateProduct: (product: T) => void;
   removeProduct: (product: T) => void;
 }

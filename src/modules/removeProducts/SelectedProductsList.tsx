@@ -11,7 +11,7 @@ import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
 import { removeProductsStore } from './stores';
-import { groupProductsByJobId } from './helpers';
+import { groupProductsByJobId } from 'src/helpers';
 import { colors, fonts } from '../../theme';
 import { ProductModel, SyncedProductStoreType } from '../../stores/types';
 import { ProductEmptyList, SelectedProductsListItem } from '../../components';

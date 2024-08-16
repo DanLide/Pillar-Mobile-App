@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { NativeStackNavigationEventMap } from 'react-native-screens/lib/typescript/native-stack/types';
-import { SvgProps } from 'react-native-svg';
 import { ssoLogin } from 'src/data/ssoLogin';
 import { getScreenOptions } from 'src/navigation/helpers';
 import {
@@ -20,6 +19,7 @@ import {
   InfoTitleBar,
   InfoTitleBarType,
   Input,
+  TextButton,
 } from '../../components';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
@@ -32,6 +32,7 @@ import { useSingleToast } from '../../hooks';
 import { authStore } from '../../stores';
 import { SVGs, colors, fonts } from '../../theme';
 import { LoginFormStore } from './stores/LoginFormStore';
+import { URLProvider } from 'src/data/helpers';
 
 type Props = NativeStackScreenProps<
   UnauthStackParamsList,
@@ -46,8 +47,6 @@ const LoginViaCredentialsScreenContent = observer(
     const authStoreRef = useRef(authStore).current;
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const LOGIN_ICON_PROPS: SvgProps = { color: colors.purpleDark };
 
     const onSubmit = useCallback(async () => {
       setIsLoading(true);
@@ -84,6 +83,7 @@ const LoginViaCredentialsScreenContent = observer(
       loginFormRef.username,
       route.params?.type,
       showToast,
+      t,
     ]);
 
     const onChangeUsername = (value: string) => {
@@ -105,6 +105,11 @@ const LoginViaCredentialsScreenContent = observer(
       await ssoLogin();
     };
 
+    const onPressForgotUsernamePassword = () => {
+      const url = new URLProvider().webURL();
+      Linking.openURL(url);
+    };
+
     useEffect(() => {
       switch (route.params?.type) {
         case LoginType.ConfigureShopDevice:
@@ -120,7 +125,7 @@ const LoginViaCredentialsScreenContent = observer(
         default:
           break;
       }
-    }, [navigation, route.params?.type]);
+    }, [navigation, route.params?.type, t]);
 
     return (
       <View style={styles.container}>
@@ -152,20 +157,28 @@ const LoginViaCredentialsScreenContent = observer(
           rightLabel={t('required')}
         />
         <View style={styles.secondaryButtonsContainer}>
-          <Text style={styles.secondaryButton}>{t('forgotUsername')}</Text>
+          <TextButton
+            title={t('forgotUsername')}
+            onPress={onPressForgotUsernamePassword}
+            style={styles.bottomButton}
+            fontFamily="TT_Regular"
+          />
           <View style={styles.separator} />
-          <Text style={styles.secondaryButton}>{t('forgotPassword')}</Text>
+          <TextButton
+            title={t('forgotPassword')}
+            onPress={onPressForgotUsernamePassword}
+            style={styles.bottomButton}
+            fontFamily="TT_Regular"
+          />
         </View>
         <View style={styles.ssoLoginContainer}>
           <Text style={styles.text}>{t('mmmEmployee')} ?</Text>
-          <Button
-            type={ButtonType.primary}
-            icon={SVGs.ConnectedWorker}
-            iconProps={LOGIN_ICON_PROPS}
-            buttonStyle={styles.ssoLoginButton}
-            textStyle={styles.ssoLoginButtonText}
+          <TextButton
+            leftIconName="worker"
             title={t('loginWithSso')}
             onPress={onPressSSOLogin}
+            color="purpleDark3"
+            style={styles.bottomButton}
           />
         </View>
         <Button
@@ -225,27 +238,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grayDark3,
     marginHorizontal: 24,
   },
-  secondaryButton: {
-    fontSize: 14,
-    lineHeight: 14,
-    fontFamily: fonts.TT_Regular,
-    color: colors.purpleDark,
-  },
   ssoLoginContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-  ssoLoginButton: {
-    width: '100%',
-    backgroundColor: 'transparent',
-  },
-  ssoLoginButtonText: {
-    paddingLeft: 8,
-    fontSize: 13,
-    fontFamily: fonts.TT_Bold,
-    lineHeight: 18,
-    color: colors.purpleDark,
+  bottomButton: {
+    marginVertical: 12,
   },
   text: {
     paddingTop: 4,

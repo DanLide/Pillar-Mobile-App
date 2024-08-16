@@ -17,7 +17,7 @@ import {
 } from './api/ssoAPI';
 import { getFetchStockByPartyRoleIdAPI } from './api/stocksAPI';
 import { mapSingle } from './helpers/utils';
-import { setSSORNToken } from 'src/helpers/localStorage';
+import { setSSORNToken } from 'src/helpers/storage';
 import { authStore, deviceInfoStore } from 'src/stores';
 
 interface FetchStocksContext {
@@ -122,6 +122,7 @@ export class FetchSSOMobileDevicesTask extends Task {
           device => device.leanTecSerialNo === deviceInfoStore.getDeviceName,
         );
         if (currentDevice) {
+          deviceInfoStore.setPartyRoleId(currentDevice.partyRoleId);
           await assignDeviceToSSOAPI(currentDevice.partyRoleId);
         } else {
           throw Error(i18n.t('devicesNotFound'));

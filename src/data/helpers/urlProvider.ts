@@ -39,7 +39,7 @@ export class URLProvider {
       order: { apiUri: string };
       shopSetup: { apiUri: string };
       shopSetupAuthentication: { apiUri: string };
-      base: { apiUri: string };
+      base: { apiUri: string; webURL: string };
     };
   };
 
@@ -402,9 +402,10 @@ export class URLProvider {
 
   getRNToken() {
     const facilityId = this.ssoStore.getCurrentSSO?.pillarId;
-    const deviceId = this.ssoStore.getCurrentMobileDevice(
-      deviceInfoStore.getDeviceName,
-    )?.partyRoleId;
+    const deviceId =
+      deviceInfoStore.partyRoleId ??
+      this.ssoStore.getCurrentMobileDevice(deviceInfoStore.getDeviceName)
+        ?.partyRoleId;
 
     return `${this.currentEnv.modules.base.apiUri}/MAP/api/auth/rn-token/${facilityId}/${deviceId}`;
   }
@@ -442,5 +443,9 @@ export class URLProvider {
 
   removeDeviceFromSSO(id: string) {
     return `${this.currentEnv.modules.pisaEquipment.apiUri}/api/Equipment/AssignedDevice/${id}`;
+  }
+
+  webURL() {
+    return `${this.currentEnv.modules.base.webURL}`;
   }
 }

@@ -6,4 +6,4 @@ export const fonts = {
   TT_Light: '3MCircularTT-Light',
   TT_LightItalic: '3MCircularTTLightItalic',
   TT_Regular: '3M Circular TT',
-};
+} as const;

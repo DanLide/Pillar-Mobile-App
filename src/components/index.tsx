@@ -31,6 +31,9 @@ export { KeyboardToolButton } from './KeyboardToolbarButton';
 export * from './ScanProduct';
 export { Spacer } from './Spacer';
 export { ButtonCluster } from './ButtonCluster';
+export { TextButton } from './TextButton';
+
+export * from './modals';
 
 export {
   Separator,

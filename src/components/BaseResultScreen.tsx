@@ -21,7 +21,7 @@ import {
   ToastContextProvider,
 } from '../contexts';
 import { BaseResultScreenNavigationProp } from '../navigation/types';
-import { groupProductsByJobId } from '../modules/removeProducts/helpers';
+import { groupProductsByJobId } from 'src/helpers';
 import { ToastType } from '../contexts/types';
 import { authStore } from '../stores';
 import { colors, fonts, SVGs } from '../theme';
@@ -92,7 +92,7 @@ const BaseResultScreen: React.FC<Props> = observer(
           </View>
         </View>
       ),
-      [],
+      [t],
     );
 
     useEffect(() => {

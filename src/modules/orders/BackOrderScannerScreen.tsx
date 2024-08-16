@@ -75,7 +75,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
         </Text>
       </>
     ),
-    [error?.error_description],
+    [error?.error_description, t],
   );
 
   const closeAlert = useCallback(() => setError(null), []);
@@ -93,7 +93,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
 
     setModalParams({
       type,
-      maxValue: product.onHand,
+      maxValue: ordersStore.getMaxValue(),
       minValue: getProductStepQty(product.inventoryUseTypeId),
     });
   };
@@ -119,6 +119,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onBadRequestError={onBadRequestError}
           onSubmit={onSubmit}
           buttonListTitle={t('reviewOrder')}
+          disableAlert
         />
       </ToastContextProvider>
 

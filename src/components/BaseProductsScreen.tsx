@@ -25,10 +25,9 @@ import { InfoTitleBar, InfoTitleBarType } from './InfoTitleBar';
 import { TooltipBar } from './TooltipBar';
 import Button, { ButtonType } from './Button';
 import { colors, SVGs } from '../theme';
-import EraseProductsAlert from 'src/modules/createInvoice/components/EraseProductsAlert';
 import { RequestError } from 'src/data/helpers/tryFetch';
 import { ToastType } from 'src/contexts/types';
-import { useSingleToast, useCustomGoBack } from 'src/hooks';
+import { useSingleToast } from 'src/hooks';
 import {
   TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
   ToastContextProvider,
@@ -67,7 +66,6 @@ interface Props {
   product?: ProductModel;
   infoTitle?: string;
   primaryButtonTitle?: string;
-  disableAlert?: boolean;
   completeErrorMessage?: string;
 
   onEditPress?: () => void;
@@ -102,7 +100,6 @@ const BaseProducts = observer(
     ListComponent,
     ProductModalComponent = ProductModal,
     primaryButtonTitle,
-    disableAlert,
     onComplete,
     flow,
   }: Props) => {
@@ -120,18 +117,6 @@ const BaseProducts = observer(
       modalType === ProductModalType.ManageProduct && !scannedProductsCount
         ? ButtonType.primary
         : ButtonType.secondary;
-
-    useCustomGoBack({
-      callback: event => {
-        if (!disableAlert && store.getNotSyncedProducts.length) {
-          setEraseProductsAlertVisible(true);
-          return;
-        }
-
-        navigation.dispatch(event.data.action);
-      },
-      deps: [store.getNotSyncedProducts],
-    });
 
     const onCompleteRemove = useCallback(async () => {
       isNeedNavigateBack.current = true;
@@ -182,70 +167,57 @@ const BaseProducts = observer(
     }, [modalType, onCompleteRemove, primaryButtonTitle, scannedProductsCount]);
 
     return (
-      <>
-        <View style={styles.container}>
-          <InfoTitleBar
-            type={InfoTitleBarType.Primary}
-            title={infoTitle || store.currentStock?.organizationName}
-          />
-          <TooltipBar title={tooltipTitle} />
+      <View style={styles.container}>
+        <InfoTitleBar
+          type={InfoTitleBarType.Primary}
+          title={infoTitle || store.currentStock?.organizationName}
+        />
+        <TooltipBar title={tooltipTitle} />
 
-          {isLoading ? (
-            <View style={styles.loader}>
-              <ActivityIndicator
-                size="large"
-                color="white"
-                style={styles.activityIndicator}
-              />
-            </View>
-          ) : null}
-
-          <ListComponent
-            modalType={modalType}
-            store={store}
-            onEditProduct={onProductListItemPress}
-            flow={flow}
-          />
-
-          <View style={styles.buttons}>
-            <Button
-              type={scanButtonType}
-              icon={SVGs.CodeIcon}
-              iconProps={SCAN_ICON_PROPS}
-              textStyle={styles.scanText}
-              buttonStyle={styles.buttonContainer}
-              title={t('scan')}
-              onPress={onPressScan}
+        {isLoading && (
+          <View style={styles.loader}>
+            <ActivityIndicator
+              size="large"
+              color="white"
+              style={styles.activityIndicator}
             />
-
-            {CompleteButton}
           </View>
+        )}
 
-          <ProductModalComponent
-            {...modalParams}
-            product={product}
-            store={store}
-            stockName={store.stockName}
-            onSubmit={onSubmitProduct}
-            onEditPress={onEditPress}
-            onCancelPress={onCancelPress}
-            onClose={onCloseModal}
-            onRemove={onRemoveProduct}
-            onChangeProductQuantity={setEditableProductQuantity}
+        <ListComponent
+          modalType={modalType}
+          store={store}
+          onEditProduct={onProductListItemPress}
+          flow={flow}
+        />
+
+        <View style={styles.buttons}>
+          <Button
+            type={scanButtonType}
+            icon={SVGs.CodeIcon}
+            iconProps={SCAN_ICON_PROPS}
+            textStyle={styles.scanText}
+            buttonStyle={styles.buttonContainer}
+            title={t('scan')}
+            onPress={onPressScan}
           />
+
+          {CompleteButton}
         </View>
 
-        <EraseProductsAlert
-          visible={eraseProductsAlertVisible}
-          onPressPrimary={() => {
-            store.setProducts([]);
-            setEraseProductsAlertVisible(false);
-          }}
-          onPressSecondary={() => {
-            setEraseProductsAlertVisible(false);
-          }}
+        <ProductModalComponent
+          {...modalParams}
+          product={product}
+          store={store}
+          stockName={store.stockName}
+          onSubmit={onSubmitProduct}
+          onEditPress={onEditPress}
+          onCancelPress={onCancelPress}
+          onClose={onCloseModal}
+          onRemove={onRemoveProduct}
+          onChangeProductQuantity={setEditableProductQuantity}
         />
-      </>
+      </View>
     );
   },
 );

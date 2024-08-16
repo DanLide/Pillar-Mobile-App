@@ -48,7 +48,6 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
 
   return (
     <BaseProductsScreen
-      disableAlert
       modalParams={modalParams}
       product={product}
       scannedProductsCount={scannedProductsCount}
@@ -60,7 +59,7 @@ export const ReturnProductsScreen = observer(({ navigation }: Props) => {
       onCloseModal={onCloseModal}
       navigation={navigation}
       store={store}
-      tooltipTitle={t('scanToAddProductsToList')}
+      tooltipTitle={t('scanToAddProductsToCart')}
       onComplete={onCompleteReturn}
       ListComponent={SelectedProductsList}
       flow={Flows.Return}

@@ -18,6 +18,7 @@ import SplashScreen from 'react-native-splash-screen';
 import { observer } from 'mobx-react';
 
 import { initI18n } from 'src/libs/translation';
+import { initTealium } from 'src/libs';
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
 
@@ -27,9 +28,11 @@ import autoLogoutService, {
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
-import { getSSORNToken, getUsernames } from 'src/helpers/localStorage';
+import { getSSORNToken, getUsernames } from 'src/helpers/storage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import { ToastProvider } from 'src/contexts';
+import { ModalProvider } from 'react-native-modalfy';
+import { MODAL_STACK } from 'src/components';
 
 if (__DEV__) {
   import('./ReactotronConfig').then(() => console.log('Reactotron Configured'));
@@ -47,6 +50,7 @@ const App = observer(() => {
 
   useEffect(() => {
     initI18n();
+    initTealium();
   }, []);
 
   useEffect(() => {
@@ -85,8 +89,9 @@ const App = observer(() => {
     };
   }, []);
 
-  const getSSORNTokenData = useCallback(async () => {
-    const data = await getSSORNToken();
+  const getSSORNTokenData = useCallback(() => {
+    const data = getSSORNToken();
+
     if (data) {
       ssoStore.setCurrentSSO(data.sso);
       ssoStore.setDeviceConfiguration(true);
@@ -97,8 +102,8 @@ const App = observer(() => {
     getSSORNTokenData();
   }, [getSSORNTokenData]);
 
-  const getUsernamesData = useCallback(async () => {
-    const data = await getUsernames();
+  const getUsernamesData = useCallback(() => {
+    const data = getUsernames();
     if (data && data.usernames) {
       authStore.setUsernames(data.usernames);
     }
@@ -150,9 +155,11 @@ const App = observer(() => {
         <KeyboardProvider>
           <ToastProvider>
             <SafeAreaProvider>
-              <NavigationContainer>
-                <AppStack />
-              </NavigationContainer>
+              <ModalProvider stack={MODAL_STACK}>
+                <NavigationContainer>
+                  <AppStack />
+                </NavigationContainer>
+              </ModalProvider>
             </SafeAreaProvider>
           </ToastProvider>
         </KeyboardProvider>

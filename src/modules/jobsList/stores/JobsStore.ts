@@ -29,17 +29,23 @@ export class JobsStore {
     makeObservable(this);
   }
 
-  @action setJobs(jobs: JobModel[]) {
+  @action
+  setJobs(jobs: JobModel[]) {
     this.jobs = jobs;
   }
 
-  @computed get getJobsWithNoRepairOrder() {
+  @computed
+  get getJobsWithNoRepairOrder() {
     const jobNoRepairOrder: JobModel = {
       jobId: jobIdNoRepairOrder,
       jobNumber: i18n.t('noRepairOrder'),
     };
 
     return [jobNoRepairOrder, ...this.jobs];
+  }
+
+  getJobByJobNumber(jobNumber: string) {
+    return this.jobs.filter(job => job.jobNumber === jobNumber)[0];
   }
 
   public clear() {

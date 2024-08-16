@@ -58,6 +58,7 @@ jest.mock('react-native-track-player', () => {
 
 jest.mock('react-native-device-info', () => ({
   getVersion: jest.fn(),
+  getBuildNumber: jest.fn(),
   getDeviceName: jest.fn(async () => 'iphone'),
   getDeviceNameSync: jest.fn(() => '3M-AAD-iphone'),
   getBundleId: jest.fn(() => 'com.bundle'),
@@ -120,3 +121,7 @@ jest.mock('react-native', () => {
 
   return RN;
 });
+
+jest.mock('tealium-react-native', () => ({
+  initialize: jest.fn(),
+}));

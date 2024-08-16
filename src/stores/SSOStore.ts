@@ -99,6 +99,7 @@ export interface SSOModel {
   msoPillarId?: string;
   distributorId?: string;
   distributorName?: string;
+  isIntegrated?: boolean;
 }
 
 export interface SSOUser {

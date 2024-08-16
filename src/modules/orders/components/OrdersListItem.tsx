@@ -92,7 +92,10 @@ export const OrdersListItem = memo(({ item, isFiltered }: Props) => {
         </View>
 
         <View style={styles.statusContainer}>
-          <StatusBadge orderStatusType={item.status} />
+          <StatusBadge
+            orderStatusType={item.status}
+            isReturnOrder={item.orderType === 'RETURN'}
+          />
         </View>
       </View>
 

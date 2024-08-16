@@ -53,7 +53,6 @@ export const ManageProductsScreen = observer(({ navigation }: Props) => {
 
   return (
     <BaseProductsScreen
-      disableAlert
       modalParams={modalParams}
       product={product}
       navigation={navigation}

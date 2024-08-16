@@ -9,6 +9,7 @@ import { onCreateInvoice } from 'src/data/createInvoice';
 import { useBaseProductsScreen } from 'src/hooks';
 import { observer } from 'mobx-react';
 import { Flows } from '../types';
+import { ssoStore } from 'src/stores';
 
 interface Props {
   navigation: BaseProductsScreenNavigationProp;
@@ -51,7 +52,11 @@ export const ProductsScreen = observer(({ navigation }: Props) => {
         store={store}
         onComplete={onComplete}
         tooltipTitle={t('scanToAddProductsToList')}
-        primaryButtonTitle={t('submit')}
+        primaryButtonTitle={
+          ssoStore.getCurrentSSO?.isIntegrated
+            ? t('Create Invoice')
+            : t('submit')
+        }
         ListComponent={BaseSelectedProductsList}
         flow={Flows.CreateInvoice}
       />

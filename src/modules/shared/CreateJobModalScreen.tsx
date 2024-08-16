@@ -13,7 +13,8 @@ import { ToastType } from 'src/contexts/types';
 import { KeyboardToolbar } from 'react-native-keyboard-controller';
 import { AppNavigator, THomeNavScreenProps } from 'src/navigation/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useToastMessage } from 'src/hooks';
+import { useToastMessage, useCustomGoBack } from 'src/hooks';
+import { WIDTH } from 'src/constants';
 
 export const CreateJobModalScreen = ({
   navigation: { goBack },
@@ -26,6 +27,14 @@ export const CreateJobModalScreen = ({
   const [number, setNumber] = useState('');
   const [comment, setComment] = useState('');
 
+  useCustomGoBack({
+    callback: (event, navigation) => {
+      params.beforeBack?.();
+      navigation.dispatch(event.data.action);
+    },
+    deps: [],
+  });
+
   const handleError = useCallback(
     (error: string) => {
       showToast(error, {
@@ -33,7 +42,6 @@ export const CreateJobModalScreen = ({
         offsetType: 'aboveButtons',
       });
       setIsLoading(false);
-      goBack();
     },
     [goBack, showToast],
   );
@@ -49,7 +57,7 @@ export const CreateJobModalScreen = ({
 
     setIsLoading(false);
     goBack();
-    params.onSubmit();
+    params.onSubmit(number);
     showToast(t('newJobNumberCreated', { number }), {
       type: ToastType.SuccessCreateJob,
       offsetType: 'aboveButtons',

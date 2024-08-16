@@ -153,10 +153,6 @@ export const CreateOrderResultScreen = ({
         <View style={styles.table}>
           <SelectedProductsList itemTitleColor={colors.grayDark3} />
         </View>
-
-        {isPurchaseOrder && !isPORequired && (
-          <Text style={styles.note}>{t('yourOrderWillBeSentEmail')}</Text>
-        )}
       </View>
 
       <TotalCostBar orderType={orderType} style={styles.totalCost} />

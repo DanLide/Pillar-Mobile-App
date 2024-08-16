@@ -5,6 +5,8 @@ import { SharedValue } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useTranslation } from 'react-i18next';
 import { isNil } from 'ramda';
+import Toast from 'react-native-toast-notifications';
+import ToastContainer from 'react-native-toast-notifications/lib/typescript/toast-container';
 
 import { Modal } from 'src/components';
 import {
@@ -16,10 +18,6 @@ import { SelectProductJob } from './components/SelectProductJob';
 import { SVGs, colors, fonts } from 'src/theme';
 import { JobModel, jobIdNoRepairOrder } from '../jobsList/stores/JobsStore';
 import {
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-  ToastContextProvider,
-} from 'src/contexts';
-import {
   CurrentProductStoreType,
   ProductModel,
   ScannerModalStoreType,
@@ -29,6 +27,11 @@ import { ToastType } from 'src/contexts/types';
 import { StockLocationListModal } from '../orders/components';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { ordersStore } from '../orders/stores';
+import { renderType } from 'src/contexts/ToastContext/renderTypes';
+import {
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from 'src/contexts';
 
 export enum ProductModalType {
   Remove,
@@ -97,6 +100,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
 };
 
 const MODAL_HEADER_HEIGHT = 60;
+const TOAST_SUCCESS_CREATE_JOB = renderType[ToastType.SuccessCreateJob];
 
 export const ProductModal = memo(
   ({
@@ -121,6 +125,8 @@ export const ProductModal = memo(
     const tabs = useMemo(() => getTabs(type), [type]);
     const carouselRef = useRef<ICarouselInstance>(null);
     const [selectedTab, setSelectedTab] = useState<number>(tabs[0]);
+    const [showProductModal, setShowProductModal] = useState<boolean>(true);
+    const toastRef = useRef<ToastContainer>(null);
 
     useEffect(() => {
       setSelectedTab(tabs[0]);
@@ -137,6 +143,28 @@ export const ProductModal = memo(
       setSelectedTab(Tabs.LinkJob);
       carouselRef.current?.next();
     }, []);
+
+    const updateJobSelectModal = useCallback(
+      (showModal: boolean, jobNumber?: string) => {
+        if (jobNumber) {
+          toastRef.current?.show(
+            t('newJobNumberCreated', { number: jobNumber }),
+            {
+              style: [{ marginBottom: TOAST_OFFSET_ABOVE_SINGLE_BUTTON }],
+            },
+          );
+          setTimeout(() => {
+            store?.setJobToCurrentProduct(jobNumber);
+          }, 100);
+        } else {
+          setShowProductModal(showModal);
+          setTimeout(() => {
+            carouselRef.current?.next();
+          });
+        }
+      },
+      [],
+    );
 
     const onPressBack = () => {
       setSelectedTab(Tabs.EditQuantity);
@@ -252,6 +280,7 @@ export const ProductModal = memo(
                 onPressSkip={onPressSkip}
                 onPressBack={onPressBack}
                 onPressAdd={onPressAdd}
+                updateJobSelectModal={updateJobSelectModal}
               />
             );
           case Tabs.StockList:
@@ -337,7 +366,7 @@ export const ProductModal = memo(
 
     return (
       <Modal
-        isVisible={type !== ProductModalType.Hidden}
+        isVisible={showProductModal && type !== ProductModalType.Hidden}
         onClose={clearProductModalStoreOnClose}
         title={renderStockName}
         titleContainerStyle={styles.titleContainer}
@@ -360,6 +389,7 @@ export const ProductModal = memo(
             renderItem={renderItem}
           />
         </ToastContextProvider>
+        <Toast ref={toastRef} renderToast={TOAST_SUCCESS_CREATE_JOB} />
       </Modal>
     );
   },

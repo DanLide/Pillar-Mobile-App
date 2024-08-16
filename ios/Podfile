@@ -25,6 +25,8 @@ abstract_target 'RepairStackAbstract' do
 
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec', :modular_headers => false
   pod 'ManagedAppConfigLib'
+  pod "tealium-react-native-swift", :path => '../node_modules/tealium-react-native/tealium-react-native-swift.podspec'
+
 
   # Flags change depending on the env values.
   flags = get_default_flags()

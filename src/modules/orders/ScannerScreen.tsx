@@ -126,6 +126,7 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
           buttonListTitle={t('reviewOrder')}
+          disableAlert
         />
       </ToastContextProvider>
 

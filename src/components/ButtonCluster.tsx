@@ -22,6 +22,7 @@ interface IClusterButtonProps {
   rightType?: ButtonType;
   rightDisabled?: boolean;
   rightIsLoading?: boolean;
+  withoutHorizontalPadding?: boolean;
 }
 
 export const ButtonCluster = ({
@@ -84,4 +85,5 @@ const styles = StyleSheet.create({
   horizontal16: {
     paddingHorizontal: 16,
   },
+  horizontal0: { paddingHorizontal: 0 },
 });

@@ -16,7 +16,7 @@ import {
 } from './api/ssoAPI';
 import ExtendedError from './error/ExtendedError';
 import { Task, TaskExecutor } from './helpers';
-import { Utils } from './helpers/utils';
+import { Utils, mapSingle } from './helpers/utils';
 import { permissionProvider } from './providers';
 import { LoginType } from 'src/navigation/types';
 import { RoleType, PartyRelationshipType } from 'src/constants/common.enum';
@@ -222,7 +222,7 @@ class GetSSOTask extends Task {
         token,
         facilityID,
       );
-      const res = this.mapSingle(response);
+      const res = mapSingle(response);
       // return undefined if the element is undefined
       return res && [res];
     } else if (this.loginFlowContext.msoID !== undefined) {
@@ -291,34 +291,6 @@ class GetSSOTask extends Task {
           : item.distributorName,
       };
     });
-  }
-
-  private mapSingle(resp: SingleSSOAPIResponse): SSOModel | undefined {
-    const pisaId = Utils.zeroToUndefined<number>(+resp.pisaId);
-    if (pisaId === undefined || Utils.isNullOrEmpty(resp.name)) {
-      return undefined;
-    }
-
-    const address = [
-      resp.streetAddress1,
-      resp.streetAddress2,
-      resp.city,
-      resp.zipCode,
-      resp.state,
-      resp.country,
-    ]
-      .filter(Utils.notNullOrEmpty)
-      .join(', ');
-
-    return {
-      pisaId: pisaId,
-      address: address,
-      name: resp.name,
-      pillarId: resp.id,
-      msoPillarId: resp.msoId,
-      distributorId: resp.distributorId,
-      distributorName: resp.distributor,
-    };
   }
 }
 

@@ -205,7 +205,7 @@ export const ProductModal = observer(
       if (
         isEachPeace &&
         (product.max ?? 0) <
-          (product.min ?? 0) + (product.unitsPerContainer ?? 0)
+          (product.min ?? 0) + (product.unitsPerContainer ?? 0) - 1
       ) {
         await scrollToError(unitsMaxInputRef);
         setError(errors => ({ ...errors, max: true }));
