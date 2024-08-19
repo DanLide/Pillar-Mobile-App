@@ -17,7 +17,11 @@ import { SelectProductJob } from './components/SelectProductJob';
 
 import { SVGs, colors, fonts } from 'src/theme';
 import { JobModel, jobIdNoRepairOrder } from '../jobsList/stores/JobsStore';
-import { MODAL_TOAST_OFFSET_ABOVE_SINGLE_BUTTON } from 'src/contexts';
+import {
+  MODAL_TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from 'src/contexts';
 import {
   CurrentProductStoreType,
   ProductModel,
@@ -29,10 +33,6 @@ import { StockLocationListModal } from '../orders/components';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { ordersStore } from '../orders/stores';
 import { renderType } from 'src/contexts/ToastContext/renderTypes';
-import {
-  ToastContextProvider,
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-} from 'src/contexts';
 
 export enum ProductModalType {
   Remove,
@@ -258,10 +258,10 @@ export const ProductModal = memo(
                 maxValue={maxValue}
                 minValue={minValue}
                 isAllowZeroValue={isAllowZeroValue}
-                style={[
+                style={
                   !isReturnRemoveCreateInvoice &&
-                    styles.productQuantityContainer,
-                ]}
+                  styles.productQuantityContainer
+                }
                 onHand={onHand}
                 onPressAddToList={onPressSkip}
                 onJobSelectNavigation={onJobSelectNavigation}

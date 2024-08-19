@@ -31,6 +31,7 @@
     "no-undef": "error",
     "react/display-name": "off",
     "react/prop-types": "off",
+    "@typescript-eslint/no-namespace": "off",
     "import/no-named-as-default": "off",
     "react/no-unescaped-entities": "off",
     "react-native/no-unused-styles": 1,
@@ -42,7 +43,8 @@
     "React": true,
     "JSX": true,
     "NodeJS": true,
-    "__DEV__": true
+    "__DEV__": true,
+    "ReactNavigation": true
   },
   "settings": {
     "import/resolver": {

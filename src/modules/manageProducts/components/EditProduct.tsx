@@ -134,10 +134,7 @@ export const EditProduct = observer(
 
     const enabledSupplier = useMemo<DropdownItem | undefined>(
       () =>
-        find(
-          whereEq({ value: product?.replenishedFormId }),
-          enabledSuppliers,
-        ),
+        find(whereEq({ value: product?.replenishedFormId }), enabledSuppliers),
       [enabledSuppliers, product?.replenishedFormId],
     );
 
@@ -212,9 +209,7 @@ export const EditProduct = observer(
         />
         <View style={styles.orderSection}>
           <View style={styles.orderSettingsContainer}>
-            <Text style={styles.orderSettingsLabel}>
-              {t('orderSettings')}
-            </Text>
+            <Text style={styles.orderSettingsLabel}>{t('orderSettings')}</Text>
             <View style={styles.orderSettings}>
               {!isSpecialOrder && (
                 <View style={styles.minMaxRow}>

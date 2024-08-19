@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+// eslint-disable-next-line import/default
 import Animated, {
   SharedValue,
   useAnimatedStyle,

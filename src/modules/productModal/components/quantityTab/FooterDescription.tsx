@@ -17,6 +17,13 @@ interface Props {
 
 const VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY = '99+';
 
+const renderValue = (value?: number) => {
+  if (typeof value === 'number' && !isNaN(value)) {
+    return value > 99 ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY : value;
+  }
+  return '';
+};
+
 export const FooterDescription: React.FC<Props> = ({
   type,
   hideOnHandCount,
@@ -25,13 +32,6 @@ export const FooterDescription: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   const isEachPiece = product?.inventoryUseTypeId === InventoryUseType.Each;
-
-  const renderValue = (value?: number) =>
-    typeof value === 'number'
-      ? value > 99
-        ? VIEW_STRING_OF_UPPER_LIMIT_PRODUCT_QUANTITY
-        : value
-      : null;
 
   const shipmentQuantity = useMemo(() => {
     switch (type) {
@@ -58,7 +58,7 @@ export const FooterDescription: React.FC<Props> = ({
               </Text>
             )}
             <View style={styles.wrappedContainer}>
-              <View style={[styles.itemContainer, { margin: 8 }]}>
+              <View style={[styles.itemContainer, styles.mr8]}>
                 <Text style={styles.title}>Remove by</Text>
                 <InventoryTypeBadge
                   inventoryUseTypeId={product.inventoryUseTypeId}
@@ -66,7 +66,7 @@ export const FooterDescription: React.FC<Props> = ({
               </View>
 
               {isEachPiece && (
-                <View style={[styles.itemContainer, { margin: 8 }]}>
+                <View style={[styles.itemContainer, styles.mr8]}>
                   <Text style={styles.title}>{t('piecesPerContainer')}</Text>
                   <Text style={styles.subtitleInStock}>
                     {renderValue(product.unitsPer)}
@@ -74,21 +74,21 @@ export const FooterDescription: React.FC<Props> = ({
                 </View>
               )}
 
-              <View style={[styles.itemContainer, { margin: 8 }]}>
+              <View style={[styles.itemContainer, styles.mr8]}>
                 <Text style={styles.title}>{t('shipmentQuantity')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(shipmentQuantity)}
                 </Text>
               </View>
 
-              <View style={[styles.itemContainer, { margin: 8 }]}>
+              <View style={[styles.itemContainer, styles.mr8]}>
                 <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onHand)}
                 </Text>
               </View>
 
-              <View style={[styles.itemContainer, { margin: 8 }]}>
+              <View style={[styles.itemContainer, styles.mr8]}>
                 <Text style={styles.title}>{t('onOrder')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onOrder)}
@@ -100,8 +100,8 @@ export const FooterDescription: React.FC<Props> = ({
       default:
         return (
           <View style={styles.container}>
-            {hideOnHandCount ? null : (
-              <View style={[styles.itemContainer, { marginRight: 16 }]}>
+            {!hideOnHandCount && (
+              <View style={[styles.itemContainer, styles.mr16]}>
                 <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {onHand > 99
@@ -177,5 +177,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: fonts.TT_Bold,
     letterSpacing: 0,
+  },
+  mr8: {
+    marginRight: 8,
+  },
+  mr16: {
+    marginRight: 16,
   },
 });
