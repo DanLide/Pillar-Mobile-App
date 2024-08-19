@@ -1,12 +1,8 @@
-import { useRef, useCallback, useState } from 'react';
+import { useRef, useCallback, useState, Dispatch, SetStateAction } from 'react';
 import { observer } from 'mobx-react';
 import { useTranslation } from 'react-i18next';
 
-import {
-  BaseScannerScreen,
-  ScannerScreenError,
-  ToastActionType,
-} from '../../components';
+import { BaseScannerScreen, ToastActionType } from '../../components';
 import {
   ScannerModalStoreType,
   CurrentProductStoreType,
@@ -83,7 +79,10 @@ export const ScannerScreen = observer(
     );
 
     const onProductScan = useCallback(
-      (product: ProductModel) => {
+      (
+        product: ProductModel,
+        setIsScannerActive?: Dispatch<SetStateAction<boolean>>,
+      ) => {
         if (product.isRecoverable) {
           setModalParams({
             type: ProductModalType.CreateInvoice,
@@ -91,6 +90,7 @@ export const ScannerScreen = observer(
             onHand: store.getOnHand(product),
           });
         } else {
+          setIsScannerActive?.(true);
           showToast(t('cannotAddToInvoiceMissingPricing'), {
             type: ToastType.DetailedScanError,
             offsetType: 'aboveButtons',

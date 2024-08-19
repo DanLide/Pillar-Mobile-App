@@ -1,6 +1,6 @@
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { View } from 'react-native';
@@ -52,7 +52,10 @@ interface Props {
   product?: ProductModel;
   disableScanner?: boolean;
   disableAlert?: boolean;
-  onProductScan?: (product: ProductModel) => void;
+  onProductScan?: (
+    product: ProductModel,
+    setIsScannerActive?: Dispatch<SetStateAction<boolean>>,
+  ) => void;
   onSubmit?: (
     product: ProductModel,
     customToastType?: ProductQuantityToastType,
@@ -186,8 +189,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           return;
         }
 
-        setIsScannerActive(true);
-        onProductScan?.(product);
+        onProductScan?.(product, setIsScannerActive);
       },
       [onFetchProduct, store, handleFetchError, onProductScan, handleScanError],
     );
