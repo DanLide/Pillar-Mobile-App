@@ -65,7 +65,7 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
 
           <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>
-              {t('youHaveSuccessfullySubmixtted')}
+              {t('youHaveSuccessfullySubmittedItems')}
             </Text>
           </View>
 

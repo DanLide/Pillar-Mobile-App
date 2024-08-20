@@ -41,9 +41,6 @@ export const CreateOrderResultScreen = ({
   const isPORequired = status === OrderStatusType.POREQUIRED;
   const isOrderNotFinalized = isPORequired && !poNumber;
 
-  const primaryButtonText = isPurchaseOrder ? t('home') : t('manageOrders');
-  const secondaryButtonText = isPurchaseOrder ? t('viewOrder') : t('home');
-
   const title = isPurchaseOrder
     ? t('orderIdCreated', { orderId: orderId ? orderId : '' })
     : t('returnOrderCreated');
@@ -78,23 +75,7 @@ export const CreateOrderResultScreen = ({
     [],
   );
 
-  const onPrimaryPress = useCallback(
-    () =>
-      isPurchaseOrder
-        ? navigation.goBack()
-        : navigation.replace(AppNavigator.OrdersScreen),
-    [isPurchaseOrder, navigation],
-  );
-
-  const onSecondaryPress = useCallback(
-    () =>
-      isPurchaseOrder && orderId
-        ? navigation.navigate(AppNavigator.OrderDetailsScreen, {
-            orderId: orderId.toString(),
-          })
-        : navigation.goBack(),
-    [isPurchaseOrder, navigation, orderId],
-  );
+  const onHomePress = useCallback(() => navigation.goBack(), [navigation]);
 
   return (
     <View style={styles.container}>
@@ -159,21 +140,12 @@ export const CreateOrderResultScreen = ({
       <TotalCostBar orderType={orderType} style={styles.totalCost} />
 
       <View style={styles.buttons}>
-        {isPurchaseOrder && !orderId ? null : (
-          <Button
-            type={ButtonType.secondary}
-            title={secondaryButtonText}
-            buttonStyle={styles.button}
-            textStyle={styles.buttonText}
-            onPress={onSecondaryPress}
-          />
-        )}
         <Button
           type={ButtonType.primary}
-          title={primaryButtonText}
+          title={t('home')}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
-          onPress={onPrimaryPress}
+          onPress={onHomePress}
         />
       </View>
     </View>
