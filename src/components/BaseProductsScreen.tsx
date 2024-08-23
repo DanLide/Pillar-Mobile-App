@@ -33,6 +33,7 @@ import {
   ToastContextProvider,
 } from 'src/contexts';
 import { Flows } from 'src/modules/types';
+import { ButtonCluster } from 'src/components/ButtonCluster';
 
 type Store = ScannerModalStoreType &
   CurrentProductStoreType &
@@ -107,8 +108,6 @@ const BaseProducts = observer(
     const { showToast } = useSingleToast();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [eraseProductsAlertVisible, setEraseProductsAlertVisible] =
-      useState(false);
     const isNeedNavigateBack = useRef(false);
 
     const modalType = modalParams.type;
@@ -147,25 +146,6 @@ const BaseProducts = observer(
       });
     }, [modalType, navigation, onComplete, showToast]);
 
-    const CompleteButton = useMemo<JSX.Element | null>(() => {
-      if (
-        modalType !== ProductModalType.ManageProduct ||
-        (modalType === ProductModalType.ManageProduct && scannedProductsCount)
-      ) {
-        return (
-          <Button
-            disabled={!scannedProductsCount && flow !== Flows.ManageProduct}
-            type={ButtonType.primary}
-            buttonStyle={styles.buttonContainer}
-            title={primaryButtonTitle ?? t('complete')}
-            onPress={onCompleteRemove}
-          />
-        );
-      }
-
-      return null;
-    }, [modalType, onCompleteRemove, primaryButtonTitle, scannedProductsCount]);
-
     return (
       <View style={styles.container}>
         <InfoTitleBar
@@ -191,19 +171,22 @@ const BaseProducts = observer(
           flow={flow}
         />
 
-        <View style={styles.buttons}>
-          <Button
-            type={scanButtonType}
-            icon={SVGs.CodeIcon}
-            iconProps={SCAN_ICON_PROPS}
-            textStyle={styles.scanText}
-            buttonStyle={styles.buttonContainer}
-            title={t('scan')}
-            onPress={onPressScan}
-          />
-
-          {CompleteButton}
-        </View>
+        <ButtonCluster
+          leftType={scanButtonType}
+          leftIcon={SVGs.CodeIcon}
+          leftIconProps={SCAN_ICON_PROPS}
+          leftTitle={t('scan')}
+          leftOnPress={onPressScan}
+          rightType={ButtonType.primary}
+          rightDisabled={!scannedProductsCount && flow !== Flows.ManageProduct}
+          rightTitle={primaryButtonTitle ?? t('complete')}
+          rightOnPress={onCompleteRemove}
+          showRightButton={
+            modalType !== ProductModalType.ManageProduct ||
+            (modalType === ProductModalType.ManageProduct &&
+              !!scannedProductsCount)
+          }
+        />
 
         <ProductModalComponent
           {...modalParams}

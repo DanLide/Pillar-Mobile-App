@@ -7,6 +7,7 @@ import { RouteProp } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 
 import {
+  ButtonCluster,
   ButtonType,
   Dropdown,
   DropdownItem,
@@ -222,8 +223,9 @@ const CreateOrderScreen = observer(
             onSelect={item => ordersStoreRef.setSupplier(+item.value)}
             disabled={isDropdownDisabled}
           />
+          <AddNotesSection orderStore={ordersStoreRef} />
         </View>
-        <AddNotesSection orderStore={ordersStoreRef} />
+
         <View style={styles.productsContainer}>
           <SelectedProductsList
             onItemPress={onProductListItemPress}
@@ -246,25 +248,18 @@ const CreateOrderScreen = observer(
 
         <TotalCostBar orderType={orderType} />
 
-        <View style={styles.buttons}>
-          <Button
-            type={ButtonType.secondary}
-            icon={SVGs.ScanIcon}
-            iconProps={SCAN_ICON_PROPS}
-            textStyle={styles.scanText}
-            buttonStyle={styles.buttonContainer}
-            title={t('scan')}
-            onPress={onPressScan}
-          />
-          <Button
-            disabled={!scannedProductsCount || isSuggestedProductsLoading}
-            isLoading={isCreateOrderLoading}
-            type={ButtonType.primary}
-            buttonStyle={styles.buttonContainer}
-            title={submitButtonTitle}
-            onPress={onCreateOrder}
-          />
-        </View>
+        <ButtonCluster
+          leftTitle={t('scan')}
+          leftType={ButtonType.secondary}
+          leftIcon={SVGs.ScanIcon}
+          leftIconProps={SCAN_ICON_PROPS}
+          leftOnPress={onPressScan}
+          rightTitle={submitButtonTitle}
+          rightDisabled={!scannedProductsCount || isSuggestedProductsLoading}
+          rightIsLoading={isCreateOrderLoading}
+          rightType={ButtonType.primary}
+          rightOnPress={onCreateOrder}
+        />
 
         <ProductModal
           {...modalParams}
@@ -294,20 +289,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 16,
-    padding: 16,
-    backgroundColor: colors.white,
-  },
-  scanText: {
-    paddingLeft: 8,
-  },
-  buttonContainer: {
-    flex: 1,
-    height: 48,
-  },
   productsContainer: {
     backgroundColor: colors.background,
     borderBottomWidth: 1,
@@ -323,7 +304,7 @@ const styles = StyleSheet.create({
   recommendedProductsButtonText: {
     color: colors.purpleDark3,
     fontFamily: fonts.TT_Bold,
-    fontSize: 13,
+    fontSize: 12,
     lineHeight: 18,
   },
   toastSuccessMessage: {
@@ -331,7 +312,8 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     paddingHorizontal: 16,
-    paddingTop: 24,
+    paddingVertical: 24,
+    gap: 8,
   },
 });
 
