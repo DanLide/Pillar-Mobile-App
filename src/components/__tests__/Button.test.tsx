@@ -66,7 +66,13 @@ describe('Button', () => {
     ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
-      { color: '#FFFFFF', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+      {
+        color: '#FFFFFF',
+        fontFamily: '3MCircularTTBold',
+        fontSize: 20,
+        lineHeight: 30,
+      },
+      {},
       undefined,
       undefined,
     ]);
@@ -92,8 +98,16 @@ describe('Button', () => {
     ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
+      {
+        color: '#FFFFFF',
+        fontFamily: '3MCircularTTBold',
+        fontSize: 20,
+        lineHeight: 30,
+      },
       [
-        { color: '#7634BC', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+        {
+          color: '#7634BC',
+        },
         undefined,
       ],
       undefined,
