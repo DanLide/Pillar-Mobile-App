@@ -171,6 +171,8 @@
   "start": "Start",
   "addedToList": "added to List",
   "addedToCart": "added to Cart",
+  "addedToOrder": "added to Order",
+  "addedToInvoice": "added to Invoice",
   "scanUPC": "Scan UPC",
   "loading": "Loading...",
   "unauthorized": "Unauthorized...",
