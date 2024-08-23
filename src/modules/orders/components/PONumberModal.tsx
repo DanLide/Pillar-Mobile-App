@@ -6,8 +6,7 @@ import { useHeaderHeight } from '@react-navigation/elements';
 import { useTranslation } from 'react-i18next';
 
 import {
-  Button,
-  ButtonType,
+  ButtonCluster,
   Input,
   InputType,
   Modal,
@@ -126,24 +125,14 @@ export const PONumberModal = observer(
             </View>
           </View>
 
-          <View style={styles.buttons}>
-            <Button
-              type={ButtonType.secondary}
-              title={t('skip')}
-              buttonStyle={styles.button}
-              textStyle={styles.buttonText}
-              onPress={handleSkipPress}
-            />
-            <Button
-              type={ButtonType.primary}
-              title={t('continue')}
-              disabled={!poNumber}
-              isLoading={isLoading}
-              buttonStyle={styles.button}
-              textStyle={styles.buttonText}
-              onPress={handleSubmitPress}
-            />
-          </View>
+          <ButtonCluster
+            leftOnPress={handleSkipPress}
+            leftTitle={t('skip')}
+            rightTitle={t('continue')}
+            rightOnPress={handleSubmitPress}
+            rightDisabled={!poNumber}
+            rightIsLoading={isLoading}
+          />
         </View>
 
         <AlertWrapper

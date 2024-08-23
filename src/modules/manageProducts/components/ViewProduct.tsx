@@ -73,7 +73,11 @@ export const ViewProduct = observer(({ product }: Props) => {
             subtitle={product?.orderMultiple ?? '-'}
           />
         )}
-        <InfoBadge title={t('onOrder')} subtitle={product?.onOrder} />
+        <InfoBadge
+          title={t('on')}
+          titleWithNewLine={t('order')}
+          subtitle={product?.onOrder}
+        />
       </View>
       <View style={styles.bottomInfo}>
         <InfoBadge

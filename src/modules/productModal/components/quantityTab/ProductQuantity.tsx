@@ -493,7 +493,6 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     width: 135,
-    height: 48,
     alignSelf: 'center',
     marginTop: 'auto',
     marginBottom: 16,

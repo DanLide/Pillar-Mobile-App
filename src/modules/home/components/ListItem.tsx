@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { colors, fonts, SVGs } from '../../../theme';
+import { isIPod } from 'src/constants';
 
 type ListItem = {
   leftIcon: React.ReactElement;
@@ -21,7 +22,7 @@ const ListItem = memo(
         {leftIcon}
         <View style={styles.infoContainer}>
           <Text style={styles.titleText}>{title}</Text>
-          <Text style={styles.subtitleText} numberOfLines={1}>
+          <Text style={styles.subtitleText} numberOfLines={2}>
             {subtitle}
           </Text>
         </View>
@@ -36,14 +37,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingVertical: 15,
+    paddingVertical: isIPod ? 11.5 : 15,
 
     paddingLeft: 16,
     paddingRight: 10,
   },
   infoContainer: {
     flex: 1,
-    marginLeft: 12,
+    marginHorizontal: 12,
+    gap: 3,
   },
   titleText: {
     fontFamily: fonts.TT_Bold,

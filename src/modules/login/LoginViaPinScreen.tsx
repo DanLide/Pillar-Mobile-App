@@ -29,6 +29,7 @@ import TokenParser from './components/TokenParser';
 import { URLProvider } from 'src/data/helpers';
 import { useToastMessage } from 'src/hooks';
 import { ToastType } from 'src/contexts/types';
+import { isIPod } from 'src/constants';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -286,7 +287,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: fonts.TT_Regular,
     color: colors.textNeutral,
-    fontSize: 15,
+    fontSize: isIPod ? 13 : 15,
   },
   selectedButtonText: {
     fontWeight: '700',

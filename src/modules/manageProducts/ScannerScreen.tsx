@@ -52,7 +52,7 @@ const ScannerScreen = observer(() => {
       onCancelPress={onCancelPress}
       ProductModalComponent={ProductModal}
       onProductsListPress={onProductListPress}
-      buttonListTitle={t('reviewUpdates')}
+      buttonListTitle={t('list')}
       disableAlert
     />
   );

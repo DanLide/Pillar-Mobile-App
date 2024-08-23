@@ -280,8 +280,8 @@ export const EditProduct = observer(
                 <EditQuantity
                   disabled
                   vertical
-                  label={t('onOrder')}
-                  labelContainerStyle={styles.onOrderLabel}
+                  label={t('on')}
+                  labelWithNewLine={t('order')}
                   currentValue={product?.onOrder ?? 0}
                   maxValue={MAX_VALUE}
                   minValue={MIN_VALUE}
@@ -390,9 +390,6 @@ const styles = StyleSheet.create({
   inventoryTypes: {
     alignSelf: 'center',
     minWidth: 150,
-  },
-  onOrderLabel: {
-    paddingVertical: 11,
   },
   orderQuantities: {
     flexDirection: 'row',

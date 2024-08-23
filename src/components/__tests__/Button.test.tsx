@@ -56,7 +56,7 @@ describe('Button', () => {
           alignItems: 'center',
           backgroundColor: '#9657D9',
           borderRadius: 8,
-          height: 50,
+          height: 48,
           justifyContent: 'center',
         },
         undefined,
@@ -66,7 +66,13 @@ describe('Button', () => {
     ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
-      { color: '#FFFFFF', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+      {
+        color: '#FFFFFF',
+        fontFamily: '3MCircularTTBold',
+        fontSize: 20,
+        lineHeight: 30,
+      },
+      {},
       undefined,
       undefined,
     ]);
@@ -84,7 +90,7 @@ describe('Button', () => {
         borderColor: '#95959E',
         borderRadius: 8,
         borderWidth: 1,
-        height: 50,
+        height: 48,
         justifyContent: 'center',
       },
       undefined,
@@ -92,8 +98,16 @@ describe('Button', () => {
     ]);
     const title = getByTestId(testIds.idTitle('button'));
     expect(title.props.style).toEqual([
+      {
+        color: '#FFFFFF',
+        fontFamily: '3MCircularTTBold',
+        fontSize: 20,
+        lineHeight: 30,
+      },
       [
-        { color: '#7634BC', fontFamily: '3MCircularTTBold', fontSize: 23.5 },
+        {
+          color: '#7634BC',
+        },
         undefined,
       ],
       undefined,

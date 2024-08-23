@@ -20,12 +20,12 @@ import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 
 import {
-  Button,
+  ButtonCluster,
   ButtonType,
   InfoTitleBar,
   InfoTitleBarType,
   Modal,
-} from '../../../components';
+} from 'src/components';
 import {
   Description,
   ProductModalProps,
@@ -441,24 +441,17 @@ export const ProductModal = observer(
                   title={onOrderTitle}
                 />
               )}
-              <View style={styles.buttons}>
-                {userPermissions.editProductInStock && (
-                  <Button
-                    title={isEdit ? t('cancel') : t('edit')}
-                    type={ButtonType.secondary}
-                    disabled={isLoading}
-                    buttonStyle={styles.buttonContainer}
-                    onPress={isEdit ? handleCancelPress : handleEditPress}
-                  />
-                )}
-                <Button
-                  title={isEdit ? t('save') : t('done')}
-                  type={ButtonType.primary}
-                  isLoading={isLoading}
-                  buttonStyle={styles.buttonContainer}
-                  onPress={handleSubmit}
-                />
-              </View>
+              <ButtonCluster
+                leftTitle={isEdit ? t('cancel') : t('edit')}
+                leftType={ButtonType.secondary}
+                leftDisabled={isLoading}
+                leftOnPress={isEdit ? handleCancelPress : handleEditPress}
+                showLeftButton={userPermissions.editProductInStock}
+                rightTitle={isEdit ? t('save') : t('done')}
+                rightType={ButtonType.primary}
+                rightIsLoading={isLoading}
+                rightOnPress={handleSubmit}
+              />
             </KeyboardAvoidingView>
           </ToastContextProvider>
 

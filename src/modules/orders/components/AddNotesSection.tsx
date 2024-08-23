@@ -6,6 +6,7 @@ import { Input } from 'src/components';
 import { SVGs, colors, fonts } from 'src/theme';
 import { OrdersStore } from '../stores/OrdersStore';
 import { observer } from 'mobx-react';
+import { isIPod } from 'src/constants';
 
 export const AddNotesSection = observer(
   ({ orderStore }: { orderStore: OrdersStore }) => {
@@ -41,27 +42,25 @@ export const AddNotesSection = observer(
 const styles = StyleSheet.create({
   notesInput: {
     height: '100%',
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 18,
   },
   notesContainer: {
-    height: 128,
-    marginHorizontal: 16,
-    marginVertical: 24,
-    paddingTop: 10,
+    height: isIPod ? 64 : 128,
+    marginTop: 8,
   },
   addNotesContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
     justifyContent: 'center',
-    marginBottom: 18,
-    marginTop: 24,
+    padding: 8,
+    paddingBottom: 0,
   },
   noteText: {
     color: colors.purpleDark3,
     fontFamily: fonts.TT_Bold,
-    fontSize: 16,
-    lineHeight: 20,
+    fontSize: 13,
+    lineHeight: 18,
     alignSelf: 'center',
     marginLeft: 8,
   },

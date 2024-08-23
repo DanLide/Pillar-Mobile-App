@@ -102,8 +102,6 @@ const Button: React.FC<ExtendedButtonProps> = ({
   const getTextStyleByType = useCallback(
     (type?: ButtonType) => {
       switch (type) {
-        case ButtonType.primary:
-          return styles.primaryText;
         case ButtonType.secondary:
           return [
             styles.secondaryText,
@@ -112,7 +110,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
         case ButtonType.secondaryRed:
           return styles.secondaryRedText;
         default:
-          return styles.buttonText;
+          return {};
       }
     },
     [isDisabled],
@@ -122,6 +120,7 @@ const Button: React.FC<ExtendedButtonProps> = ({
     (state: PressableStateCallbackType) => StyleProp<TextStyle>
   >(
     ({ pressed }) => [
+      styles.textBase,
       getTextStyleByType(type),
       pressed ? styles.buttonTextPressed : undefined,
       textStyle,
@@ -169,11 +168,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
+    height: 48,
     borderRadius: 16,
   },
   buttonPressed: {
     backgroundColor: colors.purpleDark3,
+    borderColor: colors.purpleDark3,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -181,8 +181,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonText: {
-    fontSize: 17,
+  textBase: {
+    fontSize: 20,
+    lineHeight: 30,
+    fontFamily: fonts.TT_Bold,
     color: colors.white,
   },
   buttonTextPressed: {
@@ -196,12 +198,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purple,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
-  },
-  primaryText: {
-    color: colors.white,
-    fontSize: 23.5,
-    fontFamily: fonts.TT_Bold,
+    height: 48,
   },
   secondaryContainer: {
     borderWidth: 1,
@@ -210,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
+    height: 48,
   },
   secondaryRedContainer: {
     borderWidth: 1,
@@ -219,17 +216,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
-    height: 50,
+    height: 48,
   },
   secondaryText: {
     color: colors.purpleDark,
-    fontSize: 23.5,
-    fontFamily: fonts.TT_Bold,
   },
   secondaryRedText: {
     color: colors.red,
-    fontSize: 23.5,
-    fontFamily: fonts.TT_Bold,
   },
   secondaryTextDisabled: {
     color: colors.grayDark,

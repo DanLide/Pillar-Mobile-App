@@ -165,7 +165,7 @@ export const Toast: React.FC<Props> = ({
             testID={testIds.idSettingsText(testID)}
             style={[styles.action, { color: action }]}
           >
-            {t('openSettings')}
+            {t('settings')}
           </Text>
         );
       case ToastActionType.Details:

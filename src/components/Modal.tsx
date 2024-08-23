@@ -112,10 +112,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 12,
   },
   title: {
     fontFamily: fonts.TT_Regular,
-    fontSize: 17,
+    fontSize: 16,
     lineHeight: 20,
     color: colors.blackLight,
   },

@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
     opacity: 0.125,
   },
   emptyText: {
-    fontSize: 20,
+    fontSize: 17,
     fontFamily: fonts.TT_Bold,
-    lineHeight: 30,
+    lineHeight: 25,
     color: colors.black,
   },
   emptyContainerIcon: {
-    marginVertical: 16,
+    marginVertical: 8,
   },
 });

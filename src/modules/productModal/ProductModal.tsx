@@ -100,7 +100,7 @@ const getTabs = (type: ProductModalType): Tabs[] => {
   }
 };
 
-const MODAL_HEADER_HEIGHT = 70;
+const MODAL_HEADER_HEIGHT = 60;
 const TOAST_SUCCESS_CREATE_JOB = renderType[ToastType.SuccessCreateJob];
 
 export const ProductModal = memo(

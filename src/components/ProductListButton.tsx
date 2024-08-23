@@ -52,7 +52,7 @@ const ProductListButton: React.FC<Props> = ({
         testID={testIds.idButton(testID)}
       >
         <View>
-          <SVGs.ProductListIcon color={colors.purpleDark} />
+          <SVGs.ProductListIcon color={colors.grayDark3} />
           {!!count && (
             <View style={styles.countContainer}>
               <Text style={styles.countText} testID={testIds.idCount(testID)}>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: colors.white,
     paddingHorizontal: 5,
-    paddingVertical: 12,
+    paddingVertical: 8,
     borderRadius: 8,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
@@ -84,9 +84,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     borderColor: colors.purple,
+    borderWidth: 1.5,
   },
   titleText: {
-    color: colors.purple,
+    color: colors.grayDark3,
     fontSize: 20,
     fontFamily: fonts.TT_Regular,
     marginLeft: 16,

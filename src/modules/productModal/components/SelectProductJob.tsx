@@ -1,8 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-import { Button, ButtonType } from '../../../components';
+import { ButtonCluster } from 'src/components';
 import { JobsList } from '../../jobsList/components';
 import { JobModel } from '../../jobsList/stores/JobsStore';
 import { Tabs } from '../ProductModal';
@@ -48,30 +47,13 @@ export const SelectProductJob: React.FC<Props> = ({
 
   const Footer = useMemo(
     () => (
-      <View style={styles.buttons}>
-        {isRecoverableProduct ? (
-          <Button
-            type={ButtonType.secondary}
-            title={t('skip')}
-            buttonStyle={styles.button}
-            onPress={onPressSkip}
-          />
-        ) : (
-          <Button
-            type={ButtonType.secondary}
-            title={t('back')}
-            buttonStyle={styles.button}
-            onPress={onPressBack}
-          />
-        )}
-        <Button
-          type={ButtonType.primary}
-          disabled={isEdit ? false : !selectedJob}
-          title={t('done')}
-          buttonStyle={styles.button}
-          onPress={() => onPressAdd(selectedJob)}
-        />
-      </View>
+      <ButtonCluster
+        leftTitle={isRecoverableProduct ? t('skip') : t('back')}
+        leftOnPress={isRecoverableProduct ? onPressSkip : onPressBack}
+        rightTitle={t('done')}
+        rightOnPress={() => onPressAdd(selectedJob)}
+        rightDisabled={isEdit ? false : !selectedJob}
+      />
     ),
     [
       isEdit,
@@ -100,24 +82,3 @@ export const SelectProductJob: React.FC<Props> = ({
     return null;
   }
 };
-
-const styles = StyleSheet.create({
-  header: {
-    marginVertical: 24,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-  },
-  buttons: {
-    flexDirection: 'row',
-    margin: 16,
-    justifyContent: 'space-between',
-  },
-  button: {
-    width: 163.5,
-    height: 48,
-  },
-});
