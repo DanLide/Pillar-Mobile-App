@@ -272,7 +272,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     flex: 1,
     paddingHorizontal: 10,
-    paddingBottom: 16,
   },
   cabinetContainer: {
     width: '100%',
@@ -289,7 +288,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   headerContainer: {
-    width: 360,
+    width: '96%',
     alignItems: 'center',
   },
   contentContainer: {

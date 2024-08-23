@@ -79,7 +79,7 @@ export const LogoutIcon2 = memo((props: SvgProps) => (
 ));
 
 export const InvoiceIcon = memo((props: SvgProps) => (
-  <Svg width="24" height="25" viewBox="0 0 24 25" fill="none" {...props}>
+  <Svg width="20" height="20" viewBox="0 0 24 25" fill="none" {...props}>
     <Path
       fill-rule="evenodd"
       clip-rule="evenodd"

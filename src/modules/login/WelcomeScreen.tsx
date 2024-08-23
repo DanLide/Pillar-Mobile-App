@@ -15,6 +15,7 @@ import { colors, fonts } from '../../theme';
 import { DeviceName } from './components/DeviceName';
 import { ssoStore } from 'src/stores';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { isIPod } from 'src/constants';
 
 interface Props {
   navigation: StackNavigationProp<
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   continueButton: {
-    marginTop: 36,
+    marginTop: isIPod ? 24 : 36,
     width: '90%',
   },
   ssoLoginContainer: {

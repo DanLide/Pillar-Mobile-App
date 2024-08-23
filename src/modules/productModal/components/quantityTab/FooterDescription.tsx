@@ -99,7 +99,7 @@ export const FooterDescription: React.FC<Props> = ({
         );
       default:
         return (
-          <View style={styles.container}>
+          <View style={[styles.wrappedContainer, { marginTop: 12 }]}>
             {hideOnHandCount ? null : (
               <View style={[styles.itemContainer, { marginRight: 16 }]}>
                 <Text style={styles.title}>{t('onHand')}</Text>

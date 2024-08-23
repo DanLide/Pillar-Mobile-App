@@ -32,6 +32,8 @@ interface Props {
   nextNavigationGoBack?: boolean;
 }
 
+export const STOCK_ITEM_HEIGHT = 56;
+
 export const StocksListItem: React.FC<Props> = observer(
   ({
     item,
@@ -128,7 +130,7 @@ export const StocksListItem: React.FC<Props> = observer(
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 65.5,
+    height: STOCK_ITEM_HEIGHT,
     paddingLeft: 16,
     backgroundColor: colors.white,
     paddingRight: 22,
@@ -143,8 +145,8 @@ const styles = StyleSheet.create({
   },
   title: {
     paddingLeft: 15,
-    fontSize: 20,
-    lineHeight: 26,
+    fontSize: 17,
+    lineHeight: 22,
     fontFamily: fonts.TT_Regular,
     color: '#323234',
     flex: 1,

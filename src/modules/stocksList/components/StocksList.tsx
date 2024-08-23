@@ -25,7 +25,7 @@ import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
 import { StockModel, StockStore } from '../stores/StocksStore';
 import { stocksStore } from '../stores';
 import { fetchStocks } from '../../../data/fetchStocks';
-import { StocksListItem } from './StocksListItem';
+import { STOCK_ITEM_HEIGHT, StocksListItem } from './StocksListItem';
 import { colors, SVGs } from '../../../theme';
 import { Button, ButtonType } from '../../../components';
 import { AuthError, BadRequestError } from '../../../data/helpers/tryFetch';
@@ -201,6 +201,7 @@ export const StocksList: React.FC<Props> = observer(
         data={stocksStore.stocks}
         renderItem={renderStockListItem}
         keyExtractor={keyExtractor}
+        contentContainerStyle={styles.listContainer}
       />
     );
   },
@@ -221,6 +222,9 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: '100%',
     marginBottom: 16,
+  },
+  listContainer: {
+    paddingBottom: STOCK_ITEM_HEIGHT,
   },
   text: {
     marginTop: 24,

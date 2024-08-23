@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1,
     marginHorizontal: 8,
     borderRadius: 8,
-    marginTop: 16,
+    marginTop: 10,
   },
   separator: {
     height: 0.5,

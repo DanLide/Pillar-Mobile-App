@@ -25,6 +25,7 @@ import {
 import { equals, ifElse, pipe, replace } from 'ramda';
 
 import { colors, fonts, SVGs } from '../../../../theme';
+import { isIPod } from 'src/constants';
 
 interface Props extends Pick<TextInputProps, 'keyboardType'> {
   currentValue?: number;
@@ -47,7 +48,7 @@ interface Props extends Pick<TextInputProps, 'keyboardType'> {
   onChange?: (quantity: number) => void;
 }
 
-export const QUANTITY_PICKER_HEIGHT = 103;
+export const QUANTITY_PICKER_HEIGHT = 81;
 
 const replaceCommasWithDots = replace(',', '.');
 const removeExtraDots = replace(/(?<=\..*)\./g, '');
@@ -58,6 +59,8 @@ const removeLeadingZero = ifElse(
 );
 
 const INITIAL_FONT_SIZE = 78;
+const CONTAINER_WIDTH = isIPod ? 170 : 184;
+const VERTICAL_CONTAINER_WIDTH = isIPod ? 90 : 108;
 
 export const EditQuantity = forwardRef(
   (
@@ -121,10 +124,11 @@ export const EditQuantity = forwardRef(
     const inputLabelContainerStyle = useMemo<StyleProp<ViewStyle>>(
       () => [
         styles.inputLabelContainer,
+        vertical && styles.inputLabelContainerVertical,
         labelContainerStyle,
         error && styles.inputLabelContainerError,
       ],
-      [error, labelContainerStyle],
+      [error, labelContainerStyle, vertical],
     );
 
     const quantityButtonStyle = useMemo<StyleProp<ViewStyle>>(
@@ -308,7 +312,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: QUANTITY_PICKER_HEIGHT,
-    width: 184,
+    width: CONTAINER_WIDTH,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: colors.grayDark,
@@ -337,8 +341,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.purpleDark2,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
+    maxWidth: CONTAINER_WIDTH,
     paddingHorizontal: 8,
     paddingVertical: 2,
+  },
+  inputLabelContainerVertical: {
+    maxWidth: VERTICAL_CONTAINER_WIDTH,
   },
   inputLabelContainerError: {
     backgroundColor: colors.red,
@@ -348,7 +356,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderTopWidth: 0,
     height: 48,
-    maxWidth: 108,
+    maxWidth: VERTICAL_CONTAINER_WIDTH,
     padding: 8,
   },
   inputWithLabel: {
