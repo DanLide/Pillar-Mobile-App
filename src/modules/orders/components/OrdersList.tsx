@@ -101,7 +101,7 @@ export const OrdersList = memo(
           <ButtonCluster
             leftTitle={t('returnOrder')}
             leftOnPress={onSecondaryPress}
-            rightTitle={t('createOrder')}
+            rightTitle={t('createOrderShort')}
             rightOnPress={onPrimaryPress}
           />
         )}
