@@ -18,6 +18,11 @@ import { SelectProductJob } from './components/SelectProductJob';
 import { SVGs, colors, fonts } from 'src/theme';
 import { JobModel, jobIdNoRepairOrder } from '../jobsList/stores/JobsStore';
 import {
+  MODAL_TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+  ToastContextProvider,
+  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
+} from 'src/contexts';
+import {
   CurrentProductStoreType,
   ProductModel,
   ScannerModalStoreType,
@@ -28,10 +33,6 @@ import { StockLocationListModal } from '../orders/components';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { ordersStore } from '../orders/stores';
 import { renderType } from 'src/contexts/ToastContext/renderTypes';
-import {
-  ToastContextProvider,
-  TOAST_OFFSET_ABOVE_SINGLE_BUTTON,
-} from 'src/contexts';
 
 export enum ProductModalType {
   Remove,
@@ -150,7 +151,7 @@ export const ProductModal = memo(
           toastRef.current?.show(
             t('newJobNumberCreated', { number: jobNumber }),
             {
-              style: [{ marginBottom: TOAST_OFFSET_ABOVE_SINGLE_BUTTON }],
+              style: [{ marginBottom: MODAL_TOAST_OFFSET_ABOVE_SINGLE_BUTTON }],
             },
           );
           setTimeout(() => {

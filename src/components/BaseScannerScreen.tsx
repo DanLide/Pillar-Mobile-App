@@ -1,6 +1,6 @@
 import { encode as btoa } from 'base-64';
 import { observer } from 'mobx-react';
-import { useCallback, useState } from 'react';
+import { useCallback, useState, Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
 import { View } from 'react-native';
@@ -16,7 +16,8 @@ import {
   ProductModalParams,
   ProductModalProps,
   ProductQuantityToastType,
-} from '../modules/productModal';
+  ProductModalType,
+} from 'src/modules/productModal';
 import {
   CurrentProductStoreType,
   ProductModel,
@@ -52,7 +53,10 @@ interface Props {
   product?: ProductModel;
   disableScanner?: boolean;
   disableAlert?: boolean;
-  onProductScan?: (product: ProductModel) => void;
+  onProductScan?: (
+    product: ProductModel,
+    setIsScannerActive?: Dispatch<SetStateAction<boolean>>,
+  ) => void;
   onSubmit?: (
     product: ProductModel,
     customToastType?: ProductQuantityToastType,
@@ -87,6 +91,18 @@ export const getScannerErrorMessages = (error: ScannerScreenError) => {
   };
 
   return scannerErrorMessages[error];
+};
+
+const getToastMessageInfoProductSubmit = (type: ProductModalType) => {
+  const toastMessageInfoMap = new Map([
+    [ProductModalType.Remove, i18n.t('addedToCart')],
+    [ProductModalType.Return, i18n.t('addedToCart')],
+    [ProductModalType.CreateInvoice, i18n.t('addedToInvoice')],
+    [ProductModalType.CreateOrder, i18n.t('addedToOrder')],
+    [ProductModalType.ReturnOrder, i18n.t('addedToOrder')],
+  ]);
+
+  return toastMessageInfoMap.get(type) ?? i18n.t('addedToList');
 };
 
 export const BaseScannerScreen: React.FC<Props> = observer(
@@ -186,8 +202,7 @@ export const BaseScannerScreen: React.FC<Props> = observer(
           return;
         }
 
-        setIsScannerActive(true);
-        onProductScan?.(product);
+        onProductScan?.(product, setIsScannerActive);
       },
       [onFetchProduct, store, handleFetchError, onProductScan, handleScanError],
     );
@@ -222,14 +237,12 @@ export const BaseScannerScreen: React.FC<Props> = observer(
             <ToastMessage bold>
               {Utils.truncateString(nameDetails)}
             </ToastMessage>{' '}
-            {buttonListTitle === t('cart')
-              ? t('addedToCart')
-              : t('addedToList')}
+            {getToastMessageInfoProductSubmit(modalParams.type)}
           </ToastMessage>,
           { type: ToastType.Info },
         );
       },
-      [onSubmit, showToast, store, t],
+      [onSubmit, showToast, store, modalParams, t],
     );
 
     const setEditableProductQuantity = useCallback(

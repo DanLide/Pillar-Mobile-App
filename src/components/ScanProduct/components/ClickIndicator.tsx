@@ -2,6 +2,7 @@ import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StyleSheet, Text, View } from 'react-native';
 
+// eslint-disable-next-line import/default
 import Animated, {
   Easing,
   useAnimatedStyle,

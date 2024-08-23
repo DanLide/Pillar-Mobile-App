@@ -3,7 +3,8 @@ import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import {
-  ButtonCluster,
+  Button,
+  ButtonType,
   InfoTitleBar,
   InfoTitleBarType,
 } from '../../components';
@@ -40,9 +41,6 @@ export const CreateOrderResultScreen = ({
   const isPORequired = status === OrderStatusType.POREQUIRED;
   const isOrderNotFinalized = isPORequired && !poNumber;
 
-  const primaryButtonText = isPurchaseOrder ? t('home') : t('manageOrders');
-  const secondaryButtonText = isPurchaseOrder ? t('viewOrder') : t('home');
-
   const title = isPurchaseOrder
     ? t('orderIdCreated', { orderId: orderId ? orderId : '' })
     : t('returnOrderCreated');
@@ -77,23 +75,7 @@ export const CreateOrderResultScreen = ({
     [],
   );
 
-  const onPrimaryPress = useCallback(
-    () =>
-      isPurchaseOrder
-        ? navigation.goBack()
-        : navigation.replace(AppNavigator.OrdersScreen),
-    [isPurchaseOrder, navigation],
-  );
-
-  const onSecondaryPress = useCallback(
-    () =>
-      isPurchaseOrder && orderId
-        ? navigation.navigate(AppNavigator.OrderDetailsScreen, {
-            orderId: orderId.toString(),
-          })
-        : navigation.goBack(),
-    [isPurchaseOrder, navigation, orderId],
-  );
+  const onHomePress = useCallback(() => navigation.goBack(), [navigation]);
 
   return (
     <View style={styles.container}>
@@ -156,18 +138,34 @@ export const CreateOrderResultScreen = ({
       </View>
 
       <TotalCostBar orderType={orderType} style={styles.totalCost} />
-      <ButtonCluster
-        leftTitle={secondaryButtonText}
-        leftOnPress={onSecondaryPress}
-        showLeftButton={!isPurchaseOrder || !!orderId}
-        rightTitle={primaryButtonText}
-        rightOnPress={onPrimaryPress}
-      />
+
+      <View style={styles.buttons}>
+        <Button
+          type={ButtonType.primary}
+          title={t('home')}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          onPress={onHomePress}
+        />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+  },
+  buttons: {
+    flexDirection: 'row',
+    gap: 16,
+    justifyContent: 'space-between',
+    padding: 16,
+  },
+  buttonText: {
+    fontSize: 20,
+    lineHeight: 30,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.white,
