@@ -25,7 +25,7 @@ export const getToastDuration = (type?: string) => {
     case ToastType.UnitsPerContainerReset:
       return 0;
     case ToastType.DetailedScanError:
-      return 15000;
+      return 2000;
     default:
       return TOAST_DURATION_MS;
   }

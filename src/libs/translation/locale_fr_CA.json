@@ -366,7 +366,8 @@
   "valueCannotBe0": "La valeur ne peut pas être 0",
   "mustBeGreaterThan": "doit être supérieure à",
   "piecesPerContainerMinimumValue": "Pièces par conteneur + Valeur minimale - 1",
-  "stay": "",
   "createNewRO": "Créer une nouvelle demande de réparations",
-  "cannotAddToInvoiceMissingPricing": ""
+  "ssoUserFetchingError": "",
+  "stay": "Rester",
+  "cannotAddToInvoiceMissingPricing": "Impossible d’ajouter l’élément à la facture.\nInformations sur les prix manquantes"
 }
