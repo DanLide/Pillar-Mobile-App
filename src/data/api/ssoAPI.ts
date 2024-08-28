@@ -22,7 +22,7 @@ export type MultiSSOAPIResponse = Array<MultiSSOAPIObj>;
 interface MultiSSOAPIObj {
   partyRoleId: string;
   name: string;
-  address: string;
+  address?: string;
   msoId?: string;
   distributorId?: string;
   distributorName?: string;

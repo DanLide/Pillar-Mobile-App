@@ -111,9 +111,8 @@ export class URLProvider {
   }
 
   getAllSSOUrl() {
-    // TODO replace with constants repairFacilities + '/' + repairFacilityPrimaryContact + '/' + orgPartyRoleId
     return new URL(
-      `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetAllOrganizations/3/26/1`,
+      `${this.currentEnv.modules.pisaUser.apiUri}/api/Account/GetShopsListForMobile`,
     );
   }
 
