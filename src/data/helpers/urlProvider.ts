@@ -237,7 +237,7 @@ export class URLProvider {
 
   getFetchJobsByProductUrl(productId: number, partyRoleId: number) {
     return new URL(
-      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/${productId}/${partyRoleId}/1`,
+      `${this.currentEnv.modules.pisaJob.apiUri}/api/Job/GetJobByProduct/${productId}/${partyRoleId}/1`,
     );
   }
 
