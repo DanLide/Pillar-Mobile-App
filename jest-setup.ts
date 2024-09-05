@@ -125,3 +125,5 @@ jest.mock('react-native', () => {
 jest.mock('tealium-react-native', () => ({
   initialize: jest.fn(),
 }));
+
+jest.mock('rn-secure-storage', () => ({}));

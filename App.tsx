@@ -28,7 +28,11 @@ import autoLogoutService, {
 import splashScreenBackground from './assets/images/SplashScreenBackground.jpg';
 import splashScreenLogo from './assets/images/logo.jpg';
 import { colors, fonts } from './src/theme';
-import { getSSORNToken, getUsernames } from 'src/helpers/storage';
+import {
+  getSSORNToken,
+  getUsernames,
+  syncKeychainToMMKWStorage,
+} from 'src/helpers/storage';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import { ToastProvider } from 'src/contexts';
 import { ModalProvider } from 'react-native-modalfy';
@@ -49,13 +53,21 @@ const App = observer(() => {
   const [appState, setAppState] = useState('active');
 
   useEffect(() => {
-    initI18n();
-    initTealium();
-  }, []);
+    const getSSORNTokenData = () => {
+      const data = getSSORNToken();
 
-  useEffect(() => {
-    SplashScreen.hide();
-    async function setup() {
+      if (data) {
+        ssoStore.setCurrentSSO(data.sso);
+        ssoStore.setDeviceConfiguration(true);
+      }
+    };
+    const getUsernamesData = () => {
+      const data = getUsernames();
+      if (data && data.usernames) {
+        authStore.setUsernames(data.usernames);
+      }
+    };
+    async function initTrackPlayer() {
       await setupPlayer();
 
       const queue = await TrackPlayer.getQueue();
@@ -63,7 +75,17 @@ const App = observer(() => {
         await addTracks();
       }
     }
-    setup();
+    async function initStorage() {
+      await syncKeychainToMMKWStorage();
+      getSSORNTokenData();
+      getUsernamesData();
+      SplashScreen.hide();
+    }
+
+    initTrackPlayer();
+    initTealium();
+    initStorage();
+    initI18n();
   }, []);
 
   useEffect(() => {
@@ -88,30 +110,6 @@ const App = observer(() => {
       subscription.remove();
     };
   }, []);
-
-  const getSSORNTokenData = useCallback(() => {
-    const data = getSSORNToken();
-
-    if (data) {
-      ssoStore.setCurrentSSO(data.sso);
-      ssoStore.setDeviceConfiguration(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    getSSORNTokenData();
-  }, [getSSORNTokenData]);
-
-  const getUsernamesData = useCallback(() => {
-    const data = getUsernames();
-    if (data && data.usernames) {
-      authStore.setUsernames(data.usernames);
-    }
-  }, []);
-
-  useEffect(() => {
-    getUsernamesData();
-  }, [getUsernamesData]);
 
   const renderSplashScreen = () => {
     if (appState === 'active') {

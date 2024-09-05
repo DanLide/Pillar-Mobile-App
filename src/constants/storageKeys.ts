@@ -1,1 +1,5 @@
-export const storageKeys = { HIDE_SCANNER_TOOLTIP: 'HIDE_SCANNER_TOOLTIP' };
+export const storageKeys = {
+  HIDE_SCANNER_TOOLTIP: 'HIDE_SCANNER_TOOLTIP',
+  RN_TOKEN: 'RN_TOKEN',
+  USER_NAMES: 'USER_NAMES',
+};
