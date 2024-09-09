@@ -15,10 +15,17 @@ import { colors, fonts, SVGs } from '../../../theme';
 interface Props {
   item: SSOModel;
   isSelected?: boolean;
+  testID?: string;
+  accessibilityLabel?: string;
   onPressItem?: (item: SSOModel) => void;
 }
 
-const SSOListItem: React.FC<Props> = ({ item, isSelected, onPressItem }) => {
+const SSOListItem: React.FC<Props> = ({
+  item,
+  isSelected,
+  onPressItem,
+  testID,
+}) => {
   const { address, name } = item;
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -32,7 +39,7 @@ const SSOListItem: React.FC<Props> = ({ item, isSelected, onPressItem }) => {
   );
 
   return (
-    <Pressable style={containerStyle} onPress={handlePress}>
+    <Pressable style={containerStyle} onPress={handlePress} testID={testID}>
       <View style={styles.content}>
         <SVGs.StoreIcon color={colors.black} />
         <Text numberOfLines={1} style={styles.textContainer}>

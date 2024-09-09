@@ -18,7 +18,7 @@ const SSOList = forwardRef(
     ref: LegacyRef<FlatList<SSOModel>>,
   ) => {
     const renderItem = useCallback<ListRenderItem<SSOModel>>(
-      ({ item }) => {
+      ({ item, index }) => {
         const isSelected = item.pisaId === selectedSSOId;
 
         return (
@@ -26,6 +26,8 @@ const SSOList = forwardRef(
             item={item}
             isSelected={isSelected}
             onPressItem={onPressItem}
+            testID={`listItem.${index + 1}`}
+            accessibilityLabel={item.name}
           />
         );
       },

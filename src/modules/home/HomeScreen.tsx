@@ -65,6 +65,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
         onPress={onNavigateToSelectShopLocation}
         style={styles.infoContainer}
         disabled={!isNavigationToShopSelectAvailable}
+        accessibilityLabel="onNavigateToSelectShopLocation"
       >
         <SVGs.CabinetIcon />
         <Text style={styles.infoText}>{ssoStore.getCurrentSSO?.name}</Text>
@@ -80,6 +81,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             subtitle={t('checkProductsOutOfInventory')}
             leftIcon={ArrowTopIcon}
             onPress={onRemoveProducts}
+            accessibilityLabel="Remove Products"
           />
         )}
         {renderBorderBetweenTheItems && <View style={styles.separator} />}
@@ -89,6 +91,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             subtitle={t('checkProductsBackIntoInventory')}
             leftIcon={ArrowBottomIcon}
             onPress={onReturnProducts}
+            accessibilityLabel="Return Products"
           />
         )}
       </View>
@@ -100,6 +103,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             subtitle={t('addMaterialsToOrder')}
             leftIcon={InvoiceIcon}
             onPress={onCreateInvoice}
+            accessibilityLabel="Create Invoice"
           />
         </View>
       )}
@@ -110,6 +114,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
           subtitle={t('viewAndEditProductDetails')}
           leftIcon={ManageProductIcon}
           onPress={onManageProducts}
+          accessibilityLabel="Manage Products"
         />
       </View>
 
@@ -120,6 +125,7 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
             subtitle={t('createEditReceiveOrders')}
             leftIcon={ManageOrderIcon}
             onPress={onOrders}
+            accessibilityLabel="Manage Orders"
           />
         </View>
       )}

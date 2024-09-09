@@ -7,6 +7,8 @@ type ListItem = {
   leftIcon: React.ReactElement;
   title: string;
   subtitle: string;
+  testID?: string;
+  accessibilityLabel?: string;
   onPress: () => void;
   disabled?: boolean;
 };

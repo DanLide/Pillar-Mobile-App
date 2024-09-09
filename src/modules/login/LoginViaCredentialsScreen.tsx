@@ -143,6 +143,7 @@ const LoginViaCredentialsScreenContent = observer(
           onChangeText={onChangeUsername}
           autoCapitalize="none"
           autoCorrect={false}
+          accessibilityLabel="Username"
         />
         <Input
           label={t('password')}
@@ -155,6 +156,7 @@ const LoginViaCredentialsScreenContent = observer(
           onRightIconPress={onRightIconPress}
           secureTextEntry={!isPasswordVisible}
           rightLabel={t('required')}
+          accessibilityLabel="Password"
         />
         <View style={styles.secondaryButtonsContainer}>
           <TextButton
@@ -188,6 +190,7 @@ const LoginViaCredentialsScreenContent = observer(
           buttonStyle={styles.buttonStyle}
           onPress={onSubmit}
           isLoading={isLoading}
+          accessibilityLabel="Login button"
         />
       </View>
     );

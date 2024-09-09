@@ -57,6 +57,7 @@ const Stack = createStackNavigator<HomeStackParamList>();
 const ssoScreenOptions = getScreenOptions({
   title: i18n.t('shopLocation'),
   rightBarButtonType: RightBarType.Logout,
+  rightBarButtonTestId: 'rightBarButtonTestId',
 });
 
 const homeScreenOptions = getScreenOptions({
@@ -112,6 +113,7 @@ export const HomeStack: React.FC = () => {
         options={getScreenOptions({
           title: t('alphaBetaAgreement'),
           leftBarButtonType: LeftBarType.Back,
+          leftBarButtonTestId: 'leftBarButtonTestId',
           rightBarButtonType: RightBarType.Close,
           rightBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);
