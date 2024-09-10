@@ -3,7 +3,7 @@ import { element, by } from 'detox';
 const ShopLocationScreen = {
   SearchShopInput: element(by.id('input:container')),
   FoundShope: element(by.id('listItem.1')),
-  LogoutButton: element(by.id('rightBarButtonTestId:button')),
+  LogoutButton: element(by.id('rightBarButtonTestIdLogout:button')),
 
   async verifySearchInputIsVisible() {
     await expect(ShopLocationScreen.SearchShopInput).toBeVisible();

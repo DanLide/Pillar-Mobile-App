@@ -57,7 +57,7 @@ const Stack = createStackNavigator<HomeStackParamList>();
 const ssoScreenOptions = getScreenOptions({
   title: i18n.t('shopLocation'),
   rightBarButtonType: RightBarType.Logout,
-  rightBarButtonTestId: 'rightBarButtonTestId',
+  rightBarButtonTestId: 'rightBarButtonTestIdLogout',
 });
 
 const homeScreenOptions = getScreenOptions({
@@ -115,6 +115,7 @@ export const HomeStack: React.FC = () => {
           leftBarButtonType: LeftBarType.Back,
           leftBarButtonTestId: 'leftBarButtonTestId',
           rightBarButtonType: RightBarType.Close,
+          rightBarButtonTestId: 'rightBarButtonTestId',
           rightBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);
             if (screen === AppNavigator.HomeScreen) {

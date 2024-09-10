@@ -318,6 +318,10 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
       : t('pointCameraAtProductCode');
   }, [barcodesLength, isUPC, t]);
 
+  const onMockScan = () => {
+    scanBarcode('1234235123213');
+  };
+
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
@@ -381,7 +385,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               styles.smallBottomButton,
               { backgroundColor: isTorchOn ? colors.purple : colors.white },
             ]}
-            onPress={toggleIsTorchOn}
+            onPress={onMockScan}
           >
             {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
           </TouchableOpacity>
