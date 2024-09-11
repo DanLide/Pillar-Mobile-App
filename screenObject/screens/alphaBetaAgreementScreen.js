@@ -1,15 +1,17 @@
 import { element, by } from 'detox';
 
-const AlphaBetaAgreementScreen = {
-  CloseAgreementButton: element(by.id('rightBarButtonTestId:button')),
+class AlphaBetaAgreementScreen {
+  constructor() {
+    this.closeAgreementButton = element(by.id('rightBarButtonTestId:button'));
+  }
+
   async closeAgreementIfExist() {
     try {
-      await expect(AlphaBetaAgreementScreen.CloseAgreementButton).toBeVisible();
-      await AlphaBetaAgreementScreen.CloseAgreementButton.tap();
+      await expect(this.closeAgreementButton).toBeVisible();
+      await this.closeAgreementButton.tap();
     } catch (error) {
       console.log('AlphaBetaAgreement is not shown. Skip closing step.');
     }
-  },
-};
-
-export default AlphaBetaAgreementScreen;
+  }
+}
+export default new AlphaBetaAgreementScreen();

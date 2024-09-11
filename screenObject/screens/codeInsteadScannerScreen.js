@@ -1,15 +1,18 @@
 import { element, by } from 'detox';
 
-const CodeInsteadScannerScreen = {
-  CodeInput: element(by.id('codeField')),
-  SubmitBtn: element(by.label('Confirm Button')),
+class CodeInsteadScannerScreen {
+  constructor() {
+    this.codeInput = element(by.id('codeField'));
+    this.submitBtn = element(by.label('Confirm Button'));
+  }
 
   async enterCode(code) {
-    await CodeInsteadScannerScreen.CodeInput.typeText(code);
-  },
-  async clickSubmitButton() {
-    await CodeInsteadScannerScreen.SubmitBtn.tap();
-  },
-};
+    await this.codeInput.typeText(code);
+  }
 
-export default CodeInsteadScannerScreen;
+  async clickSubmitButton() {
+    await this.submitBtn.tap();
+  }
+}
+
+export default new CodeInsteadScannerScreen();

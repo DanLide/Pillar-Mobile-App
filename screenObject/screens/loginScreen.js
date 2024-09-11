@@ -1,17 +1,18 @@
 import { element, by } from 'detox';
 
-const LoginScreen = {
-  UserNameInput: element(by.label('Username Username')),
-  PasswordInput: element(by.label('Password Required Password')),
-  LoginButton: element(by.label('Login button')),
+class LoginScreen {
+  constructor() {
+    this.userNameInput = element(by.label('Username Username'));
+    this.passwordInput = element(by.label('Password Required Password'));
+    this.loginButton = element(by.label('Login button'));
+  }
 
   async login(username, password) {
-    await LoginScreen.UserNameInput.typeText(username);
-    // await LoginScreen.PasswordInput.tap();
-    await LoginScreen.PasswordInput.typeText(password);
-    await LoginScreen.PasswordInput.tapReturnKey();
-    await LoginScreen.LoginButton.tap();
-  },
-};
+    await this.userNameInput.typeText(username);
+    await this.passwordInput.typeText(password);
+    await this.passwordInput.tapReturnKey();
+    await this.loginButton.tap();
+  }
+}
 
-export default LoginScreen;
+export default new LoginScreen();

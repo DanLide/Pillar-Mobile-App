@@ -1,0 +1,12 @@
+{
+    "user": {
+      "username": "Aadmin2",
+      "password": "andriiQA111@"
+    },
+    "sso":{
+      "ssoName": "Autotest-BodyShop",
+      "ssoCode": "758ZD",
+      "deviceCode": "03350918"
+    }
+  }
+  

@@ -1,13 +1,14 @@
 import { element, by } from 'detox';
 
-const ScannerScreen = {
-  EnterCharacterInsteadOfScanner: element(
-    by.label('Enter 5 character Repair Facility code instead'),
-  ),
+class ScannerScreen {
+  constructor() {
+    this.enterCharacterInsteadOfScanner = element(
+      by.label('Enter 5 character Repair Facility code instead'),
+    );
+  }
 
   async clickEnterCharacterInsteadOfScannerLink() {
-    await ScannerScreen.EnterCharacterInsteadOfScanner.tap();
-  },
-};
-
-export default ScannerScreen;
+    await this.enterCharacterInsteadOfScanner.tap();
+  }
+}
+export default new ScannerScreen();

@@ -1,59 +1,63 @@
 import { device } from 'detox';
-import WelcomeScreen from '../screenObject/screens/welcomeScreen.js';
-import LoginScreen from '../screenObject/screens/loginScreen.js';
-import AlphaBetaAgreementScreen from '../screenObject/screens/alphaBetaAgreementScreen.js';
-import ShopLocationScreen from '../screenObject/screens/shopLocationScreen.js';
-import SelectLanguageScreen from '../screenObject/screens/selectLanguageScreen.js';
-import ScannerScreen from '../screenObject/screens/scannerScreen.js';
-import CodeInsteadScannerScreen from '../screenObject/screens/codeInsteadScannerScreen.js';
+import welcomeScreen from '../screenObject/screens/WelcomeScreen';
+import loginScreen from '../screenObject/screens/LoginScreen';
+import alphaBetaAgreementScreen from '../screenObject/screens/AlphaBetaAgreementScreen';
+import shopLocationScreen from '../screenObject/screens/ShopLocationScreen';
+import selectLanguageScreen from '../screenObject/screens/SelectLanguageScreen';
+import scannerScreen from '../screenObject/screens/ScannerScreen';
+import codeInsteadScannerScreen from '../screenObject/screens/CodeInsteadScannerScreen';
+import updateDeviceNameAlert from '../screenObject/alerts/UpdateDeviceNameAlert.js';
+import testData from '../testData/data.Config.json';
 
 describe('Authentication Tests', () => {
-  it('Login Via Credentials Test', async () => {
-    await device.launchApp();
-    await WelcomeScreen.clickAdminDeviceLogin();
-    await LoginScreen.login('Aadmin2', 'andriiQA111@');
-    await SelectLanguageScreen.clickSubmitButton();
-    await AlphaBetaAgreementScreen.closeAgreementIfExist();
-    await ShopLocationScreen.verifySearchInputIsVisible();
-    await device.terminateApp();
+  beforeEach(async () => {
+    await device.clearKeychain();
+    await device.launchApp({ delete: true, newInstance: true });
   });
 
-  it.only('Search Shop Test', async () => {
-    await device.launchApp();
-    await WelcomeScreen.clickAdminDeviceLogin();
-    await LoginScreen.login('Aadmin2', 'andriiQA111@');
-    await ShopLocationScreen.searchShop('Autotest-BodyShop');
-    await ShopLocationScreen.verifySeekingShopIsVisible();
-    await device.terminateApp();
+  it('Login Via Credentials Test', async () => {
+    await welcomeScreen.clickAdminDeviceLogin();
+    await loginScreen.login(testData.user.username, testData.user.password);
+    await selectLanguageScreen.clickSubmitButton();
+    await alphaBetaAgreementScreen.closeAgreementIfExist();
+    await shopLocationScreen.verifySearchInputIsVisible();
+  });
+
+  it('Search Shop Test', async () => {
+    await welcomeScreen.clickAdminDeviceLogin();
+    await loginScreen.login(testData.user.username, testData.user.password);
+    await selectLanguageScreen.clickSubmitButton();
+    await alphaBetaAgreementScreen.closeAgreementIfExist();
+    await shopLocationScreen.searchShop(testData.sso.ssoName);
+    await shopLocationScreen.verifySeekingShopIsVisible();
   });
 
   it('Logout Test', async () => {
-    await device.launchApp();
-    await WelcomeScreen.clickAdminDeviceLogin();
-    await LoginScreen.login('Aadmin2', 'andriiQA111@');
-    await ShopLocationScreen.clickLogoutButton();
-    await WelcomeScreen.verifyRedirectionToWelcomeScreen();
-    await device.terminateApp();
+    await welcomeScreen.clickAdminDeviceLogin();
+    await loginScreen.login(testData.user.username, testData.user.password);
+    await selectLanguageScreen.clickSubmitButton();
+    await alphaBetaAgreementScreen.closeAgreementIfExist();
+    await shopLocationScreen.clickLogoutButton();
+    await welcomeScreen.verifyRedirectionToWelcomeScreen();
   });
 
   it('Configure Shop', async () => {
-    await device.launchApp();
-    await WelcomeScreen.clickUpdateDeviceNameButton();
-
-    //  await element(by.text('Save')).tap();
-
-    await WelcomeScreen.clickConfigureShopDevice();
-    await LoginScreen.login('Aadmin2', 'andriiQA111@');
-    await SelectLanguageScreen.clickSubmitButton();
-    await AlphaBetaAgreementScreen.closeAgreementIfExist();
-    await wait(3000); // Time to allow permission
-    await ScannerScreen.clickEnterCharacterInsteadOfScannerLink();
-    await CodeInsteadScannerScreen.enterCode('758ZD');
-    await CodeInsteadScannerScreen.clickSubmitButton();
-    // await device.terminateApp();
+    await device.launchApp({
+      newInstance: true,
+      permissions: { camera: 'YES' },
+    });
+    await welcomeScreen.clickUpdateDeviceNameButton();
+    await updateDeviceNameAlert.updateDeviceName(testData.sso.deviceCode);
+    await welcomeScreen.clickConfigureShopDevice();
+    await loginScreen.login(testData.user.username, testData.user.password);
+    await selectLanguageScreen.clickSubmitButton();
+    await alphaBetaAgreementScreen.closeAgreementIfExist();
+    await scannerScreen.clickEnterCharacterInsteadOfScannerLink();
+    await codeInsteadScannerScreen.enterCode(testData.sso.ssoCode);
+    await codeInsteadScannerScreen.clickSubmitButton();
   });
 
-  function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  afterAll(async () => {
+    await device.terminateApp();
+  });
 });

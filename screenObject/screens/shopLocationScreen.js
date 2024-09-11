@@ -1,22 +1,26 @@
 import { element, by } from 'detox';
 
-const ShopLocationScreen = {
-  SearchShopInput: element(by.id('input:container')),
-  FoundShope: element(by.id('listItem.1')),
-  LogoutButton: element(by.id('rightBarButtonTestIdLogout:button')),
+class ShopLocationScreen {
+  constructor() {
+    this.searchShopInput = element(by.id('input:container'));
+    this.foundShope = element(by.id('listItem.1'));
+    this.logoutButton = element(by.id('rightBarButtonTestIdLogout:button'));
+  }
 
   async verifySearchInputIsVisible() {
-    await expect(ShopLocationScreen.SearchShopInput).toBeVisible();
-  },
-  async searchShop(name) {
-    await ShopLocationScreen.SearchShopInput.typeText(name);
-  },
-  async verifySeekingShopIsVisible() {
-    await expect(ShopLocationScreen.FoundShope).toBeVisible();
-  },
-  async clickLogoutButton() {
-    await ShopLocationScreen.LogoutButton.tap();
-  },
-};
+    await expect(this.searchShopInput).toBeVisible();
+  }
 
-export default ShopLocationScreen;
+  async searchShop(name) {
+    await this.searchShopInput.typeText(name);
+  }
+
+  async verifySeekingShopIsVisible() {
+    await expect(this.foundShope).toBeVisible();
+  }
+
+  async clickLogoutButton() {
+    await this.logoutButton.tap();
+  }
+}
+export default new ShopLocationScreen();

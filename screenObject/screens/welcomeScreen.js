@@ -1,23 +1,28 @@
 import { element, by } from 'detox';
 
-const WelcomeScreen = {
-  ConfigureShopDevice: element(by.label('Configure shop device')),
-  AdminDeviceLogin: element(by.label('Admin device login')),
-  UpdateDeviceNameBtn: element(by.id('updateButton')),
+class WelcomeScreen {
+  constructor() {
+    this.configureShopDevice = element(by.label('Configure shop device'));
+    this.adminDeviceLogin = element(by.label('Admin device login'));
+    this.updateDeviceNameBtn = element(by.id('updateButton'));
+  }
 
   async clickAdminDeviceLogin() {
-    await WelcomeScreen.AdminDeviceLogin.tap();
-  },
-  async clickConfigureShopDevice() {
-    await WelcomeScreen.ConfigureShopDevice.tap();
-  },
-  async verifyRedirectionToWelcomeScreen() {
-    await expect(WelcomeScreen.AdminDeviceLogin).toBeVisible();
-    await expect(WelcomeScreen.ConfigureShopDevice).toBeVisible();
-  },
-  async clickUpdateDeviceNameButton() {
-    await WelcomeScreen.UpdateDeviceNameBtn.tap();
-  },
-};
+    await this.adminDeviceLogin.tap();
+  }
 
-export default WelcomeScreen;
+  async clickConfigureShopDevice() {
+    await this.configureShopDevice.tap();
+  }
+
+  async verifyRedirectionToWelcomeScreen() {
+    await expect(this.adminDeviceLogin).toBeVisible();
+    await expect(this.configureShopDevice).toBeVisible();
+  }
+
+  async clickUpdateDeviceNameButton() {
+    await this.updateDeviceNameBtn.tap();
+  }
+}
+
+export default new WelcomeScreen();
