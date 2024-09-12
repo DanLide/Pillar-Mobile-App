@@ -21,7 +21,7 @@ interface LeftBarButtonProps extends ViewProps {
 }
 
 export const LeftBarButton: React.FC<LeftBarButtonProps> = ({
-  leftBarButtonType,
+  leftBarButtonType = LeftBarType.Back,
   onPress,
   style,
   testID = 'leftBarButton',

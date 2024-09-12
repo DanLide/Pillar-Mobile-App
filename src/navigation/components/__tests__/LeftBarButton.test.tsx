@@ -26,11 +26,11 @@ describe('LeftBarButton', () => {
   it('render with undefined', () => {
     const { getByTestId } = render(<LeftBarButton />);
     const button = getByTestId(testIds.idButton('leftBarButton'));
-    expect(button.props.children[0]).toBeNull();
+    expect(button.findByType(SVGs.ChevronIcon)).toBeDefined();
     act(() => {
       button.props.onClick();
     });
-    expect(mockNavigation).not.toHaveBeenCalled();
+    expect(mockNavigation).toHaveBeenCalled();
   });
 
   it('render with LeftBarType.Back', () => {
