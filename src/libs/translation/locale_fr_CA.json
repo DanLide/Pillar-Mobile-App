@@ -63,7 +63,7 @@
   "enterFacilityCodeInstead": "Entrez plutôt un code d’atelier de réparation à 5 caractères",
   "selectStocksForThisDevice": "Sélectionnez le(s) emplacement(s) de stock pour cet appareil",
   "newJobNumberCreated": "Un nouveau numéro de bon de travail {{number}} a été créé.",
-  "createRepairOrder": "Créer Ordre Répar.",
+  "createRepairOrder": "Créer Ordre Réparation",
   "number": "Numéro",
   "required": "Requis",
   "comments": "Commentaires",
