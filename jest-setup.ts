@@ -79,6 +79,9 @@ RNNativeModules.PlatformConstants = RNNativeModules.PlatformConstants || {
 };
 
 jest.mock('react-native-bluetooth-state-manager', () => ({}));
+jest.mock('react-native-ble-plx', () => ({
+  BleManager: () => null,
+}));
 
 jest.mock('react-i18next', () => ({
   // this mock makes sure any components using the translate hook can use it without a warning being shown
@@ -95,6 +98,8 @@ jest.mock('react-i18next', () => ({
     init: (i18next: unknown) => i18next,
   },
 }));
+
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
 
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');

@@ -20,11 +20,11 @@ import { useTranslation } from 'react-i18next';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { NativeStackScreenProps } from 'react-native-screens/native-stack';
-import { masterLockStore } from 'src/stores';
+import { masterLockStore, southcoStore } from 'src/stores';
 
 import cabinet from '../../assets/images/cabinetImage.png';
 import { Button, ButtonType } from '../components';
-import { colors, fonts, SVGs } from '../theme';
+import { colors, commonStyles, fonts, SVGs } from '../theme';
 import { LockStatus } from '../data/masterlock';
 import { RELOCK_TIME, RELOCK_TIME_SEC } from '../stores/MasterLockStore';
 import {
@@ -66,14 +66,22 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
   ({ navigation, route }) => {
     const { t } = useTranslation();
     const {
-      params: { masterlockId, nextScreen, nextNavigationGoBack },
+      params: { MLId = '', SCId = '', nextScreen, nextNavigationGoBack },
     } = route;
+
     const masterLockStatus: LockStatus =
-      masterLockStore.stocksState[masterlockId]?.status;
-    // const status: ExtendedMasterLockStatuses = LockStatus.UNLOCKED
-    const status: ExtendedMasterLockStatuses = masterLockStore.isUnlocking
+      masterLockStore.stocksState[MLId]?.status;
+    const SCLock = southcoStore.locks.get(SCId);
+
+    const SCStatus = southcoStore.isUnlocking
+      ? ExtendedMasterLockStatus.UNLOCKING
+      : SCLock?.status;
+
+    const MLStatus: ExtendedMasterLockStatuses = masterLockStore.isUnlocking
       ? ExtendedMasterLockStatus.UNLOCKING
       : masterLockStatus;
+
+    const status = MLStatus || SCStatus;
 
     const [countDownNumber, setCountDownNumber] = useState(RELOCK_TIME_SEC);
     const [canSkipUnlock, setCanSkipUnlock] = useState(false);
@@ -122,24 +130,32 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
     }, [countDownNumber, status]);
 
     const unlock = useCallback(() => {
-      masterLockStore.unlock(masterlockId);
-    }, [masterlockId]);
+      if (MLId) {
+        masterLockStore.unlock(MLId);
+      } else if (SCId) {
+        southcoStore.startUnlockProcess(SCId);
+      }
+    }, [MLId, SCId]);
 
     const navigateNextScreen = useCallback(() => {
       if (nextNavigationGoBack) {
         return navigation.goBack();
       }
       nextScreen && navigation.navigate(nextScreen);
-    }, [navigation, nextScreen]);
+    }, [navigation, nextScreen, nextNavigationGoBack]);
 
     useLayoutEffect(() => {
-      if (status === LockStatus.OPEN || status === LockStatus.OPEN_LOCKED) {
+      if (
+        status === LockStatus.OPEN ||
+        status === LockStatus.OPEN_LOCKED ||
+        SCLock?.status === 'UNLOCKED'
+      ) {
         if (nextNavigationGoBack) {
           return navigation.goBack();
         }
         nextScreen && navigation.replace(nextScreen);
       }
-    }, [status, navigation, nextScreen]);
+    }, [status, navigation, nextScreen, SCLock?.status, nextNavigationGoBack]);
 
     let title = '';
     switch (status) {
@@ -169,14 +185,16 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
         result.push(
           <View
             key={index + 'circle'}
-            style={{
-              width: size,
-              height: size,
-              borderRadius: percentageRadius,
-              position: 'absolute',
-              backgroundColor,
-              zIndex: circlesCount - index,
-            }}
+            style={[
+              {
+                width: size,
+                height: size,
+                borderRadius: percentageRadius,
+                backgroundColor,
+                zIndex: circlesCount - index,
+              },
+              commonStyles.absolute,
+            ]}
           />,
         );
       }
@@ -257,7 +275,7 @@ export const BaseUnlockScreen: React.FC<Props> = observer(
         default:
           return null;
       }
-    }, [status, countDownNumber]);
+    }, [status, countDownNumber, t]);
 
     const renderBottomComponent = useMemo(() => {
       switch (status) {

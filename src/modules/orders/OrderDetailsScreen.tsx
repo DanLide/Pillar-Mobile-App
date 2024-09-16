@@ -5,7 +5,7 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { observer } from 'mobx-react';
 import { useIsFocused } from '@react-navigation/native';
 import { groupBy } from 'ramda';
-import { masterLockStore, ssoStore } from 'src/stores';
+import { masterLockStore, southcoStore, ssoStore } from 'src/stores';
 
 import { ordersStore } from './stores';
 import {
@@ -53,18 +53,18 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     stock => stock.partyRoleId === Number(selectedStockId.current),
   );
 
-  const controllerSerialNo = stockItem?.controllerSerialNo || '';
+  const MLId = stockItem?.controllerSerialNo || '';
+  const SCId = stockItem?.leanTecSerialNo?.toLowerCase() || '';
 
   const isVisible =
-    masterLockStore.stocksState[controllerSerialNo]?.visibility ===
-    LockVisibility.VISIBLE;
+    masterLockStore.stocksState[MLId]?.visibility === LockVisibility.VISIBLE;
+  const lockStatus = masterLockStore.stocksState[MLId]?.status;
+  const SCLock = southcoStore.locks.get(SCId);
 
-  const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+  const isValidFlow =
+    stockItem?.roleTypeId === RoleType.Cabinet && isDeviceConfiguredBySSO;
   const navigateToUnlockScreen =
-    isVisible &&
-    lockStatus === LockStatus.LOCKED &&
-    stockItem?.roleTypeId === RoleType.Cabinet &&
-    isDeviceConfiguredBySSO;
+    isValidFlow && ((lockStatus === LockStatus.LOCKED && isVisible) || SCLock);
 
   const { currentOrder } = ordersStoreRef;
   const orderProductsByStockId = groupBy(
@@ -82,10 +82,14 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       selectedStockId.current = stockId;
     }, []);
 
-  const initMasterLock = useCallback(async () => {
+  const initLockAPI = useCallback(async () => {
     if (!stocksStore.stocks.length) return;
-    masterLockStore.initMasterLockForStocks(stocksStore.stocks);
-  }, [stocksStore.stocks]);
+    if (MLId) {
+      masterLockStore.initMasterLockForStocks(stocksStore.stocks);
+    } else if (SCId) {
+      southcoStore.startDeviceScan();
+    }
+  }, [MLId, SCId]);
 
   const fetchOrder = useCallback(async () => {
     setSelectedStock(undefined);
@@ -96,10 +100,10 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     if (result) {
       setIsError(true);
     } else if (stocksStore.stocks.length) {
-      await initMasterLock();
+      await initLockAPI();
     }
     setIsLoading(false);
-  }, [initMasterLock, route.params.orderId]);
+  }, [initLockAPI, route.params.orderId]);
 
   useEffect(() => {
     if (isFocused) {
@@ -112,9 +116,14 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
       ordersStoreRef.setSelectedProductsByStock(selectedStock);
 
       if (navigateToUnlockScreen) {
-        masterLockStore.unlock(controllerSerialNo);
+        if (MLId) {
+          masterLockStore.unlock(MLId);
+        } else if (SCId) {
+          southcoStore.startUnlockProcess(SCId);
+        }
         return navigation.navigate(AppNavigator.BaseUnlockScreen, {
-          masterlockId: controllerSerialNo,
+          MLId,
+          SCId,
           nextScreen: AppNavigator.OrderByStockLocationScreen,
         });
       }
@@ -290,15 +299,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
           contentContainerStyle={styles.contentContainer}
         />
         {renderButton() ? (
-          <View
-            style={{
-              backgroundColor: colors.white,
-              padding: 16,
-              marginTop: 'auto',
-            }}
-          >
-            {renderButton()}
-          </View>
+          <View style={styles.buttonContainer}>{renderButton()}</View>
         ) : null}
       </View>
     );
@@ -347,9 +348,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     paddingBottom: 8,
   },
-  headerPlaceholder: {
-    height: 26,
-    width: '15%',
+  buttonContainer: {
+    backgroundColor: colors.white,
+    padding: 16,
+    marginTop: 'auto',
   },
   stockHeader: {
     paddingHorizontal: 36,
@@ -372,14 +374,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 'auto',
     marginBottom: 16,
-  },
-  buttonText: {
-    fontSize: 15,
-    lineHeight: 20,
-    fontFamily: fonts.TT_Regular,
-    paddingBottom: 3,
-    paddingRight: 8,
-    color: colors.purpleDark,
   },
   loading: {
     padding: 16,

@@ -109,9 +109,10 @@ export type UnlockStockNextScreenParams =
 
 type UnlockStockScreenParams = {
   title?: string;
-  masterlockId: string;
+  MLId?: string;
+  SCId?: string;
   nextNavigationGoBack?: boolean;
-  nextScreen?: AppNavigator.ScannerScreen;
+  nextScreen?: UnlockStockNextScreenParams;
 };
 
 type PinScreenParams = {

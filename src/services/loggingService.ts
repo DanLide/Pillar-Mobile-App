@@ -1,12 +1,18 @@
-import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+import {
+  ApplicationInsights,
+  ICustomProperties,
+} from '@microsoft/applicationinsights-web';
 import { ReactNativePlugin } from '@microsoft/applicationinsights-react-native';
 import { clone } from 'ramda';
 
 import { environment } from 'src/data/helpers/environment';
+import { deviceInfoStore } from 'src/stores';
 
 type TParams = {
   [key: string]: string | number | object | undefined;
 };
+
+type TEvents = 'Unlock SC lock';
 
 type TApiParams = {
   statusCode: number | undefined;
@@ -50,6 +56,8 @@ export const LoggingService = {
         envelope.baseData.properties['username'] = authenticatedUserId;
         envelope.baseData.properties['SSOName'] = name;
         envelope.baseData.properties['SSOId'] = pisaId;
+        envelope.baseData.properties['appVersion'] =
+          deviceInfoStore.version ?? 'unknown';
       }
     });
   },
@@ -57,8 +65,10 @@ export const LoggingService = {
   logException(error: unknown, params?: TParams) {
     if (__DEV__) {
       console.error(
-        JSON.stringify(error, null, 4),
-        JSON.stringify(params, null, 4),
+        error,
+        `${error instanceof Error ? error?.message : ''}\n${
+          params ? JSON.stringify(params, null, 4) : ''
+        }`,
       );
     } else {
       appInsights.trackException(
@@ -83,5 +93,11 @@ export const LoggingService = {
     }
 
     this.logException(error, apiParams);
+  },
+
+  logEvent(name: TEvents, params: ICustomProperties) {
+    if (!__DEV__) {
+      appInsights.trackEvent({ name }, params);
+    }
   },
 };

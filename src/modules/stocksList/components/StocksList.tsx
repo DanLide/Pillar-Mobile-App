@@ -15,7 +15,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { masterLockStore, ssoStore } from 'src/stores';
+import { masterLockStore, southcoStore, ssoStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
 import { PERMISSIONS, RESULTS } from 'react-native-permissions';
@@ -53,6 +53,13 @@ export const StocksList: React.FC<Props> = observer(
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isError, setIsError] = useState(false);
     const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
+
+    useEffect(() => {
+      southcoStore.startDeviceScan();
+      return () => {
+        southcoStore.stopDeviceScan();
+      };
+    }, []);
 
     const initMasterLock = useCallback(async () => {
       if (
