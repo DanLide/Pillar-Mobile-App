@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { GetOrdersAPIResponse } from 'src/data/api';
 import { OrdersListItem } from './OrdersListItem';
-import { SVGs, colors, fonts } from 'src/theme';
+import { SVGs, colors, commonStyles, fonts } from 'src/theme';
 import { ButtonCluster, Separator } from 'src/components';
 import { fetchOrders } from 'src/data/fetchOrders';
 import { AppNavigator } from 'src/navigation/types';
@@ -63,18 +63,18 @@ export const OrdersList = memo(
     };
 
     return (
-      <View style={styles.container}>
+      <View style={commonStyles.flex1}>
         <View style={styles.header}>
           <Text style={[styles.headerOrderId, styles.headerText]}>
             {t('order')}
           </Text>
-          <Text style={[styles.headerDistributor, styles.headerText]}>
+          <Text style={[commonStyles.flex1, styles.headerText]}>
             {t('distributor')}
           </Text>
           <Text style={styles.headerText}>{t('status')}</Text>
         </View>
         <FlatList
-          style={styles.container}
+          style={commonStyles.flex1}
           data={orders}
           renderItem={item => (
             <OrdersListItem {...item} isFiltered={isFiltered} />
@@ -111,9 +111,6 @@ export const OrdersList = memo(
 );
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     backgroundColor: colors.grayLight,
     paddingHorizontal: 16,
@@ -126,9 +123,6 @@ const styles = StyleSheet.create({
     minWidth: '20%',
     paddingLeft: 8,
   },
-  headerDistributor: {
-    flex: 1,
-  },
   headerText: {
     fontSize: 12,
     lineHeight: 16,
@@ -140,7 +134,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 16,
+    padding: 16,
   },
   backborderText: {
     fontFamily: fonts.TT_Bold,
