@@ -51,8 +51,11 @@ jobs:
       - name: Install Detox dependency
         run: yarn add detox --dev
 
+        - name: Build Test APP
+        run: yarn detox build --configuration ios.sim.debug
+
       - name: Run ui tests
-        run: detox test --configuration ios.sim.debug
+        run: yarn detox test --configuration ios.sim.debug
       
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
