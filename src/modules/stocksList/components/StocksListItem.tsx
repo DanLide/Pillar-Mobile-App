@@ -5,7 +5,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { masterLockStore, ssoStore } from 'src/stores';
+import { masterLockStore, southcoStore, ssoStore } from 'src/stores';
 import { useTranslation } from 'react-i18next';
 
 import { StockModel } from '../stores/StocksStore';
@@ -16,6 +16,7 @@ import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
 import { LockStatus, LockVisibility } from 'src/data/masterlock';
 import { observer } from 'mobx-react';
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack';
+import { SCLockStatusEnum } from 'src/libs';
 
 type ScreenNavigationProp = NativeStackNavigationProp<
   RemoveStackParamList,
@@ -45,35 +46,59 @@ export const StocksListItem: React.FC<Props> = observer(
     nextNavigationGoBack,
   }) => {
     const { t } = useTranslation();
-    const { organizationName, roleTypeId, controllerSerialNo = '' } = item;
+    const {
+      organizationName,
+      roleTypeId,
+      controllerSerialNo = '',
+      leanTecSerialNo = '',
+    } = item;
 
+    const SCLockId = leanTecSerialNo?.toLowerCase();
+
+    const currentSCLock = southcoStore.locks.get(SCLockId);
     const isDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
     const navigation = useNavigation<ScreenNavigationProp>();
-    const lockStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+    const MLStatus = masterLockStore.stocksState[controllerSerialNo]?.status;
+
     const isVisible =
       masterLockStore.stocksState[controllerSerialNo]?.visibility ===
-      LockVisibility.VISIBLE;
+        LockVisibility.VISIBLE || currentSCLock;
+    const SCStatus = currentSCLock?.status;
 
-    const isLocked =
+    const isMLLocked =
       roleTypeId === RoleType.Cabinet &&
-      (lockStatus === LockStatus.LOCKED ||
-        lockStatus === LockStatus.OPEN_LOCKED) &&
+      (MLStatus === LockStatus.LOCKED || MLStatus === LockStatus.OPEN_LOCKED) &&
       isVisible;
 
+    const isSCLocked =
+      roleTypeId === RoleType.Cabinet && SCStatus === SCLockStatusEnum.LOCKED;
+
+    const isLocked = isSCLocked || isMLLocked;
+
+    const isSCUnlockingDisabled =
+      currentSCLock &&
+      !!southcoStore.openedLockId &&
+      (southcoStore.openedLockId !== currentSCLock?.id ||
+        southcoStore.isUnlocking);
+
     const handlePress = () => {
-      if (
-        isLocked &&
-        !skipNavToUnlockScreen &&
-        item.controllerSerialNo &&
-        isDeviceConfiguredBySSO
-      ) {
-        masterLockStore.unlock(item.controllerSerialNo);
+      if (isLocked && !skipNavToUnlockScreen) {
+        if (currentSCLock && isLocked) {
+          southcoStore.startUnlockProcess(currentSCLock.id);
+          navigation.navigate(AppNavigator.BaseUnlockScreen, {
+            title: organizationName,
+            SCId: SCLockId,
+            nextNavigationGoBack,
+          });
+        } else if (item.controllerSerialNo && isDeviceConfiguredBySSO) {
+          masterLockStore.unlock(item.controllerSerialNo);
+          return navigation.navigate(AppNavigator.BaseUnlockScreen, {
+            title: organizationName,
+            MLId: item.controllerSerialNo,
+            nextNavigationGoBack,
+          });
+        }
         onPressItem && onPressItem(item, true);
-        return navigation.navigate(AppNavigator.BaseUnlockScreen, {
-          title: organizationName,
-          masterlockId: item.controllerSerialNo,
-          nextNavigationGoBack,
-        });
       } else {
         onPressItem && onPressItem(item);
       }
@@ -86,28 +111,46 @@ export const StocksListItem: React.FC<Props> = observer(
       ) {
         return <SVGs.CabinetSimple />;
       }
-      switch (lockStatus) {
-        case LockStatus.UNLOCKED:
-        case LockStatus.OPEN:
-          return <SVGs.CabinetOpen />;
-        case LockStatus.LOCKED:
-        case LockStatus.PENDING_UNLOCK:
-        case LockStatus.PENDING_RELOCK:
-          return <SVGs.CabinetLocked />;
-        case LockStatus.OPEN_LOCKED:
-          return <SVGs.CabinetOpenLocked />;
-        case LockStatus.UNKNOWN:
-          return <SVGs.CabinetError />;
-        default:
-          return <SVGs.CabinetSimple />;
+
+      if (SCStatus) {
+        switch (SCStatus) {
+          case SCLockStatusEnum.UNLOCKED:
+            return <SVGs.CabinetOpen />;
+          case SCLockStatusEnum.LOCKED:
+            return <SVGs.CabinetLocked />;
+          case SCLockStatusEnum.UNKNOWN:
+            return <SVGs.CabinetError />;
+          case SCLockStatusEnum.OPEN_LOCKED:
+            return <SVGs.CabinetOpenLocked />;
+          default:
+            return <SVGs.CabinetSimple />;
+        }
       }
+      if (MLStatus) {
+        switch (MLStatus) {
+          case LockStatus.UNLOCKED:
+          case LockStatus.OPEN:
+            return <SVGs.CabinetOpen />;
+          case LockStatus.LOCKED:
+          case LockStatus.PENDING_UNLOCK:
+          case LockStatus.PENDING_RELOCK:
+            return <SVGs.CabinetLocked />;
+          case LockStatus.OPEN_LOCKED:
+            return <SVGs.CabinetOpenLocked />;
+          case LockStatus.UNKNOWN:
+            return <SVGs.CabinetError />;
+          default:
+            return <SVGs.CabinetSimple />;
+        }
+      }
+      return <SVGs.CabinetSimple />;
     };
 
     return (
       <TouchableOpacity
         style={[styles.container, containerStyle]}
         onPress={handlePress}
-        disabled={!onPressItem}
+        disabled={!onPressItem || isSCUnlockingDisabled}
       >
         <View style={[styles.underlineContainer, subContainer]}>
           <View style={styles.rowContainer}>

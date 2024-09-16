@@ -121,7 +121,7 @@ export interface StockModel {
   accessProfile?: string;
   firmwareVersion?: number;
   controllerSerialNo?: string;
-  controllerType?: 'ML' | string;
+  controllerType?: 'ML' | 'SouthCo' | string;
   // roleTypeDescription: string;
   // dateAssigned: string;
 }

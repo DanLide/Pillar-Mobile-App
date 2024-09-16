@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { colors, fonts } from 'src/theme';
 import { ConnectedWorker } from 'src/theme/svgs';
-import { IColors, IFonts } from 'src/types';
 
 const IconsList = {
   worker: ConnectedWorker,

@@ -12,6 +12,7 @@ import {
   Text,
   SafeAreaView,
   AppState,
+  LogBox,
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import SplashScreen from 'react-native-splash-screen';
@@ -21,6 +22,10 @@ import { initI18n } from 'src/libs/translation';
 import { initTealium } from 'src/libs';
 import { AppStack } from './src/navigation';
 import { addTracks, setupPlayer } from './src/components/Sound';
+
+LogBox.ignoreLogs([
+  'Sending `onAnimatedValueUpdate` with no listeners registered.',
+]);
 
 import autoLogoutService, {
   AUTO_LOGOUT_TIMEOUT,
