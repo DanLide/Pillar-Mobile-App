@@ -48,6 +48,9 @@ jobs:
       - name: Run unit tests
         run: yarn jest --coverage --coverageReporters json-summary
       
+      - name: Run ui tests
+        run: detox test --configuration ios.sim.debug
+      
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:

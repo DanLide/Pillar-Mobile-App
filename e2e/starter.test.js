@@ -7,6 +7,7 @@ import selectLanguageScreen from '../screenObject/screens/SelectLanguageScreen';
 import scannerScreen from '../screenObject/screens/ScannerScreen';
 import codeInsteadScannerScreen from '../screenObject/screens/CodeInsteadScannerScreen';
 import updateDeviceNameAlert from '../screenObject/alerts/UpdateDeviceNameAlert.js';
+import shopManagementScreen from '../screenObject/screens/ShopManagementScreen';
 import testData from '../testData/data.Config.json';
 
 describe('Authentication Tests', () => {
@@ -55,6 +56,7 @@ describe('Authentication Tests', () => {
     await scannerScreen.clickEnterCharacterInsteadOfScannerLink();
     await codeInsteadScannerScreen.enterCode(testData.sso.ssoCode);
     await codeInsteadScannerScreen.clickSubmitButton();
+    await shopManagementScreen.verifyShopManagementOptions();
   });
 
   afterAll(async () => {

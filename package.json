@@ -17,6 +17,7 @@
     "archive:prod": "xcodebuild -workspace ios/RepairStack.xcworkspace -scheme \"RepairStackPROD\" -archivePath build/RepairStack.xcarchive archive",
     "generate-ipa": "xcodebuild -exportArchive -archivePath build/RepairStack.xcarchive -exportPath build -exportOptionsPlist ios_export/src/ExportOptions.plist",
     "test": "jest",
+    "ui:test": "detox",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "postinstall": "patch-package && react-native setup-ios-permissions && cd ios && pod install",
     "prepare": "husky && husky install"
