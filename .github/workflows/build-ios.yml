@@ -54,7 +54,7 @@ jobs:
               brew install applesimutils
       
       - name: Build the app
-         run: |
+        run: |
               echo "Starting build..."
               detox build configuration ios.sim.debug
               echo "Build completed."
