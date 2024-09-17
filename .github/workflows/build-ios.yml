@@ -48,10 +48,7 @@ jobs:
       - name: Run unit tests
         run: yarn jest --coverage --coverageReporters json-summary
       
-      - name: Install Detox dependency
-        run: yarn add detox --dev
-
-        - name: Build Test APP
+      - name: Build Test APP
         run: yarn detox build --configuration ios.sim.debug
 
       - name: Run ui tests
