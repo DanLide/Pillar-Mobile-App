@@ -47,6 +47,11 @@ jobs:
 
       - name: Run unit tests
         run: yarn jest --coverage --coverageReporters json-summary
+
+      - name: Install applesimutils
+        run: |
+              brew tap wix/brew
+              brew install applesimutils
       
       - name: Build Test APP
         run: yarn detox build --configuration ios.sim.debug
