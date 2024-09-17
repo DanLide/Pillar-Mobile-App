@@ -53,11 +53,14 @@ jobs:
               brew tap wix/brew
               brew install applesimutils
       
-      - name: Build Test APP
-        run: yarn detox build --configuration ios.sim.debug
+      - name: Build the app
+         run: |
+              echo "Starting build..."
+              detox build configuration ios.sim.debug
+              echo "Build completed."
 
       - name: Run ui tests
-        run: yarn detox test --configuration ios.sim.debug
+        run: detox test --configuration ios.sim.debug
       
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
