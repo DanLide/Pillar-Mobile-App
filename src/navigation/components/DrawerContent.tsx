@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { View, Image, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import {
+  DrawerContentComponentProps,
+  useDrawerStatus,
+} from '@react-navigation/drawer';
 import { useTranslation } from 'react-i18next';
 
 import { authStore, ssoStore, deviceInfoStore } from '../../stores';
@@ -11,10 +14,12 @@ import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
 import { AppNavigator } from '../types';
 import SupportAlertWrapper from 'src/navigation/components/DrawerAlertWrappers/SupportAlertWrapper';
+import { FocusAwareStatusBar } from 'src/components';
 
 export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
   navigation,
 }) => {
+  const isDrawerOpen = useDrawerStatus() === 'open';
   const { t } = useTranslation();
   const [isSupportAlertVisible, setIsSupportAlertVisible] =
     useState<boolean>(false);
@@ -45,6 +50,7 @@ export const DrawerContent: React.FC<DrawerContentComponentProps> = ({
 
   return (
     <SafeAreaView style={styles.drawerContainer}>
+      {isDrawerOpen && <FocusAwareStatusBar barStyle="dark-content" />}
       <View style={styles.topContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <TouchableOpacity
