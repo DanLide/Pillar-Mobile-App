@@ -1,11 +1,22 @@
-import { action, computed, makeObservable, observable } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { NativeModules } from 'react-native';
-import { getVersion, getBuildNumber } from 'react-native-device-info';
+import {
+  getVersion,
+  getBuildNumber,
+  isEmulator,
+} from 'react-native-device-info';
 
 export class DeviceInfoStore {
   @observable deviceName: string;
   @observable partyRoleId?: number;
   @observable version: string;
+  @observable isSimulator?: boolean;
 
   constructor() {
     this.deviceName = '';
@@ -17,6 +28,7 @@ export class DeviceInfoStore {
       }
     });
     this.version = `${getVersion()} - ${getBuildNumber()}`;
+    this.checkIsSimulator();
     makeObservable(this);
   }
 
@@ -30,5 +42,12 @@ export class DeviceInfoStore {
 
   @action setPartyRoleId(partyRoleId: number) {
     this.partyRoleId = partyRoleId;
+  }
+
+  async checkIsSimulator() {
+    const isSimulator = await isEmulator();
+    runInAction(() => {
+      this.isSimulator = isSimulator;
+    });
   }
 }
