@@ -13,6 +13,7 @@ import {
   SafeAreaView,
   AppState,
   LogBox,
+  StatusBar,
 } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import SplashScreen from 'react-native-splash-screen';
@@ -72,6 +73,7 @@ const App = observer(() => {
         authStore.setUsernames(data.usernames);
       }
     };
+
     async function initTrackPlayer() {
       await setupPlayer();
 
@@ -80,6 +82,7 @@ const App = observer(() => {
         await addTracks();
       }
     }
+
     async function initStorage() {
       await syncKeychainToMMKWStorage();
       getSSORNTokenData();
@@ -155,6 +158,7 @@ const App = observer(() => {
           return false;
         }}
       >
+        <StatusBar barStyle="light-content" />
         <KeyboardProvider>
           <ToastProvider>
             <SafeAreaProvider>
