@@ -45,20 +45,20 @@ jobs:
       - name: Install Node dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run unit tests
-        run: yarn jest --coverage --coverageReporters json-summary
-
       - name: Install applesimutils
         run: |
-              brew tap wix/brew
-              brew install applesimutils
-      
-      - name: Build the app
-        run: yarn detox build --configuration ios.sim.debug
+             brew tap wix/brew
+             brew install applesimutils
 
-      - name: Run ui tests
-        run: yarn detox test --configuration ios.sim.debug
+      - name: Run unit tests
+        run: yarn jest --coverage --coverageReporters json-summary
       
+      - name: Run Detox Build
+        run: yarn e2e:build ios.sim.debug
+
+      - name: Run Detox Test(s)
+        run: bash ${{ github.workspace }}/scripts/run-e2e-ios-debug.sh
+
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
