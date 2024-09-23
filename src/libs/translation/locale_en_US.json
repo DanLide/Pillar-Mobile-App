@@ -369,5 +369,7 @@
   "createNewRO": "Create New RO",
   "ssoUserFetchingError": "SSO User fetching error!",
   "stay": "Stay",
-  "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info"
+  "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info",
+  "partiallyReceived": "Partially Received",
+  "orderPartiallyReceived": "Order {{orderId}} Partially Received"
 }

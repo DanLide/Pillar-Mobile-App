@@ -1,5 +1,15 @@
 import { action, makeObservable, observable, computed, override } from 'mobx';
-import { includes, isNil, map, pipe, sum, forEach, keys, filter } from 'ramda';
+import {
+  includes,
+  isNil,
+  map,
+  pipe,
+  sum,
+  forEach,
+  keys,
+  filter,
+  difference,
+} from 'ramda';
 import { v1 as uuid } from 'uuid';
 
 import { GetOrderDetailsResponse, GetOrdersAPIResponse } from 'src/data/api';
@@ -87,6 +97,24 @@ export class OrdersStore extends BaseProductsStore {
       return acc;
     }, false);
     return !!isMissing;
+  }
+
+  @computed get isProductItemsMissingInMultipleStock() {
+    if (isNil(this.currentOrder?.productList)) return false;
+
+    const productsInOtherStocks = difference(
+      this.currentOrder?.productList,
+      this.getCurrentProductsByStockName || [],
+    );
+
+    const isMissing = productsInOtherStocks.reduce((acc, item) => {
+      if (isNil(item.orderedQty) || isNil(item.receivedQty)) return acc;
+
+      if (item.orderedQty - item.receivedQty !== 0) acc = true;
+      return acc;
+    }, false);
+
+    return !!isMissing || this.isProductItemsMissing;
   }
 
   @computed get getTotalCost() {

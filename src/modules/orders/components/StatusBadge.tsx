@@ -20,6 +20,7 @@ export const OrderTitleByStatusType: Record<string, string> = {
   [OrderStatusType.POREQUIRED]: 'PO Required',
   [OrderStatusType.SHIPPED]: 'Shipped',
   [OrderStatusType.RECEIVING]: 'Receiving',
+  [OrderStatusType.PARTIALLY_RECEIVED]: 'Partially Received',
   [OrderStatusType.SUBMITTED]: 'Submitted',
   [OrderStatusType.TRANSMITTED]: 'Transmitted',
   [OrderStatusType.CLOSED]: 'Closed',
@@ -32,6 +33,7 @@ const getOrderTitleByStatusTypeI18n = (label: string) => {
     ['PO Required']: i18n.t('poRequired'),
     ['Shipped']: i18n.t('shipped'),
     ['Receiving']: i18n.t('receiving'),
+    ['Partially Received']: i18n.t('partiallyReceived'),
     ['Submitted']: i18n.t('submitted'),
     ['Transmitted']: i18n.t('transmitted'),
     ['Closed']: i18n.t('closed'),
@@ -47,6 +49,7 @@ export const getBadgeStyleByStatusType = (orderStatusType: string) => {
     case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
     case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
     case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+    case OrderTitleByStatusType[OrderStatusType.PARTIALLY_RECEIVED]:
     case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
     case OrderTitleByStatusType[OrderStatusType.TRANSMITTED]:
       return {
@@ -78,11 +81,13 @@ export const StatusBadge: React.FC<Props> = ({
     if (isString) {
       return getBadgeStyleByStatusType(orderStatusType);
     }
+
     switch (orderStatusType) {
       case OrderStatusType.APPROVAL:
       case OrderStatusType.POREQUIRED:
       case OrderStatusType.SHIPPED:
       case OrderStatusType.RECEIVING:
+      case OrderStatusType.PARTIALLY_RECEIVED:
       case OrderStatusType.SUBMITTED:
       case OrderStatusType.TRANSMITTED:
         return {
@@ -101,6 +106,7 @@ export const StatusBadge: React.FC<Props> = ({
     switch (orderStatusType) {
       case OrderStatusType.POREQUIRED:
       case OrderStatusType.APPROVAL:
+      case OrderStatusType.PARTIALLY_RECEIVED:
         return <SVGs.TransparentWarning />;
       case OrderStatusType.CLOSED:
         if (isReturnOrder) {

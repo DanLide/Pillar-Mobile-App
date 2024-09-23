@@ -367,7 +367,9 @@
   "mustBeGreaterThan": "doit être supérieure à",
   "piecesPerContainerMinimumValue": "Pièces par conteneur + Valeur minimale - 1",
   "createNewRO": "Créer une nouvelle demande de réparations",
-  "ssoUserFetchingError": "",
+  "ssoUserFetchingError": "Erreur de récupération de l'utilisateur SSO!",
   "stay": "Rester",
-  "cannotAddToInvoiceMissingPricing": "Impossible d’ajouter l’élément à la facture.\nInformations sur les prix manquantes"
+  "cannotAddToInvoiceMissingPricing": "Impossible d’ajouter l’élément à la facture.\nInformations sur les prix manquantes",
+  "partiallyReceived": "",
+  "orderPartiallyReceived": ""
 }
