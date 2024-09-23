@@ -106,12 +106,25 @@ export const ResultScreen = ({ navigation }: Props) => {
       />
 
       <View style={styles.titleContainer}>
-        <SVGs.CheckMark color={colors.green3} />
-        <Text style={styles.title}>
-          {t('orderReceived', {
-            orderId: ordersStoreRef.currentOrder?.order.orderId,
-          })}
-        </Text>
+        {ordersStoreRef.isProductItemsMissingInMultipleStock ? (
+          <>
+            <SVGs.Warning />
+            <Text style={styles.title}>
+              {t('orderPartiallyReceived', {
+                orderId: ordersStoreRef.currentOrder?.order.orderId,
+              })}
+            </Text>
+          </>
+        ) : (
+          <>
+            <SVGs.CheckMark color={colors.green3} />
+            <Text style={styles.title}>
+              {t('orderReceived', {
+                orderId: ordersStoreRef.currentOrder?.order.orderId,
+              })}
+            </Text>
+          </>
+        )}
       </View>
       <Text style={styles.subtitle}>
         {t('youHaveSuccessfullySubmittedItems')}
@@ -190,7 +203,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontFamily: fonts.TT_Regular,
     color: colors.black,
-    paddingLeft: 16,
+    paddingLeft: 6,
   },
   subtitle: {
     textAlign: 'center',

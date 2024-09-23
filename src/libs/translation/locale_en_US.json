@@ -253,7 +253,7 @@
   "receiveHere": "Receive here",
   "products": "Products",
   "totalCost": "Total Cost",
-  "returnOrderTotal": "Return Order Total",
+  "returnOrderTotal": "Total Cost",
   "productsReceived": "Products Received",
   "viewOrder": "View Order",
   "multipleDistributors": "Multiple Distributors",
@@ -276,7 +276,7 @@
   "addItemsBelowInventoryMinimum": "Add Items Below Inventory Minimum",
   "receiveOrderId": "Receive Order {{orderId}}",
   "orderConfirmationWasNotSuccessful": "Order confirmation was not successful. Please retry.",
-  "searchByOrderOrProductNumber": "Search by order or product number",
+  "searchByOrderOrProductNumber": "Search orders",
   "orderReceived": "Order {{orderId}} Received",
   "orderIsIncomplete": "Order is incomplete.",
   "ifItemsArriveLater": "If items arrive later on, update this order.",
@@ -369,5 +369,7 @@
   "createNewRO": "Create New RO",
   "ssoUserFetchingError": "SSO User fetching error!",
   "stay": "Stay",
-  "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info"
+  "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info",
+  "partiallyReceived": "Partially Received",
+  "orderPartiallyReceived": "Order {{orderId}} Partially Received"
 }

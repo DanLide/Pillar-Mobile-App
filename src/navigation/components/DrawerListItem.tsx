@@ -32,7 +32,7 @@ export const DrawerListItem: React.FC<DrawerListItemProps> = ({
             {title}
           </Text>
           {subtitle && (
-            <Text style={styles.subtitleText} numberOfLines={1}>
+            <Text style={styles.subtitleText} numberOfLines={3}>
               {subtitle}
             </Text>
           )}

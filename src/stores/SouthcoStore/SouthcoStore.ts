@@ -6,6 +6,7 @@ import { delay } from 'src/helpers';
 import { SCLockModel } from './SCLockModel';
 import { DeviceEventEmitter } from 'react-native';
 import { LoggingService } from 'src/services';
+import { deviceInfoStore } from '..';
 
 const ADVERTISED_SERVICES = ['0000be9e-0000-1000-8000-00805f9b34fb'];
 
@@ -136,6 +137,7 @@ export class SouthcoStore {
   }
 
   startDeviceScan() {
+    if (deviceInfoStore.isSimulator) return;
     if (!this.isUnlockInProgress) {
       this.disconnectDevice();
     }

@@ -441,18 +441,18 @@ export const ProductModal = observer(
                   title={onOrderTitle}
                 />
               )}
-              <ButtonCluster
-                leftTitle={isEdit ? t('cancel') : t('edit')}
-                leftType={ButtonType.secondary}
-                leftDisabled={isLoading}
-                leftOnPress={isEdit ? handleCancelPress : handleEditPress}
-                showLeftButton={userPermissions.editProductInStock}
-                rightTitle={isEdit ? t('save') : t('done')}
-                rightType={ButtonType.primary}
-                rightIsLoading={isLoading}
-                rightOnPress={handleSubmit}
-              />
             </KeyboardAvoidingView>
+            <ButtonCluster
+              leftTitle={isEdit ? t('cancel') : t('edit')}
+              leftType={ButtonType.secondary}
+              leftDisabled={isLoading}
+              leftOnPress={isEdit ? handleCancelPress : handleEditPress}
+              showLeftButton={userPermissions.editProductInStock}
+              rightTitle={isEdit ? t('save') : t('done')}
+              rightType={ButtonType.primary}
+              rightIsLoading={isLoading}
+              rightOnPress={handleSubmit}
+            />
           </ToastContextProvider>
 
           <AlertWrapper

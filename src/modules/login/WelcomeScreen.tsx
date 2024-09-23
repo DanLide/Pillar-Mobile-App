@@ -1,11 +1,17 @@
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useRef } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { ssoLogin } from 'src/data/ssoLogin';
 
 import Logo from '../../../assets/images/logo.png';
-import { Button, ButtonType, Spacer, TextButton } from '../../components';
+import {
+  Button,
+  ButtonType,
+  FocusAwareStatusBar,
+  Spacer,
+  TextButton,
+} from '../../components';
 import {
   AppNavigator,
   LoginType,
@@ -54,6 +60,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
 
   return (
     <SafeAreaView edges={{ bottom: 'maximum' }} style={styles.container}>
+      <FocusAwareStatusBar barStyle="dark-content" />
       <View style={styles.continueContainer}>
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <Text style={styles.text}>{t('welcomeToRepairStack')}</Text>

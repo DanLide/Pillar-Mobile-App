@@ -48,6 +48,7 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
         case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
         case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
         case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+        case OrderTitleByStatusType[OrderStatusType.PARTIALLY_RECEIVED]:
           return true;
         case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
         case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
