@@ -30,7 +30,9 @@ describe('Authentication Tests', () => {
     await selectLanguageScreen.clickSubmitButton();
     await alphaBetaAgreementScreen.closeAgreementIfExist();
     await shopLocationScreen.searchShop(testData.sso.ssoName);
-    await shopLocationScreen.verifySeekingShopIsVisible();
+    await shopLocationScreen.verifySeekingShopIsVisible(
+      testData.sso.partyRoleId,
+    );
   });
 
   it('Logout Test', async () => {

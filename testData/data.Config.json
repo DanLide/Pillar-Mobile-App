@@ -5,6 +5,7 @@
     },
     "sso":{
       "ssoName": "Autotest-BodyShop",
+      "partyRoleId": "90237",
       "ssoCode": "758ZD",
       "deviceCode": "03350918"
     }

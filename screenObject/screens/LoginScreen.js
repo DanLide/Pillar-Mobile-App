@@ -8,8 +8,8 @@ class LoginScreen {
   }
 
   async login(username, password) {
-    await this.userNameInput.typeText(username);
-    await this.passwordInput.typeText(password);
+    await this.userNameInput.replaceText(username);
+    await this.passwordInput.replaceText(password);
     await this.passwordInput.tapReturnKey();
     await this.loginButton.tap();
   }
