@@ -371,5 +371,7 @@
   "stay": "Stay",
   "cannotAddToInvoiceMissingPricing": "Cannot add to Invoice.\nMissing pricing info",
   "partiallyReceived": "Partially Received",
-  "orderPartiallyReceived": "Order {{orderId}} Partially Received"
+  "orderPartiallyReceived": "Order {{orderId}} Partially Received",
+  "flashlightDefaultSetting": "Flashlight Default Setting",
+  "turnOnScanningWithFlashlight": "Turn on to start scanning screens\nwith the light on by default."
 }
