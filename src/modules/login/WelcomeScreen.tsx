@@ -92,12 +92,14 @@ export const WelcomeScreen = ({ navigation }: Props) => {
               buttonStyle={styles.continueButton}
               title={t('configureShopDevice')}
               onPress={handleConfigureDevice}
+              accessibilityLabel="Configure shop device"
             />
             <Button
               type={ButtonType.secondary}
               buttonStyle={styles.secondaryBtn}
               title={t('adminDeviceLogin')}
               onPress={onLoginViaCredentials}
+              accessibilityLabel="Admin device login"
             />
           </>
         )}

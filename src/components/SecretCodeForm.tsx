@@ -113,6 +113,7 @@ const SecretCodeForm = ({
       <View style={styles.inputContainer}>
         <View style={styles.fieldRow}>
           <CodeField
+            testID="codeField"
             autoFocus={autoFocus}
             ref={ref}
             {...props}
@@ -143,6 +144,7 @@ const SecretCodeForm = ({
           disabled={isDisabled}
           buttonStyle={styles.buttonStyle}
           onPress={handleSubmitForm}
+          accessibilityLabel="Confirm Button"
         />
       )}
     </View>

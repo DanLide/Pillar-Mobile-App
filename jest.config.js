@@ -5,6 +5,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node', 'd.ts'],
   moduleDirectories: ['node_modules'],
+  testPathIgnorePatterns: ['/node_modules/', '/e2e/'],
   setupFilesAfterEnv: ['./jest-setup.ts'],
   transformIgnorePatterns: [
     'node_modules/(?!jest-?@react-native-reanimated|react-native-vision-camera)/',

@@ -92,6 +92,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(
           rightIcon={SVGs.SearchIcon}
           onChangeText={onChangeText}
           value={store.searchInSSOList}
+          accessibilityLabel="Select a Shop Location"
         />
         <SSOList
           data={data}
@@ -106,6 +107,7 @@ export const SelectSSOScreen: React.FC<Props> = observer(
           onPress={onPressSubmit}
           title={isUpdating ? t('update') : t('submit')}
           type={ButtonType.primary}
+          accessibilityLabel="Submit button SSO list"
         />
       </View>
     );

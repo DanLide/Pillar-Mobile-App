@@ -33,6 +33,7 @@ export const DeviceName = observer(() => {
         activeOpacity={0.4}
         onPress={onChangeDeviceName}
         style={styles.button}
+        testID="updateButton"
       >
         <Text>{t('update')}</Text>
       </TouchableOpacity>
