@@ -16,6 +16,10 @@ class ShopManagementScreen {
     await expect(this.manageProductOption).toBeVisible();
     await expect(this.manageOrderOption).toBeVisible();
   }
+
+  async openManageProductOption() {
+    await this.manageProductOption.tap();
+  }
 }
 
 export default new ShopManagementScreen();

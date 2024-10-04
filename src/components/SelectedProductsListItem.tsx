@@ -41,7 +41,7 @@ export const SelectedProductsListItem = memo(
         style={styles.container}
         onPress={handlePress}
       >
-        <View style={styles.leftContainer}>
+        <View style={styles.leftContainer} testID={`${item.productId}`}>
           <Text numberOfLines={1} style={styles.title}>
             {name}
           </Text>

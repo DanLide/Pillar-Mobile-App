@@ -8,6 +8,15 @@
       "partyRoleId": "90237",
       "ssoCode": "758ZD",
       "deviceCode": "03350918"
+    },
+    "stockLocation":{
+      "stockName":"Test Stock Location"
+    },
+    "productSettings": {
+      "mainCategory": "ALLIED - ABRASIVES (ABR)",
+      "secondaryCategory":"ALLIED - ADHESIVES, COATINGS, SEALERS (ACS)",
+      "productId":"50376056"
     }
-  }
+}
+
   
