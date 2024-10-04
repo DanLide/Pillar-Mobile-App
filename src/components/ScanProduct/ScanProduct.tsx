@@ -385,6 +385,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               styles.smallBottomButton,
               { backgroundColor: isTorchOn ? colors.purple : colors.white },
             ]}
+            onPress={toggleIsTorchOn}
             accessibilityLabel="flash"
           >
             {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
