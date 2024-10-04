@@ -371,5 +371,7 @@
   "stay": "Rester",
   "cannotAddToInvoiceMissingPricing": "Impossible d’ajouter l’élément à la facture.\nInformations sur les prix manquantes",
   "partiallyReceived": "",
-  "orderPartiallyReceived": ""
+  "orderPartiallyReceived": "",
+  "flashlightDefaultSetting": "",
+  "turnOnScanningWithFlashlight": ""
 }

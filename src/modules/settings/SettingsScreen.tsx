@@ -11,12 +11,12 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import { useTranslation } from 'react-i18next';
 import { NavigationProp, ParamListBase } from '@react-navigation/native';
 
-import { Separator } from 'src/components';
+import { Separator, Switch } from 'src/components';
 import { WidthType } from 'src/components/Separator';
 import { colors, fonts, SVGs } from 'src/theme';
 import { authStore, deviceInfoStore, ssoStore } from 'src/stores';
 import AlertWrapper from 'src/contexts/AlertWrapper';
-import { cleanKeychain } from 'src/helpers/storage';
+import { cleanKeychain, getSettings, setSettings } from 'src/helpers/storage';
 import { permissionProvider } from 'src/data/providers';
 import { onRemoveDeviceFromSSO } from 'src/data/removeDeviceFromSSO';
 import { AppNavigator } from 'src/navigation/types';
@@ -46,12 +46,23 @@ const ItemSeparatorComponent = () => (
 
 export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
   const { t, i18n } = useTranslation();
+  const settings = getSettings();
+
   const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   const deviceName = deviceInfoStore.getDeviceName;
   const { userPermissions } = permissionProvider;
 
   const openAlert = useCallback(() => setIsAlertVisible(true), []);
+
+  const [isEnabledFlashlight, setIsFlashlightEnabled] = useState(
+    !!settings.isEnabledFlashlight,
+  );
+
+  const toggleSwitchFlashlight = useCallback(() => {
+    setSettings({ ...settings, isEnabledFlashlight: !isEnabledFlashlight });
+    setIsFlashlightEnabled(!isEnabledFlashlight);
+  }, [isEnabledFlashlight, settings]);
 
   const sections = useMemo<Section[]>(
     () => [
@@ -69,6 +80,11 @@ export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
             isSettings: true,
           });
         },
+      },
+      {
+        title: t('flashlightDefaultSetting'),
+        subtitle: t('turnOnScanningWithFlashlight'),
+        type: Type.Switch,
       },
       {
         title: t('deviceName'),
@@ -101,27 +117,37 @@ export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
     ],
   );
 
-  const renderItemActionType = useCallback((section: Section) => {
-    switch (section.type) {
-      case Type.Button: {
-        return (
-          <TouchableOpacity style={styles.button} onPress={section.action}>
-            <Text style={styles.buttonText}>{section.buttonTitle}</Text>
-          </TouchableOpacity>
-        );
+  const renderItemActionType = useCallback(
+    (section: Section) => {
+      switch (section.type) {
+        case Type.Button: {
+          return (
+            <TouchableOpacity style={styles.button} onPress={section.action}>
+              <Text style={styles.buttonText}>{section.buttonTitle}</Text>
+            </TouchableOpacity>
+          );
+        }
+        case Type.Chevron: {
+          return (
+            <TouchableOpacity style={styles.button} onPress={section.action}>
+              <SVGs.ChevronIcon color={colors.purpleDark} />
+            </TouchableOpacity>
+          );
+        }
+        case Type.Switch:
+          return (
+            <Switch
+              value={isEnabledFlashlight}
+              onPress={toggleSwitchFlashlight}
+              trackColor={{ true: colors.purple }}
+            />
+          );
+        case Type.Empty:
+          return null;
       }
-      case Type.Chevron: {
-        return (
-          <TouchableOpacity style={styles.button} onPress={section.action}>
-            <SVGs.ChevronIcon color={colors.purpleDark} />
-          </TouchableOpacity>
-        );
-      }
-      case Type.Switch:
-      case Type.Empty:
-        return null;
-    }
-  }, []);
+    },
+    [isEnabledFlashlight, toggleSwitchFlashlight],
+  );
 
   const renderSectionItem = useCallback(
     ({ item }: ListRenderItemInfo<Section>) => (
