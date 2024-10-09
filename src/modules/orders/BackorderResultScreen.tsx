@@ -75,7 +75,7 @@ export const BackOrderResultScreen = ({ navigation }: Props) => {
                 {t('distributor')}
               </Text>
               <Text numberOfLines={1} style={distributorAndPOTextStyle}>
-                {supplier.label}
+                {supplier?.label}
               </Text>
             </View>
           </View>
@@ -154,18 +154,6 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingHorizontal: 14,
   },
-  note: {
-    color: colors.grayText,
-    fontFamily: fonts.TT_Regular,
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  poTitle: {
-    textAlign: 'right',
-  },
-  poPlaceholder: {
-    color: colors.orange,
-  },
   subtitle: {
     color: colors.black,
     fontFamily: fonts.TT_Regular,
@@ -173,16 +161,9 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     textAlign: 'center',
   },
-  subtitleBoldItalic: {
-    fontFamily: fonts.TT_BoldItalic,
-  },
   subtitleContainer: {
     gap: 8,
     paddingBottom: 15,
-  },
-  subtitleLarge: {
-    fontSize: 14,
-    lineHeight: 18,
   },
   table: {
     flex: 1,

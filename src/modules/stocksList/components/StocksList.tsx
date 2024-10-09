@@ -18,7 +18,7 @@ import {
 import { masterLockStore, southcoStore, ssoStore } from 'src/stores';
 import permissionStore from 'src/modules/permissions/stores/PermissionStore';
 import { useSingleToast } from 'src/hooks';
-import { PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { RESULTS } from 'react-native-permissions';
 import { ToastType } from 'src/contexts/types';
 import { AppNavigator, RemoveStackParamList } from 'src/navigation/types';
 
@@ -100,16 +100,6 @@ export const StocksList: React.FC<Props> = observer(
     };
 
     const { showToast, hideAll, toastInitialized } = useSingleToast();
-
-    const requestLocationPermission = useCallback(async () => {
-      await permissionStore.requestPermission(
-        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
-      );
-    }, []);
-
-    useEffect(() => {
-      requestLocationPermission();
-    }, [requestLocationPermission]);
 
     const checkPermissions = async () => {
       if (!isDeviceConfiguredBySSO) return;

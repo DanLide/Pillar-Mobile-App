@@ -14,7 +14,6 @@ import { KeyboardToolbar } from 'react-native-keyboard-controller';
 import { AppNavigator, THomeNavScreenProps } from 'src/navigation/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useToastMessage, useCustomGoBack } from 'src/hooks';
-import { WIDTH } from 'src/constants';
 
 export const CreateJobModalScreen = ({
   navigation: { goBack },
@@ -43,7 +42,7 @@ export const CreateJobModalScreen = ({
       });
       setIsLoading(false);
     },
-    [goBack, showToast],
+    [showToast],
   );
 
   const onCreateRepairOrder = async () => {

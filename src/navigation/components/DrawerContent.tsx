@@ -8,7 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import { authStore, ssoStore, deviceInfoStore } from '../../stores';
-import { colors, fonts, SVGs } from '../../theme';
+import { colors, SVGs } from '../../theme';
 import Logo from '../../../assets/images/logoPerformanceSolution.png';
 import { DrawerListItem } from './DrawerListItem';
 import { DrawerListButton } from './DrawerListButton';
@@ -111,9 +111,6 @@ const styles = StyleSheet.create({
   drawerContainer: {
     flex: 1,
   },
-  iconButton: {
-    padding: 14,
-  },
   closeButton: {
     top: 2,
     right: 8,
@@ -129,49 +126,13 @@ const styles = StyleSheet.create({
     aspectRatio: 4,
     marginLeft: 8,
   },
-  itemContainer: {
-    flexDirection: 'row',
-    paddingVertical: 16,
-    alignItems: 'center',
-  },
-  listContainer: {
-    paddingLeft: 18,
-  },
-  textContainer: {
-    flex: 1,
-    marginLeft: 16,
-  },
-  infoText: {
-    fontSize: 15,
-    fontFamily: fonts.TT_Regular,
-    color: colors.blackSemiLight,
-    fontWeight: '700',
-  },
   subtitleText: {
     marginTop: 6,
     color: colors.blackLight,
-  },
-  separator: {
-    height: 1,
-    backgroundColor: colors.gray,
   },
   bottomContainer: {
     marginTop: 'auto',
     alignItems: 'center',
     paddingBottom: 16,
-  },
-  button: {
-    flexDirection: 'row',
-    marginHorizontal: 13,
-    borderWidth: 1,
-    borderRadius: 8,
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderColor: colors.grayDark,
-    marginBottom: 10,
-  },
-  iconWrapper: {
-    paddingVertical: 13,
   },
 });

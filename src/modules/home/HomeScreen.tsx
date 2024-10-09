@@ -3,13 +3,16 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
 import { LoggingService } from 'src/services';
-import { authStore, ssoStore } from '../../stores';
+import { authStore, masterLockStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
 import { colors, fonts, SVGs } from '../../theme';
 
 import ListItem from './components/ListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { fetchStocks } from 'src/data/fetchStocks';
+import { stocksStore } from '../stocksList/stores';
+import PermissionStore from '../permissions/stores/PermissionStore';
 
 interface Props {
   navigation: StackNavigationProp<HomeStackParamList, AppNavigator.HomeScreen>;
@@ -57,6 +60,24 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
       ssoStore.getCurrentSSO?.name,
       ssoStore.getCurrentSSO?.pisaId,
     );
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const [res] = await Promise.allSettled([
+        await fetchStocks(stocksStore),
+        await PermissionStore.requestPermission(
+          'ios.permission.LOCATION_WHEN_IN_USE',
+        ),
+      ]);
+      if (
+        res.status === 'fulfilled' &&
+        !res.value &&
+        PermissionStore.isMasterLockPermissionsGranted
+      ) {
+        await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
+      }
+    })();
   }, []);
 
   return (
@@ -156,9 +177,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: fonts.TT_Regular,
     color: colors.blackLight,
-  },
-  button: {
-    margin: 16,
   },
   shadowWrapper: {
     backgroundColor: colors.white,
