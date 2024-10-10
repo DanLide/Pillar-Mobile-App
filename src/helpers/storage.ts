@@ -69,6 +69,7 @@ export const cleanKeychain = () => {
   MMKWStorageService.removeRecord(storageKeys.RN_TOKEN);
   RNKeychainStorage.removeRecord(storageKeys.USER_NAMES);
   RNKeychainStorage.removeRecord(storageKeys.RN_TOKEN);
+  RNKeychainStorage.removeRecord(storageKeys.DEVICE_NAME);
 };
 
 export const syncKeychainToMMKWStorage = async () => {
