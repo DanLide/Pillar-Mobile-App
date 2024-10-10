@@ -386,6 +386,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               { backgroundColor: isTorchOn ? colors.purple : colors.white },
             ]}
             onPress={toggleIsTorchOn}
+            accessibilityLabel="flash"
           >
             {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
           </TouchableOpacity>
@@ -405,6 +406,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               { backgroundColor: isZoomToggled ? colors.purple : colors.white },
             ]}
             onPress={setIsZoomToggled}
+            accessibilityLabel="zoomIcon"
           >
             {isZoomToggled ? <SVGs.ZoomOutIcon /> : <SVGs.ZoomInIcon />}
           </TouchableOpacity>

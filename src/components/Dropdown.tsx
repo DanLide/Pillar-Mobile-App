@@ -153,7 +153,11 @@ export const Dropdown = <T extends object | number | string = DropdownItem>({
       return (
         <Pressable style={style} onPress={handlePress}>
           {isDropdownItem(item) ? (
-            <Text numberOfLines={1} style={styles.optionLabel}>
+            <Text
+              numberOfLines={1}
+              style={styles.optionLabel}
+              testID={item.label}
+            >
               {item.label}
             </Text>
           ) : (
