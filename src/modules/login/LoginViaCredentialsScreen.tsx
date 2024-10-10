@@ -63,11 +63,11 @@ const LoginViaCredentialsScreenContent = observer(
           type: ToastType.Error,
           duration: 0,
         });
-        // } else if (error.code === 'no_permission') {
-        //   showToast(error.message, {
-        //     type: ToastType.ProfileError,
-        //     duration: 0,
-        //   });
+      } else if (error.code === 'no_permission') {
+        showToast(error.message, {
+          type: ToastType.ProfileError,
+          duration: 0,
+        });
       } else {
         showToast(t('weAreNotAbleToLogin'), {
           type: ToastType.Retry,
