@@ -47,6 +47,10 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
   const onError = (errorMessage: string) => {
     setIsLoading(false);
 
+    if (!errorMessage || errorMessage === 'The provided code is invalid.') {
+      errorMessage = t('invalidFacilityCode');
+    }
+
     showToast(errorMessage, {
       type: ToastType.ScanError,
       duration: 0,
@@ -65,13 +69,15 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
       return onError?.(
         Utils.isNetworkError(error)
           ? t('checkYourInternetConnection')
-          : t('invalidFacilityCode'),
+          : error?.message,
       );
     }
     setIsLoading(false);
 
     if (stocksStoreRef.getMasterlockStocks.length) {
-      navigation.navigate(AppNavigator.SelectStockLocationsScreen);
+      navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
+        stocks: stocksStoreRef.getMasterlockStocks,
+      });
     } else {
       navigation.reset({
         routes: [{ name: AppNavigator.Drawer }],

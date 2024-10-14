@@ -1,8 +1,6 @@
-import i18n from 'i18next';
 import { Task, TaskExecutor } from './helpers/taskExecutor';
 
-import { TokenData } from './login';
-import { authStore, deviceInfoStore, ssoStore } from '../stores';
+import { deviceInfoStore, ssoStore } from '../stores';
 import { resetMasterlockAPI } from './api/stocksAPI';
 import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 
@@ -48,23 +46,5 @@ export class ResetMasterlockTask extends Task {
       }
       return acc;
     }, []);
-  }
-}
-
-export class SaveTokensToStore extends Task {
-  refreshTokenContext: TokenData;
-
-  constructor(refreshTokenContext: TokenData) {
-    super();
-    this.refreshTokenContext = refreshTokenContext;
-  }
-
-  async run() {
-    const { token, tokenExpiresIn, refreshToken } = this.refreshTokenContext;
-    if (token && refreshToken && typeof tokenExpiresIn === 'number') {
-      authStore.setToken(token, refreshToken, tokenExpiresIn);
-    } else {
-      throw Error(i18n.t('tokenIsNotDefined'));
-    }
   }
 }

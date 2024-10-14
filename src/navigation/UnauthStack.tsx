@@ -10,6 +10,7 @@ import { UpdateShopLocationScreen } from 'src/modules/login/UpdateShopLocationSc
 import { CreatePinScreen } from 'src/modules/login/CreatePinScreen';
 import { ssoStore } from 'src/stores';
 import { LoginWithPinScreen } from 'src/modules/login/LoginWithPinScreen';
+import { ConfigureDeviceStack } from './ConfigureDeviceStack';
 
 const Stack = createStackNavigator<UnauthStackParamsList>();
 
@@ -61,6 +62,11 @@ export const UnauthStack: React.FC = () => {
           title: ssoStore.getCurrentSSO?.name || 'Repair Stack',
           leftBarButtonType: LeftBarType.Back,
         })}
+      />
+      <Stack.Screen
+        name={AppNavigator.ConfigureDeviceStack}
+        component={ConfigureDeviceStack}
+        options={getNavigationOptions}
       />
     </Stack.Navigator>
   );

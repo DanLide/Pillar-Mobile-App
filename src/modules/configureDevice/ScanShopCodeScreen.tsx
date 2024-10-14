@@ -111,7 +111,9 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
       setIsCameraActive(true);
 
       if (stocksStoreRef.getMasterlockStocks.length) {
-        navigation.navigate(AppNavigator.SelectStockLocationsScreen);
+        navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
+          stocks: stocksStoreRef.getMasterlockStocks,
+        });
       } else {
         navigation.reset({
           routes: [{ name: AppNavigator.Drawer }],

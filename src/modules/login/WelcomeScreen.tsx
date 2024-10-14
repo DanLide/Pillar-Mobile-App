@@ -1,9 +1,9 @@
+import { observer } from 'mobx-react';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useRef } from 'react';
-import { Image, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { ssoLogin } from 'src/data/ssoLogin';
 
+import { ssoLogin } from 'src/data/ssoLogin';
 import Logo from '../../../assets/images/logo.png';
 import {
   Button,
@@ -30,9 +30,8 @@ interface Props {
   >;
 }
 
-export const WelcomeScreen = ({ navigation }: Props) => {
+export const WelcomeScreen = observer(({ navigation }: Props) => {
   const { t } = useTranslation();
-  const ssoStoreRef = useRef(ssoStore).current;
 
   const onPressLoginWithUsername = () => {
     navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
@@ -41,9 +40,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
   };
 
   const handleConfigureDevice = () => {
-    navigation.navigate(AppNavigator.LoginViaCredentialsScreen, {
-      type: LoginType.ConfigureShopDevice,
-    });
+    navigation.navigate(AppNavigator.ConfigureDeviceStack);
   };
 
   const onLoginViaCredentials = () => {
@@ -65,11 +62,11 @@ export const WelcomeScreen = ({ navigation }: Props) => {
         <Image source={Logo} style={styles.image} resizeMode="contain" />
         <Text style={styles.text}>{t('welcomeToRepairStack')}</Text>
         <Text style={styles.locationText}>
-          {ssoStoreRef.getIsDeviceConfiguredBySSO
+          {ssoStore.getIsDeviceConfiguredBySSO
             ? ssoStore.getCurrentSSO?.name
             : t('locationNotSet')}
         </Text>
-        {ssoStoreRef.getIsDeviceConfiguredBySSO ? (
+        {ssoStore.getIsDeviceConfiguredBySSO ? (
           <>
             <Button
               type={ButtonType.primary}
@@ -117,7 +114,7 @@ export const WelcomeScreen = ({ navigation }: Props) => {
       </View>
     </SafeAreaView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingBottom: 10 },
