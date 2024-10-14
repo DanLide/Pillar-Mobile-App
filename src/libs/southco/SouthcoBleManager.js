@@ -33,16 +33,21 @@ var __awaiter =
     });
   };
 //import packageJson from '../package.json';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, Platform } from 'react-native';
 import { SouthcoBleDevice } from './SouthcoBleDevice';
-// import { BleManager, LogLevel } from 'react-native-ble-plx';
+import { ScanCallbackType } from 'react-native-ble-plx';
 export class SouthcoBleManager {
   constructor() {
+    this._matchLostTimeout = 10000; // Time in milliseconds after which a device is considered "lost"
+    this._checkInterval = 5000; // Interval to check for lost devices
+    this._deviceTimers = {};
+    this._connectToDeviceTimerId = null;
+    this._intervalTimerId = null;
     if (!(this instanceof SouthcoBleManager)) {
       throw Error('SouthcoBleManager must be instantiated with `new`');
     }
-    console.log('Southco BLE - SDK Version: 0.11.0'); //${packageJson.version}
-    this._scannedDevices = [];
+    console.log('Southco BLE - SDK Version: 0.12.0'); //${packageJson.version}
+    this._deviceTimers = {};
     this._connectedDevice = null;
     // this._bleManager = new BleManager();
     // this._bleManager.setLogLevel(LogLevel.Verbose);
@@ -108,30 +113,12 @@ export class SouthcoBleManager {
       { deviceId: deviceId },
     );
   }
-  static addSensorStatusChangedListener(listener) {
-    console.log('SouthcoBleManager.addSensorStatusChangedListener: Enter');
-    return SouthcoBleManager._sensorStatusChangedEventEmitter.addListener(
-      'SouthcoBleDeviceSensorStatusChanged',
+  static addDeviceLostListener(listener) {
+    console.log('SouthcoBleManager.addDeviceLostListener: Enter');
+    return SouthcoBleManager._deviceLostEventEmitter.addListener(
+      'SouthcoBleDeviceLost',
       listener,
     );
-  }
-  get scannedDevices() {
-    return this._scannedDevices;
-  }
-  isDuplicateDevice(nextDevice) {
-    return (
-      this._scannedDevices.findIndex(device => nextDevice.id === device.id) > -1
-    );
-  }
-  sensorStatusChanged(nextDevice) {
-    const index = this._scannedDevices.findIndex(
-      device => nextDevice.id === device.id,
-    );
-    const sensorStatus = Buffer.from(nextDevice.manufacturerData, 'base64')
-      .toString('hex')
-      .substring(16, 18);
-    if (sensorStatus !== this._scannedDevices[index].sensorStatus) return true;
-    else return false;
   }
   startDeviceScan(callback) {
     console.log(
@@ -139,59 +126,85 @@ export class SouthcoBleManager {
         callback ? 'Provided' : 'Null'
       }`,
     );
-    this._bleManager.startDeviceScan(
-      SouthcoBleManager._advertisedServices,
-      null,
-      (error, device) => {
-        if (error) {
-          console.log(`SouthcoBleManager: startDeviceScan: ${error}`);
-        }
-        if (device !== null) {
-          if (!this.isDuplicateDevice(device)) {
-            const southcoBleDevice = new SouthcoBleDevice(device);
-            this._scannedDevices.push(southcoBleDevice);
-            if (callback) {
-              callback(southcoBleDevice);
-            } else {
-              SouthcoBleManager._deviceFoundEmitter.emit(
-                'SouthcoBleDeviceDiscovered',
-                { message: southcoBleDevice },
-              );
+    const scanOptions = {
+      allowDuplicates: Platform.OS === 'ios', // Allow duplicates on iOS only
+      callbackType:
+        Platform.OS === 'android' ? ScanCallbackType.AllMatches : undefined, // Handle all matches on Android
+    };
+    const scanDevices = () => {
+      this._bleManager.startDeviceScan(
+        SouthcoBleManager._advertisedServices,
+        scanOptions,
+        (error, device) => {
+          if (error) {
+            console.log(`SouthcoBleManager: startDeviceScan: ${error}`);
+            return;
+          }
+          if (device) {
+            const currentTime = Date.now();
+            // console.log(`Found device: ${device.id} at ${new Date().toISOString()}`);
+            if (!this._deviceTimers[device.id]) {
+              const southcoBleDevice = new SouthcoBleDevice(device);
+              if (callback) {
+                callback(southcoBleDevice);
+              } else {
+                SouthcoBleManager._deviceFoundEmitter.emit(
+                  'SouthcoBleDeviceDiscovered',
+                  { message: southcoBleDevice },
+                );
+              }
             }
-          } else {
-            if (this.sensorStatusChanged(device)) {
-              const sensorStatus = Buffer.from(
-                device.manufacturerData,
-                'base64',
-              )
-                .toString('hex')
-                .substring(16, 18);
-              const macAddress = Buffer.from(device.manufacturerData, 'base64')
-                .toString('hex')
-                .substring(0, 12);
-              SouthcoBleManager._sensorStatusChangedEventEmitter.emit(
-                'SouthcoBleDeviceSensorStatusChanged',
-                {
-                  macAddress: macAddress,
-                  sensorStatus: sensorStatus,
-                },
-              );
-            }
+            this._deviceTimers[device.id] = currentTime;
+          }
+        },
+      );
+    };
+    scanDevices();
+    // Set up an interval to periodically check for lost devices
+    this._intervalTimerId = setInterval(() => {
+      const currentTime = Date.now();
+      for (const deviceId in this._deviceTimers) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (this._deviceTimers.hasOwnProperty(deviceId)) {
+          const timeSinceLastSeen = currentTime - this._deviceTimers[deviceId];
+          if (timeSinceLastSeen > this._matchLostTimeout) {
+            console.log(
+              `Device lost: ${deviceId} at ${new Date().toISOString()}`,
+            );
+            SouthcoBleManager._deviceLostEventEmitter.emit(
+              'SouthcoBleDeviceLost',
+              { deviceId: deviceId },
+            );
+            delete this._deviceTimers[deviceId];
           }
         }
-      },
-    );
+      }
+    }, this._checkInterval);
   }
   stopDeviceScan() {
+    if (this._intervalTimerId) {
+      clearTimeout(this._intervalTimerId);
+    }
     this._bleManager.stopDeviceScan();
-    this._scannedDevices = [];
+    this._deviceTimers = {};
     this._connectedDevice = null;
   }
   connectToDevice(device) {
     return __awaiter(this, void 0, void 0, function* () {
       console.log(`SouthcoBleManager.connectToDevice: ${device.id}`);
       try {
-        this._scannedDevices = [];
+        this._deviceTimers = {};
+        this._connectToDeviceTimerId = setTimeout(
+          () =>
+            __awaiter(this, void 0, void 0, function* () {
+              console.log(
+                'SouthcoBleManager.connectToDevice: unresponsive device',
+              );
+              yield this._bleManager.cancelDeviceConnection(device.id);
+              throw new Error();
+            }),
+          5000,
+        );
         const bleDevice = yield this._bleManager.connectToDevice(device.id, {
           autoConnect: true,
         });
@@ -199,6 +212,11 @@ export class SouthcoBleManager {
           throw new Error(
             'SouthcoBleManager.connectToDevice: Failed to connect to device',
           );
+        }
+        if (this._connectToDeviceTimerId) {
+          clearTimeout(this._connectToDeviceTimerId);
+          this._connectToDeviceTimerId = null;
+          console.log('SouthcoBleManager.connectToDevice: Timer cleared out');
         }
         this._connectedDevice = new SouthcoBleDevice(
           bleDevice,
@@ -239,7 +257,7 @@ SouthcoBleManager._lockStateChangeEventEmitter = DeviceEventEmitter;
 SouthcoBleManager._keyChangeStateNotificationEventEmitter = DeviceEventEmitter;
 SouthcoBleManager._deviceFoundEmitter = DeviceEventEmitter;
 SouthcoBleManager._deviceDisconnectedEventEmitter = DeviceEventEmitter;
-SouthcoBleManager._sensorStatusChangedEventEmitter = DeviceEventEmitter;
+SouthcoBleManager._deviceLostEventEmitter = DeviceEventEmitter;
 SouthcoBleManager._advertisedServices = [
   '0000be9e-0000-1000-8000-00805f9b34fb',
 ];

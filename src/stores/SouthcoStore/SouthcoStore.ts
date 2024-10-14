@@ -7,6 +7,7 @@ import { SCLockModel } from './SCLockModel';
 import { DeviceEventEmitter } from 'react-native';
 import { LoggingService } from 'src/services';
 import { deviceInfoStore } from '..';
+import { ISimpleError } from 'src/types';
 
 const ADVERTISED_SERVICES = ['0000be9e-0000-1000-8000-00805f9b34fb'];
 
@@ -34,11 +35,13 @@ const creteException = ({
 const CONNECTION_ERROR = 'Failed to connect to device';
 const REGISTRATION_ERROR = 'Failed to register the lock';
 const UNLOCKING_ERROR = 'Failed to open the lock';
+const CANCELED_BECAUSE_OCCUPIED = 'Operation was cancelled';
 
 export class SouthcoStore {
   private _bleManager: BleManager;
   private _scannedDevices: Map<string, SouthcoBleDevice> = new Map();
   private _connectedDevice: SouthcoBleDevice | null = null;
+  private _connectToDeviceTimerId: NodeJS.Timeout | null = null;
 
   @observable
   locks: Map<string, SCLockModel> = new Map();
@@ -55,7 +58,10 @@ export class SouthcoStore {
         const lock = this.locks.get(data.id);
         if (lock) {
           lock.updateStatus(data.state);
-          if (data.state === 'LOCKED') {
+          if (
+            data.state === SCLockStatusEnum.OPEN_LOCKED ||
+            data.state === SCLockStatusEnum.LOCKED
+          ) {
             this.disconnectDevice();
           }
         }
@@ -102,11 +108,16 @@ export class SouthcoStore {
   @action
   setDevice(device: SouthcoBleDevice) {
     this._scannedDevices.set(device.macAddress, device);
+    const prevDevice = this.locks.get(device.macAddress);
     this.locks.set(
       device.macAddress,
       new SCLockModel({
         id: device.macAddress,
-        status: device.lockState,
+        status:
+          prevDevice?.status === SCLockStatusEnum.OPEN_LOCKED &&
+          device.lockState === SCLockStatusEnum.UNLOCKED
+            ? SCLockStatusEnum.OPEN_LOCKED
+            : device.lockState,
         isRegistered: device.isRegistered(),
       }),
     );
@@ -150,14 +161,13 @@ export class SouthcoStore {
             `SC Locks scanning error - ${error?.iosErrorCode} ${error?.reason}`,
           );
         }
-        if (device !== null) {
-          if (!this.isDuplicatedDevice(device.manufacturerData)) {
-            const southcoBleDevice = new SouthcoBleDevice(device);
-            this.setDevice(southcoBleDevice);
-          } else if (this.isLockStatusChanged(device.manufacturerData)) {
-            const southcoBleDevice = new SouthcoBleDevice(device);
-            this.setDevice(southcoBleDevice);
-          }
+        if (
+          device !== null &&
+          (!this.isDuplicatedDevice(device.manufacturerData) ||
+            this.isLockStatusChanged(device.manufacturerData))
+        ) {
+          const southcoBleDevice = new SouthcoBleDevice(device);
+          this.setDevice(southcoBleDevice);
         }
       },
     );
@@ -186,9 +196,16 @@ export class SouthcoStore {
         await this.disconnectDevice();
       }
 
+      this.clearConnectionTimeout();
+
+      this._connectToDeviceTimerId = setTimeout(async () => {
+        await this._bleManager.cancelDeviceConnection(device.id);
+      }, 5000);
       const bleDevice = await this._bleManager.connectToDevice(device.id, {
         autoConnect: true,
       });
+
+      this.clearConnectionTimeout();
 
       if (bleDevice === null) {
         throw new Error(
@@ -208,22 +225,29 @@ export class SouthcoStore {
         newDevice.id,
       );
       if (isConnected) {
-        console.log(
-          `SouthcoBleManager: connectToDevice: advertisingPayload: ${device.advertisingPayload}`,
-        );
         await newDevice.discoverAllServicesAndCharacteristics();
       }
-      console.log(`Device ${newDevice.id} connected and services discovered.`);
     } catch (error) {
       this._scannedDevices.delete(device.macAddress);
       this._connectedDevice = null;
+      const err = error as ISimpleError;
       throw new Error(
         creteException({
-          type: CONNECTION_ERROR,
+          type:
+            err.message === CANCELED_BECAUSE_OCCUPIED
+              ? CANCELED_BECAUSE_OCCUPIED
+              : CONNECTION_ERROR,
           macAddress: device?.macAddress ?? 'Unknown id',
           error,
         }),
       );
+    }
+  }
+
+  clearConnectionTimeout() {
+    if (this._connectToDeviceTimerId) {
+      clearTimeout(this._connectToDeviceTimerId);
+      this._connectToDeviceTimerId = null;
     }
   }
 
@@ -263,18 +287,14 @@ export class SouthcoStore {
     const lock = this.locks.get(id);
     if (device && lock) {
       this.setIsUnlocking(true);
-      try {
-        LoggingService.logEvent('Unlock SC lock', {
-          macAddress: device.macAddress,
-          isRegistered: device.isRegistered() ? 'Y' : 'N',
-          port: device.port,
-          sensorStatus: device.sensorStatus,
-          batteryData: device.batteryData,
-          latchType: device.latchType,
-        });
-      } catch (error) {
-        LoggingService.logException(error);
-      }
+      LoggingService.logEvent('Unlock SC lock', {
+        macAddress: device.macAddress,
+        isRegistered: device.isRegistered() ? 'Y' : 'N',
+        port: device.port,
+        sensorStatus: device.sensorStatus,
+        batteryData: device.batteryData,
+        latchType: device.latchType,
+      });
       try {
         await this.connectToDevice(device);
         await delay(200);
@@ -286,9 +306,14 @@ export class SouthcoStore {
           await this.openLock(id);
         }
         await delay(2000);
-      } catch (err) {
-        LoggingService.logException(err);
-        lock?.updateStatus(SCLockStatusEnum.UNKNOWN);
+      } catch (error) {
+        const err = error as ISimpleError;
+        if (err.message?.startsWith(CANCELED_BECAUSE_OCCUPIED)) {
+          lock?.updateStatus(SCLockStatusEnum.UNLOCKED);
+        } else {
+          LoggingService.logException(err);
+          lock?.updateStatus(SCLockStatusEnum.UNKNOWN);
+        }
       } finally {
         this.setIsUnlocking(false);
       }
