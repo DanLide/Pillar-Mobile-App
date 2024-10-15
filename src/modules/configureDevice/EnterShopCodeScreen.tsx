@@ -74,9 +74,9 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
     }
     setIsLoading(false);
 
-    if (stocksStoreRef.getMasterlockStocks.length) {
+    if (stocksStoreRef.stocks.length) {
       navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
-        stocks: stocksStoreRef.getMasterlockStocks,
+        stocks: stocksStoreRef.stocks,
       });
     } else {
       navigation.reset({

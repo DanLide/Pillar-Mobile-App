@@ -110,9 +110,9 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
       setIsLoading(false);
       setIsCameraActive(true);
 
-      if (stocksStoreRef.getMasterlockStocks.length) {
+      if (stocksStoreRef.stocks.length) {
         navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
-          stocks: stocksStoreRef.getMasterlockStocks,
+          stocks: stocksStoreRef.stocks,
         });
       } else {
         navigation.reset({
@@ -120,7 +120,7 @@ const ScanShopCodeScreenBody = observer(({ navigation }: Props) => {
         });
       }
     },
-    [navigation, onScanError, stocksStoreRef.getMasterlockStocks],
+    [navigation, onScanError, stocksStoreRef.stocks],
   );
 
   const onScanShopCode = useCallback<ScanProductProps['onScan']>(
