@@ -58,7 +58,7 @@ export const FooterDescription: React.FC<Props> = ({
               </Text>
             )}
             <View style={styles.wrappedContainer}>
-              <View style={[styles.itemContainer, styles.mr8]}>
+              <View style={styles.itemContainer}>
                 <Text style={styles.title}>Remove by</Text>
                 <InventoryTypeBadge
                   inventoryUseTypeId={product.inventoryUseTypeId}
@@ -66,7 +66,7 @@ export const FooterDescription: React.FC<Props> = ({
               </View>
 
               {isEachPiece && (
-                <View style={[styles.itemContainer, styles.mr8]}>
+                <View style={styles.itemContainer}>
                   <Text style={styles.title}>{t('piecesPerContainer')}</Text>
                   <Text style={styles.subtitleInStock}>
                     {renderValue(product.unitsPer)}
@@ -74,21 +74,21 @@ export const FooterDescription: React.FC<Props> = ({
                 </View>
               )}
 
-              <View style={[styles.itemContainer, styles.mr8]}>
+              <View style={styles.itemContainer}>
                 <Text style={styles.title}>{t('shipmentQuantity')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(shipmentQuantity)}
                 </Text>
               </View>
 
-              <View style={[styles.itemContainer, styles.mr8]}>
+              <View style={styles.itemContainer}>
                 <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onHand)}
                 </Text>
               </View>
 
-              <View style={[styles.itemContainer, styles.mr8]}>
+              <View style={styles.itemContainer}>
                 <Text style={styles.title}>{t('onOrder')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {renderValue(product.onOrder)}
@@ -101,7 +101,7 @@ export const FooterDescription: React.FC<Props> = ({
         return (
           <View style={[styles.wrappedContainer, { marginTop: 12 }]}>
             {hideOnHandCount ? null : (
-              <View style={[styles.itemContainer, styles.mr16]}>
+              <View style={styles.itemContainer}>
                 <Text style={styles.title}>{t('onHand')}</Text>
                 <Text style={styles.subtitleInStock}>
                   {onHand > 99
@@ -148,6 +148,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'flex-end',
+    gap: 8,
   },
   itemContainer: {
     alignItems: 'center',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.TT_Regular,
     fontSize: 10,
     marginBottom: 4,
-    width: 50,
+    width: 66,
     textAlign: 'center',
   },
   piecesCount: {
@@ -177,11 +178,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: fonts.TT_Bold,
     letterSpacing: 0,
-  },
-  mr8: {
-    marginRight: 8,
-  },
-  mr16: {
-    marginRight: 16,
   },
 });

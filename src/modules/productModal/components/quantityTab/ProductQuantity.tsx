@@ -28,7 +28,6 @@ import {
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
 import { useSingleToast } from 'src/hooks';
-import { getProductTotalCost } from 'src/modules/orders/helpers';
 import { ToastMessage } from 'src/components/ToastMessage';
 import AlertWrapper, { AlertWrapperProps } from 'src/contexts/AlertWrapper';
 
@@ -293,10 +292,7 @@ export const ProductQuantity = forwardRef(
         if (type === ProductModalType.Remove && currentValue === 0)
           return false;
 
-        if (
-          type === ProductModalType.Remove ||
-          type === ProductModalType.ReceiveOrder
-        ) {
+        if (type === ProductModalType.Remove) {
           return isProductQuantityError;
         }
 
@@ -381,12 +377,6 @@ export const ProductQuantity = forwardRef(
                   </View>
                 </View>
               )}
-              <Text style={styles.cost}>
-                {t('costPer')}: ${product.cost?.toFixed(2)}
-              </Text>
-              <Text style={styles.totalCost}>
-                {t('totalCost')}: ${getProductTotalCost(product).toFixed(2)}
-              </Text>
             </View>
           );
         default:
@@ -572,25 +562,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 16,
     marginHorizontal: 16,
-  },
-  cost: {
-    width: '100%',
-    padding: 8,
-    fontSize: 12,
-    lineHeight: 11,
-    fontFamily: fonts.TT_Regular,
-    color: colors.grayDark2,
-    backgroundColor: colors.background,
-    textAlign: 'center',
-  },
-  totalCost: {
-    width: '100%',
-    padding: 8,
-    fontSize: 20,
-    lineHeight: 24,
-    fontFamily: fonts.TT_Bold,
-    color: colors.white,
-    backgroundColor: colors.purpleDark2,
-    textAlign: 'center',
   },
 });

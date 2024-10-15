@@ -22,6 +22,7 @@ import {
 } from 'src/data/getProductByOrderTypeAndSupplier';
 import { AppNavigator, OrdersParamsList } from 'src/navigation/types';
 import { OrderType } from 'src/constants/common.enum';
+import { ProductModal } from './components';
 
 interface Props {
   route: RouteProp<OrdersParamsList, AppNavigator.ScannerScreen>;
@@ -126,6 +127,7 @@ export const ScannerScreen = observer(({ route: { params } }: Props) => {
           onCloseModal={onCloseModal}
           onBadRequestError={onBadRequestError}
           buttonListTitle={t('reviewOrder')}
+          ProductModalComponent={ProductModal}
           disableAlert
         />
       </ToastContextProvider>
