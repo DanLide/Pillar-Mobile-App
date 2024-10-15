@@ -1,11 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { getFetchStockAPI, getFetchStockByDeviceNameAPI } from 'src/data/api';
+import { getFetchStockAPI } from 'src/data/api';
 import { StocksList } from 'src/modules/stocksList/components/StocksList';
 import { stocksStore } from 'src/modules/stocksList/stores';
-import {
-  StockModel,
-  StockModelWithMLAccess,
-} from 'src/modules/stocksList/stores/StocksStore';
+import { StockModel } from 'src/modules/stocksList/stores/StocksStore';
 import { ordersStore } from '../stores';
 
 type StockLocationListModalProps = {

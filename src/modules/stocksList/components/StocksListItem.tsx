@@ -92,7 +92,7 @@ export const StocksListItem: React.FC<Props> = observer(
           });
         } else if (item.controllerSerialNo && isDeviceConfiguredBySSO) {
           masterLockStore.unlock(item.controllerSerialNo);
-          return navigation.navigate(AppNavigator.BaseUnlockScreen, {
+          navigation.navigate(AppNavigator.BaseUnlockScreen, {
             title: organizationName,
             MLId: item.controllerSerialNo,
             nextNavigationGoBack,

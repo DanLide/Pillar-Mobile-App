@@ -55,6 +55,7 @@ export const BluetoothPermissionScreen = observer(
           buttonStyle={styles.button}
           title={t('continue')}
           onPress={onButtonPress}
+          accessibilityLabel="continue"
         />
       </View>
     );

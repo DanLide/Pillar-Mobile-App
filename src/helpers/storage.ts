@@ -11,6 +11,10 @@ interface AlphaAlerts {
   usernames?: string[];
 }
 
+interface Settings {
+  isEnabledFlashlight?: boolean;
+}
+
 export const setSSORNToken = (rnToken: string, sso: SSOModel) => {
   const value = JSON.stringify({ rnToken, sso });
   MMKWStorageService.setRecord(storageKeys.RN_TOKEN, value);
@@ -46,11 +50,26 @@ export const setUsernames = (username: string) => {
   RNKeychainStorage.setRecord(storageKeys.USER_NAMES, value);
 };
 
+export const setSettings = (settings: Settings) => {
+  const value = JSON.stringify(settings);
+  MMKWStorageService.setRecord(storageKeys.SETTINGS, value);
+  RNKeychainStorage.setRecord(storageKeys.SETTINGS, value);
+};
+
+export const getSettings = () => {
+  const settings = MMKWStorageService.getRecord(storageKeys.SETTINGS);
+  if (settings) {
+    return JSON.parse(settings) as Settings;
+  }
+  return {};
+};
+
 export const cleanKeychain = () => {
   MMKWStorageService.removeRecord(storageKeys.USER_NAMES);
   MMKWStorageService.removeRecord(storageKeys.RN_TOKEN);
   RNKeychainStorage.removeRecord(storageKeys.USER_NAMES);
   RNKeychainStorage.removeRecord(storageKeys.RN_TOKEN);
+  RNKeychainStorage.removeRecord(storageKeys.DEVICE_NAME);
 };
 
 export const syncKeychainToMMKWStorage = async () => {
@@ -60,11 +79,15 @@ export const syncKeychainToMMKWStorage = async () => {
   if (!ssoRNToken) {
     const usernames = await RNKeychainStorage.getRecord(storageKeys.USER_NAMES);
     const rnToken = await RNKeychainStorage.getRecord(storageKeys.RN_TOKEN);
+    const settings = await RNKeychainStorage.getRecord(storageKeys.SETTINGS);
     if (usernames) {
       MMKWStorageService.setRecord(storageKeys.USER_NAMES, usernames);
     }
     if (rnToken) {
       MMKWStorageService.setRecord(storageKeys.RN_TOKEN, rnToken);
+    }
+    if (settings) {
+      MMKWStorageService.setRecord(storageKeys.SETTINGS, settings);
     }
   }
 };

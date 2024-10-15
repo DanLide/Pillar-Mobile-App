@@ -8,7 +8,9 @@ import { LeftBarType, RightBarType } from '../types';
 
 interface GetScreenOptions {
   title: string;
+  leftBarButtonTestId?: string;
   leftBarButtonType?: LeftBarType;
+  rightBarButtonTestId?: string;
   rightBarButtonType?: RightBarType;
   style?: ViewStyle;
   leftBarButtonAction?: () => void;
@@ -21,12 +23,14 @@ export const getScreenOptions = (params: GetScreenOptions) => ({
     <LeftBarButton
       onPress={params.leftBarButtonAction}
       leftBarButtonType={params.leftBarButtonType}
+      testID={params.leftBarButtonTestId}
     />
   ),
   headerRight: () => (
     <RightBarButton
       onPress={params.rightBarButtonAction}
       rightBarButtonType={params.rightBarButtonType}
+      testID={params.rightBarButtonTestId}
     />
   ),
   headerStyle: {

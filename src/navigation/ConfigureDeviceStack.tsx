@@ -8,9 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { DeviceConfigCompletedScreen } from 'src/modules/configureDevice/DeviceConfigCompletedScreen';
 import EnterShopCodeScreen from 'src/modules/configureDevice/EnterShopCodeScreen';
 import { ScanShopCodeScreen } from 'src/modules/configureDevice/ScanShopCodeScreen';
-import { SelectStockLocationsScreen } from 'src/modules/configureDevice/SelectStockLocationsScreen';
 import { CameraPermissionScreen } from 'src/modules/permissions';
-import { authStore, ssoStore } from 'src/stores';
 
 const Stack = createStackNavigator<ConfigureDeviceStackParams>();
 
@@ -23,9 +21,6 @@ export const ConfigureDeviceStack: React.FC = () => {
         name={AppNavigator.ScanShopCodeScreen}
         component={ScanShopCodeScreen}
         options={getScreenOptions({
-          leftBarButtonAction: () => {
-            authStore.logOut();
-          },
           leftBarButtonType: LeftBarType.Back,
           title: t('repairFacilityCode'),
         })}
@@ -36,18 +31,6 @@ export const ConfigureDeviceStack: React.FC = () => {
         options={getScreenOptions({
           leftBarButtonType: LeftBarType.Back,
           title: t('repairFacilityCode'),
-        })}
-      />
-      <Stack.Screen
-        name={AppNavigator.SelectStockLocationsScreen}
-        component={SelectStockLocationsScreen}
-        options={getScreenOptions({
-          leftBarButtonAction: () => {
-            ssoStore.clear();
-            navigation.goBack();
-          },
-          leftBarButtonType: LeftBarType.Back,
-          title: t('configureShopDevice'),
         })}
       />
       <Stack.Screen

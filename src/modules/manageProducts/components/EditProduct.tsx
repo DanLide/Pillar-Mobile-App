@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   KeyboardTypeOptions,
   StyleSheet,
@@ -32,6 +32,7 @@ import { manageProductsStore } from '../stores';
 import { ProductModalProps } from 'src/modules/productModal';
 import { TError } from 'src/modules/manageProducts/components/ProductModal';
 import { UpcScanner } from './UpcScanner';
+import { isIPod } from 'src/constants';
 
 const inventoryTypes = [
   InventoryUseType.Each,
@@ -330,6 +331,7 @@ export const EditProduct = observer(
           <View style={styles.spaceBetweenContainer}>
             <Input
               keyboardType="number-pad"
+              returnKeyType="done"
               type={InputType.Primary}
               value={product?.upc}
               label={t('upcNumber')}

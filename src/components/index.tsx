@@ -26,6 +26,8 @@ import { BaseSelectedProductsList } from './BaseSelectedProductsList';
 import { Dropdown, DropdownItem } from './Dropdown';
 import { InventoryTypeBadge } from './InventoryTypeBadge';
 import { Separator } from './Separator';
+import { FocusAwareStatusBar } from './FocusAwareStatusBar';
+
 export { KeyboardToolButton } from './KeyboardToolbarButton';
 
 export * from './ScanProduct';
@@ -66,6 +68,7 @@ export {
   BaseSelectedProductsList,
   Dropdown,
   InventoryTypeBadge,
+  FocusAwareStatusBar,
 };
 
 export type { DropdownItem, ModalProps };

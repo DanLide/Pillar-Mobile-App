@@ -2,7 +2,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 
-import { isNil } from 'ramda';
 import i18n from 'i18next';
 import { HomeScreen } from '../modules/home/HomeScreen';
 import { LanguageSelectScreen } from '../modules/languageSelect/LanguageSelectScreen';
@@ -11,7 +10,6 @@ import TermsScreen from '../modules/terms/TermsScreen';
 import { authStore, ssoStore } from '../stores';
 import { AuthStore } from '../stores/AuthStore';
 import { SSOStore } from '../stores/SSOStore';
-import { ConfigureDeviceStack } from './ConfigureDeviceStack';
 import { CreateInvoiceStack } from './CreateInvoiceStack';
 import { ManageProductsStack } from './ManageProductsStack';
 import { OrdersStack } from './OrdersStack';
@@ -35,13 +33,8 @@ const getInitialScreen = (
   authStore: AuthStore,
   ssoStore: SSOStore,
 ): keyof HomeStackParamList => {
-  const getIsDeviceConfiguredBySSO = ssoStore.getIsDeviceConfiguredBySSO;
-
   if (!authStore.isUsernameExistInUsernames) {
     return AppNavigator.LanguageSelectScreen;
-  }
-  if (!isNil(getIsDeviceConfiguredBySSO) && !getIsDeviceConfiguredBySSO) {
-    return AppNavigator.ConfigureDeviceStack;
   }
   if (!authStore.isTnCSelected) {
     return AppNavigator.TermsScreen;
@@ -57,6 +50,7 @@ const Stack = createStackNavigator<HomeStackParamList>();
 const ssoScreenOptions = getScreenOptions({
   title: i18n.t('shopLocation'),
   rightBarButtonType: RightBarType.Logout,
+  rightBarButtonTestId: 'rightBarButtonTestIdLogout',
 });
 
 const homeScreenOptions = getScreenOptions({
@@ -112,7 +106,9 @@ export const HomeStack: React.FC = () => {
         options={getScreenOptions({
           title: t('alphaBetaAgreement'),
           leftBarButtonType: LeftBarType.Back,
+          leftBarButtonTestId: 'leftBarButtonTestId',
           rightBarButtonType: RightBarType.Close,
+          rightBarButtonTestId: 'rightBarButtonTestId',
           rightBarButtonAction: () => {
             const screen = getInitialScreen(authStore, ssoStore);
             if (screen === AppNavigator.HomeScreen) {
@@ -162,11 +158,6 @@ export const HomeStack: React.FC = () => {
       <Stack.Screen
         name={AppNavigator.OrdersStack}
         component={OrdersStack}
-        options={getNavigationOptions}
-      />
-      <Stack.Screen
-        name={AppNavigator.ConfigureDeviceStack}
-        component={ConfigureDeviceStack}
         options={getNavigationOptions}
       />
       <Stack.Screen

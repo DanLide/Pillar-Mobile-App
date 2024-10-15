@@ -51,6 +51,7 @@ import { ScannerPlaceholderImage } from 'src/theme/svgs';
 import { Spacer } from '../Spacer';
 import { MMKWStorageService } from 'src/services';
 import { useCaptuvoScanner } from 'src/libs';
+import { getSettings } from 'src/helpers/storage';
 
 const soundAndVibrate = async () => {
   await VolumeManager.setVolume(1);
@@ -70,13 +71,16 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
   buttonListTitle,
 }) => {
   const { t } = useTranslation();
+  const settings = getSettings();
   const frameRef = useRef<Frame | null>(null);
   const scannerLayoutRef = useRef<LayoutRectangle | null>(null);
   const ratio = useRef<number | null>(null);
   const widthCorrection = useRef<number | null>(null);
   const heightCorrection = useRef<number | null>(null);
 
-  const [isTorchOn, toggleIsTorchOn] = useSwitchState();
+  const [isTorchOn, toggleIsTorchOn] = useSwitchState(
+    settings.isEnabledFlashlight,
+  );
   const [isZoomToggled, setIsZoomToggled] = useSwitchState();
   const [hideScannerTooltip, setScannerTooltip] = useState(
     !!MMKWStorageService.getRecord(storageKeys.HIDE_SCANNER_TOOLTIP),
@@ -382,6 +386,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               { backgroundColor: isTorchOn ? colors.purple : colors.white },
             ]}
             onPress={toggleIsTorchOn}
+            accessibilityLabel="flash"
           >
             {isTorchOn ? <SVGs.TorchIconActive /> : <SVGs.TorchIconPassive />}
           </TouchableOpacity>
@@ -401,6 +406,7 @@ export const ScanProduct: React.FC<ScanProductProps> = ({
               { backgroundColor: isZoomToggled ? colors.purple : colors.white },
             ]}
             onPress={setIsZoomToggled}
+            accessibilityLabel="zoomIcon"
           >
             {isZoomToggled ? <SVGs.ZoomOutIcon /> : <SVGs.ZoomInIcon />}
           </TouchableOpacity>

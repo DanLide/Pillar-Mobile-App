@@ -12,6 +12,8 @@ import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/nati
 import { AppNavigator, ConfigureDeviceStackParams } from 'src/navigation/types';
 import { StockModel } from '../stocksList/stores/StocksStore';
 import { Button, ButtonType } from 'src/components';
+import { authStore } from 'src/stores';
+import { stocksStore } from 'src/modules/stocksList/stores';
 
 type Props = NativeStackScreenProps<
   ConfigureDeviceStackParams,
@@ -20,10 +22,11 @@ type Props = NativeStackScreenProps<
 
 export const DeviceConfigCompletedScreen = ({ route, navigation }: Props) => {
   const { t } = useTranslation();
-  const onNavigateToHome = () => {
-    navigation.reset({
-      routes: [{ name: AppNavigator.Drawer }],
-    });
+
+  const onFinishConfigureDevice = () => {
+    stocksStore.clear();
+    authStore.logOut();
+    navigation.navigate(AppNavigator.WelcomeScreen);
   };
 
   const ItemSeparator = () => <View style={styles.separator} />;
@@ -56,8 +59,8 @@ export const DeviceConfigCompletedScreen = ({ route, navigation }: Props) => {
         <Button
           type={ButtonType.primary}
           buttonStyle={styles.button}
-          title={t('home')}
-          onPress={onNavigateToHome}
+          title={t('finish')}
+          onPress={onFinishConfigureDevice}
         />
       </View>
     </View>

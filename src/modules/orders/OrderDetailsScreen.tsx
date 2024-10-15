@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { NativeStackScreenProps } from 'react-native-screens/lib/typescript/native-stack';
 import { observer } from 'mobx-react';
-import { useIsFocused } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { groupBy } from 'ramda';
 import { masterLockStore, southcoStore, ssoStore } from 'src/stores';
 
@@ -35,7 +35,6 @@ type Props = NativeStackScreenProps<
 
 export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
   const { t } = useTranslation();
-  const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
   const ordersStoreRef = useRef(ordersStore).current;
@@ -105,11 +104,12 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
     setIsLoading(false);
   }, [initLockAPI, route.params.orderId]);
 
-  useEffect(() => {
-    if (isFocused) {
+  useFocusEffect(
+    useCallback(() => {
       fetchOrder();
-    }
-  }, [fetchOrder, isFocused]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []),
+  );
 
   const onNavigateToOrderByStockLocation = () => {
     if (selectedStock) {
@@ -210,6 +210,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
         case OrderTitleByStatusType[OrderStatusType.CANCELLED]:
           return t('orderCancelled');
         case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+        case OrderTitleByStatusType[OrderStatusType.PARTIALLY_RECEIVED]:
           return t('someItemsNotReceived');
         default:
           return null;
@@ -241,6 +242,7 @@ export const OrderDetailsScreen = observer(({ navigation, route }: Props) => {
             />
           );
         case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+        case OrderTitleByStatusType[OrderStatusType.PARTIALLY_RECEIVED]:
           return (
             <Button
               disabled={!selectedStock}

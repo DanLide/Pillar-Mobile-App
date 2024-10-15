@@ -26,6 +26,8 @@ const SSOList = forwardRef(
             item={item}
             isSelected={isSelected}
             onPressItem={onPressItem}
+            testID={`partyRoleId.${item.pisaId}`}
+            accessibilityLabel={item.name}
           />
         );
       },

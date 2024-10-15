@@ -19,6 +19,7 @@ import { getFetchStockByPartyRoleIdAPI } from './api/stocksAPI';
 import { mapSingle } from './helpers/utils';
 import { setSSORNToken } from 'src/helpers/storage';
 import { authStore, deviceInfoStore } from 'src/stores';
+import { resetMasterlock } from 'src/data/resetMasterlock';
 
 interface FetchStocksContext {
   shop: SingleSSOAPIResponse;
@@ -65,6 +66,10 @@ export class FetchShopByShopSetupCodeTask extends Task {
 
   async run(): Promise<void> {
     const shop = await shopSetupLoginAPI(this.shopSetupCode);
+
+    if (shop.token) {
+      authStore.setToken(shop.token.access_token, shop.token.refresh_token);
+    }
 
     if (!authStore.getToken) throw Error(i18n.t('unauthorized'));
 
@@ -167,7 +172,12 @@ export class SaveDataToStore extends Task {
 
   async run() {
     this.stocksStore.setStocks(this.fetchStocksContext.stocks);
+
+    // TODO: check if we need resetMasterlock (if not delete this)
+    await resetMasterlock(this.stocksStore.getMasterlockStocks);
+
     this.ssoStore.setDeviceConfiguration(true);
+
     if (this.ssoStore.getCurrentSSO && this.fetchStocksContext.rnToken) {
       setSSORNToken(
         this.fetchStocksContext.rnToken,

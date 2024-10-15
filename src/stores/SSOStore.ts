@@ -6,7 +6,7 @@ export class SSOStore {
   private ssoList?: SSOModel[];
   @observable ssoUsersList: SSOUser[] | null;
   private ssoMobileDevices?: MobileDevice[];
-  private isDeviceConfiguredBySSO?: boolean;
+  @observable isDeviceConfiguredBySSO?: boolean;
 
   constructor() {
     makeObservable(this);
@@ -52,7 +52,7 @@ export class SSOStore {
     this.currentSSO = currentSSO;
   }
 
-  public setDeviceConfiguration(value?: boolean) {
+  @action setDeviceConfiguration(value?: boolean) {
     this.isDeviceConfiguredBySSO = value;
   }
 

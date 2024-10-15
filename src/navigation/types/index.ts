@@ -69,7 +69,6 @@ export enum AppNavigator {
   ConfigureDeviceStack = 'ConfigureDeviceStack',
   BaseShopSetupScreen = 'BaseShopSetupScreen',
   ScanShopCodeScreen = 'ScanShopCodeScreen',
-  SelectStockLocationsScreen = 'SelectStockLocationsScreen',
   DeviceConfigCompletedScreen = 'DeviceConfigCompletedScreen',
   EnterShopCodeScreen = 'EnterShopCodeScreen',
   ReceiveBackorderScreen = 'ReceiveBackorderScreen',
@@ -138,6 +137,7 @@ export type UnauthStackParamsList = {
   [AppNavigator.UpdateShopLocationScreen]: undefined;
   [AppNavigator.CreatePinScreen]: PinScreenParams;
   [AppNavigator.LoginWithPinScreen]: PinScreenParams;
+  [AppNavigator.ConfigureDeviceStack]: undefined;
 };
 
 export type HomeStackParamList = {
@@ -151,7 +151,6 @@ export type HomeStackParamList = {
   [AppNavigator.ManageProductsStack]: undefined;
   [AppNavigator.CreateInvoiceStack]: undefined;
   [AppNavigator.OrdersStack]: undefined;
-  [AppNavigator.ConfigureDeviceStack]: undefined;
   [AppNavigator.Settings]: undefined;
   [AppNavigator.AlphaAlertScreen]: undefined;
   [AppNavigator.CreateJobModal]: {
@@ -230,9 +229,9 @@ export type OrdersParamsList = {
 };
 
 export type ConfigureDeviceStackParams = {
+  [AppNavigator.WelcomeScreen]: undefined;
   [AppNavigator.BaseShopSetupScreen]: undefined;
   [AppNavigator.ScanShopCodeScreen]: undefined;
-  [AppNavigator.SelectStockLocationsScreen]: undefined;
   [AppNavigator.DeviceConfigCompletedScreen]: { stocks: StockModel[] };
   [AppNavigator.EnterShopCodeScreen]: undefined;
   [AppNavigator.CameraPermissionScreen]: CameraPermissionScreenParams;

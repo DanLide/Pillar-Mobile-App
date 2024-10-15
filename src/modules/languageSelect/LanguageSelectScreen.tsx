@@ -75,6 +75,7 @@ export const LanguageSelectScreen: React.FC<Props> = ({
           type={ButtonType.primary}
           title={onDoneButtonTitle}
           onPress={onDone}
+          accessibilityLabel="Submit Button"
         />
       </View>
     </View>

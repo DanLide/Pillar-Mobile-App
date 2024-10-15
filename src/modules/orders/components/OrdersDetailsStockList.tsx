@@ -48,6 +48,7 @@ export const OrdersDetailsStockList: React.FC<Props> = observer(
         case OrderTitleByStatusType[OrderStatusType.SUBMITTED]:
         case OrderTitleByStatusType[OrderStatusType.SHIPPED]:
         case OrderTitleByStatusType[OrderStatusType.RECEIVING]:
+        case OrderTitleByStatusType[OrderStatusType.PARTIALLY_RECEIVED]:
           return true;
         case OrderTitleByStatusType[OrderStatusType.POREQUIRED]:
         case OrderTitleByStatusType[OrderStatusType.APPROVAL]:
@@ -128,15 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingRight: 36,
   },
-  products: {
-    flex: 1,
-  },
-  stockName: {
-    fontSize: 15,
-    lineHeight: 20,
-    fontFamily: fonts.TT_Bold,
-    paddingVertical: 8,
-  },
   radioButton: {
     width: 22,
     height: 22,
@@ -158,31 +150,5 @@ const styles = StyleSheet.create({
   radioButtonPlaceholder: {
     width: 38,
     height: 22,
-  },
-  productDetails: {
-    flexDirection: 'row',
-    paddingVertical: 2,
-  },
-  productDetailsBold: {
-    fontFamily: fonts.TT_Bold,
-    color: colors.black,
-    fontSize: 14,
-  },
-  productNameContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  productText: {
-    fontSize: 12,
-    lineHeight: 16,
-    fontFamily: fonts.TT_Regular,
-    color: colors.grayDark,
-  },
-  productName: {
-    paddingRight: 24,
-  },
-  dashedLine: {
-    alignSelf: 'flex-end',
   },
 });

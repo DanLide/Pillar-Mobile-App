@@ -58,6 +58,7 @@ export const ButtonCluster = ({
           isLoading={leftIsLoading}
           disabled={leftDisabled}
           onPress={leftOnPress}
+          accessibilityLabel={`${leftTitle}`}
         />
       )}
       {!isSingleButton && <Spacer w={isIPod ? 8 : 16} />}
@@ -69,6 +70,7 @@ export const ButtonCluster = ({
           isLoading={rightIsLoading}
           buttonStyle={commonStyles.flex1}
           onPress={rightOnPress}
+          accessibilityLabel={`${rightTitle}`}
         />
       )}
     </SafeAreaView>

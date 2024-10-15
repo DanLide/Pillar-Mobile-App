@@ -292,7 +292,17 @@ export const ProductQuantity = forwardRef(
         if (type === ProductModalType.Remove && currentValue === 0)
           return false;
 
-        if (type === ProductModalType.Remove) {
+        if (
+          type === ProductModalType.ReturnOrder &&
+          (!product.onHand || product.onHand < (currentValue ?? 0))
+        ) {
+          return true;
+        }
+
+        if (
+          type === ProductModalType.Remove ||
+          type === ProductModalType.ReceiveOrder
+        ) {
           return isProductQuantityError;
         }
 
@@ -464,9 +474,7 @@ const InvoicingInfoAlert: FC<InvoicingInfoAlertProps> = props => {
   const { t } = useTranslation();
   return (
     <AlertWrapper
-      message={
-        <Text style={{ textAlign: 'center' }}>{t('invoicingSettings')}</Text>
-      }
+      message={<Text style={styles.alertTitle}>{t('invoicingSettings')}</Text>}
       hidePrimary
       secondaryTitle={t('close')}
       {...props}
@@ -481,6 +489,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     // paddingHorizontal: 16,
   },
+  alertTitle: { textAlign: 'center' },
   continueButton: {
     width: 135,
     alignSelf: 'center',
