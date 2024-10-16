@@ -26,7 +26,7 @@ import {
   AppNavigator,
   BaseProductsScreenNavigationProp,
 } from 'src/navigation/types';
-import { ProductModal, ProductModalType } from 'src/modules/productModal';
+import { ProductModalType } from 'src/modules/productModal';
 import {
   useBaseProductsScreen,
   useSingleToast,
@@ -39,6 +39,7 @@ import {
 import { ToastType } from 'src/contexts/types';
 import {
   AddNotesSection,
+  ProductModal,
   SelectedProductsList,
   TotalCostBar,
 } from './components';

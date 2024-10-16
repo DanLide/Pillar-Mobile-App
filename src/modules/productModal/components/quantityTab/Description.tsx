@@ -20,8 +20,10 @@ import { colors, fonts } from '../../../../theme';
 import { ProductModel } from '../../../../stores/types';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ProductModalType } from 'src/modules/productModal';
 
 interface Props extends ViewProps {
+  type?: ProductModalType;
   product?: ProductModel;
   topOffset?: SharedValue<number>;
 }
@@ -29,9 +31,15 @@ interface Props extends ViewProps {
 const CONTAINER_SHADOW_OPACITY = 0.12;
 const SIZE_CONTAINER_HEIGHT = 22;
 
-export const Description = memo(({ product, topOffset }: Props) => {
+export const Description = memo(({ type, product, topOffset }: Props) => {
   const modalCollapsedOffset = useHeaderHeight();
   const { top: modalExpandedOffset } = useSafeAreaInsets();
+
+  const isOrderType =
+    type === ProductModalType.CreateOrder ||
+    type === ProductModalType.ReturnOrder ||
+    type === ProductModalType.ReceiveOrder ||
+    type === ProductModalType.ReceiveBackOrder;
 
   const scrollOffset = useDerivedValue(
     () => topOffset?.value ?? modalCollapsedOffset,
@@ -84,16 +92,22 @@ export const Description = memo(({ product, topOffset }: Props) => {
 
   return (
     <Animated.View style={[styles.container, containerAnimatedStyle]}>
-      <View style={styles.partNumberContainer}>
-        <View>
-          <Text style={styles.partNo} numberOfLines={1} ellipsizeMode="middle">
-            {product?.manufactureCode} {product?.partNo}
-          </Text>
+      {!isOrderType && (
+        <View style={styles.partNumberContainer}>
+          <View>
+            <Text
+              style={styles.partNo}
+              numberOfLines={1}
+              ellipsizeMode="middle"
+            >
+              {product?.manufactureCode} {product?.partNo}
+            </Text>
+          </View>
         </View>
-      </View>
+      )}
       <Animated.Text
-        style={[styles.name, nameAnimatedStyle]}
-        numberOfLines={2}
+        style={[styles.name, nameAnimatedStyle, isOrderType && styles.textGray]}
+        numberOfLines={1}
         ellipsizeMode="middle"
       >
         {product?.name}
@@ -146,5 +160,9 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontFamily: fonts.TT_Regular,
     color: colors.black,
+  },
+  textGray: {
+    fontFamily: fonts.TT_Regular,
+    color: colors.grayDark2,
   },
 });

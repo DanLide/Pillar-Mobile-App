@@ -25,7 +25,7 @@ import {
   BaseProductsScreenNavigationProp,
   OrdersParamsList,
 } from 'src/navigation/types';
-import { ProductModal, ProductModalType } from 'src/modules/productModal';
+import { ProductModalType } from 'src/modules/productModal';
 import {
   useBaseProductsScreen,
   useSingleToast,
@@ -42,6 +42,7 @@ import { createOrder } from 'src/data/createOrder';
 import {
   AddNotesSection,
   PONumberModal,
+  ProductModal,
   SelectedProductsList,
   TotalCostBar,
 } from './components';
