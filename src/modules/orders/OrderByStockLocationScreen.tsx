@@ -28,15 +28,12 @@ import {
   OrdersParamsList,
 } from '../../navigation/types';
 import { getScreenOptions } from '../../navigation/helpers';
-import {
-  ProductModal,
-  ProductModalParams,
-  ProductModalType,
-} from '../productModal';
+import { ProductModalParams, ProductModalType } from '../productModal';
 import { ProductModel } from '../../stores/types';
 import { receiveOrder } from '../../data/receiveOrder';
 import { OrderTitleByStatusType } from 'src/modules/orders/components/StatusBadge';
 import { OrderStatusType } from 'src/constants/common.enum';
+import { ProductModal } from './components';
 
 type Props = NativeStackScreenProps<
   OrdersParamsList,

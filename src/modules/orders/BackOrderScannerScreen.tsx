@@ -20,6 +20,7 @@ import {
 import AlertWrapper from 'src/contexts/AlertWrapper';
 import { colors, fonts, SVGs } from '../../theme';
 import { getProductStepQty } from 'src/data/helpers';
+import { ProductModal } from './components';
 
 const initModalParams: ProductModalParams = {
   type: ProductModalType.Hidden,
@@ -119,6 +120,7 @@ export const BackOrderScannerScreen: React.FC = observer(() => {
           onBadRequestError={onBadRequestError}
           onSubmit={onSubmit}
           buttonListTitle={t('reviewOrder')}
+          ProductModalComponent={ProductModal}
           disableAlert
         />
       </ToastContextProvider>

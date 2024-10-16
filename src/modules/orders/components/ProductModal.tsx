@@ -1,5 +1,5 @@
 import { useCallback, useRef, useMemo, memo } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-notifications';
@@ -21,7 +21,11 @@ import {
 } from 'src/contexts';
 import { ToastType } from 'src/contexts/types';
 import { renderType } from 'src/contexts/ToastContext/renderTypes';
-import { ProductModalProps, ProductModalType } from 'src/modules/productModal';
+import {
+  Description,
+  ProductModalProps,
+  ProductModalType,
+} from 'src/modules/productModal';
 import { ProductQuantity } from 'src/modules/productModal/components/quantityTab';
 import { getProductTotalCost } from 'src/modules/orders/helpers';
 
@@ -167,8 +171,24 @@ export const ProductModal = memo(
           return isProductQuantityError;
         }
 
+        if (
+          type === ProductModalType.ReturnOrder &&
+          (!product?.onHand || product.onHand < (currentValue ?? 0))
+        ) {
+          return true;
+        }
+
         return isProductQuantityError || currentValue === 0;
       };
+
+      if (isEdit && currentValue === 0) {
+        return (
+          <Pressable style={styles.deleteButton} onPress={onRemoveAlert}>
+            <SVGs.TrashIcon color={colors.redDark} />
+            <Text style={styles.deleteButtonText}>{t('delete')}</Text>
+          </Pressable>
+        );
+      }
 
       const disabled = calculateDisabled();
 
@@ -181,22 +201,28 @@ export const ProductModal = memo(
           onPress={onPressButton}
         />
       );
-    }, [currentValue, isProductQuantityError, onPressButton, t, type]);
+    }, [
+      currentValue,
+      isEdit,
+      isProductQuantityError,
+      onPressButton,
+      onRemoveAlert,
+      product?.onHand,
+      t,
+      type,
+    ]);
 
-    const CostOfProduct = useMemo(
-      () =>
-        product && (
-          <View>
-            <Text style={styles.cost}>
-              {t('costPer')}: ${product.cost?.toFixed(2)}
-            </Text>
-            <Text style={styles.totalCost}>
-              {t('totalCost')}: ${getProductTotalCost(product).toFixed(2)}
-            </Text>
-          </View>
-        ),
-      [product, t],
-    );
+    const renderCostOfProduct = () =>
+      product && (
+        <View>
+          <Text style={styles.cost}>
+            {t('costPer')}: ${product.cost?.toFixed(2)}
+          </Text>
+          <Text style={styles.totalCost}>
+            {t('totalCost')}: ${getProductTotalCost(product).toFixed(2)}
+          </Text>
+        </View>
+      );
 
     return (
       <Modal
@@ -219,6 +245,7 @@ export const ProductModal = memo(
             ref={scrollViewRef}
             nestedScrollEnabled
           >
+            <Description type={type} product={product} topOffset={topOffset} />
             <ProductQuantity
               type={type}
               product={product}
@@ -240,7 +267,7 @@ export const ProductModal = memo(
               onClose={onClose}
             />
           </Animated.ScrollView>
-          {CostOfProduct}
+          {renderCostOfProduct()}
           {BottomButton}
         </ToastContextProvider>
         <Toast ref={toastRef} renderToast={TOAST_SUCCESS_CREATE_JOB} />
@@ -257,9 +284,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   contentContainer: {
-    gap: 24,
     paddingBottom: 56,
-    marginBottom: 56,
   },
   cost: {
     width: '100%',
@@ -270,6 +295,26 @@ const styles = StyleSheet.create({
     color: colors.grayDark2,
     backgroundColor: colors.background,
     textAlign: 'center',
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: colors.red,
+    height: 48,
+    marginTop: 8,
+    marginBottom: 16,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+  },
+  deleteButtonText: {
+    color: colors.redDark,
+    fontWeight: '700',
+    fontSize: 20,
+    fontFamily: fonts.TT_Bold,
+    marginLeft: 15,
   },
   divider: {
     fontSize: 14,

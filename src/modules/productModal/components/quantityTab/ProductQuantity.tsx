@@ -22,8 +22,8 @@ import {
   Button,
   ButtonType,
   ColoredTooltip,
-  ScannerScreenError,
   getScannerErrorMessages,
+  ScannerScreenError,
 } from 'src/components';
 import { ProductModalType } from '../../ProductModal';
 import { Description } from './Description';
@@ -274,7 +274,13 @@ export const ProductQuantity = forwardRef(
     };
 
     const renderBottomButton = () => {
-      if (type === ProductModalType.ManageProduct) {
+      if (
+        type === ProductModalType.ManageProduct ||
+        type === ProductModalType.CreateOrder ||
+        type === ProductModalType.ReturnOrder ||
+        type === ProductModalType.ReceiveOrder ||
+        type === ProductModalType.ReceiveBackOrder
+      ) {
         return null;
       }
 
@@ -292,17 +298,7 @@ export const ProductQuantity = forwardRef(
         if (type === ProductModalType.Remove && currentValue === 0)
           return false;
 
-        if (
-          type === ProductModalType.ReturnOrder &&
-          (!product.onHand || product.onHand < (currentValue ?? 0))
-        ) {
-          return true;
-        }
-
-        if (
-          type === ProductModalType.Remove ||
-          type === ProductModalType.ReceiveOrder
-        ) {
+        if (type === ProductModalType.Remove) {
           return isProductQuantityError;
         }
 
@@ -344,11 +340,11 @@ export const ProductQuantity = forwardRef(
     const renderDescription = () => {
       switch (type) {
         case ProductModalType.ManageProduct:
-          return null;
-        case ProductModalType.ReceiveOrder:
         case ProductModalType.CreateOrder:
         case ProductModalType.ReturnOrder:
+        case ProductModalType.ReceiveOrder:
         case ProductModalType.ReceiveBackOrder:
+          return null;
         case ProductModalType.Remove:
         case ProductModalType.Return:
         case ProductModalType.CreateInvoice:
