@@ -6,13 +6,13 @@ import { LoggingService } from 'src/services';
 import { authStore, masterLockStore, ssoStore } from '../../stores';
 import { AppNavigator, HomeStackParamList } from '../../navigation/types';
 import { permissionProvider } from '../../data/providers';
-import { colors, fonts, SVGs } from '../../theme';
+import { colors, commonStyles, fonts, SVGs } from '../../theme';
 
 import ListItem from './components/ListItem';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { fetchStocks } from 'src/data/fetchStocks';
 import { stocksStore } from '../stocksList/stores';
 import PermissionStore from '../permissions/stores/PermissionStore';
+import { RESULTS } from 'react-native-permissions';
 
 interface Props {
   navigation: StackNavigationProp<HomeStackParamList, AppNavigator.HomeScreen>;
@@ -64,24 +64,29 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const [res] = await Promise.allSettled([
-        await fetchStocks(stocksStore),
-        await PermissionStore.requestPermission(
-          'ios.permission.LOCATION_WHEN_IN_USE',
-        ),
-      ]);
-      if (
-        res.status === 'fulfilled' &&
-        !res.value &&
-        PermissionStore.isMasterLockPermissionsGranted
-      ) {
-        await masterLockStore.initMasterLockForStocks(stocksStore.stocks);
+      const tasks = [];
+      if (!stocksStore.SSOStocks.length) {
+        tasks.push(await stocksStore.fetchSSOStocks());
+      }
+      if (PermissionStore.locationPermission !== RESULTS.GRANTED) {
+        tasks.push(
+          await PermissionStore.requestPermission(
+            'ios.permission.LOCATION_WHEN_IN_USE',
+          ),
+        );
+      }
+      await Promise.allSettled(tasks);
+      if (PermissionStore.isMasterLockPermissionsGranted) {
+        await masterLockStore.initMasterLockForStocks(stocksStore.SSOStocks);
       }
     })();
+    return () => {
+      masterLockStore.deinit();
+    };
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={commonStyles.flex1}>
       <TouchableOpacity
         onPress={onNavigateToSelectShopLocation}
         style={styles.infoContainer}
@@ -155,9 +160,6 @@ export const HomeScreen: React.FC<Props> = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   infoContainer: {
     flexDirection: 'row',
     paddingLeft: 16,

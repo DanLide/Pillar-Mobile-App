@@ -42,6 +42,8 @@ interface Props {
   updateJobSelectModal?: (showModal: boolean, number?: string) => void;
 }
 
+const keyExtractor = (item: JobModel) => String(item.jobId);
+
 export const JobsList: React.FC<Props> = observer(
   ({
     selectedId,
@@ -112,7 +114,6 @@ export const JobsList: React.FC<Props> = observer(
       }
     }, [onFetchJobs]);
 
-    const keyExtractor = (item: JobModel) => String(item.jobId);
     const onChangeText = (text: string) => {
       listRef.current?.scrollToOffset({
         offset: 0,

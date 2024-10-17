@@ -1,26 +1,29 @@
-import { action, computed, makeObservable, observable } from 'mobx';
+import {
+  action,
+  computed,
+  makeObservable,
+  observable,
+  runInAction,
+} from 'mobx';
 import { find, pipe, prop, propEq, whereEq } from 'ramda';
+import { getFetchStockByDeviceNameAPI } from 'src/data/api';
 
 import {
   CategoryResponse,
   FacilityProductResponse,
   SupplierResponse,
 } from 'src/data/api/productsAPI';
+import { LoggingService } from 'src/services';
 
 export class StockStore {
-  @observable stocks: ExtendedStockModel[];
-  @observable facilityProducts: FacilityProductModel[];
-  @observable categories: CategoryModel[];
-  @observable suppliers: SupplierModel[];
-  @observable enabledSuppliers: SupplierModel[];
+  @observable stocks: ExtendedStockModel[] = [];
+  @observable facilityProducts: FacilityProductModel[] = [];
+  @observable categories: CategoryModel[] = [];
+  @observable suppliers: SupplierModel[] = [];
+  @observable enabledSuppliers: SupplierModel[] = [];
+  @observable SSOStocks: ExtendedStockModel[] = [];
 
   constructor() {
-    this.stocks = [];
-    this.facilityProducts = [];
-    this.categories = [];
-    this.suppliers = [];
-    this.enabledSuppliers = [];
-
     makeObservable(this);
   }
 
@@ -95,7 +98,32 @@ export class StockStore {
     this.enabledSuppliers = enabledSuppliers;
   }
 
-  public clear() {
+  async fetchSSOStocks() {
+    try {
+      const stocks = (await getFetchStockByDeviceNameAPI()) ?? [];
+      const mappedStocks = stocks
+        .map(stockItem =>
+          StockStore.isStockWithMLAccess(stockItem)
+            ? {
+                ...stockItem.equipment,
+                ...stockItem.mlAccessData,
+              }
+            : stockItem,
+        )
+        .sort((a, b) => a.organizationName.localeCompare(b.organizationName));
+      runInAction(() => {
+        this.SSOStocks = mappedStocks;
+      });
+    } catch (err) {
+      LoggingService.logException(err);
+    }
+  }
+
+  @action clearSSOStocks() {
+    this.SSOStocks = [];
+  }
+
+  @action clear() {
     this.stocks = [];
     this.facilityProducts = [];
     this.categories = [];

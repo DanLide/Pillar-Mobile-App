@@ -21,15 +21,16 @@ const LICENSE_ID =
 
 export const RELOCK_TIME = 10000; // msec
 export const RELOCK_TIME_SEC = RELOCK_TIME / 1000;
-export const INIT_TIME = 60000;
+export const INIT_TIME = 6000;
 
 export class MasterLockStore {
   @observable stocksState: Record<string, StockState>;
-  @observable isUnlocking: boolean;
   @observable relockTimeMasterlocksTime: Record<string, string>;
   @observable permissionStore: PermissionStore;
-  @observable masterlockConfigured: boolean;
-  @observable isIniting: boolean;
+  @observable isUnlocking = false;
+  @observable masterlockConfigured = false;
+  @observable isIniting = false;
+  @observable isInited = false;
 
   static parseString(input: string) {
     return input.split('/');
@@ -39,10 +40,7 @@ export class MasterLockStore {
     makeAutoObservable(this);
     this.stocksState = {};
     this.relockTimeMasterlocksTime = {};
-    this.isUnlocking = false;
     this.permissionStore = permissionStoreInstance;
-    this.masterlockConfigured = false;
-    this.isIniting = false;
 
     MasterLockStateListener.addListener('visibilityStatus', (data: string) => {
       const updatedVisibility = MasterLockStore.parseString(
@@ -60,7 +58,7 @@ export class MasterLockStore {
   }
 
   @action async initMasterLockForStocks(stocks: ExtendedStockModel[]) {
-    if (this.isIniting) return;
+    if (this.isIniting || this.isInited || !stocks.length) return;
     this.isIniting = true;
     await MasterLockModule.configure(LICENSE_ID);
     const stocksWithML = stocks.filter(
@@ -86,9 +84,9 @@ export class MasterLockStore {
         );
       }
     }
-
     setTimeout(() => {
       this.isIniting = false;
+      this.isInited = true;
     }, INIT_TIME);
   }
 
@@ -135,5 +133,11 @@ export class MasterLockStore {
         [statusKey]: value,
       },
     };
+  }
+
+  @action deinit() {
+    this.isInited = false;
+    this.isIniting = false;
+    MasterLockModule.deinit();
   }
 }

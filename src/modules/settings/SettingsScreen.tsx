@@ -20,6 +20,7 @@ import { cleanKeychain, getSettings, setSettings } from 'src/helpers/storage';
 import { permissionProvider } from 'src/data/providers';
 import { onRemoveDeviceFromSSO } from 'src/data/removeDeviceFromSSO';
 import { AppNavigator } from 'src/navigation/types';
+import { stocksStore } from '../stocksList/stores';
 
 interface Props {
   navigation: NavigationProp<ParamListBase>;
@@ -168,6 +169,8 @@ export const SettingsScreen: React.FC<Props> = ({ navigation }) => {
     await onRemoveDeviceFromSSO();
     cleanKeychain();
     closeAlert();
+    deviceInfoStore.getInitialDeviceName();
+    stocksStore.clearSSOStocks();
     ssoStore.setDeviceConfiguration(false);
     authStore.logOut();
   }, [closeAlert]);

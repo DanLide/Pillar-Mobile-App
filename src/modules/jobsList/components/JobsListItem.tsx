@@ -30,9 +30,7 @@ export const JobListItem: React.FC<Props> = ({
         <TouchableOpacity style={styles.container} onPress={handlePress}>
           <View style={styles.underlineContainer}>
             <View style={styles.toggle}>
-              {selectedId === item.jobId ? (
-                <View style={styles.selected} />
-              ) : null}
+              {selectedId === item.jobId && <View style={styles.selected} />}
             </View>
 
             <View style={[styles.textContainer, styles.toggleTextContainer]}>
