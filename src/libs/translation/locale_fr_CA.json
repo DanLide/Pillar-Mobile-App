@@ -369,8 +369,8 @@
   "cannotAddToInvoiceMissingPricing": "Impossible d’ajouter l’élément à la facture.\nInformations sur les prix manquantes",
   "partiallyReceived": "Partiellement reçu",
   "orderPartiallyReceived": "La commande {{orderId}} a été partiellement reçue",
-  "flashlightDefaultSetting": "Réglage par défaut de la lampe de poche",
-  "turnOnScanningWithFlashlight": "Allumez pour commencer à numériser\n les écrans avec la lumière allumée par défaut.",
+  "flashlightDefaultSetting": "Réglage par défaut\nde la lampe de poche",
+  "turnOnScanningWithFlashlight": "Allumez pour commencer à numériser\nles écrans avec la lumière allumée\npar défaut.",
   "finish": "Terminer",
   "devicesNotFound": ""
 }
