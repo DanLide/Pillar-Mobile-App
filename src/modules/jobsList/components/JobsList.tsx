@@ -80,9 +80,29 @@ export const JobsList: React.FC<Props> = observer(
 
     const filteredList = useMemo(
       () =>
-        jobs.filter(job =>
-          job.jobNumber.toLowerCase().includes(filterValue.toLowerCase()),
-        ),
+        jobs.filter(job => {
+          const filterValueLowerCase = filterValue.toLowerCase();
+
+          const filterByNumber = job.jobNumber
+            .toLowerCase()
+            .includes(filterValueLowerCase);
+          const filterByMake = job.carMake
+            ?.toLowerCase()
+            .includes(filterValueLowerCase);
+          const filterByModel = job.carModel
+            ?.toLowerCase()
+            .includes(filterValueLowerCase);
+          const filterByDescription = job.jobDescription
+            ?.toLowerCase()
+            .includes(filterValueLowerCase);
+
+          return (
+            filterByNumber ||
+            filterByMake ||
+            filterByModel ||
+            filterByDescription
+          );
+        }),
       [filterValue, jobs],
     );
 
@@ -163,6 +183,7 @@ export const JobsList: React.FC<Props> = observer(
     return (
       <>
         <Input
+          autoCapitalize="none"
           style={styles.input}
           containerStyle={[styles.inputContainer, inputContainerStyle]}
           value={filterValue}
