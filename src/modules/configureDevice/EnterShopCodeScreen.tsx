@@ -74,15 +74,9 @@ const EnterShopCodeScreenBody = ({ navigation }: Props) => {
     }
     setIsLoading(false);
 
-    if (stocksStoreRef.stocks.length) {
-      navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
-        stocks: stocksStoreRef.stocks,
-      });
-    } else {
-      navigation.reset({
-        routes: [{ name: AppNavigator.Drawer }],
-      });
-    }
+    navigation.navigate(AppNavigator.DeviceConfigCompletedScreen, {
+      stocks: stocksStoreRef.stocks,
+    });
   };
 
   return (
