@@ -16,6 +16,8 @@ export interface JobModel {
   status?: string;
   tax?: number;
   unitCost?: number;
+  carMake?: string;
+  carModel?: string;
 }
 
 export const jobIdNoRepairOrder = 0;
