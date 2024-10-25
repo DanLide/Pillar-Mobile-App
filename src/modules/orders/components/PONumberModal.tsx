@@ -117,7 +117,7 @@ export const PONumberModal = observer(
                 type={InputType.Primary}
                 placeholder={t('poNumber')}
                 value={poNumber}
-                keyboardType="number-pad"
+                keyboardType="default"
                 onChangeText={handlePONumberChange}
               />
 
